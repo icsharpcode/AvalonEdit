@@ -24,8 +24,6 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Media;
-using ICSharpCode.NRefactory.Editor;
-using ICSharpCode.NRefactory.TypeSystem.Implementation;
 using ICSharpCode.AvalonEdit.Document;
 using ICSharpCode.AvalonEdit.Utils;
 
@@ -34,7 +32,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 	/// <summary>
 	/// Stores rich-text formatting.
 	/// </summary>
-	public sealed class RichTextModel : AbstractFreezable
+	public sealed class RichTextModel
 	{
 		List<int> stateChangeOffsets = new List<int>();
 		List<HighlightingColor> stateChanges = new List<HighlightingColor>();

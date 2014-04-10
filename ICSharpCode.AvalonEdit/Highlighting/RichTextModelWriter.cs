@@ -22,7 +22,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Windows;
 using System.Windows.Media;
-using ICSharpCode.NRefactory.Editor;
 using ICSharpCode.AvalonEdit.Document;
 using ICSharpCode.AvalonEdit.Utils;
 

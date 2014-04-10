@@ -19,7 +19,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+#if NREFACTORY
 using ICSharpCode.NRefactory.Editor;
+#else
+using ICSharpCode.AvalonEdit.Document;
+#endif
 using NUnit.Framework;
 
 namespace ICSharpCode.AvalonEdit.Highlighting
@@ -27,7 +31,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 	[TestFixture]
 	public class HighlightedLineMergeTests
 	{
-		IDocument document = new ReadOnlyDocument(new string(' ', 20));
+		IDocument document = new TextDocument(new string(' ', 20));
 		
 		[Test]
 		public void SimpleMerge1()
