@@ -7,7 +7,7 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>AvalonEdit.Sample</RootNamespace>
     <AssemblyName>ICSharpCode.AvalonEdit.Sample</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <TargetFrameworkProfile />
   </PropertyGroup>
