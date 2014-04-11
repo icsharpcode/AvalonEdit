@@ -1,0 +1,101 @@
+﻿<html xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:MSHelp="http://msdn.microsoft.com/mshelp" xmlns:mshelp="http://msdn.microsoft.com/mshelp" xmlns:ddue="http://ddue.schemas.microsoft.com/authoring/2003/5" xmlns:msxsl="urn:schemas-microsoft-com:xslt"><head><META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8" /><title>Code Completion</title><link rel="stylesheet" type="text/css" href="../styles/presentation.css" /><script type="text/javascript" src="../scripts/script_prototype.js"> </script><script type="text/javascript" src="../scripts/EventUtilities.js"> </script><script type="text/javascript" src="../scripts/StyleUtilities.js"> </script><script type="text/javascript" src="../scripts/SplitScreen.js"> </script><script type="text/javascript" src="../scripts/ElementCollection.js"> </script><script type="text/javascript" src="../scripts/MemberFilter.js"> </script><script type="text/javascript" src="../scripts/CollapsibleSection.js"> </script><script type="text/javascript" src="../scripts/LanguageFilter.js"> </script><script type="text/javascript" src="../scripts/CookieDataStore.js"> </script><link type="text/css" rel="stylesheet" href="../styles/highlight.css" /><script type="text/javascript" src="../scripts/highlight.js"> </script></head><body><img id="copyImage" style="display:none; height:0; width:0;" src="../icons/copycode.gif" alt="Copy image" title="Copy image" /><img id="copyHoverImage" style="display:none; height:0; width:0;" src="../icons/copycodeHighlight.gif" alt="CopyHover image" title="CopyHover image" /><div id="control"><span class="productTitle">AvalonEdit</span><br /><span class="topicTitle">Code Completion</span><br /><div id="toolbar"><span id="languageFilter"><select id="languageSelector" onchange="var names = this.value.split(' '); toggleVisibleLanguage(names[1]); switchLanguage(names, this.value);"><option value="CSharp cs">C#</option><option value="VisualBasic vb">Visual Basic</option><option value="ManagedCPlusPlus cpp">Visual C++</option></select></span></div></div><div id="main"><span style="color: DarkGray"></span><div class="introduction"><p>
+			AvalonEdit comes with a code completion drop down window.
+			You only have to handle the text entering events to determine
+			when you want to show the window; all the UI is already done for you.
+		</p></div><div class="section"><div class="sectionTitle" onclick="toggleSection(this.parentNode)"><img src="../icons/collapse_all.gif" /> Usage of the Code Completion Window</div><div class="sectionContent"><div class="subsection"><div class="code"><table width="100%" cellspacing="0" cellpadding="0"><tr><th>C# </th><th><span class="copyCode" onclick="CopyCode(this)" onkeypress="CopyCode_CheckKey(this, event)" onmouseover="ChangeCopyCodeIcon(this)" onmouseout="ChangeCopyCodeIcon(this)" tabindex="0"><img class="copyCodeImage" name="ccImage" align="absmiddle" alt="Copy image" title="Copy image" src="../icons/copycode.gif" />Copy</span></th></tr><tr><td colspan="2"><pre xml:space="preserve">    <span class="highlight-comment">// in the constructor:</span>
+    textEditor.TextArea.TextEntering += textEditor_TextArea_TextEntering;
+    textEditor.TextArea.TextEntered += textEditor_TextArea_TextEntered;
+}
+
+CompletionWindow completionWindow;
+
+<span class="highlight-keyword">void</span> textEditor_TextArea_TextEntered(<span class="highlight-keyword">object</span> sender, TextCompositionEventArgs e)
+{
+    <span class="highlight-keyword">if</span> (e.Text == <span class="highlight-literal">"."</span>) {
+        <span class="highlight-comment">// Open code completion after the user has pressed dot:</span>
+        completionWindow = <span class="highlight-keyword">new</span> CompletionWindow(textEditor.TextArea);
+        IList&lt;ICompletionData&gt; data = completionWindow.CompletionList.CompletionData;
+        data.Add(<span class="highlight-keyword">new</span> MyCompletionData(<span class="highlight-literal">"Item1"</span>));
+        data.Add(<span class="highlight-keyword">new</span> MyCompletionData(<span class="highlight-literal">"Item2"</span>));
+        data.Add(<span class="highlight-keyword">new</span> MyCompletionData(<span class="highlight-literal">"Item3"</span>));
+        completionWindow.Show();
+        completionWindow.Closed += <span class="highlight-keyword">delegate</span> {
+            completionWindow = <span class="highlight-keyword">null</span>;
+        };
+    }
+}
+
+<span class="highlight-keyword">void</span> textEditor_TextArea_TextEntering(<span class="highlight-keyword">object</span> sender, TextCompositionEventArgs e)
+{
+    <span class="highlight-keyword">if</span> (e.Text.Length &gt; <span class="highlight-number">0</span> &amp;&amp; completionWindow != <span class="highlight-keyword">null</span>) {
+        <span class="highlight-keyword">if</span> (!<span class="highlight-keyword">char</span>.IsLetterOrDigit(e.Text[<span class="highlight-number">0</span>])) {
+            <span class="highlight-comment">// Whenever a non-letter is typed while the completion window is open,</span>
+            <span class="highlight-comment">// insert the currently selected element.</span>
+            completionWindow.CompletionList.RequestInsertion(e);
+        }
+    }
+    <span class="highlight-comment">// Do not set e.Handled=true.</span>
+    <span class="highlight-comment">// We still want to insert the character that was typed.</span>
+}</pre></td></tr></table></div><p>
+        This code will open the code completion window whenever '.' is pressed.
+        By default, the
+        <span sdata="cer" target="T:ICSharpCode.AvalonEdit.CodeCompletion.CompletionWindow"><a href="8ee1217f-4883-b6b4-e4f2-bbf756f816e6.htm">CompletionWindow</a></span>
+        only handles key presses like Tab and Enter to insert the currently
+        selected item. To also make it complete when keys like '.' or ';' are pressed,
+        we attach another handler to the <span class="code">TextEntering</span> event 
+        and tell the completion window to insert the selected item.
+    	</p><p>
+    	The <span class="code">CompletionWindow</span> will actually never have
+    	focus - instead, it hijacks
+    	the WPF keyboard input events on the text area and passes them through its
+    	<span class="code">ListBox</span>.
+    	This allows selecting entries in the completion list using the
+    	keyboard and normal typing in the editor at the same time.
+    	</p><p>
+    	Here is the implementation of the MyCompletionData class used in the code above: 
+<div class="code"><table width="100%" cellspacing="0" cellpadding="0"><tr><th>C# </th><th><span class="copyCode" onclick="CopyCode(this)" onkeypress="CopyCode_CheckKey(this, event)" onmouseover="ChangeCopyCodeIcon(this)" onmouseout="ChangeCopyCodeIcon(this)" tabindex="0"><img class="copyCodeImage" name="ccImage" align="absmiddle" alt="Copy image" title="Copy image" src="../icons/copycode.gif" />Copy</span></th></tr><tr><td colspan="2"><pre xml:space="preserve"><span class="highlight-comment">/// Implements AvalonEdit ICompletionData interface to provide the entries in the</span>
+<span class="highlight-comment">/// completion drop down.</span>
+<span class="highlight-keyword">public</span> <span class="highlight-keyword">class</span> MyCompletionData : ICompletionData
+{
+    <span class="highlight-keyword">public</span> MyCompletionData(<span class="highlight-keyword">string</span> text)
+    {
+        <span class="highlight-keyword">this</span>.Text = text;
+    }
+
+    <span class="highlight-keyword">public</span> System.Windows.Media.ImageSource Image {
+        <span class="highlight-keyword">get</span> { <span class="highlight-keyword">return</span> <span class="highlight-keyword">null</span>; }
+    }
+
+    <span class="highlight-keyword">public</span> <span class="highlight-keyword">string</span> Text { <span class="highlight-keyword">get</span>; <span class="highlight-keyword">private</span> <span class="highlight-keyword">set</span>; }
+
+    <span class="highlight-comment">// Use this property if you want to show a fancy UIElement in the list.</span>
+    <span class="highlight-keyword">public</span> <span class="highlight-keyword">object</span> Content {
+        <span class="highlight-keyword">get</span> { <span class="highlight-keyword">return</span> <span class="highlight-keyword">this</span>.Text; }
+    }
+
+    <span class="highlight-keyword">public</span> <span class="highlight-keyword">object</span> Description {
+        <span class="highlight-keyword">get</span> { <span class="highlight-keyword">return</span> <span class="highlight-literal">"Description for "</span> + <span class="highlight-keyword">this</span>.Text; }
+    }
+
+    <span class="highlight-keyword">public</span> <span class="highlight-keyword">void</span> Complete(TextArea textArea, ISegment completionSegment,
+        EventArgs insertionRequestEventArgs)
+    {
+        textArea.Document.Replace(completionSegment, <span class="highlight-keyword">this</span>.Text);
+    }
+}</pre></td></tr></table></div>
+		Both the content and the description shown may be any content acceptable in WPF,
+		including custom UIElements.
+		You may also implement custom logic in the <span class="code">Complete</span>
+		method if you want to do more than simply inserting the text.
+		The <span class="code">insertionRequestEventArgs</span> can help decide which
+		kind of insertion the user wants - depending on how the insertion was triggered,
+		it is an instance of <span class="code">TextCompositionEventArgs</span>,
+		<span class="code">KeyEventArgs</span> or <span class="code">MouseEventArgs</span>.
+    	</p></div></div></div><div class="section"><div class="sectionTitle" onclick="toggleSection(this.parentNode)"><img src="../icons/collapse_all.gif" /> Code Completion for C#</div><div class="sectionContent"><div class="subsection"><p>
+      	Full C# code completion is not in the scope of AvalonEdit.
+      	You will need a C# parser, a C# type system, and the ability
+      	to resolve C# expressions in your type system.
+      </p><p>
+        If you want to learn how this is handled in SharpDevelop, please
+        see:
+        <a href="https://github.com/icsharpcode/SharpDevelop/wiki/Code-Completion" target="_blank">Code Completion in SharpDevelop</a></p></div></div></div><div id="footer"><p />Copyright 2008-2014, Daniel Grunwald</div></div></body></html>

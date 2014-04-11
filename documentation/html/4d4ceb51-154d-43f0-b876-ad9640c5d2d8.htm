@@ -1,0 +1,177 @@
+﻿<html xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:MSHelp="http://msdn.microsoft.com/mshelp" xmlns:mshelp="http://msdn.microsoft.com/mshelp" xmlns:ddue="http://ddue.schemas.microsoft.com/authoring/2003/5" xmlns:msxsl="urn:schemas-microsoft-com:xslt"><head><META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8" /><title>Syntax Highlighting</title><link rel="stylesheet" type="text/css" href="../styles/presentation.css" /><script type="text/javascript" src="../scripts/script_prototype.js"> </script><script type="text/javascript" src="../scripts/EventUtilities.js"> </script><script type="text/javascript" src="../scripts/StyleUtilities.js"> </script><script type="text/javascript" src="../scripts/SplitScreen.js"> </script><script type="text/javascript" src="../scripts/ElementCollection.js"> </script><script type="text/javascript" src="../scripts/MemberFilter.js"> </script><script type="text/javascript" src="../scripts/CollapsibleSection.js"> </script><script type="text/javascript" src="../scripts/LanguageFilter.js"> </script><script type="text/javascript" src="../scripts/CookieDataStore.js"> </script><link type="text/css" rel="stylesheet" href="../styles/highlight.css" /><script type="text/javascript" src="../scripts/highlight.js"> </script></head><body><img id="copyImage" style="display:none; height:0; width:0;" src="../icons/copycode.gif" alt="Copy image" title="Copy image" /><img id="copyHoverImage" style="display:none; height:0; width:0;" src="../icons/copycodeHighlight.gif" alt="CopyHover image" title="CopyHover image" /><div id="control"><span class="productTitle">AvalonEdit</span><br /><span class="topicTitle">Syntax Highlighting</span><br /><div id="toolbar"><span id="languageFilter"><select id="languageSelector" onchange="var names = this.value.split(' '); toggleVisibleLanguage(names[1]); switchLanguage(names, this.value);"><option value="CSharp cs">C#</option><option value="VisualBasic vb">Visual Basic</option><option value="ManagedCPlusPlus cpp">Visual C++</option></select></span></div></div><div id="main"><span style="color: DarkGray"></span><div class="introduction"><p>Probably the most important feature for any text editor is syntax highlighting.</p><p>AvalonEdit has a flexible text rendering model, see
+        <span sdata="link"><a href="c06e9832-9ef0-4d65-ac2e-11f7ce9c7774.htm">Text Rendering</a></span>. Among the
+		text rendering extension points is the support for "visual line transformers" that
+		can change the display of a visual line after it has been constructed by the "visual element generators".
+		A useful base class implementing IVisualLineTransformer for the purpose of syntax highlighting
+		is <span sdata="cer" target="T:ICSharpCode.AvalonEdit.Rendering.DocumentColorizingTransformer"><a href="1e7e98ad-31d6-1298-0676-5035a879aff4.htm">DocumentColorizingTransformer</a></span>.
+		Take a look at that class' documentation to see
+		how to write fully custom syntax highlighters. This article only discusses the XML-driven built-in
+		highlighting engine.
+		</p></div><div class="section"><div class="sectionTitle" onclick="toggleSection(this.parentNode)"><img src="../icons/collapse_all.gif" /> The highlighting engine</div><div class="sectionContent"><div class="subsection"><p>
+			The highlighting engine in AvalonEdit is implemented in the class
+			<span sdata="cer" target="T:ICSharpCode.AvalonEdit.Highlighting.DocumentHighlighter"><a href="bf2471c2-92e2-5ecb-1e6a-4868c525074e.htm">DocumentHighlighter</a></span>.
+			Highlighting is the process of taking a DocumentLine and constructing
+			a <span sdata="cer" target="T:ICSharpCode.AvalonEdit.Highlighting.HighlightedLine"><a href="acc79a60-cb37-6248-8163-12624960fe2f.htm">HighlightedLine</a></span>
+			instance for it by assigning colors to different sections of the line.
+			A <span class="code">HighlightedLine</span> is simply a list of
+			(possibly nested) highlighted text sections.
+		</p><p>
+			The <span class="code">HighlightingColorizer</span> class is the only
+			link between highlighting and rendering.
+			It uses a <span class="code">DocumentHighlighter</span> to implement
+			a line transformer that applies the
+			highlighting to the visual lines in the rendering process.
+		</p><p>
+			Except for this single call, syntax highlighting is independent from the
+			rendering namespace. To help with other potential uses of the highlighting
+			engine, the <span class="code">HighlightedLine</span> class has the
+			method <span class="code">ToHtml()</span>
+			to produce syntax highlighted HTML source code.
+		</p><p>The highlighting rules used by the highlighting engine to highlight
+			the document are described by the following classes:
+			</p><dl class="authored"><dt>HighlightingRuleSet</dt><dd>Describes a set of highlighting spans and rules.</dd><dt>HighlightingSpan</dt><dd>A span consists of two regular expressions (Start and End), a color,
+			and a child ruleset.
+			The region between Start and End expressions will be assigned the
+			given color, and inside that span, the rules of the child
+			ruleset apply.
+			If the child ruleset also has <span class="code">HighlightingSpan</span>s,
+			they can be nested, allowing highlighting constructs like nested comments or one language
+			embedded in another.</dd><dt>HighlightingRule</dt><dd>A highlighting rule is a regular expression with a color.
+  			It will highlight matches of the regular expression using that color.</dd><dt>HighlightingColor</dt><dd>A highlighting color isn't just a color: it consists of a foreground
+			color, font weight and font style.</dd></dl><p>
+       The highlighting engine works by first analyzing the spans: whenever a
+       begin RegEx matches some text, that span is pushed onto a stack.
+       Whenever the end RegEx of the current span matches some text,
+       the span is popped from the stack.
+		</p><p>
+		Each span has a nested rule set associated with it, which is empty 
+		by default. This is why keywords won't be highlighted inside comments: 
+		the span's empty ruleset is active there, so the keyword rule is not applied.
+		</p><p>
+		This feature is also used in the string span: the nested span will match 
+		when a backslash is encountered, and the character following the backslash
+		will be consumed by the end RegEx of the nested span 
+		(<span class="code">.</span> matches any character). 
+		This ensures that <span class="code">\"</span> does not denote the end of the string span;
+		but <span class="code">\\"</span> still does.
+		</p><p>
+		What's great about the highlighting engine is that it highlights only
+		on-demand, works incrementally, and yet usually requires only a
+		few KB of memory even for large code files.
+		</p><p>
+		On-demand means that when a document is opened, only the lines initially 
+		visible will be highlighted. When the user scrolls down, highlighting will continue
+		from the point where it stopped the last time. If the user scrolls quickly,
+		so that the first visible line is far below the last highlighted line,
+		then the highlighting engine still has to process all the lines in between
+		– there might be comment starts in them. However, it will only scan that region
+		for changes in the span stack; highlighting rules will not be tested.
+		</p><p>
+		The stack of active spans is stored at the beginning of every line.
+		If the user scrolls back up, the lines getting into view can be highlighted 
+		immediately because the necessary context (the span stack) is still available.
+		</p><p>
+		Incrementally means that even if the document is changed, the stored span stacks
+		will be reused as far as possible. If the user types <span class="code">/*</span>,
+		that would theoretically cause the whole remainder of the file to become
+		highlighted in the comment color.
+		However, because the engine works on-demand, it will only update the span
+		stacks within the currently visible region and keep a notice 
+		'the highlighting state is not consistent between line X and line X+1',
+		where X is the last line in the visible region.
+		Now, if the user would scroll down,
+		the highlighting state would be updated and the 'not consistent' notice
+		would be moved down. But usually, the user will continue typing
+		and type <span class="code">*/</span> only a few lines later.
+		Now the highlighting state in the visible region will revert to the normal
+		'only the main ruleset is on the stack of active spans'. 
+		When the user now scrolls down below the line with the 'not consistent' marker;
+		the engine will notice that the old stack and the new stack are identical;
+		and will remove the 'not consistent' marker. 
+		This allows reusing the stored span stacks cached from before the user typed
+		<span class="code">/*</span>.
+		</p><p>
+		While the stack of active spans might change frequently inside the lines,
+		it rarely changes from the beginning of one line to the beginning of the next line.
+		With most languages, such changes happen only at the start and end of multiline comments.
+		The highlighting engine exploits this property by storing the list of
+		span stacks in a special data structure
+		(<span sdata="cer" target="T:ICSharpCode.AvalonEdit.Utils.CompressingTreeList`1"><a href="55668e4c-5b60-1383-4e4d-ef378f98c842.htm">CompressingTreeList<span class="languageSpecificText"><span class="cs">&lt;</span><span class="vb">(Of </span><span class="cpp">&lt;</span><span class="nu">(</span><span class="fs">&lt;'</span></span>T<span class="languageSpecificText"><span class="cs">&gt;</span><span class="vb">)</span><span class="cpp">&gt;</span><span class="nu">)</span><span class="fs">&gt;</span></span></a></span>).
+		The memory usage of the highlighting engine is linear to the number of span stack changes;
+		not to the total number of lines.
+		This allows the highlighting engine to store the span stacks for big code
+		files using only a tiny amount of memory, especially in languages like
+		C# where sequences of <span class="code">//</span> or <span class="code">///</span>
+		are more popular than <span class="code">/* */</span> comments.
+       </p></div></div></div><div class="section"><div class="sectionTitle" onclick="toggleSection(this.parentNode)"><img src="../icons/collapse_all.gif" /> XML highlighting definitions</div><div class="sectionContent"><div class="subsection"><p>AvalonEdit supports XML syntax highlighting definitions (.xshd files).</p><p>In the AvalonEdit source code, you can find the file
+        <span class="code">ICSharpCode.AvalonEdit\Highlighting\Resources\ModeV2.xsd</span>.
+        This is an XML schema for the .xshd file format; you can use it to
+        code completion for .xshd files in XML editors.
+        </p><p>Here is an example highlighting definition for a sub-set of C#:
+<div class="code"><table width="100%" cellspacing="0" cellpadding="0"><tr><th>Xml </th><th><span class="copyCode" onclick="CopyCode(this)" onkeypress="CopyCode_CheckKey(this, event)" onmouseover="ChangeCopyCodeIcon(this)" onmouseout="ChangeCopyCodeIcon(this)" tabindex="0"><img class="copyCodeImage" name="ccImage" align="absmiddle" alt="Copy image" title="Copy image" src="../icons/copycode.gif" />Copy</span></th></tr><tr><td colspan="2"><pre xml:space="preserve"><span class="highlight-xml-bracket">&lt;</span><span class="highlight-xml-tag">SyntaxDefinition</span> <span class="highlight-xml-attribute-name">name</span><span class="highlight-xml-attribute-equal">=</span><span class="highlight-xml-attribute-value">"C#"</span>
+        <span class="highlight-xml-attribute-name">xmlns</span><span class="highlight-xml-attribute-equal">=</span><span class="highlight-xml-attribute-value">"http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008"</span><span class="highlight-xml-bracket">&gt;</span>
+    <span class="highlight-xml-bracket">&lt;</span><span class="highlight-xml-tag">Color</span> <span class="highlight-xml-attribute-name">name</span><span class="highlight-xml-attribute-equal">=</span><span class="highlight-xml-attribute-value">"Comment"</span> <span class="highlight-xml-attribute-name">foreground</span><span class="highlight-xml-attribute-equal">=</span><span class="highlight-xml-attribute-value">"Green"</span> <span class="highlight-xml-bracket">/&gt;</span>
+    <span class="highlight-xml-bracket">&lt;</span><span class="highlight-xml-tag">Color</span> <span class="highlight-xml-attribute-name">name</span><span class="highlight-xml-attribute-equal">=</span><span class="highlight-xml-attribute-value">"String"</span> <span class="highlight-xml-attribute-name">foreground</span><span class="highlight-xml-attribute-equal">=</span><span class="highlight-xml-attribute-value">"Blue"</span> <span class="highlight-xml-bracket">/&gt;</span>
+
+    <span class="highlight-xml-comment">&lt;!-- This is the main ruleset. --&gt;</span>
+    <span class="highlight-xml-bracket">&lt;</span><span class="highlight-xml-tag">RuleSet</span><span class="highlight-xml-bracket">&gt;</span>
+        <span class="highlight-xml-bracket">&lt;</span><span class="highlight-xml-tag">Span</span> <span class="highlight-xml-attribute-name">color</span><span class="highlight-xml-attribute-equal">=</span><span class="highlight-xml-attribute-value">"Comment"</span> <span class="highlight-xml-attribute-name">begin</span><span class="highlight-xml-attribute-equal">=</span><span class="highlight-xml-attribute-value">"//"</span> <span class="highlight-xml-bracket">/&gt;</span>
+        <span class="highlight-xml-bracket">&lt;</span><span class="highlight-xml-tag">Span</span> <span class="highlight-xml-attribute-name">color</span><span class="highlight-xml-attribute-equal">=</span><span class="highlight-xml-attribute-value">"Comment"</span> <span class="highlight-xml-attribute-name">multiline</span><span class="highlight-xml-attribute-equal">=</span><span class="highlight-xml-attribute-value">"true"</span> <span class="highlight-xml-attribute-name">begin</span><span class="highlight-xml-attribute-equal">=</span><span class="highlight-xml-attribute-value">"/\*"</span> <span class="highlight-xml-attribute-name">end</span><span class="highlight-xml-attribute-equal">=</span><span class="highlight-xml-attribute-value">"\*/"</span> <span class="highlight-xml-bracket">/&gt;</span>
+
+        <span class="highlight-xml-bracket">&lt;</span><span class="highlight-xml-tag">Span</span> <span class="highlight-xml-attribute-name">color</span><span class="highlight-xml-attribute-equal">=</span><span class="highlight-xml-attribute-value">"String"</span><span class="highlight-xml-bracket">&gt;</span>
+            <span class="highlight-xml-bracket">&lt;</span><span class="highlight-xml-tag">Begin</span><span class="highlight-xml-bracket">&gt;</span>"<span class="highlight-xml-bracket">&lt;/</span><span class="highlight-xml-tag">Begin</span><span class="highlight-xml-bracket">&gt;</span>
+            <span class="highlight-xml-bracket">&lt;</span><span class="highlight-xml-tag">End</span><span class="highlight-xml-bracket">&gt;</span>"<span class="highlight-xml-bracket">&lt;/</span><span class="highlight-xml-tag">End</span><span class="highlight-xml-bracket">&gt;</span>
+            <span class="highlight-xml-bracket">&lt;</span><span class="highlight-xml-tag">RuleSet</span><span class="highlight-xml-bracket">&gt;</span>
+                <span class="highlight-xml-comment">&lt;!-- nested span for escape sequences --&gt;</span>
+                <span class="highlight-xml-bracket">&lt;</span><span class="highlight-xml-tag">Span</span> <span class="highlight-xml-attribute-name">begin</span><span class="highlight-xml-attribute-equal">=</span><span class="highlight-xml-attribute-value">"\\"</span> <span class="highlight-xml-attribute-name">end</span><span class="highlight-xml-attribute-equal">=</span><span class="highlight-xml-attribute-value">"."</span> <span class="highlight-xml-bracket">/&gt;</span>
+            <span class="highlight-xml-bracket">&lt;/</span><span class="highlight-xml-tag">RuleSet</span><span class="highlight-xml-bracket">&gt;</span>
+        <span class="highlight-xml-bracket">&lt;/</span><span class="highlight-xml-tag">Span</span><span class="highlight-xml-bracket">&gt;</span>
+
+        <span class="highlight-xml-bracket">&lt;</span><span class="highlight-xml-tag">Keywords</span> <span class="highlight-xml-attribute-name">fontWeight</span><span class="highlight-xml-attribute-equal">=</span><span class="highlight-xml-attribute-value">"bold"</span> <span class="highlight-xml-attribute-name">foreground</span><span class="highlight-xml-attribute-equal">=</span><span class="highlight-xml-attribute-value">"Blue"</span><span class="highlight-xml-bracket">&gt;</span>
+            <span class="highlight-xml-bracket">&lt;</span><span class="highlight-xml-tag">Word</span><span class="highlight-xml-bracket">&gt;</span>if<span class="highlight-xml-bracket">&lt;/</span><span class="highlight-xml-tag">Word</span><span class="highlight-xml-bracket">&gt;</span>
+            <span class="highlight-xml-bracket">&lt;</span><span class="highlight-xml-tag">Word</span><span class="highlight-xml-bracket">&gt;</span>else<span class="highlight-xml-bracket">&lt;/</span><span class="highlight-xml-tag">Word</span><span class="highlight-xml-bracket">&gt;</span>
+            <span class="highlight-xml-comment">&lt;!-- ... --&gt;</span>
+        <span class="highlight-xml-bracket">&lt;/</span><span class="highlight-xml-tag">Keywords</span><span class="highlight-xml-bracket">&gt;</span>
+
+        <span class="highlight-xml-comment">&lt;!-- Digits --&gt;</span>
+        <span class="highlight-xml-bracket">&lt;</span><span class="highlight-xml-tag">Rule</span> <span class="highlight-xml-attribute-name">foreground</span><span class="highlight-xml-attribute-equal">=</span><span class="highlight-xml-attribute-value">"DarkBlue"</span><span class="highlight-xml-bracket">&gt;</span>
+            \b0[xX][0-9a-fA-F]+  # hex number
+        |    \b
+            (    \d+(\.[0-9]+)?   #number with optional floating point
+            |    \.[0-9]+         #or just starting with floating point
+            )
+            ([eE][+-]?[0-9]+)? # optional exponent
+        <span class="highlight-xml-bracket">&lt;/</span><span class="highlight-xml-tag">Rule</span><span class="highlight-xml-bracket">&gt;</span>
+    <span class="highlight-xml-bracket">&lt;/</span><span class="highlight-xml-tag">RuleSet</span><span class="highlight-xml-bracket">&gt;</span>
+<span class="highlight-xml-bracket">&lt;/</span><span class="highlight-xml-tag">SyntaxDefinition</span><span class="highlight-xml-bracket">&gt;</span></pre></td></tr></table></div></p></div></div></div><div class="section"><div class="sectionTitle" onclick="toggleSection(this.parentNode)"><img src="../icons/collapse_all.gif" /> ICSharpCode.TextEditor XML highlighting definitions</div><div class="sectionContent"><div class="subsection"><p>ICSharpCode.TextEditor (the predecessor of AvalonEdit) used
+        a different version of the XSHD file format.
+        AvalonEdit detects the difference between the formats using the XML namespace:
+        The new format uses <span class="code">xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008"</span>,
+        the old format does not use any XML namespace.
+        </p><p>
+        AvalonEdit can load .xshd files written in that old format, and even
+        automatically convert them to the new format. However, not all
+        constructs of the old file format are supported by AvalonEdit.
+        </p><div class="code"><table width="100%" cellspacing="0" cellpadding="0"><tr><th>C# </th><th><span class="copyCode" onclick="CopyCode(this)" onkeypress="CopyCode_CheckKey(this, event)" onmouseover="ChangeCopyCodeIcon(this)" onmouseout="ChangeCopyCodeIcon(this)" tabindex="0"><img class="copyCodeImage" name="ccImage" align="absmiddle" alt="Copy image" title="Copy image" src="../icons/copycode.gif" />Copy</span></th></tr><tr><td colspan="2"><pre xml:space="preserve"><span class="highlight-comment">// convert from old .xshd format to new format</span>
+XshdSyntaxDefinition xshd;
+<span class="highlight-keyword">using</span> (XmlTextReader reader = <span class="highlight-keyword">new</span> XmlTextReader(<span class="highlight-literal">"input.xshd"</span>)) {
+    xshd = HighlightingLoader.LoadXshd(reader);
+}
+<span class="highlight-keyword">using</span> (XmlTextWriter writer = <span class="highlight-keyword">new</span> XmlTextWriter(<span class="highlight-literal">"output.xshd"</span>, System.Text.Encoding.UTF8)) {
+    writer.Formatting = Formatting.Indented;
+    <span class="highlight-keyword">new</span> SaveXshdVisitor(writer).WriteDefinition(xshd);
+}</pre></td></tr></table></div></div></div></div><div class="section"><div class="sectionTitle" onclick="toggleSection(this.parentNode)"><img src="../icons/collapse_all.gif" /> Programmatically accessing highlighting information</div><div class="sectionContent"><div class="subsection"><p>As described above, the highlighting engine only stores the "span stack"
+        at the start of each line. This information can be retrieved using the
+        <span sdata="cer" target="M:ICSharpCode.AvalonEdit.Highlighting.DocumentHighlighter.GetSpanStack(System.Int32)"><a href="80f1d610-b0b1-9887-aa25-f470cc7e0cd3.htm">GetSpanStack(Int32)</a></span>
+        method:
+<div class="code"><table width="100%" cellspacing="0" cellpadding="0"><tr><th>C# </th><th><span class="copyCode" onclick="CopyCode(this)" onkeypress="CopyCode_CheckKey(this, event)" onmouseover="ChangeCopyCodeIcon(this)" onmouseout="ChangeCopyCodeIcon(this)" tabindex="0"><img class="copyCodeImage" name="ccImage" align="absmiddle" alt="Copy image" title="Copy image" src="../icons/copycode.gif" />Copy</span></th></tr><tr><td colspan="2"><pre xml:space="preserve"><span class="highlight-keyword">bool</span> isInComment = documentHighlighter.GetSpanStack(<span class="highlight-number">1</span>).Any(
+    s =&gt; s.SpanColor != <span class="highlight-keyword">null</span> &amp;&amp; s.SpanColor.Name == <span class="highlight-literal">"Comment"</span>);
+<span class="highlight-comment">// returns true if the end of line 1 (=start of line 2) is inside a multiline comment</span></pre></td></tr></table></div>
+		Spans can be identified using their color. For this purpose, named colors should be used in the syntax definition.
+        </p><p>For more detailed results inside lines, the highlighting algorithm
+        must be executed for that line:
+<div class="code"><table width="100%" cellspacing="0" cellpadding="0"><tr><th>C# </th><th><span class="copyCode" onclick="CopyCode(this)" onkeypress="CopyCode_CheckKey(this, event)" onmouseover="ChangeCopyCodeIcon(this)" onmouseout="ChangeCopyCodeIcon(this)" tabindex="0"><img class="copyCodeImage" name="ccImage" align="absmiddle" alt="Copy image" title="Copy image" src="../icons/copycode.gif" />Copy</span></th></tr><tr><td colspan="2"><pre xml:space="preserve"><span class="highlight-keyword">int</span> off = document.GetOffset(<span class="highlight-number">7</span>, <span class="highlight-number">22</span>);
+HighlightedLine result = documentHighlighter.HighlightLine(document.GetLineByNumber(<span class="highlight-number">7</span>));
+<span class="highlight-keyword">bool</span> isInComment = result.Sections.Any(
+    s =&gt; s.Offset &lt;= off &amp;&amp; s.Offset+s.Length &gt;= off
+         &amp;&amp; s.Color.Name == <span class="highlight-literal">"Comment"</span>);</pre></td></tr></table></div></p></div></div></div><div id="seeAlsoSection" class="section"><div class="sectionTitle">See Also</div><div class="sectionContent"><span sdata="cer" target="N:ICSharpCode.AvalonEdit.Highlighting"><a href="c12604ab-87fe-e03e-04c5-b71170794fa7.htm">ICSharpCode.AvalonEdit.Highlighting</a></span><br /></div></div><div id="footer"><p />Copyright 2008-2014, Daniel Grunwald</div></div></body></html>
