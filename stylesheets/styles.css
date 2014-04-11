@@ -166,6 +166,12 @@ code, pre {
   font-size:14px;
 }
 
+.packagename {
+  font-size:12px;
+  color: white;
+  white-space: nowrap;
+}
+
 pre {
 	padding: 4px 12px;
   background: #FDFEFB;
@@ -215,7 +221,7 @@ td {
 header {
 	background-color: #171717;
 	color: #FDFDFB;
-  width:170px;
+  width:190px;
   float:left;
   position:fixed;
 	border: 1px solid #000;
@@ -225,7 +231,7 @@ header {
 	-moz-border-radius-bottomright: 4px;
 	border-top-right-radius: 4px;
 	border-bottom-right-radius: 4px;
-	padding: 34px 25px 22px 50px;
+	padding: 34px 25px 22px 30px;
 	margin: 30px 25px 0 0;
 	-webkit-font-smoothing: antialiased;
 }
@@ -263,7 +269,7 @@ header ul {
 
 header li {
 	list-style-type: none;
-  width:132px;
+  width:145px;
   height:15px;
 	margin-bottom: 12px;
 	line-height: 1em;
@@ -306,6 +312,10 @@ a.buttons {
 
 a.github {
 	background: url(../images/octocat-small.png) no-repeat 1px;
+}
+
+a.documentation {
+	background: url(../images/help-small.png) no-repeat 0px;
 }
 
 a.buttons:hover {
