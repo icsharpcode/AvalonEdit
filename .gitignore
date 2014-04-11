@@ -1,3 +1,6 @@
 # ignore all obj and bin folders (even in subdirectories)
 obj/
 bin/
+/Documentation/Help
+/packages/AvalonEdit
+/packages/AvalonEdit.Sample

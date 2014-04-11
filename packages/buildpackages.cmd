@@ -1,8 +1,8 @@
 @ECHO OFF
 SETLOCAL
 SET msbuild=%windir%\microsoft.net\framework\v4.0.30319\msbuild
-SET documentation=..\..\..\..\Libraries\AvalonEdit\Documentation
-SET project=..\..\..\..\Libraries\AvalonEdit\ICSharpCode.AvalonEdit\ICSharpCode.AvalonEdit.csproj
+SET documentation=..\Documentation
+SET project=..\ICSharpCode.AvalonEdit\ICSharpCode.AvalonEdit.csproj
 SET buildoptions=/t:Rebuild /p:Configuration=Release /p:DebugType=PdbOnly
 
 @echo Using this script requires nuget.exe to be in the PATH, and that Sandcastle Help File Builder is installed.
@@ -22,8 +22,8 @@ SET buildoptions=/t:Rebuild /p:Configuration=Release /p:DebugType=PdbOnly
 copy /Y %documentation%\Help\ICSharpCode.AvalonEdit.xml AvalonEdit\lib\Net35\ICSharpCode.AvalonEdit.xml
 copy /Y %documentation%\Help\ICSharpCode.AvalonEdit.xml AvalonEdit\lib\Net40\ICSharpCode.AvalonEdit.xml
 
-nuget.exe pack AvalonEdit\AvalonEdit.nuspec -Symbols -BasePath AvalonEdit -OutputDirectory AvalonEdit
-nuget.exe pack AvalonEdit.Sample\AvalonEdit.Sample.nuspec -BasePath AvalonEdit.Sample -OutputDirectory AvalonEdit.Sample
+nuget.exe pack AvalonEdit.nuspec -Symbols -BasePath AvalonEdit -OutputDirectory AvalonEdit
+nuget.exe pack AvalonEdit.Sample.nuspec -BasePath AvalonEdit.Sample -OutputDirectory AvalonEdit.Sample
 
 @ECHO OFF
 ENDLOCAL

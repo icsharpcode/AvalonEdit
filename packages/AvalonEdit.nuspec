@@ -18,6 +18,6 @@
 	<files>
 		<file src="lib\Net35\*.*" target="lib\Net35" />
 		<file src="lib\Net40\*.*" target="lib\Net40" />
-		<file src="..\..\..\..\..\Libraries\AvalonEdit\ICSharpCode.AvalonEdit\**\*.cs" target="src" />
+		<file src="..\..\ICSharpCode.AvalonEdit\**\*.cs" target="src" />
 	</files>
 </package>
