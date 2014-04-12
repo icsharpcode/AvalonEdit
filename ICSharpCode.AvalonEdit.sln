@@ -14,19 +14,33 @@ Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
+		DebugNet35|Any CPU = DebugNet35|Any CPU
+		ReleaseNet35|Any CPU = ReleaseNet35|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{6C55B776-26D4-4DB3-A6AB-87E783B2F3D1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{6C55B776-26D4-4DB3-A6AB-87E783B2F3D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6C55B776-26D4-4DB3-A6AB-87E783B2F3D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6C55B776-26D4-4DB3-A6AB-87E783B2F3D1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6C55B776-26D4-4DB3-A6AB-87E783B2F3D1}.DebugNet35|Any CPU.ActiveCfg = DebugNet35|Any CPU
+		{6C55B776-26D4-4DB3-A6AB-87E783B2F3D1}.DebugNet35|Any CPU.Build.0 = DebugNet35|Any CPU
+		{6C55B776-26D4-4DB3-A6AB-87E783B2F3D1}.ReleaseNet35|Any CPU.ActiveCfg = ReleaseNet35|Any CPU
+		{6C55B776-26D4-4DB3-A6AB-87E783B2F3D1}.ReleaseNet35|Any CPU.Build.0 = ReleaseNet35|Any CPU
 		{6222A3A1-83CE-47A3-A4E4-A018F82D44D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{6222A3A1-83CE-47A3-A4E4-A018F82D44D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6222A3A1-83CE-47A3-A4E4-A018F82D44D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6222A3A1-83CE-47A3-A4E4-A018F82D44D8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6222A3A1-83CE-47A3-A4E4-A018F82D44D8}.DebugNet35|Any CPU.ActiveCfg = DebugNet35|Any CPU
+		{6222A3A1-83CE-47A3-A4E4-A018F82D44D8}.DebugNet35|Any CPU.Build.0 = DebugNet35|Any CPU
+		{6222A3A1-83CE-47A3-A4E4-A018F82D44D8}.ReleaseNet35|Any CPU.ActiveCfg = ReleaseNet35|Any CPU
+		{6222A3A1-83CE-47A3-A4E4-A018F82D44D8}.ReleaseNet35|Any CPU.Build.0 = ReleaseNet35|Any CPU
 		{13A5B497-BA12-45AE-9033-22620C3153FB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{13A5B497-BA12-45AE-9033-22620C3153FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{13A5B497-BA12-45AE-9033-22620C3153FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{13A5B497-BA12-45AE-9033-22620C3153FB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{13A5B497-BA12-45AE-9033-22620C3153FB}.DebugNet35|Any CPU.ActiveCfg = DebugNet35|Any CPU
+		{13A5B497-BA12-45AE-9033-22620C3153FB}.DebugNet35|Any CPU.Build.0 = DebugNet35|Any CPU
+		{13A5B497-BA12-45AE-9033-22620C3153FB}.ReleaseNet35|Any CPU.ActiveCfg = ReleaseNet35|Any CPU
+		{13A5B497-BA12-45AE-9033-22620C3153FB}.ReleaseNet35|Any CPU.Build.0 = ReleaseNet35|Any CPU
 	EndGlobalSection
 EndGlobal

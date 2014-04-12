@@ -189,18 +189,24 @@ namespace ICSharpCode.AvalonEdit.Document
 		}
 	}
 	
+	/// <summary>
+	/// Converts strings of the form '0+[;,]0+' to a <see cref="TextLocation"/>.
+	/// </summary>
 	public class TextLocationConverter : TypeConverter
 	{
+		/// <inheritdoc/>
 		public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
 		{
 			return sourceType == typeof(string) || base.CanConvertFrom(context, sourceType);
 		}
 		
+		/// <inheritdoc/>
 		public override bool CanConvertTo(ITypeDescriptorContext context, Type destinationType)
 		{
 			return destinationType == typeof(TextLocation) || base.CanConvertTo(context, destinationType);
 		}
 		
+		/// <inheritdoc/>
 		public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
 		{
 			if (value is string) {
@@ -212,6 +218,7 @@ namespace ICSharpCode.AvalonEdit.Document
 			return base.ConvertFrom(context, culture, value);
 		}
 		
+		/// <inheritdoc/>
 		public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destinationType)
 		{
 			if (value is TextLocation) {

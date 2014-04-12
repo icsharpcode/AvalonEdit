@@ -5,6 +5,7 @@ SET documentation=..\Documentation
 SET project=..\ICSharpCode.AvalonEdit\ICSharpCode.AvalonEdit.csproj
 SET sample=..\ICSharpCode.AvalonEdit.Samle\ICSharpCode.AvalonEdit.Sample.csproj
 SET buildoptions=/t:Rebuild /p:Configuration=Release /p:DebugType=PdbOnly
+SET buildoptions35=/t:Rebuild /p:Configuration=ReleaseNet35 /p:DebugType=PdbOnly
 
 @echo Using this script requires nuget.exe to be in the PATH, and that Sandcastle Help File Builder is installed.
 
@@ -18,7 +19,7 @@ if %errorlevel% neq 0 exit /B 1
 if %errorlevel% neq 0 exit /B 1
 
 :BUILD .NET 3.5 version
-%msbuild% /m %project% %buildoptions% "/p:DefineConstants=TRACE" "/p:TargetFrameworkVersion=v3.5" /p:OutputPath=%~dp0\AvalonEdit\lib\Net35
+%msbuild% /m %project% %buildoptions35% "/p:DefineConstants=TRACE" /p:OutputPath=%~dp0\AvalonEdit\lib\Net35
 if %errorlevel% neq 0 exit /B 1
 
 @echo Building documentation with SHFB (for processing <inheritdoc/>)

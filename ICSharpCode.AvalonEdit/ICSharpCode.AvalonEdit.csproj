@@ -7,12 +7,12 @@
     <OutputType>Library</OutputType>
     <RootNamespace>ICSharpCode.AvalonEdit</RootNamespace>
     <AssemblyName>ICSharpCode.AvalonEdit</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion Condition="'$(Configuration)' == '' ">v4.0</TargetFrameworkVersion>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
     <NoStdLib>False</NoStdLib>
     <WarningLevel>4</WarningLevel>
-    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
     <SignAssembly>True</SignAssembly>
     <AssemblyOriginatorKeyFile>ICSharpCode.AvalonEdit.snk</AssemblyOriginatorKeyFile>
     <DelaySign>False</DelaySign>
@@ -22,6 +22,8 @@
     <NoWarn>1607</NoWarn>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
+    <NoWin32Manifest>False</NoWin32Manifest>
+    <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <OutputPath>bin\Debug\</OutputPath>
@@ -31,6 +33,8 @@
     <Optimize>False</Optimize>
     <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
     <DefineConstants>DEBUG;TRACE;DOTNET4</DefineConstants>
+  	<TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <BaseIntermediateOutputPath>obj\</BaseIntermediateOutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <OutputPath>bin\Release\</OutputPath>
@@ -40,6 +44,7 @@
     <Optimize>True</Optimize>
     <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
     <DefineConstants>TRACE;DOTNET4</DefineConstants>
+	<TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Platform)' == 'AnyCPU' ">
     <RegisterForComInterop>False</RegisterForComInterop>
@@ -48,8 +53,32 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <FileAlignment>4096</FileAlignment>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'DebugNet35' ">
+    <OutputPath>bin\Debug\</OutputPath>
+    <DocumentationFile>bin\Debug\ICSharpCode.AvalonEdit.xml</DocumentationFile>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>Full</DebugType>
+    <Optimize>False</Optimize>
+    <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <BaseIntermediateOutputPath>obj\</BaseIntermediateOutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'ReleaseNet35' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <DocumentationFile>bin\Release\ICSharpCode.AvalonEdit.xml</DocumentationFile>
+    <DebugSymbols>false</DebugSymbols>
+    <DebugType>PdbOnly</DebugType>
+    <Optimize>True</Optimize>
+    <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
+    <DefineConstants>TRACE</DefineConstants>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+  </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.Targets" />
   <ItemGroup>
+    <Reference Include="Microsoft.CSharp">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
     <Reference Include="PresentationCore">
       <RequiredTargetFramework>3.0</RequiredTargetFramework>
     </Reference>
@@ -68,6 +97,7 @@
     <Reference Include="System.Printing">
       <RequiredTargetFramework>3.0</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Web" Condition="!$(DefineConstants.Contains('DOTNET4'))" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>

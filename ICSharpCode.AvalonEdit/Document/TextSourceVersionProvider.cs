@@ -31,6 +31,9 @@ namespace ICSharpCode.AvalonEdit.Document
 	{
 		Version currentVersion;
 		
+		/// <summary>
+		/// Creates a new TextSourceVersionProvider instance.
+		/// </summary>
 		public TextSourceVersionProvider()
 		{
 			this.currentVersion = new Version(this);
