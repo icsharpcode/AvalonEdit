@@ -19,11 +19,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-#if NREFACTORY
-using ICSharpCode.NRefactory.Editor;
-#else
 using ICSharpCode.AvalonEdit.Document;
-#endif
+using ICSharpCode.NRefactory.Editor;
 using NUnit.Framework;
 
 namespace ICSharpCode.AvalonEdit.Highlighting

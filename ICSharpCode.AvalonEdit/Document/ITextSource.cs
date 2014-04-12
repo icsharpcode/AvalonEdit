@@ -17,12 +17,12 @@
 // DEALINGS IN THE SOFTWARE.
 
 using System.Collections.Generic;
-using ICSharpCode.AvalonEdit.Utils;
 using System;
 using System.IO;
 
 namespace ICSharpCode.AvalonEdit.Document
 {
+	#if !NREFACTORY
 	/// <summary>
 	/// A read-only view on a (potentially mutable) text source.
 	/// The IDocument interface derives from this interface.
@@ -353,4 +353,5 @@ namespace ICSharpCode.AvalonEdit.Document
 			return text.LastIndexOf(searchText, startIndex + count - 1, count, comparisonType);
 		}
 	}
+	#endif
 }

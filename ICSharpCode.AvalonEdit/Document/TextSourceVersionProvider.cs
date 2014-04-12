@@ -24,6 +24,7 @@ using ICSharpCode.AvalonEdit.Utils;
 
 namespace ICSharpCode.AvalonEdit.Document
 {
+	#if !NREFACTORY
 	/// <summary>
 	/// Provides ITextSourceVersion instances.
 	/// </summary>
@@ -131,4 +132,5 @@ namespace ICSharpCode.AvalonEdit.Document
 			}
 		}
 	}
+	#endif
 }

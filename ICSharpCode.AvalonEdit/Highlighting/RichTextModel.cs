@@ -17,15 +17,13 @@
 // DEALINGS IN THE SOFTWARE.
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using System.Windows.Documents;
-using System.Windows.Media;
 using ICSharpCode.AvalonEdit.Document;
-using ICSharpCode.AvalonEdit.Utils;
+using ICSharpCode.NRefactory.Editor;
 
 namespace ICSharpCode.AvalonEdit.Highlighting
 {

@@ -18,10 +18,9 @@
 
 using System;
 using ICSharpCode.AvalonEdit.Utils;
-#if NREFACTORY
 using ICSharpCode.NRefactory;
 using ICSharpCode.NRefactory.Editor;
-#endif
+using ICSharpCode.AvalonEdit.Document;
 
 namespace ICSharpCode.AvalonEdit.Document
 {

@@ -18,16 +18,11 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.IO.Packaging;
-using System.Printing;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Documents;
-using System.Windows.Xps;
 
+using ICSharpCode.NRefactory.Editor;
 using ICSharpCode.AvalonEdit.Document;
-using ICSharpCode.AvalonEdit.Editing;
 using ICSharpCode.AvalonEdit.Highlighting;
 
 namespace ICSharpCode.AvalonEdit.Utils

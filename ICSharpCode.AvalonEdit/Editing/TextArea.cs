@@ -33,11 +33,8 @@ using ICSharpCode.AvalonEdit.Document;
 using ICSharpCode.AvalonEdit.Indentation;
 using ICSharpCode.AvalonEdit.Rendering;
 using ICSharpCode.AvalonEdit.Utils;
-#if NREFACTORY
 using ICSharpCode.NRefactory;
 using ICSharpCode.NRefactory.Editor;
-using ICSharpCode.NRefactory.Utils;
-#endif
 
 namespace ICSharpCode.AvalonEdit.Editing
 {

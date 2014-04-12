@@ -19,6 +19,7 @@
 using System;
 using System.Windows.Documents;
 using ICSharpCode.AvalonEdit.Document;
+using ICSharpCode.NRefactory.Editor;
 
 namespace ICSharpCode.AvalonEdit.Snippets
 {

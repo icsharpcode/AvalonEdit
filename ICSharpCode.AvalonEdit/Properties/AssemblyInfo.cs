@@ -69,7 +69,8 @@ using System.Windows.Markup;
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2243:AttributeStringLiteralsShouldParseCorrectly",
 	Justification = "AssemblyInformationalVersion does not need to be a parsable version")]
 
-// DO NOT FORGET TO EDIT the GlobalAssemblyInfo.vb.template!
+namespace ICSharpCode.NRefactory.Editor {}
+
 internal static class RevisionClass
 {
 	public const string Major = "5";
