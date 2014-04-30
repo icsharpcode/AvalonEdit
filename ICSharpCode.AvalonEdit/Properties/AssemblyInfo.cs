@@ -54,8 +54,7 @@ using System.Windows.Markup;
 [assembly: AssemblyCompany("ic#code")]
 [assembly: AssemblyProduct("SharpDevelop")]
 [assembly: AssemblyCopyright("2000-2014 AlphaSierraPapa for the SharpDevelop Team")]
-[assembly: AssemblyVersion(RevisionClass.Major + "." + RevisionClass.Minor + "." + RevisionClass.Build + "." + RevisionClass.Revision)]
-[assembly: AssemblyInformationalVersion(RevisionClass.FullVersion + "-74400d69")]
+[assembly: AssemblyVersion("5.0.1")]
 [assembly: NeutralResourcesLanguage("en-US")]
 
 [assembly: XmlnsPrefix("http://icsharpcode.net/sharpdevelop/avalonedit", "avalonedit")]
@@ -70,14 +69,3 @@ using System.Windows.Markup;
 	Justification = "AssemblyInformationalVersion does not need to be a parsable version")]
 
 namespace ICSharpCode.NRefactory.Editor {}
-
-internal static class RevisionClass
-{
-	public const string Major = "5";
-	public const string Minor = "0";
-	public const string Build = "0";
-	public const string Revision = "4238";
-	public const string VersionName = "Beta 3"; // "" is not valid for no version name, you have to use null if you don't want a version name (eg "Beta 1")
-	
-	public const string FullVersion = Major + "." + Minor + "." + Build + ".4238-Beta 3";
-}

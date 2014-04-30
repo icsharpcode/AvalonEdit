@@ -41,16 +41,6 @@ namespace ICSharpCode.AvalonEdit.Document
 		public static readonly TextLocation Empty = new TextLocation(0, 0);
 		
 		/// <summary>
-		/// Constant of the minimum line.
-		/// </summary>
-		public const int MinLine   = 1;
-		
-		/// <summary>
-		/// Constant of the minimum column.
-		/// </summary>
-		public const int MinColumn = 1;
-		
-		/// <summary>
 		/// Creates a TextLocation instance.
 		/// </summary>
 		public TextLocation(int line, int column)
@@ -59,7 +49,7 @@ namespace ICSharpCode.AvalonEdit.Document
 			this.column = column;
 		}
 		
-		int column, line;
+		readonly int column, line;
 		
 		/// <summary>
 		/// Gets the line number.
@@ -80,7 +70,7 @@ namespace ICSharpCode.AvalonEdit.Document
 		/// </summary>
 		public bool IsEmpty {
 			get {
-				return column < MinLine && line < MinColumn;
+				return column <= 0 && line <= 0;
 			}
 		}
 		
@@ -212,7 +202,7 @@ namespace ICSharpCode.AvalonEdit.Document
 			if (value is string) {
 				string[] parts = ((string)value).Split(';', ',');
 				if (parts.Length == 2) {
-					return new TextLocation(int.Parse(parts[0]), int.Parse(parts[1]));
+					return new TextLocation(int.Parse(parts[0], culture), int.Parse(parts[1], culture));
 				}
 			}
 			return base.ConvertFrom(context, culture, value);
@@ -221,9 +211,9 @@ namespace ICSharpCode.AvalonEdit.Document
 		/// <inheritdoc/>
 		public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destinationType)
 		{
-			if (value is TextLocation) {
+			if (value is TextLocation && destinationType == typeof(string)) {
 				var loc = (TextLocation)value;
-				return loc.Line + ";" + loc.Column;
+				return loc.Line.ToString(culture) + ";" + loc.Column.ToString(culture);
 			}
 			return base.ConvertTo(context, culture, value, destinationType);
 		}
