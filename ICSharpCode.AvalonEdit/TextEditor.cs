@@ -944,9 +944,9 @@ namespace ICSharpCode.AvalonEdit
 		{
 			using (StreamReader reader = FileReader.OpenStream(stream, this.Encoding ?? Encoding.UTF8)) {
 				this.Text = reader.ReadToEnd();
-				this.Encoding = reader.CurrentEncoding; // assign encoding after ReadToEnd() so that the StreamReader can autodetect the encoding
+				SetCurrentValue(EncodingProperty, reader.CurrentEncoding); // assign encoding after ReadToEnd() so that the StreamReader can autodetect the encoding
 			}
-			this.IsModified = false;
+			SetCurrentValue(IsModifiedProperty, Boxes.False);
 		}
 		
 		/// <summary>
@@ -997,7 +997,7 @@ namespace ICSharpCode.AvalonEdit
 				document.WriteTextTo(writer);
 			writer.Flush();
 			// do not close the stream
-			this.IsModified = false;
+			SetCurrentValue(IsModifiedProperty, Boxes.False);
 		}
 		
 		/// <summary>
