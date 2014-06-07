@@ -905,7 +905,7 @@ namespace ICSharpCode.AvalonEdit
 			if (start < 0 || start > documentLength)
 				throw new ArgumentOutOfRangeException("start", start, "Value must be between 0 and " + documentLength);
 			if (length < 0 || start + length > documentLength)
-				throw new ArgumentOutOfRangeException("length", length, "Value must be between 0 and " + (documentLength - length));
+				throw new ArgumentOutOfRangeException("length", length, "Value must be between 0 and " + (documentLength - start));
 			textArea.Selection = SimpleSelection.Create(textArea, start, start + length);
 			textArea.Caret.Offset = start + length;
 		}
