@@ -199,7 +199,8 @@ namespace ICSharpCode.AvalonEdit.CodeCompletion
 			set {
 				if (listBox == null && value != null)
 					ApplyTemplate();
-				listBox.SelectedItem = value;
+				if (listBox != null) // may still be null if ApplyTemplate fails, or if listBox and value both are null
+					listBox.SelectedItem = value;
 			}
 		}
 		
