@@ -45,9 +45,9 @@
     <DebugType>Full</DebugType>
     <Optimize>False</Optimize>
     <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
-  	<BaseIntermediateOutputPath>obj\</BaseIntermediateOutputPath>
-	<DefineDebug>True</DefineDebug>
-	<DefineTrace>True</DefineTrace>
+    <BaseIntermediateOutputPath>obj\</BaseIntermediateOutputPath>
+    <DefineDebug>True</DefineDebug>
+    <DefineTrace>True</DefineTrace>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <DebugSymbols>false</DebugSymbols>
