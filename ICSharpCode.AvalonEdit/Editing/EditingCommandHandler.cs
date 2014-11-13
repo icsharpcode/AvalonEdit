@@ -422,41 +422,42 @@ namespace ICSharpCode.AvalonEdit.Editing
 				}
 				if (dataObject == null)
 					return;
-				Debug.WriteLine(dataObject.GetData(DataFormats.Html) as string);
+				
+				var pastingEventArgs = new DataObjectPastingEventArgs(dataObject, false, DataFormats.UnicodeText);
+				textArea.RaiseEvent(pastingEventArgs);
+				if (pastingEventArgs.CommandCancelled)
+					return;
+				
+				dataObject = pastingEventArgs.DataObject;
+				if (dataObject == null)
+					return;
 				
 				// convert text back to correct newlines for this document
 				string newLine = TextUtilities.GetNewLineFromDocument(textArea.Document, textArea.Caret.Line);
 				string text;
 				try {
-					text = (string)dataObject.GetData(DataFormats.UnicodeText);
+					// Try retrieving the text as one of:
+					//  - the FormatToApply
+					//  - UnicodeText
+					//  - Text
+					// (but don't try the same format twice)
+					if (pastingEventArgs.FormatToApply != null && dataObject.GetDataPresent(pastingEventArgs.FormatToApply))
+						text = (string)dataObject.GetData(pastingEventArgs.FormatToApply);
+					else if (pastingEventArgs.FormatToApply != DataFormats.UnicodeText && dataObject.GetDataPresent(DataFormats.UnicodeText))
+						text = (string)dataObject.GetData(DataFormats.UnicodeText);
+					else if (pastingEventArgs.FormatToApply != DataFormats.Text && dataObject.GetDataPresent(DataFormats.Text))
+						text = (string)dataObject.GetData(DataFormats.Text);
+					else
+						return; // no text data format
 					text = TextUtilities.NormalizeNewLines(text, newLine);
 				} catch (OutOfMemoryException) {
+					// may happen when trying to paste a huge string
 					return;
 				}
 				
 				if (!string.IsNullOrEmpty(text)) {
 					bool fullLine = textArea.Options.CutCopyWholeLine && dataObject.GetDataPresent(LineSelectedType);
 					bool rectangular = dataObject.GetDataPresent(RectangleSelection.RectangularSelectionDataType);
-					
-					string pasteFormat;
-					// fill the suggested DataFormat used for the paste action:
-					if (fullLine)
-						pasteFormat = LineSelectedType;
-					else if (rectangular && textArea.Selection.IsEmpty && !(textArea.Selection is RectangleSelection))
-						pasteFormat = RectangleSelection.RectangularSelectionDataType;
-					else
-						pasteFormat = DataFormats.UnicodeText;
-					
-					var pastingEventArgs = new DataObjectPastingEventArgs(dataObject, false, pasteFormat);
-					textArea.RaiseEvent(pastingEventArgs);
-					if (pastingEventArgs.CommandCancelled)
-						return;
-					
-					// DataObject.PastingEvent handlers might have changed the format to apply.
-					pasteFormat = pastingEventArgs.FormatToApply;
-					
-					fullLine = pasteFormat == LineSelectedType;
-					rectangular = pasteFormat == RectangleSelection.RectangularSelectionDataType;
 					
 					if (fullLine) {
 						DocumentLine currentLine = textArea.Document.GetLineByNumber(textArea.Caret.Line);
