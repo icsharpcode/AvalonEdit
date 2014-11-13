@@ -601,12 +601,16 @@ namespace ICSharpCode.AvalonEdit.Rendering
 		/// LinkTextUnderlinedBrush dependency property.
 		/// </summary>
 		public static readonly DependencyProperty LinkTextUnderlineProperty =
-			DependencyProperty.Register("LinkTextUnderlinedBrush", typeof(bool), typeof(TextView),
+			DependencyProperty.Register("LinkTextUnderline", typeof(bool), typeof(TextView),
 										new FrameworkPropertyMetadata(true));
 
 		/// <summary>
 		/// Gets/sets whether to underline link texts.
 		/// </summary>
+		/// <remarks>
+		/// Note that when setting this property to false, link text remains clickable and the LinkTextForegroundBrush (if any) is still applied.
+		/// Set TextEditorOptions.EnableHyperlinks and EnableEmailHyperlinks to false to disable links completely.
+		/// </remarks>
 		public bool LinkTextUnderline
 		{
 			get { return (bool)GetValue(LinkTextUnderlineProperty); }
