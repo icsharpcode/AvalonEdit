@@ -192,6 +192,10 @@ namespace ICSharpCode.AvalonEdit.CodeCompletion
 		/// <summary>
 		/// Gets/Sets the selected item.
 		/// </summary>
+		/// <remarks>
+		/// The setter of this property does not scroll to the selected item.
+		/// You might want to also call <see cref="ScrollIntoView"/>.
+		/// </remarks>
 		public ICompletionData SelectedItem {
 			get {
 				return (listBox != null ? listBox.SelectedItem : null) as ICompletionData;
@@ -202,6 +206,17 @@ namespace ICSharpCode.AvalonEdit.CodeCompletion
 				if (listBox != null) // may still be null if ApplyTemplate fails, or if listBox and value both are null
 					listBox.SelectedItem = value;
 			}
+		}
+		
+		/// <summary>
+		/// Scrolls the specified item into view.
+		/// </summary>
+		public void ScrollIntoView(ICompletionData item)
+		{
+			if (listBox == null)
+				ApplyTemplate();
+			if (listBox != null)
+				listBox.ScrollIntoView(item);
 		}
 		
 		/// <summary>
