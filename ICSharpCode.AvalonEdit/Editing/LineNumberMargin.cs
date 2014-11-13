@@ -191,6 +191,7 @@ namespace ICSharpCode.AvalonEdit.Editing
 					if ((Keyboard.Modifiers & ModifierKeys.Shift) == ModifierKeys.Shift) {
 						ExtendSelection(currentSeg);
 					}
+					textArea.Caret.BringCaretToView(5.0);
 				}
 			}
 		}
@@ -199,6 +200,7 @@ namespace ICSharpCode.AvalonEdit.Editing
 		{
 			Point pos = e.GetPosition(TextView);
 			pos.X = 0;
+			pos.Y = pos.Y.CoerceValue(0, TextView.ActualHeight);
 			pos.Y += TextView.VerticalOffset;
 			VisualLine vl = TextView.GetVisualLineFromVisualTop(pos.Y);
 			if (vl == null)
@@ -234,6 +236,7 @@ namespace ICSharpCode.AvalonEdit.Editing
 				if (currentSeg == SimpleSegment.Invalid)
 					return;
 				ExtendSelection(currentSeg);
+				textArea.Caret.BringCaretToView(5.0);
 			}
 			base.OnMouseMove(e);
 		}
