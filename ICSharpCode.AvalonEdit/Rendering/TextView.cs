@@ -944,7 +944,13 @@ namespace ICSharpCode.AvalonEdit.Rendering
 			TextEditorOptions options = this.Options;
 			if (options.AllowScrollBelowDocument) {
 				if (!double.IsInfinity(scrollViewport.Height)) {
-					heightTreeHeight = Math.Max(heightTreeHeight, Math.Min(heightTreeHeight - 50, scrollOffset.Y) + scrollViewport.Height);
+					// HACK: we need to keep at least Caret.MinimumDistanceToViewBorder visible so that we don't scroll back up when the user types after
+					// scrolling to the very bottom.
+					double minVisibleDocumentHeight = Math.Max(DefaultLineHeight, Editing.Caret.MinimumDistanceToViewBorder);
+					// scrollViewportBottom: bottom of scroll view port, but clamped so that at least minVisibleDocumentHeight of the document stays visible.
+					double scrollViewportBottom = Math.Min(heightTreeHeight - minVisibleDocumentHeight, scrollOffset.Y) + scrollViewport.Height;
+					// increase the extend height to allow scrolling below the document
+					heightTreeHeight = Math.Max(heightTreeHeight, scrollViewportBottom);
 				}
 			}
 			
