@@ -69,7 +69,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 			this.engine = new HighlightingEngine(definition.MainRuleSet);
 			document.VerifyAccess();
 			weakLineTracker = WeakLineTracker.Register(document, this);
-			InvalidateHighlighting();
+			InvalidateSpanStacks();
 		}
 		
 		#if NREFACTORY
@@ -134,7 +134,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 		
 		void ILineTracker.RebuildDocument()
 		{
-			InvalidateHighlighting();
+			InvalidateSpanStacks();
 		}
 		
 		void ILineTracker.ChangeComplete(DocumentChangeEventArgs e)
@@ -160,6 +160,15 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 		/// needs to be called only when there are changes to the highlighting rule set.
 		/// </summary>
 		public void InvalidateHighlighting()
+		{
+			InvalidateSpanStacks();
+			OnHighlightStateChanged(1, document.LineCount); // force a redraw with the new highlighting
+		}
+		
+		/// <summary>
+		/// Invalidates stored highlighting info, but does not raise the HighlightingStateChanged event.
+		/// </summary>
+		void InvalidateSpanStacks()
 		{
 			CheckIsHighlighting();
 			storedSpanStacks.Clear();
