@@ -28,7 +28,7 @@ using ICSharpCode.AvalonEdit.Utils;
 namespace ICSharpCode.AvalonEdit
 {
 	/// <summary>
-	/// Exposes <see cref="TextEditor"/> to automation.
+	/// Exposes <see cref="ICSharpCode.AvalonEdit.TextEditor"/> to automation.
 	/// </summary>
 	public class TextEditorAutomationPeer : FrameworkElementAutomationPeer, IValueProvider
 	{

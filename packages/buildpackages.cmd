@@ -22,14 +22,20 @@ SET buildoptions=/t:Rebuild /p:Configuration=Release /p:DebugType=PdbOnly
 @if %errorlevel% neq 0 exit /B 1
 
 @echo Building documentation with SHFB (for processing <inheritdoc/>)
-%msbuild% %documentation%\ICSharpCode.AvalonEdit.shfbproj
+%msbuild% %documentation%\ICSharpCode.AvalonEdit.shfbproj /p:Configuration=Release
 @if %errorlevel% neq 0 exit /B 1
 
-copy /Y %documentation%\Help\ICSharpCode.AvalonEdit.xml AvalonEdit\lib\Net35\ICSharpCode.AvalonEdit.xml
-copy /Y %documentation%\Help\ICSharpCode.AvalonEdit.xml AvalonEdit\lib\Net40\ICSharpCode.AvalonEdit.xml
+copy /Y %documentation%\IntelliSense\ICSharpCode.AvalonEdit.xml AvalonEdit\lib\Net35\ICSharpCode.AvalonEdit.xml
+@if errorlevel 1 exit /B 1
+copy /Y %documentation%\IntelliSense\ICSharpCode.AvalonEdit.xml AvalonEdit\lib\Net40\ICSharpCode.AvalonEdit.xml
+@if errorlevel 1 exit /B 1
 
+mkdir AvalonEdit
 nuget.exe pack AvalonEdit.nuspec -Symbols -BasePath AvalonEdit -OutputDirectory AvalonEdit
-rem nuget.exe pack AvalonEdit.Sample.nuspec -BasePath AvalonEdit.Sample -OutputDirectory AvalonEdit.Sample
+@if %errorlevel% neq 0 exit /B 1
+mkdir AvalonEdit.Sample
+nuget.exe pack AvalonEdit.Sample.nuspec -BasePath AvalonEdit.Sample -OutputDirectory AvalonEdit.Sample
+@if %errorlevel% neq 0 exit /B 1
 
 @ECHO OFF
 ENDLOCAL

@@ -25,23 +25,22 @@ namespace ICSharpCode.AvalonEdit.Highlighting.Xshd
 	/// </summary>
 	public interface IXshdVisitor
 	{
-		/// <summary/>
+		/// <summary>Visit method for XshdRuleSet</summary>
 		object VisitRuleSet(XshdRuleSet ruleSet);
 		
-		/// <summary/>
+		/// <summary>Visit method for XshdColor</summary>
 		object VisitColor(XshdColor color);
 		
-		/// <summary/>
+		/// <summary>Visit method for XshdKeywords</summary>
 		object VisitKeywords(XshdKeywords keywords);
 		
-		/// <summary/>
+		/// <summary>Visit method for XshdSpan</summary>
 		object VisitSpan(XshdSpan span);
 		
-		/// <summary/>
-		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1716:IdentifiersShouldNotMatchKeywords", Justification = "A VB programmer implementing a visitor?")]
+		/// <summary>Visit method for XshdImport</summary>
 		object VisitImport(XshdImport import);
 		
-		/// <summary/>
+		/// <summary>Visit method for XshdRule</summary>
 		object VisitRule(XshdRule rule);
 	}
 }

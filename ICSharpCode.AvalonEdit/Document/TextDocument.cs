@@ -242,7 +242,9 @@ namespace ICSharpCode.AvalonEdit.Document
 			}
 		}
 		
-		/// <inheritdoc/>
+		/// <summary>
+		/// This event is called after a group of changes is completed.
+		/// </summary>
 		/// <remarks><inheritdoc cref="Changing"/></remarks>
 		public event EventHandler TextChanged;
 		

@@ -68,7 +68,9 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 			this.brush = brush;
 		}
 		
-		/// <inheritdoc/>
+		/// <summary>
+		/// Creates a new HighlightingBrush with the specified color.
+		/// </summary>
 		public SimpleHighlightingBrush(Color color) : this(new SolidColorBrush(color)) {}
 		
 		/// <inheritdoc/>
