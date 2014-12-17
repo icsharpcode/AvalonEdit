@@ -248,8 +248,7 @@ namespace ICSharpCode.AvalonEdit.Editing
 	                 }
 	                 else
 	                 {
-	                    string indentationString = textArea.Options.GetIndentationString(textArea.Caret.Column);
-	                    textArea.ReplaceSelectionWithText(indentationString);
+	                    textArea.ReplaceSelectionWithText(textArea.Options.IndentationString);
 	                 }
 	              }
 	              textArea.Caret.BringCaretToView();
