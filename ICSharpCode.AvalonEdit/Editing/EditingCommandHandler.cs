@@ -297,7 +297,7 @@ namespace ICSharpCode.AvalonEdit.Editing
 	           else
 	           {
 	              if (textArea.Selection.IsEmpty ||
-	                  textArea.Selection.IsMultiline)
+	                  !textArea.Selection.IsMultiline)
 	              {
 	                 var remPoint = textArea.Caret.Offset - idenLen;
 	                 if (remPoint < 0 || remPoint > textArea.Document.TextLength)
