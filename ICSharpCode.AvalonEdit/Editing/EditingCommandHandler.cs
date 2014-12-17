@@ -193,107 +193,124 @@ namespace ICSharpCode.AvalonEdit.Editing
 		}
 		#endregion
 		
-		#region Tab
-		static void OnTab(object target, ExecutedRoutedEventArgs args)
-      {
-         TextArea textArea = GetTextArea(target);
-         if (textArea != null && textArea.Document != null)
-         {
-            using (textArea.Document.RunUpdate())
-            {
-               if (textArea.Selection.IsMultiline)
-               {
-                  var segment = textArea.Selection.SurroundingSegment;
-                  DocumentLine start = textArea.Document.GetLineByOffset(segment.Offset);
-                  DocumentLine end = textArea.Document.GetLineByOffset(segment.EndOffset);
-                  // don't include the last line if no characters on it are selected
-                  if (start != end && end.Offset == segment.EndOffset)
-                     end = end.PreviousLine;
-                  DocumentLine current = start;
-
-                  bool isInsertTab = textArea.Selection.Segments.Count() > 1;
-                  var i = textArea.Selection.Segments.GetEnumerator();
-                  int j = 0;
-                  int idenLen = textArea.Options.ConvertTabsToSpaces ? textArea.Options.IndentationSize : 1;
-
-                  //Restore selection manually
-                  var startSel = textArea.Selection.StartPosition;
-                  var endSel = textArea.Selection.EndPosition;
-                  startSel.Column += idenLen;
-                  endSel.Column += idenLen;
-                  startSel.VisualColumn += textArea.Options.IndentationSize;
-                  endSel.VisualColumn += textArea.Options.IndentationSize;
-
-                  while (true)
-                  {
-                     int offset = 0;
-                     if (isInsertTab)
-                     {
-                        i.MoveNext();
-                        offset = i.Current.StartOffset + j * idenLen;
-                        j++;
-                     }
-                     else
-                        offset = current.Offset;
-                     if (textArea.ReadOnlySectionProvider.CanInsert(offset))
-                     {
-                        textArea.Document.Insert(offset, textArea.Options.IndentationString);
-                     }
-                     if (current == end)
-                        break;
-                     current = current.NextLine;
-                  }
-                  if (textArea.Selection is RectangleSelection)
-                     textArea.Selection = new RectangleSelection(textArea, startSel, endSel);
-               }
-               else
-               {
-                  string indentationString = textArea.Options.GetIndentationString(textArea.Caret.Column);
-                  textArea.ReplaceSelectionWithText(indentationString);
-               }
-            }
-            textArea.Caret.BringCaretToView();
-            args.Handled = true;
-
-         }
-      }
-
-      private static bool TryDeleteIdentationFragment(TextArea textArea, int offset)
-      {
-         ISegment s = TextUtilities.GetSingleIndentationSegment(textArea.Document, offset, textArea.Options.IndentationSize);
-         if (s != null && s.Length > 0)
-         {
-            s = textArea.GetDeletableSegments(s).FirstOrDefault();
-            if (s != null && s.Length > 0)
-            {
-               textArea.Document.Remove(s.Offset, s.Length);
-               return true;
-            }
-         }
-         return false;
-      }
-
-      static void OnShiftTab(object target, ExecutedRoutedEventArgs args)
-      {
-         TextArea textArea = GetTextArea(target);
-         if (textArea.Selection is RectangleSelection)
-         {
-            var offsetCoerce = 0;
-            var idenLen = textArea.Options.ConvertTabsToSpaces ? textArea.Options.IndentationSize : 1;
-            textArea.Document.UndoStack.StartUndoGroup("Multicarret identation delete");
-            foreach (var segment in textArea.Selection.Segments)
-            {
-               var remPoint = segment.StartOffset - idenLen - offsetCoerce;
-               if (TryDeleteIdentationFragment(textArea, remPoint))
-                  offsetCoerce += idenLen;
-            }
-            textArea.Document.UndoStack.EndUndoGroup();
-         }
-         else
-         {
-            TransformSelectedLines((area, line) => TryDeleteIdentationFragment(area, line.Offset), target, args, DefaultSegmentType.CurrentLine);
-         }
-      }
+	        #region Tab
+	        static void OnTab(object target, ExecutedRoutedEventArgs args)
+	        {
+	           TextArea textArea = GetTextArea(target);
+	           if (textArea != null && textArea.Document != null)
+	           {
+	              using (textArea.Document.RunUpdate())
+	              {
+	                 if (textArea.Selection.IsMultiline)
+	                 {
+	                    var segment = textArea.Selection.SurroundingSegment;
+	                    DocumentLine start = textArea.Document.GetLineByOffset(segment.Offset);
+	                    DocumentLine end = textArea.Document.GetLineByOffset(segment.EndOffset);
+	                    // don't include the last line if no characters on it are selected
+	                    //if (start != end && end.Offset == segment.EndOffset)
+	                    //   end = end.PreviousLine;
+	                    DocumentLine current = start;
+	  
+	                    bool isInsertTab = textArea.Selection.Segments.Count() > 1;
+	                    var i = textArea.Selection.Segments.GetEnumerator();
+	                    int j = 0;
+	                    int idenLen = textArea.Options.ConvertTabsToSpaces ? textArea.Options.IndentationSize : 1;
+	  
+	                    //Restore selection manually
+	                    var startSel = textArea.Selection.StartPosition;
+	                    var endSel = textArea.Selection.EndPosition;
+	                    startSel.Column += idenLen;
+	                    endSel.Column += idenLen;
+	                    startSel.VisualColumn += textArea.Options.IndentationSize;
+	                    endSel.VisualColumn += textArea.Options.IndentationSize;
+	  
+	                    while (true)
+	                    {
+	                       int offset = 0;
+	                       if (isInsertTab)
+	                       {
+	                          i.MoveNext();
+	                          offset = i.Current.StartOffset + j * idenLen;
+	                          j++;
+	                       }
+	                       else
+	                          offset = current.Offset;
+	                       if (textArea.ReadOnlySectionProvider.CanInsert(offset))
+	                       {
+	                          textArea.Document.Insert(offset, textArea.Options.IndentationString);
+	                       }
+	                       if (current == end)
+	                          break;
+	                       current = current.NextLine;
+	                    }
+	                    if (textArea.Selection is RectangleSelection)
+	                       textArea.Selection = new RectangleSelection(textArea, startSel, endSel);
+	                 }
+	                 else
+	                 {
+	                    string indentationString = textArea.Options.GetIndentationString(textArea.Caret.Column);
+	                    textArea.ReplaceSelectionWithText(indentationString);
+	                 }
+	              }
+	              textArea.Caret.BringCaretToView();
+	              args.Handled = true;
+	  
+	           }
+	        }
+	  
+	        private static bool TryDeleteIdentationFragment(TextArea textArea, int offset)
+	        {
+	           ISegment s = TextUtilities.GetSingleIndentationSegment(textArea.Document, offset, textArea.Options.IndentationSize);
+	           if (s != null && s.Length > 0)
+	           {
+	              s = textArea.GetDeletableSegments(s).FirstOrDefault();
+	              if (s != null && s.Length > 0)
+	              {
+	                 textArea.Document.Remove(s.Offset, s.Length);
+	                 return true;
+	              }
+	           }
+	           return false;
+	        }
+	  
+	  	   static void OnShiftTab(object target, ExecutedRoutedEventArgs args)
+	        {
+	           TextArea textArea = GetTextArea(target);
+	           
+	           var idenLen = textArea.Options.ConvertTabsToSpaces ? textArea.Options.IndentationSize : 1;
+	           if (textArea.Selection is RectangleSelection)
+	           {
+	              var offsetCoerce = 0;
+	              textArea.Document.UndoStack.StartUndoGroup("Multicarret identation delete");
+	              foreach (var segment in textArea.Selection.Segments)
+	              {
+	                 var remPoint = segment.StartOffset - idenLen - offsetCoerce;
+	                 if (remPoint < 0 || remPoint > textArea.Document.TextLength)
+	                 {
+	                    textArea.Document.UndoStack.EndUndoGroup();
+	                    return;
+	                 }
+	                 if (TryDeleteIdentationFragment(textArea, remPoint))
+	                    offsetCoerce += idenLen;
+	              }
+	              textArea.Document.UndoStack.EndUndoGroup();
+	           }
+	           else
+	           {
+	              if (textArea.Selection.IsEmpty ||
+	                  textArea.Selection.IsMultiline)
+	              {
+	                 var remPoint = textArea.Caret.Offset - idenLen;
+	                 if (remPoint < 0 || remPoint > textArea.Document.TextLength)
+	                    return;
+	                 TryDeleteIdentationFragment(textArea, remPoint);
+	              }
+	              else
+	              {
+	                 TransformSelectedLines((area, line) => TryDeleteIdentationFragment(area, line.Offset), target, args, DefaultSegmentType.CurrentLine);
+	              }
+	           }
+	        }
 		#endregion
 		
 		#region Delete
@@ -310,10 +327,11 @@ namespace ICSharpCode.AvalonEdit.Editing
                      foreach (var s in textArea.Selection.Segments.Reverse())
 						   {
 						      int delOffset = s.StartOffset + caretMovementOffset;
-                        if (caretMovement == CaretMovementType.Backspace &&
-                            (delOffset < 0 || s.StartVisualColumn == 0))
+                        if (caretMovement == CaretMovementType.Backspace && (delOffset < 0 || s.StartVisualColumn == 0) ||
+                            caretMovement == CaretMovementType.CharRight &&
+                               (delOffset >= textArea.Document.TextLength || s.EndOffset >= textArea.Document.GetLineByOffset(delOffset).EndOffset))
                            continue;
-                        textArea.Document.Remove(s.StartOffset + caretMovementOffset, 1);
+                        textArea.Document.Remove(delOffset, 1);
 						   }
                      textArea.Document.UndoStack.EndUndoGroup();
                      if (caretMovement == CaretMovementType.Backspace)
