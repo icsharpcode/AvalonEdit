@@ -450,6 +450,7 @@ namespace ICSharpCode.AvalonEdit.Editing
 					else
 						return; // no text data format
 					text = TextUtilities.NormalizeNewLines(text, newLine);
+					text = textArea.Options.ConvertTabsToSpaces ? text.Replace("\t", new String(' ', textArea.Options.IndentationSize)) : text;
 				} catch (OutOfMemoryException) {
 					// may happen when trying to paste a huge string
 					return;
