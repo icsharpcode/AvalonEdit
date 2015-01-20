@@ -2,7 +2,7 @@
 <package xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<metadata xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 		<id>AvalonEdit</id>
-		<version>5.0.1-pre</version>
+		<version>5.0.2</version>
 		<authors>Daniel Grunwald</authors>
 		<owners>SharpDevelop</owners>
 		<licenseUrl>http://opensource.org/licenses/MIT</licenseUrl>
@@ -16,6 +16,7 @@
 			* New Feature: Hide mouse cursor while typing (enabled by default)
 			* New Feature: Highlight current line (disabled by default)
 			* New Feature: Overstrike mode (disabled by default)
+			* New Feature: 'underline' attribute in syntax highlighting definitions
 			* AvalonEdit now raises the WPF DataObject attached events on clipboard and drag'n'drop operations.
 			* Encoding detection now distinguishes between UTF-8 with BOM and UTF-8 without BOM. This prevents AvalonEdit from adding the BOM to existing UTF-8 files.
 			* Improved handling of grapheme clusters. A base character followed by a combining mark is now treated as a single character by the caret movement logic.
