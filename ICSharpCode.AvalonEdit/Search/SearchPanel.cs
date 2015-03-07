@@ -218,6 +218,14 @@ namespace ICSharpCode.AvalonEdit.Search
 			textArea.DefaultInputHandler.NestedInputHandlers.Add(panel.handler);
 			return panel;
 		}
+
+		/// <summary>
+		/// Adds the commands used by SearchPanel to the given CommandBindingCollection.
+		/// </summary>
+		public void RegisterCommands(CommandBindingCollection commandBindings)
+		{
+			handler.RegisterGlobalCommands(commandBindings);
+		}
 		
 		/// <summary>
 		/// Removes the SearchPanel from the TextArea.
@@ -413,7 +421,11 @@ namespace ICSharpCode.AvalonEdit.Search
 			renderer.CurrentResults.Clear();
 		}
 		
-		void CloseAndRemove()
+		/// <summary>
+		/// Closes the SearchPanel and removes it.
+		/// </summary>
+		[Obsolete("Use the Uninstall method instead!")]
+		public void CloseAndRemove()
 		{
 			Close();
 			textArea.DocumentChanged -= textArea_DocumentChanged;
