@@ -644,11 +644,8 @@ namespace ICSharpCode.AvalonEdit.Editing
 					textArea.Selection = Selection.Create(textArea,
 					                                      Math.Min(newWord.Offset, startWord.Offset),
 					                                      Math.Max(newWord.EndOffset, startWord.EndOffset));
-					// Set caret offset, but limit the caret to stay inside the selection.
-					// in whole-word selection, it's otherwise possible that we get the caret outside the
-					// selection - but the TextArea doesn't like that and will reset the selection, causing
-					// flickering.
-					SetCaretOffsetToMousePosition(e, textArea.Selection.SurroundingSegment);
+					// moves caret to the end of selection
+					textArea.Caret.Offset = Math.Max(newWord.EndOffset, startWord.EndOffset);
 				}
 			}
 			textArea.Caret.BringCaretToView(5.0);
