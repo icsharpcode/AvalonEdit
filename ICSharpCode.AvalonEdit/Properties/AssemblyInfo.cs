@@ -54,7 +54,7 @@ using System.Windows.Markup;
 [assembly: AssemblyCompany("ic#code")]
 [assembly: AssemblyProduct("SharpDevelop")]
 [assembly: AssemblyCopyright("2000-2014 AlphaSierraPapa for the SharpDevelop Team")]
-[assembly: AssemblyVersion("5.0.1")]
+[assembly: AssemblyVersion("5.0.3")]
 [assembly: NeutralResourcesLanguage("en-US")]
 
 [assembly: XmlnsPrefix("http://icsharpcode.net/sharpdevelop/avalonedit", "avalonedit")]

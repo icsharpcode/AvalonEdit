@@ -18,6 +18,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls.Primitives;
@@ -46,14 +47,41 @@ namespace ICSharpCode.AvalonEdit.Rendering
 		}
 		
 		/// <summary>
-		/// Gets/Sets whether to align the geometry to whole pixels.
+		/// Gets/Sets whether to align to whole pixels.
+		/// 
+		/// If BorderThickness is set to 0, the geometry is aligned to whole pixels.
+		/// If BorderThickness is set to a non-zero value, the outer edge of the border is aligned
+		/// to whole pixels.
+		/// 
+		/// The default value is <c>false</c>.
 		/// </summary>
 		public bool AlignToWholePixels { get; set; }
 		
 		/// <summary>
+		/// Gets/sets the border thickness.
+		/// 
+		/// This property only has an effect if <c>AlignToWholePixels</c> is enabled.
+		/// When using the resulting geometry to paint a border, set this property to the border thickness.
+		/// Otherwise, leave the property set to the default value <c>0</c>.
+		/// </summary>
+		public double BorderThickness { get; set; }
+		
+		bool alignToMiddleOfPixels;
+		
+		/// <summary>
 		/// Gets/Sets whether to align the geometry to the middle of pixels.
 		/// </summary>
-		public bool AlignToMiddleOfPixels { get; set; }
+		[Obsolete("Use the AlignToWholePixels and BorderThickness properties instead. "
+		          + "Setting AlignToWholePixels=true and setting the BorderThickness to the pixel size " 
+		          + "is equivalent to aligning the geometry to the middle of pixels.")]
+		public bool AlignToMiddleOfPixels {
+			get {
+				return alignToMiddleOfPixels;
+			}
+			set {
+				alignToMiddleOfPixels = value;
+			}
+		}
 		
 		/// <summary>
 		/// Gets/Sets whether to extend the rectangles to full width at line end.
@@ -96,17 +124,19 @@ namespace ICSharpCode.AvalonEdit.Rendering
 		void AddRectangle(Size pixelSize, Rect r)
 		{
 			if (AlignToWholePixels) {
-				AddRectangle(PixelSnapHelpers.Round(r.Left, pixelSize.Width),
-				             PixelSnapHelpers.Round(r.Top + 1, pixelSize.Height),
-				             PixelSnapHelpers.Round(r.Right, pixelSize.Width),
-				             PixelSnapHelpers.Round(r.Bottom + 1, pixelSize.Height));
-			} else if (AlignToMiddleOfPixels) {
+				double halfBorder = 0.5 * BorderThickness;
+				AddRectangle(PixelSnapHelpers.Round(r.Left - halfBorder, pixelSize.Width) + halfBorder,
+				             PixelSnapHelpers.Round(r.Top - halfBorder, pixelSize.Height) + halfBorder,
+				             PixelSnapHelpers.Round(r.Right + halfBorder, pixelSize.Width) - halfBorder,
+				             PixelSnapHelpers.Round(r.Bottom + halfBorder, pixelSize.Height) - halfBorder);
+				//Debug.WriteLine(r.ToString() + " -> " + new Rect(lastLeft, lastTop, lastRight-lastLeft, lastBottom-lastTop).ToString());
+			} else if (alignToMiddleOfPixels) {
 				AddRectangle(PixelSnapHelpers.PixelAlign(r.Left, pixelSize.Width),
-				             PixelSnapHelpers.PixelAlign(r.Top + 1, pixelSize.Height),
+				             PixelSnapHelpers.PixelAlign(r.Top, pixelSize.Height),
 				             PixelSnapHelpers.PixelAlign(r.Right, pixelSize.Width),
-				             PixelSnapHelpers.PixelAlign(r.Bottom + 1, pixelSize.Height));
+				             PixelSnapHelpers.PixelAlign(r.Bottom, pixelSize.Height));
 			} else {
-				AddRectangle(r.Left, r.Top + 1, r.Right, r.Bottom + 1);
+				AddRectangle(r.Left, r.Top, r.Right, r.Bottom);
 			}
 		}
 		

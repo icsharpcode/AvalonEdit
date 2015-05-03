@@ -42,6 +42,7 @@
     <AssemblyOriginatorKeyFile>..\..\NRefactory\ICSharpCode.NRefactory.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DefineConstants>DEBUG;$(DefineConstants)</DefineConstants>
     <OutputPath>bin\Debug\</OutputPath>
     <DocumentationFile>bin\Debug\ICSharpCode.AvalonEdit.xml</DocumentationFile>
     <DebugSymbols>true</DebugSymbols>

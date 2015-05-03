@@ -56,7 +56,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 			// 0.5 -> 0.5
 			// 0.9 -> 0.5
 			// 1 -> 1.5
-			return pixelSize * (Math.Round((value / pixelSize) + 0.5) - 0.5);
+			return pixelSize * (Math.Round((value / pixelSize) + 0.5, MidpointRounding.AwayFromZero) - 0.5);
 		}
 		
 		/// <summary>
@@ -93,7 +93,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 		/// </summary>
 		public static double Round(double value, double pixelSize)
 		{
-			return pixelSize * Math.Round(value / pixelSize);
+			return pixelSize * Math.Round(value / pixelSize, MidpointRounding.AwayFromZero);
 		}
 		
 		/// <summary>

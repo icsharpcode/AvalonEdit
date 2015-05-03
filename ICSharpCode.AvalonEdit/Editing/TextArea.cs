@@ -470,7 +470,7 @@ namespace ICSharpCode.AvalonEdit.Editing
 			DependencyProperty.Register("SelectionForeground", typeof(Brush), typeof(TextArea));
 		
 		/// <summary>
-		/// Gets/Sets the foreground brush used selected text.
+		/// Gets/Sets the foreground brush used for selected text.
 		/// </summary>
 		public Brush SelectionForeground {
 			get { return (Brush)GetValue(SelectionForegroundProperty); }
@@ -484,7 +484,7 @@ namespace ICSharpCode.AvalonEdit.Editing
 			DependencyProperty.Register("SelectionBorder", typeof(Pen), typeof(TextArea));
 		
 		/// <summary>
-		/// Gets/Sets the background brush used for the selection.
+		/// Gets/Sets the pen used for the border of the selection.
 		/// </summary>
 		public Pen SelectionBorder {
 			get { return (Pen)GetValue(SelectionBorderProperty); }

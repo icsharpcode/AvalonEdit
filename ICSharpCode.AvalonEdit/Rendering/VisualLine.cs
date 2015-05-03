@@ -484,7 +484,7 @@ namespace ICSharpCode.AvalonEdit.Rendering
 		{
 			if (xPos > textLine.WidthIncludingTrailingWhitespace) {
 				if (allowVirtualSpace && textLine == TextLines[TextLines.Count - 1]) {
-					int virtualX = (int)Math.Round((xPos - textLine.WidthIncludingTrailingWhitespace) / textView.WideSpaceWidth);
+					int virtualX = (int)Math.Round((xPos - textLine.WidthIncludingTrailingWhitespace) / textView.WideSpaceWidth, MidpointRounding.AwayFromZero);
 					return VisualLengthWithEndOfLineMarker + virtualX;
 				}
 			}

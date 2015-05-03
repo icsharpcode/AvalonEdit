@@ -60,6 +60,8 @@ namespace ICSharpCode.AvalonEdit.Sample
 			#endif
 			propertyGridComboBox.SelectedIndex = 2;
 			
+			//textEditor.TextArea.SelectionBorder = null;
+			
 			//textEditor.SyntaxHighlighting = HighlightingManager.Instance.GetDefinition("C#");
 			//textEditor.SyntaxHighlighting = customHighlighting;
 			// initial highlighting now set by XAML

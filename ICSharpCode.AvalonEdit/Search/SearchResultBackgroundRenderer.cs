@@ -80,7 +80,8 @@ namespace ICSharpCode.AvalonEdit.Search
 			
 			foreach (SearchResult result in currentResults.FindOverlappingSegments(viewStart, viewEnd - viewStart)) {
 				BackgroundGeometryBuilder geoBuilder = new BackgroundGeometryBuilder();
-				geoBuilder.AlignToMiddleOfPixels = true;
+				geoBuilder.AlignToWholePixels = true;
+				geoBuilder.BorderThickness = markerPen != null ? markerPen.Thickness : 0;
 				geoBuilder.CornerRadius = 3;
 				geoBuilder.AddSegment(textView, result);
 				Geometry geometry = geoBuilder.CreateGeometry();
