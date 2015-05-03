@@ -295,6 +295,8 @@ namespace ICSharpCode.AvalonEdit.Editing
 			if (pos >= 0) {
 				return visualLine.GetTextViewPosition(pos);
 			} else {
+				if(enableVirtualSpace && mode == CaretPositioningMode.Normal) 
+					return caretPosition;
 				// move to end of previous line
 				DocumentLine previousDocumentLine = visualLine.FirstDocumentLine.PreviousLine;
 				if (previousDocumentLine != null) {
