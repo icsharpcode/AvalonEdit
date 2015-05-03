@@ -27,6 +27,12 @@ namespace ICSharpCode.AvalonEdit
 	public static class AvalonEditCommands
 	{
 		/// <summary>
+		/// Toggles Overstrike mode
+		/// The default shortcut is Ins.
+		/// </summary>
+		public static readonly RoutedCommand ToggleOverstrike = new RoutedCommand("ToggleOverstrike", typeof(TextEditor));
+
+		/// <summary>
 		/// Deletes the current line.
 		/// The default shortcut is Ctrl+D.
 		/// </summary>
