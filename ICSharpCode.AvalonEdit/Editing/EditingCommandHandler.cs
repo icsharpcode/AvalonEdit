@@ -72,18 +72,18 @@ namespace ICSharpCode.AvalonEdit.Editing
 			AddBinding(EditingCommands.EnterParagraphBreak, ModifierKeys.None, Key.Enter, OnEnter);
 			AddBinding(EditingCommands.EnterLineBreak, ModifierKeys.Shift, Key.Enter, OnEnter);
 			AddBinding(EditingCommands.TabForward, ModifierKeys.None, Key.Tab, OnTab);
-			AddBinding(EditingCommands.TabBackward, ModifierKeys.Shift, Key.Tab, OnShiftTab);			                  
-
-			AddBinding(AvalonEditCommands.ToggleOverstrike, ModifierKeys.None, Key.Insert, OnInsert(CaretMovementType.None));
+			AddBinding(EditingCommands.TabBackward, ModifierKeys.Shift, Key.Tab, OnShiftTab);			                  			
 
 			CommandBindings.Add(new CommandBinding(ApplicationCommands.Copy, OnCopy, CanCutOrCopy));
 			CommandBindings.Add(new CommandBinding(ApplicationCommands.Cut, OnCut, CanCutOrCopy));
 			CommandBindings.Add(new CommandBinding(ApplicationCommands.Paste, OnPaste, CanPaste));
-			
-			AddBinding(ApplicationCommands.Copy,  ModifierKeys.Control, Key.Insert, OnCopy);
-			AddBinding(ApplicationCommands.Cut,   ModifierKeys.Shift,   Key.Delete, OnCut);
-			AddBinding(ApplicationCommands.Paste, ModifierKeys.Shift,   Key.Insert, OnPaste);
 
+			InputBindings.Add(TextAreaDefaultInputHandler.CreateFrozenKeyBinding(ApplicationCommands.Copy, ModifierKeys.Control, Key.Insert ));
+			InputBindings.Add(TextAreaDefaultInputHandler.CreateFrozenKeyBinding(ApplicationCommands.Cut, ModifierKeys.Shift, Key.Delete ));
+			InputBindings.Add(TextAreaDefaultInputHandler.CreateFrozenKeyBinding(ApplicationCommands.Paste, ModifierKeys.Shift, Key.Insert ));
+			
+			AddBinding(AvalonEditCommands.ToggleOverstrike, ModifierKeys.None, Key.Insert, ToggleOverstrike);			
+			
 			CommandBindings.Add(new CommandBinding(AvalonEditCommands.DeleteLine, OnDeleteLine));
 			
 			CommandBindings.Add(new CommandBinding(AvalonEditCommands.RemoveLeadingWhitespace, OnRemoveLeadingWhitespace));
@@ -247,14 +247,12 @@ namespace ICSharpCode.AvalonEdit.Editing
 		}
 		#endregion
 		
-		#region Insert
-		static ExecutedRoutedEventHandler OnInsert(CaretMovementType caretMovement)
-		{
-			return (target, args) => {            
-				TextArea textArea = GetTextArea(target);
-				if(textArea.Options.AllowToggleOverstrikeMode) 
-					textArea.OverstrikeMode = !textArea.OverstrikeMode;
-			};
+		#region Toggle Overstrike
+		static void ToggleOverstrike(object target, ExecutedRoutedEventArgs args)
+		{			
+			TextArea textArea = GetTextArea(target);
+			if(textArea.Options.AllowToggleOverstrikeMode) 
+				textArea.OverstrikeMode = !textArea.OverstrikeMode;
 		}
 		#endregion
 		
