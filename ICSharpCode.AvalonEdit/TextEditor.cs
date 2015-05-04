@@ -580,6 +580,14 @@ namespace ICSharpCode.AvalonEdit
 		}
 		
 		/// <summary>
+		/// Removes the current selection without copying it to the clipboard.
+		/// </summary>
+		public void Delete()
+		{
+			Execute(ApplicationCommands.Delete);		
+		}
+
+		/// <summary>
 		/// Ends the current group of document changes.
 		/// </summary>
 		public void EndChange()
