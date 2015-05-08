@@ -388,10 +388,7 @@ namespace ICSharpCode.AvalonEdit.Editing
 		void textArea_QueryCursor(object sender, QueryCursorEventArgs e)
 		{
 			if (!e.Handled) {
-				if (mode != SelectionMode.None || !enableTextDragDrop) {
-					e.Cursor = Cursors.IBeam;
-					e.Handled = true;
-				} else if (textArea.TextView.VisualLinesValid) {
+				if (textArea.TextView.VisualLinesValid) {
 					// Only query the cursor if the visual lines are valid.
 					// If they are invalid, the cursor will get re-queried when the visual lines
 					// get refreshed.
@@ -400,7 +397,7 @@ namespace ICSharpCode.AvalonEdit.Editing
 						int visualColumn;
 						bool isAtEndOfLine;
 						int offset = GetOffsetFromMousePosition(e, out visualColumn, out isAtEndOfLine);
-						if (textArea.Selection.Contains(offset))
+						if (textArea.Selection.Contains(offset) && enableTextDragDrop)
 							e.Cursor = Cursors.Arrow;
 						else
 							e.Cursor = Cursors.IBeam;
