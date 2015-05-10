@@ -1642,6 +1642,10 @@ namespace ICSharpCode.AvalonEdit.Rendering
 			} else if (rectangle.Bottom > visibleRectangle.Bottom) {
 				newScrollOffset.Y = rectangle.Bottom - scrollViewport.Height;
 			}
+
+			// aligns Y with line height
+			if(DefaultLineHeight!=0) newScrollOffset.Y = Math.Floor(newScrollOffset.Y / DefaultLineHeight) * DefaultLineHeight;
+
 			newScrollOffset.X = ValidateVisualOffset(newScrollOffset.X);
 			newScrollOffset.Y = ValidateVisualOffset(newScrollOffset.Y);
 			if (!scrollOffset.IsClose(newScrollOffset)) {
