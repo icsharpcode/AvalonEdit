@@ -1657,12 +1657,12 @@ namespace ICSharpCode.AvalonEdit.Rendering
 		private double AlignToDefaultLineHeight(double offset)
 		{
 			// do not align at the end of the scroll			
-			if( offset == ((this as IScrollInfo).ExtentHeight - (this as IScrollInfo).ViewportHeight) )
+			if (offset == (this as IScrollInfo).ExtentHeight - (this as IScrollInfo).ViewportHeight)
 				return offset;
 
-			if( DefaultLineHeight==0 )
+			if (DefaultLineHeight == 0)
 				return offset;
-			else   
+			else
 				return Math.Round(offset / DefaultLineHeight) * DefaultLineHeight;
 		}
 		#endregion
