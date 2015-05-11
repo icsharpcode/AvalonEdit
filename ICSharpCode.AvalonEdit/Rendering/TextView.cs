@@ -1642,7 +1642,6 @@ namespace ICSharpCode.AvalonEdit.Rendering
 			} else if (rectangle.Bottom > visibleRectangle.Bottom) {
 				newScrollOffset.Y = rectangle.Bottom - scrollViewport.Height;
 			}
-
 			newScrollOffset.X = ValidateVisualOffset(newScrollOffset.X);
 			newScrollOffset.Y = ValidateVisualOffset(newScrollOffset.Y);
 			if (!scrollOffset.IsClose(newScrollOffset)) {
@@ -1653,14 +1652,18 @@ namespace ICSharpCode.AvalonEdit.Rendering
 		}
 
 		/// <summary>
-		/// Aligns the vertical scroll offset with DefaultLineHeight.
+		/// Aligns the vertical offset with DefaultLineHeight.
 		/// </summary>
-		private double AlignToDefaultLineHeight(double scrollOffset)
+		private double AlignToDefaultLineHeight(double offset)
 		{
+			// do not align at the end of the scroll			
+			if( offset == ((this as IScrollInfo).ExtentHeight - (this as IScrollInfo).ViewportHeight) )
+				return offset;
+
 			if( DefaultLineHeight==0 )
-				return scrollOffset;
+				return offset;
 			else   
-				return Math.Floor(scrollOffset / DefaultLineHeight) * DefaultLineHeight;
+				return Math.Round(offset / DefaultLineHeight) * DefaultLineHeight;
 		}
 		#endregion
 		
