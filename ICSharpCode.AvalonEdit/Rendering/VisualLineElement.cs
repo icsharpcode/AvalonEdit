@@ -166,6 +166,8 @@ namespace ICSharpCode.AvalonEdit.Rendering
 				firstPart.TextRunProperties = TextRunProperties.Clone();
 			if (secondPart.TextRunProperties == null)
 				secondPart.TextRunProperties = TextRunProperties.Clone();
+			firstPart.BackgroundBrush = BackgroundBrush;
+			secondPart.BackgroundBrush = BackgroundBrush;
 		}
 		
 		/// <summary>
