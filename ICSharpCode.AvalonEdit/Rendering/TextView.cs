@@ -2104,5 +2104,13 @@ namespace ICSharpCode.AvalonEdit.Rendering
 			get { return this.currentLineHighlighRenderer.Line; }
 			set { this.currentLineHighlighRenderer.Line = value; }
 		}
+
+		/// <summary>
+		/// Empty line selection width.
+		/// </summary>
+		public virtual double EmptyLineSelectionWidth
+		{
+			get { return 1; }
+		}
 	}
 }
