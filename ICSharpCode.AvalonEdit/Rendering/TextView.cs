@@ -1619,7 +1619,7 @@ namespace ICSharpCode.AvalonEdit.Rendering
 		/// <summary>
 		/// Scrolls the text view so that the specified rectangle gets visible.
 		/// </summary>
-		public void MakeVisible(Rect rectangle)
+		public virtual void MakeVisible(Rect rectangle)
 		{
 			Rect visibleRectangle = new Rect(scrollOffset.X, scrollOffset.Y,
 			                                 scrollViewport.Width, scrollViewport.Height);
