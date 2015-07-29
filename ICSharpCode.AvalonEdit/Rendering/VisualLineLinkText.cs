@@ -74,7 +74,7 @@ namespace ICSharpCode.AvalonEdit.Rendering
 		/// </summary>
 		/// <remarks>Returns true when control is pressed; or when
 		/// <see cref="RequireControlModifierForClick"/> is disabled.</remarks>
-		protected bool LinkIsClickable()
+		protected virtual bool LinkIsClickable()
 		{
 			if (NavigateUri == null)
 				return false;
