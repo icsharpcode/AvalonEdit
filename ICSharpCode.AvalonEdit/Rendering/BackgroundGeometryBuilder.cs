@@ -244,7 +244,7 @@ namespace ICSharpCode.AvalonEdit.Rendering
 						continue;
 					if (segmentStartVCInLine == visualStartCol && i > 0 && segmentStartVC < segmentStartVCInLine && visualLine.TextLines[i - 1].TrailingWhitespaceLength == 0)
 						continue;
-					yield return new Rect(pos, y, 1, line.Height);
+					yield return new Rect(pos, y, textView.EmptyLineSelectionWidth, line.Height);
 				} else {
 					Rect lastRect = Rect.Empty;
 					if (segmentStartVCInLine <= visualEndCol) {
