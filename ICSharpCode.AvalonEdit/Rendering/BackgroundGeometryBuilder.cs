@@ -258,8 +258,10 @@ namespace ICSharpCode.AvalonEdit.Rendering
 						}
 					}
 					if (segmentEndVC >= visualLine.VisualLengthWithEndOfLineMarker) {
-						double left = (segmentStartVC > visualLine.VisualLengthWithEndOfLineMarker ? visualLine.GetTextLineVisualXPosition(lastTextLine, segmentStartVC) : line.WidthIncludingTrailingWhitespace) - scrollOffset.X;
-						double right = ((segmentEndVC == int.MaxValue || line != lastTextLine) ? Math.Max(((IScrollInfo)textView).ExtentWidth, ((IScrollInfo)textView).ViewportWidth) : visualLine.GetTextLineVisualXPosition(lastTextLine, segmentEndVC)) - scrollOffset.X;
+						var isLast = segmentEndVC != int.MaxValue && line == lastTextLine;
+						var lineWidth = isLast ? line.WidthIncludingTrailingWhitespace : line.Width;
+						double left = (segmentStartVC > visualLine.VisualLengthWithEndOfLineMarker ? visualLine.GetTextLineVisualXPosition(lastTextLine, segmentStartVC) : lineWidth) - scrollOffset.X;
+						double right = (!isLast ? Math.Max(((IScrollInfo)textView).ExtentWidth, ((IScrollInfo)textView).ViewportWidth) : visualLine.GetTextLineVisualXPosition(lastTextLine, segmentEndVC)) - scrollOffset.X;
 						Rect extendSelection = new Rect(Math.Min(left, right), y, Math.Abs(right - left), line.Height);
 						if (!lastRect.IsEmpty) {
 							if (extendSelection.IntersectsWith(lastRect)) {
