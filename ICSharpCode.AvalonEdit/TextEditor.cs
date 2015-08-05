@@ -488,7 +488,7 @@ namespace ICSharpCode.AvalonEdit
 			TextEditor editor = (TextEditor)d;
 			var leftMargins = editor.TextArea.LeftMargins;
 			if ((bool)e.NewValue) {
-				LineNumberMargin lineNumbers = new LineNumberMargin();
+				LineNumberMargin lineNumbers = ((TextEditor)d).GetLineNumberMargin();
 				Line line = (Line)DottedLineMargin.Create();
 				leftMargins.Insert(0, lineNumbers);
 				leftMargins.Insert(1, line);
@@ -506,6 +506,11 @@ namespace ICSharpCode.AvalonEdit
 					}
 				}
 			}
+		}
+
+		protected virtual LineNumberMargin GetLineNumberMargin()
+		{
+			return new LineNumberMargin();
 		}
 		#endregion
 		
