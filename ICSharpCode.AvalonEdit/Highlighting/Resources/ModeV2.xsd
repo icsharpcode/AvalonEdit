@@ -19,23 +19,33 @@
 			</xsd:simpleType>
 		</xsd:union>
 	</xsd:simpleType>
-	
-	<!-- Font Style -->
-	<xsd:simpleType name="FontStyle">
-		<xsd:restriction base="xsd:string">
-			<xsd:enumeration value="italic"/>
-			<xsd:enumeration value="normal"/>
-			<xsd:enumeration value="oblique"/>
-		</xsd:restriction>
-	</xsd:simpleType>
-	
-	<!-- Color -->
+
+    <!-- Font Style -->
+    <xsd:simpleType name="FontStyle">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="italic"/>
+            <xsd:enumeration value="normal"/>
+            <xsd:enumeration value="oblique"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <!-- Font Size -->
+    <xsd:simpleType name="FontSize">
+        <xsd:restriction base="xsd:integer">
+            <xsd:minInclusive value="1"/>
+            <xsd:maxInclusive value="72"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <!-- Color -->
 	<xsd:attributeGroup name="ColorAttributes">
 		<xsd:attribute name="foreground" type="xsd:string" use="optional" />
 		<xsd:attribute name="background" type="xsd:string" use="optional" />
 		<xsd:attribute name="fontWeight" type="FontWeight" use="optional" />
-		<xsd:attribute name="fontStyle" type="FontStyle" use="optional" />
-		<xsd:attribute name="underline" type="xsd:boolean" use="optional" />
+        <xsd:attribute name="fontStyle" type="FontStyle" use="optional" />
+        <xsd:attribute name="fontFamily" type="xsd:string" use="optional" />
+        <xsd:attribute name="fontSize" type="FontSize" use="optional" />
+        <xsd:attribute name="underline" type="xsd:boolean" use="optional" />
 		<xsd:anyAttribute namespace="##other" processContents="lax" />
 	</xsd:attributeGroup>
 	

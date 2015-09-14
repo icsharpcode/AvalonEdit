@@ -298,24 +298,46 @@ namespace ICSharpCode.AvalonEdit.Highlighting.Xshd
 			color.FontWeight = ParseFontWeight(reader.GetAttribute("fontWeight"));
 			color.FontStyle = ParseFontStyle(reader.GetAttribute("fontStyle"));
 			color.Underline = reader.GetBoolAttribute("underline");
-			return color;
+            color.FontFamily = ParseFontFamily(position, reader.GetAttribute("fontFamily"));
+            color.FontSize = ParseFontSize(position, reader.GetAttribute("fontSize"));
+            return color;
 		}
 		
 		internal readonly static ColorConverter ColorConverter = new ColorConverter();
 		internal readonly static FontWeightConverter FontWeightConverter = new FontWeightConverter();
 		internal readonly static FontStyleConverter FontStyleConverter = new FontStyleConverter();
-		
-		static HighlightingBrush ParseColor(IXmlLineInfo lineInfo, string color)
-		{
-			if (string.IsNullOrEmpty(color))
-				return null;
-			if (color.StartsWith("SystemColors.", StringComparison.Ordinal))
-				return GetSystemColorBrush(lineInfo, color);
-			else
-				return FixedColorHighlightingBrush((Color?)ColorConverter.ConvertFromInvariantString(color));
-		}
-		
-		internal static SystemColorHighlightingBrush GetSystemColorBrush(IXmlLineInfo lineInfo, string name)
+
+        static HighlightingBrush ParseColor(IXmlLineInfo lineInfo, string color)
+        {
+            if (string.IsNullOrEmpty(color))
+                return null;
+            if (color.StartsWith("SystemColors.", StringComparison.Ordinal))
+                return GetSystemColorBrush(lineInfo, color);
+            else
+                return FixedColorHighlightingBrush((Color?)ColorConverter.ConvertFromInvariantString(color));
+        }
+
+        static int? ParseFontSize(IXmlLineInfo lineInfo, string size)
+        {
+            int value;
+            return int.TryParse(size, out value)
+                ? value
+                : (int?)null;
+        }
+
+        static FontFamily ParseFontFamily(IXmlLineInfo lineInfo, string family)
+        {
+            if (!string.IsNullOrEmpty(family))
+            {
+                return new FontFamily(family);
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        internal static SystemColorHighlightingBrush GetSystemColorBrush(IXmlLineInfo lineInfo, string name)
 		{
 			Debug.Assert(name.StartsWith("SystemColors.", StringComparison.Ordinal));
 			string shortName = name.Substring(13);

@@ -18,6 +18,7 @@
 
 using System;
 using System.Globalization;
+using System.Linq;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
 using System.Text;
@@ -36,7 +37,9 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 		internal static readonly HighlightingColor Empty = FreezableHelper.FreezeAndReturn(new HighlightingColor());
 		
 		string name;
-		FontWeight? fontWeight;
+        FontFamily fontFamily = null;
+        int? fontSize;
+        FontWeight? fontWeight;
 		FontStyle? fontStyle;
 		bool? underline;
 		HighlightingBrush foreground;
@@ -56,11 +59,45 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 				name = value;
 			}
 		}
-		
-		/// <summary>
-		/// Gets/sets the font weight. Null if the highlighting color does not change the font weight.
-		/// </summary>
-		public FontWeight? FontWeight {
+
+        /// <summary>
+        /// Gets/sets the font family. Null if the highlighting color does not change the font style.
+        /// </summary>
+        public FontFamily FontFamily
+        {
+            get
+            {
+                return fontFamily;
+            }
+            set
+            {
+                if (frozen)
+                    throw new InvalidOperationException();
+                fontFamily = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets/sets the font size. Null if the highlighting color does not change the font style.
+        /// </summary>
+        public int? FontSize
+        {
+            get
+            {
+                return fontSize;
+            }
+            set
+            {
+                if (frozen)
+                    throw new InvalidOperationException();
+                fontSize = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets/sets the font weight. Null if the highlighting color does not change the font weight.
+        /// </summary>
+        public FontWeight? FontWeight {
 			get {
 				return fontWeight;
 			}
@@ -150,15 +187,19 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 				this.Underline = info.GetBoolean("Underline");
 			this.Foreground = (HighlightingBrush)info.GetValue("Foreground", typeof(HighlightingBrush));
 			this.Background = (HighlightingBrush)info.GetValue("Background", typeof(HighlightingBrush));
-		}
-		
-		/// <summary>
-		/// Serializes this HighlightingColor instance.
-		/// </summary>
-		#if DOTNET4
+            if (info.GetBoolean("HasFamily"))
+                this.FontFamily = new FontFamily(info.GetString("Family"));
+            if (info.GetBoolean("HasSize"))
+                this.FontSize = info.GetInt32("Size");
+        }
+
+        /// <summary>
+        /// Serializes this HighlightingColor instance.
+        /// </summary>
+#if DOTNET4
 		[System.Security.SecurityCritical]
-		#else
-		[SecurityPermission(SecurityAction.LinkDemand, Flags = SecurityPermissionFlag.SerializationFormatter)]
+#else
+        [SecurityPermission(SecurityAction.LinkDemand, Flags = SecurityPermissionFlag.SerializationFormatter)]
 		#endif
 		public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
@@ -176,12 +217,18 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 				info.AddValue("Underline", this.Underline.Value);
 			info.AddValue("Foreground", this.Foreground);
 			info.AddValue("Background", this.Background);
-		}
-		
-		/// <summary>
-		/// Gets CSS code for the color.
-		/// </summary>
-		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase", Justification = "CSS usually uses lowercase, and all possible values are English-only")]
+            info.AddValue("HasFamily", this.FontFamily != null);
+            if (this.FontFamily != null)
+                info.AddValue("Family", this.FontFamily.FamilyNames.FirstOrDefault());
+            info.AddValue("HasSize", this.FontSize.HasValue);
+            if (this.FontSize.HasValue)
+                info.AddValue("Size", this.FontSize.Value.ToString());
+        }
+
+        /// <summary>
+        /// Gets CSS code for the color.
+        /// </summary>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase", Justification = "CSS usually uses lowercase, and all possible values are English-only")]
 		public virtual string ToCss()
 		{
 			StringBuilder b = new StringBuilder();
@@ -260,7 +307,8 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 				return false;
 			return this.name == other.name && this.fontWeight == other.fontWeight
 				&& this.fontStyle == other.fontStyle && this.underline == other.underline
-				&& object.Equals(this.foreground, other.foreground) && object.Equals(this.background, other.background);
+				&& object.Equals(this.foreground, other.foreground) && object.Equals(this.background, other.background)
+                && object.Equals(this.fontFamily, other.fontFamily) && object.Equals(this.FontSize, other.FontSize);
 		}
 		
 		/// <inheritdoc/>
@@ -274,10 +322,14 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 				hashCode += 1000000021 * fontStyle.GetHashCode();
 				if (foreground != null)
 					hashCode += 1000000033 * foreground.GetHashCode();
-				if (background != null)
-					hashCode += 1000000087 * background.GetHashCode();
-			}
-			return hashCode;
+                if (background != null)
+                    hashCode += 1000000087 * background.GetHashCode();
+                if (fontFamily != null)
+                    hashCode += 1000000123 * fontFamily.GetHashCode();
+                if (fontSize != null)
+                    hashCode += 1000000167 * fontSize.GetHashCode();
+            }
+            return hashCode;
 		}
 		
 		/// <summary>
@@ -295,14 +347,19 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 				this.foreground = color.foreground;
 			if (color.background != null)
 				this.background = color.background;
-			if (color.underline != null)
-				this.underline = color.underline;
-		}
-		
-		internal bool IsEmptyForMerge {
+            if (color.underline != null)
+                this.underline = color.underline;
+            if (color.fontFamily != null)
+                this.fontFamily = color.fontFamily;
+            if (color.fontSize != null)
+                this.fontSize = color.fontSize;
+        }
+
+        internal bool IsEmptyForMerge {
 			get {
 				return fontWeight == null && fontStyle == null && underline == null
-					&& foreground == null && background == null;
+					&& foreground == null && background == null && fontFamily == null 
+                    && fontSize == null;
 			}
 		}
 	}
