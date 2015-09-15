@@ -1,14 +1,14 @@
 ﻿<?xml version="1.0"?>
 <SyntaxDefinition name="MarkDown" extensions=".md" xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
-    <Color name="Heading1" foreground="Maroon" fontSize="30" exampleText="# Title #" />
-    <Color name="Heading2" foreground="Maroon" fontSize="27" exampleText="# Title #" />
-    <Color name="Heading3" foreground="Maroon" fontSize="24" exampleText="# Title #" />
-    <Color name="Heading4" foreground="Maroon" fontSize="21" exampleText="# Title #" />
-    <Color name="Heading5" foreground="Maroon" fontSize="18" exampleText="# Title #" />
-    <Color name="Heading6" foreground="Maroon" fontSize="15" exampleText="# Title #" />
-    <Color name="Emphasis" fontStyle="italic" exampleText="*this* is important!" />
+  <Color name="Heading1" fontFamily="Impact, Charcoal, sans-serif" foreground="Maroon" fontSize="36" exampleText="# Title #" />
+  <Color name="Heading2" fontFamily="Comic Sans MS, cursive, sans-serif" foreground="Maroon" fontSize="28" exampleText="# Title #" />
+  <Color name="Heading3" fontFamily="Arial Black, Gadget, sans-serif" foreground="Maroon" fontSize="24" exampleText="# Title #" />
+  <Color name="Heading4" fontFamily="Arial, Helvetica, sans-serif" foreground="Maroon" fontSize="20" exampleText="# Title #" />
+  <Color name="Heading5" fontFamily="Trebuchet MS, Helvetica, sans-serif" foreground="Maroon" fontSize="16" exampleText="# Title #" />
+  <Color name="Heading6" fontFamily="Verdana, Geneva, sans-serif" foreground="Maroon" fontSize="12" exampleText="# Title #" />
+  <Color name="Emphasis" fontStyle="italic" exampleText="*this* is important!" />
 	<Color name="StrongEmphasis" fontWeight="bold" exampleText="**this** is more important!" />
-	<Color name="Code" fontFamily="Footlight MT Light" exampleText="this is `int.GetHashCode()`" />
+	<Color name="Code" exampleText="this is `int.GetHashCode()`" />
 	<Color name="BlockQuote" foreground="DarkBlue" exampleText="&gt; This is a\r\n&gt; quote." />
 	<Color name="Link" foreground="Blue" exampleText="[text](http://example.com)" />
 	<Color name="Image" foreground="Green" exampleText="[text][http://example.com/test.png]" />

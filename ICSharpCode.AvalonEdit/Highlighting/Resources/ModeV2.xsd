@@ -32,18 +32,50 @@
     <!-- Font Size -->
     <xsd:simpleType name="FontSize">
         <xsd:restriction base="xsd:integer">
-            <xsd:minInclusive value="1"/>
-            <xsd:maxInclusive value="72"/>
+          <xsd:enumeration value="8"/>
+          <xsd:enumeration value="9"/>
+          <xsd:enumeration value="10"/>
+          <xsd:enumeration value="12"/>
+          <xsd:enumeration value="14"/>
+          <xsd:enumeration value="16"/>
+          <xsd:enumeration value="18"/>
+          <xsd:enumeration value="20"/>
+          <xsd:enumeration value="22"/>
+          <xsd:enumeration value="24"/>
+          <xsd:enumeration value="26"/>
+          <xsd:enumeration value="28"/>
+          <xsd:enumeration value="36"/>
+          <xsd:enumeration value="48"/>
+          <xsd:enumeration value="72"/>
         </xsd:restriction>
     </xsd:simpleType>
 
-    <!-- Color -->
+  <!-- Font Family -->
+  <xsd:simpleType name="FontFamily">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="Georgia, serif"/>
+      <xsd:enumeration value="Palatino Linotype, Book Antiqua, Palatino, serif"/>
+      <xsd:enumeration value="Times New Roman, Times, serif"/>
+      <xsd:enumeration value="Arial, Helvetica, sans-serif"/>
+      <xsd:enumeration value="Arial Black, Gadget, sans-serif"/>
+      <xsd:enumeration value="Comic Sans MS, cursive, sans-serif"/>
+      <xsd:enumeration value="Impact, Charcoal, sans-serif"/>
+      <xsd:enumeration value="Lucida Sans Unicode, Lucida Grande, sans-serif"/>
+      <xsd:enumeration value="Tahoma, Geneva, sans-serif"/>
+      <xsd:enumeration value="Trebuchet MS, Helvetica, sans-serif"/>
+      <xsd:enumeration value="Verdana, Geneva, sans-serif"/>
+      <xsd:enumeration value="Courier New, Courier, monospace"/>
+      <xsd:enumeration value="Lucida Console, Monaco, monospace"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <!-- Color -->
 	<xsd:attributeGroup name="ColorAttributes">
 		<xsd:attribute name="foreground" type="xsd:string" use="optional" />
 		<xsd:attribute name="background" type="xsd:string" use="optional" />
 		<xsd:attribute name="fontWeight" type="FontWeight" use="optional" />
         <xsd:attribute name="fontStyle" type="FontStyle" use="optional" />
-        <xsd:attribute name="fontFamily" type="xsd:string" use="optional" />
+        <xsd:attribute name="fontFamily" type="FontFamily" use="optional" />
         <xsd:attribute name="fontSize" type="FontSize" use="optional" />
         <xsd:attribute name="underline" type="xsd:boolean" use="optional" />
 		<xsd:anyAttribute namespace="##other" processContents="lax" />
