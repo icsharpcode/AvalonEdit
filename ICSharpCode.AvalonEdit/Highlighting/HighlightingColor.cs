@@ -37,45 +37,14 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 		internal static readonly HighlightingColor Empty = FreezableHelper.FreezeAndReturn(new HighlightingColor());
 		
 		string name;
-        FontFamily fontFamily = null;
-        int? fontSize;
         FontWeight? fontWeight;
 		FontStyle? fontStyle;
 		bool? underline;
 		HighlightingBrush foreground;
 		HighlightingBrush background;
-		bool frozen;
-		
-		/// <summary>
-		/// Gets/Sets the name of the color.
-		/// </summary>
-		public string Name {
-			get {
-				return name;
-			}
-			set {
-				if (frozen)
-					throw new InvalidOperationException();
-				name = value;
-			}
-		}
-
-        /// <summary>
-        /// Gets/sets the font family. Null if the highlighting color does not change the font style.
-        /// </summary>
-        public FontFamily FontFamily
-        {
-            get
-            {
-                return fontFamily;
-            }
-            set
-            {
-                if (frozen)
-                    throw new InvalidOperationException();
-                fontFamily = value;
-            }
-        }
+        FontFamily fontFamily = null;
+        int? fontSize;
+        bool frozen;
 
         /// <summary>
         /// Gets/sets the font size. Null if the highlighting color does not change the font style.
@@ -163,11 +132,45 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 				background = value;
 			}
 		}
-		
-		/// <summary>
-		/// Creates a new HighlightingColor instance.
-		/// </summary>
-		public HighlightingColor()
+
+        /// <summary>
+        /// Gets/Sets the name of the color.
+        /// </summary>
+        public string Name
+        {
+            get
+            {
+                return name;
+            }
+            set
+            {
+                if (frozen)
+                    throw new InvalidOperationException();
+                name = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets/sets the font family. Null if the highlighting color does not change the font style.
+        /// </summary>
+        public FontFamily FontFamily
+        {
+            get
+            {
+                return fontFamily;
+            }
+            set
+            {
+                if (frozen)
+                    throw new InvalidOperationException();
+                fontFamily = value;
+            }
+        }
+
+        /// <summary>
+        /// Creates a new HighlightingColor instance.
+        /// </summary>
+        public HighlightingColor()
 		{
 		}
 		

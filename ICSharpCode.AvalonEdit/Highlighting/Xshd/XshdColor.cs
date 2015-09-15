@@ -37,16 +37,6 @@ namespace ICSharpCode.AvalonEdit.Highlighting.Xshd
 		public string Name { get; set; }
 
         /// <summary>
-        /// Gets/sets the font family
-        /// </summary>
-        public FontFamily FontFamily { get; set; }
-
-        /// <summary>
-        /// Gets/sets the font size.
-        /// </summary>
-        public int? FontSize { get; set; }
-
-        /// <summary>
         /// Gets/sets the foreground brush.
         /// </summary>
         public HighlightingBrush Foreground { get; set; }
@@ -70,11 +60,21 @@ namespace ICSharpCode.AvalonEdit.Highlighting.Xshd
 		/// Gets/sets the font style.
 		/// </summary>
 		public FontStyle? FontStyle { get; set; }
-		
-		/// <summary>
-		/// Gets/Sets the example text that demonstrates where the color is used.
-		/// </summary>
-		public string ExampleText { get; set; }
+
+        /// <summary>
+        /// Gets/sets the font family
+        /// </summary>
+        public FontFamily FontFamily { get; set; }
+
+        /// <summary>
+        /// Gets/sets the font size.
+        /// </summary>
+        public int? FontSize { get; set; }
+
+        /// <summary>
+        /// Gets/Sets the example text that demonstrates where the color is used.
+        /// </summary>
+        public string ExampleText { get; set; }
 		
 		/// <summary>
 		/// Creates a new XshdColor instance.
