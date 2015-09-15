@@ -222,7 +222,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 			info.AddValue("Background", this.Background);
             info.AddValue("HasFamily", this.FontFamily != null);
             if (this.FontFamily != null)
-                info.AddValue("Family", this.FontFamily.FamilyNames.FirstOrDefault());
+                info.AddValue("Family", this.FontFamily.Source);
             info.AddValue("HasSize", this.FontSize.HasValue);
             if (this.FontSize.HasValue)
                 info.AddValue("Size", this.FontSize.Value.ToString());
@@ -257,6 +257,18 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 				b.Append(Underline.Value ? "underline" : "none");
 				b.Append("; ");
 			}
+            if (FontFamily != null)
+            {
+                b.Append("font-family: ");
+                b.Append(FontFamily.Source);
+                b.Append("; ");
+            }
+            if (FontSize != null)
+            {
+                b.Append("font-size: ");
+                b.Append(FontSize.Value.ToString());
+                b.Append("px; ");
+            }
 			return b.ToString();
 		}
 		

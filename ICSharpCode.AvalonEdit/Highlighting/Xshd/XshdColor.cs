@@ -133,7 +133,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting.Xshd
 			info.AddValue("ExampleText", this.ExampleText);
             info.AddValue("HasFamily", this.FontFamily != null);
             if (this.FontFamily != null)
-                info.AddValue("Family", this.FontFamily.FamilyNames.FirstOrDefault());
+                info.AddValue("Family", this.FontFamily.Source);
             info.AddValue("HasSize", this.FontSize.HasValue);
             if (this.FontSize.HasValue)
                 info.AddValue("Size", this.FontSize.Value.ToString());
