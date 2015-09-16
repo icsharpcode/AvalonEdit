@@ -1,37 +1,37 @@
 ﻿<?xml version="1.0"?>
 <SyntaxDefinition name="MarkDown" extensions=".md" xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
-  <Color name="Heading1" fontFamily="Impact, Charcoal, sans-serif" foreground="Maroon" fontSize="36" exampleText="# Title #" />
-  <Color name="Heading2" fontFamily="Comic Sans MS, cursive, sans-serif" foreground="Maroon" fontSize="28" exampleText="# Title #" />
-  <Color name="Heading3" fontFamily="Arial Black, Gadget, sans-serif" foreground="Maroon" fontSize="24" exampleText="# Title #" />
-  <Color name="Heading4" fontFamily="Arial, Helvetica, sans-serif" foreground="Maroon" fontSize="20" exampleText="# Title #" />
-  <Color name="Heading5" fontFamily="Trebuchet MS, Helvetica, sans-serif" foreground="Maroon" fontSize="16" exampleText="# Title #" />
-  <Color name="Heading6" fontFamily="Verdana, Geneva, sans-serif" foreground="Maroon" fontSize="12" exampleText="# Title #" />
-  <Color name="Emphasis" fontStyle="italic" exampleText="*this* is important!" />
+    <Color name="Heading1" fontFamily="Impact, Charcoal, sans-serif" foreground="Maroon" fontSize="36" exampleText="# Title #" />
+    <Color name="Heading2" fontFamily="Tahoma, Geneva, sans-serif" foreground="Maroon" fontSize="28" exampleText="# Title #" />
+    <Color name="Heading3" fontFamily="Arial Black, Gadget, sans-serif" foreground="Maroon" fontSize="24" exampleText="# Title #" />
+    <Color name="Heading4" fontFamily="Arial, Helvetica, sans-serif" foreground="Maroon" fontSize="20" exampleText="# Title #" />
+    <Color name="Heading5" fontFamily="Trebuchet MS, Helvetica, sans-serif" foreground="Maroon" fontSize="16" exampleText="# Title #" />
+    <Color name="Heading6" fontFamily="Verdana, Geneva, sans-serif" foreground="Maroon" fontSize="12" exampleText="# Title #" />
+    <Color name="Emphasis" fontStyle="italic" exampleText="*this* is important!" />
 	<Color name="StrongEmphasis" fontWeight="bold" exampleText="**this** is more important!" />
 	<Color name="Code" exampleText="this is `int.GetHashCode()`" />
-	<Color name="BlockQuote" foreground="DarkBlue" exampleText="&gt; This is a\r\n&gt; quote." />
+	<Color name="BlockQuote" fontSize="18" fontFamily="Palatino Linotype, Book Antiqua, Palatino, serif" foreground="DarkBlue" exampleText="&gt; This is a\r\n&gt; quote." />
 	<Color name="Link" foreground="Blue" exampleText="[text](http://example.com)" />
 	<Color name="Image" foreground="Green" exampleText="[text][http://example.com/test.png]" />
 	<Color name="LineBreak" background="LightGray" exampleText="end of line      \r\n2nd line   " />
 	
 	<RuleSet ignoreCase="true">
         <Rule color="Heading1">
-            ^[#]{1}[ ]{1}.*
+            ^(\#){1}\s.*
         </Rule>
         <Rule color="Heading2">
-            ^[#]{2}[ ]{1}.*
+            ^(\#){2}\s.*
         </Rule>
         <Rule color="Heading3">
-            ^[#]{3}[ ]{1}.*
+            ^(\#){3}\s.*
         </Rule>
         <Rule color="Heading4">
-            ^[#]{4}[ ]{1}.*
+            ^(\#){4}\s.*
         </Rule>
         <Rule color="Heading5">
-            ^[#]{5}[ ]{1}.*
+            ^(\#){5}\s.*
         </Rule>
         <Rule color="Heading6">
-            ^[#]{6}[ ]{1}.*
+            ^(\#){6}\s.*
         </Rule>
         <Rule color="StrongEmphasis">
 			\*\*.*\*\*
@@ -48,7 +48,7 @@
 		<Rule color="Code">
 			`.*`
 		</Rule>
-		<Span color="Code" ruleSet="C#/" multiline="true">
+        <Span color="Code" ruleSet="C#/" multiline="true">
 			<Begin>^\t</Begin>
 			<End>^(?!\t)</End>
 		</Span>
@@ -56,7 +56,63 @@
 			<Begin>^[ ]{4}</Begin>
 			<End>^(?![ ]{4})</End>
 		</Span>
-		<Span color="BlockQuote" multiline="true">
+        <Span color="Code" ruleSet="C#/" multiline="true">
+            <Begin>```(csharp|c\#)</Begin>
+            <End>```</End>
+        </Span>
+        <Span color="Code" ruleSet="Boo/" multiline="true">
+            <Begin>```boo</Begin>
+            <End>```</End>
+        </Span>
+        <Span color="Code" ruleSet="C++/" multiline="true">
+            <Begin>```(cpp|c\+\+)</Begin>
+            <End>```</End>
+        </Span>
+        <Span color="Code" ruleSet="CSS/" multiline="true">
+            <Begin>```css</Begin>
+            <End>```</End>
+        </Span>
+        <Span color="Code" ruleSet="HTML/" multiline="true">
+            <Begin>```html</Begin>
+            <End>```</End>
+        </Span>
+        <Span color="Code" ruleSet="Java/" multiline="true">
+            <Begin>```java</Begin>
+            <End>```</End>
+        </Span>
+        <Span color="Code" ruleSet="JavaScript/" multiline="true">
+            <Begin>```(javascript|jscript)</Begin>
+            <End>```</End>
+        </Span>
+        <Span color="Code" ruleSet="Patch/" multiline="true">
+            <Begin>```patch</Begin>
+            <End>```</End>
+        </Span>
+        <Span color="Code" ruleSet="PHP/" multiline="true">
+            <Begin>```php</Begin>
+            <End>```</End>
+        </Span>
+        <Span color="Code" ruleSet="PowerShell/" multiline="true">
+            <Begin>```powershell</Begin>
+            <End>```</End>
+        </Span>
+        <Span color="Code" ruleSet="TeX/" multiline="true">
+            <Begin>```tex</Begin>
+            <End>```</End>
+        </Span>
+        <Span color="Code" ruleSet="VB/" multiline="true">
+            <Begin>```(vb|visualbasic)</Begin>
+            <End>```</End>
+        </Span>
+        <Span color="Code" ruleSet="XML/" multiline="true">
+            <Begin>```xml</Begin>
+            <End>```</End>
+        </Span>
+        <Span color="Code" ruleSet="XmlDoc/" multiline="true">
+            <Begin>```xmldoc</Begin>
+            <End>```</End>
+        </Span>
+        <Span color="BlockQuote" multiline="true">
 			<Begin>^&gt;</Begin>
 			<End>^(?!&gt;)</End>
 		</Span>

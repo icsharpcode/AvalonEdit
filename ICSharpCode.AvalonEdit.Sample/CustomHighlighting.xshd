@@ -23,12 +23,12 @@
 			<!-- ... -->
 		</Keywords>
 		
-		<Keywords fontWeight="bold" fontStyle="italic" foreground="Red">
+		<Keywords fontFamily="Comic Sans MS, cursive, sans-serif" fontSize="16" fontWeight="bold" fontStyle="italic" foreground="Red">
 			<Word>AvalonEdit</Word>
 		</Keywords>
 		
 		<!-- Digits -->
-		<Rule foreground="DarkBlue">
+		<Rule foreground="DarkBlue" fontSize="8">
             \b0[xX][0-9a-fA-F]+  # hex number
         |    \b
             (    \d+(\.[0-9]+)?   #number with optional floating point
