@@ -1,0 +1,9 @@
+version: 1.0.{build}
+configuration: Debug
+platform: Any CPU
+before_build:
+- nuget restore ICSharpCode.AvalonEdit.sln
+build:
+  project: ICSharpCode.AvalonEdit.sln
+  parallel: true
+  verbosity: minimal
