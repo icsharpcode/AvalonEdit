@@ -1,6 +1,6 @@
 version: 1.0.{build}
 configuration: Debug
-platform: Any CPU
+platform: Net40
 before_build:
 - nuget restore ICSharpCode.AvalonEdit.sln
 build:
