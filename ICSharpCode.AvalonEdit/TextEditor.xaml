@@ -10,20 +10,22 @@
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type AvalonEdit:TextEditor}">
-					<ScrollViewer
-						Focusable="False"
-						Name="PART_ScrollViewer"
-						CanContentScroll="True"
-						VerticalScrollBarVisibility="{TemplateBinding VerticalScrollBarVisibility}"
-						HorizontalScrollBarVisibility="{TemplateBinding HorizontalScrollBarVisibility}"
-						Content="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=TextArea}"
-						VerticalContentAlignment="Top"
-						HorizontalContentAlignment="Left"
+					<Border
 						Background="{TemplateBinding Background}"
-						Padding="{TemplateBinding Padding}"
 						BorderBrush="{TemplateBinding BorderBrush}"
-						BorderThickness="{TemplateBinding BorderThickness}"
-					/>
+						BorderThickness="{TemplateBinding BorderThickness}">
+						<ScrollViewer
+							Focusable="False"
+							Name="PART_ScrollViewer"
+							CanContentScroll="True"
+							VerticalScrollBarVisibility="{TemplateBinding VerticalScrollBarVisibility}"
+							HorizontalScrollBarVisibility="{TemplateBinding HorizontalScrollBarVisibility}"
+							Content="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=TextArea}"
+							VerticalContentAlignment="Top"
+							HorizontalContentAlignment="Left"
+							Padding="{TemplateBinding Padding}"
+						/>
+					</Border>
 					<ControlTemplate.Triggers>
 						<Trigger Property="WordWrap"
 						         Value="True">
