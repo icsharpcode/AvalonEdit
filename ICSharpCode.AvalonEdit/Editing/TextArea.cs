@@ -971,13 +971,6 @@ namespace ICSharpCode.AvalonEdit.Editing
 		protected override void OnPreviewKeyDown(KeyEventArgs e)
 		{
 			base.OnPreviewKeyDown(e);
-			
-			if (!e.Handled && e.Key == Key.Insert && this.Options.AllowToggleOverstrikeMode) {
-				this.OverstrikeMode = !this.OverstrikeMode;
-				e.Handled = true;
-				return;
-			}
-			
 			foreach (TextAreaStackedInputHandler h in stackedInputHandlers) {
 				if (e.Handled)
 					break;

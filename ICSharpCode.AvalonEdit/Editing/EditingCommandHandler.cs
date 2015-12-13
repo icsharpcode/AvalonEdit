@@ -78,6 +78,7 @@ namespace ICSharpCode.AvalonEdit.Editing
 			CommandBindings.Add(new CommandBinding(ApplicationCommands.Cut, OnCut, CanCutOrCopy));
 			CommandBindings.Add(new CommandBinding(ApplicationCommands.Paste, OnPaste, CanPaste));
 			
+			CommandBindings.Add(new CommandBinding(AvalonEditCommands.ToggleOverstrike, OnToggleOverstrike));
 			CommandBindings.Add(new CommandBinding(AvalonEditCommands.DeleteLine, OnDeleteLine));
 			
 			CommandBindings.Add(new CommandBinding(AvalonEditCommands.RemoveLeadingWhitespace, OnRemoveLeadingWhitespace));
@@ -481,6 +482,15 @@ namespace ICSharpCode.AvalonEdit.Editing
 				// may happen when trying to paste a huge string
 				return null;
 			}
+		}
+		#endregion
+		
+		#region Toggle Overstrike
+		static void OnToggleOverstrike(object target, ExecutedRoutedEventArgs args)
+		{
+			TextArea textArea = GetTextArea(target);
+			if (textArea != null && textArea.Options.AllowToggleOverstrikeMode) 
+				textArea.OverstrikeMode = !textArea.OverstrikeMode;
 		}
 		#endregion
 		
