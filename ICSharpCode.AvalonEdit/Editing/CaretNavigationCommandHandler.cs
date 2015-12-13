@@ -213,6 +213,9 @@ namespace ICSharpCode.AvalonEdit.Editing
 			switch (direction) {
 				case CaretMovementType.CharLeft:
 					desiredXPos = double.NaN;
+					// do not move caret to previous line in virtual space
+					if (caretPosition.VisualColumn == 0 && enableVirtualSpace)
+						return caretPosition;
 					return GetPrevCaretPosition(textView, caretPosition, visualLine, CaretPositioningMode.Normal, enableVirtualSpace);
 				case CaretMovementType.Backspace:
 					desiredXPos = double.NaN;
