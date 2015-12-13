@@ -39,8 +39,8 @@ namespace ICSharpCode.AvalonEdit.Indentation
 			if (previousLine != null) {
 				ISegment indentationSegment = TextUtilities.GetWhitespaceAfter(document, previousLine.Offset);
 				string indentation = document.GetText(indentationSegment);
-				// copy indentation to line
-				indentationSegment = TextUtilities.GetWhitespaceAfter(document, line.Offset);
+				// copy indentation to line				
+				indentationSegment = new SimpleSegment(line.Offset,0);
 				document.Replace(indentationSegment, indentation);
 			}
 		}
