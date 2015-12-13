@@ -19,7 +19,7 @@
 							SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
 					</Border>
 					<!-- Simplified triggers:
- 						we don't want a gray selection background when the ListBox doesn't have focus
+						 we don't want a gray selection background when the ListBox doesn't have focus
 					-->
 					<ControlTemplate.Triggers>
 						<Trigger Property="IsSelected" Value="true">

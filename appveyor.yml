@@ -7,3 +7,5 @@ build:
   project: ICSharpCode.AvalonEdit.sln
   parallel: true
   verbosity: minimal
+after_test:
+- python ICSharpCode.AvalonEdit.Tests\tidy.py
