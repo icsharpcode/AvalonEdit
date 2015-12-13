@@ -375,7 +375,8 @@ namespace ICSharpCode.AvalonEdit.Editing
 		void textArea_QueryCursor(object sender, QueryCursorEventArgs e)
 		{
 			if (!e.Handled) {
-				if (mode != SelectionMode.None || !enableTextDragDrop) {
+				if (mode != SelectionMode.None) {
+					// during selection, use IBeam cursor even outside the text area
 					e.Cursor = Cursors.IBeam;
 					e.Handled = true;
 				} else if (textArea.TextView.VisualLinesValid) {
@@ -387,7 +388,7 @@ namespace ICSharpCode.AvalonEdit.Editing
 						int visualColumn;
 						bool isAtEndOfLine;
 						int offset = GetOffsetFromMousePosition(e, out visualColumn, out isAtEndOfLine);
-						if (textArea.Selection.Contains(offset))
+						if (enableTextDragDrop && textArea.Selection.Contains(offset))
 							e.Cursor = Cursors.Arrow;
 						else
 							e.Cursor = Cursors.IBeam;
