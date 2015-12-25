@@ -41,7 +41,7 @@ namespace ICSharpCode.AvalonEdit.Indentation
 				string indentation = document.GetText(indentationSegment);
 				// copy indentation to line
 				indentationSegment = TextUtilities.GetWhitespaceAfter(document, line.Offset);
-				document.Replace(indentationSegment.Offset, indentation.Length, indentation,
+				document.Replace(indentationSegment.Offset, indentationSegment.Length, indentation,
 				                 OffsetChangeMappingType.RemoveAndInsert);
 				// OffsetChangeMappingType.RemoveAndInsert guarantees the caret moves behind the new indentation.
 			}
