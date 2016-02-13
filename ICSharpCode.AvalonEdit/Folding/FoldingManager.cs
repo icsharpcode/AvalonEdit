@@ -279,7 +279,6 @@ namespace ICSharpCode.AvalonEdit.Folding
 					// auto-close #regions only when opening the document
 					if (isFirstUpdate) {
 						section.IsFolded = newFolding.DefaultClosed;
-						isFirstUpdate = false;
 					}
 					section.Tag = newFolding;
 				}
@@ -292,6 +291,7 @@ namespace ICSharpCode.AvalonEdit.Folding
 					break;
 				this.RemoveFolding(oldSection);
 			}
+            isFirstUpdate = false;
 		}
 		#endregion
 		
