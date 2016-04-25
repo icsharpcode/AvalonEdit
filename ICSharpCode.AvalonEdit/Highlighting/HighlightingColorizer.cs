@@ -233,7 +233,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 				return true;
 			return color.Background == null && color.Foreground == null
 				&& color.FontStyle == null && color.FontWeight == null
-				&& color.Underline == null;
+				&& color.Underline == null && color.Strikethrough == null;
 		}
 		
 		/// <summary>
@@ -267,7 +267,9 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 			}
 			if(color.Underline ?? false)
 				element.TextRunProperties.SetTextDecorations(TextDecorations.Underline);
-		}
+            if (color.Strikethrough ?? false)
+                element.TextRunProperties.SetTextDecorations(TextDecorations.Strikethrough);
+        }
 		
 		/// <summary>
 		/// This method is responsible for telling the TextView to redraw lines when the highlighting state has changed.

@@ -22,6 +22,7 @@ using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.TextFormatting;
 using ICSharpCode.AvalonEdit.Utils;
+using System.Linq;
 
 namespace ICSharpCode.AvalonEdit.Rendering
 {
@@ -200,8 +201,12 @@ namespace ICSharpCode.AvalonEdit.Rendering
 		public void SetTextDecorations(TextDecorationCollection value)
 		{
 			ExtensionMethods.CheckIsFrozen(value);
-			textDecorations = value;
-		}
+
+            if (textDecorations == null)
+                textDecorations = value;
+            else
+                textDecorations = new TextDecorationCollection(textDecorations.Union(value));
+        }
 		
 		/// <summary>
 		/// Gets the text effects. The value may be null, a frozen <see cref="TextEffectCollection"/>

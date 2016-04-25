@@ -298,7 +298,8 @@ namespace ICSharpCode.AvalonEdit.Highlighting.Xshd
 			color.FontWeight = ParseFontWeight(reader.GetAttribute("fontWeight"));
 			color.FontStyle = ParseFontStyle(reader.GetAttribute("fontStyle"));
 			color.Underline = reader.GetBoolAttribute("underline");
-			return color;
+			color.Strikethrough = reader.GetBoolAttribute("strikethrough");
+            return color;
 		}
 		
 		internal readonly static ColorConverter ColorConverter = new ColorConverter();

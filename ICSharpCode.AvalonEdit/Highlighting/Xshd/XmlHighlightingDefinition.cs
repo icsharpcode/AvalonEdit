@@ -205,7 +205,8 @@ namespace ICSharpCode.AvalonEdit.Highlighting.Xshd
 				c.Foreground = color.Foreground;
 				c.Background = color.Background;
 				c.Underline = color.Underline;
-				c.FontStyle = color.FontStyle;
+				c.Strikethrough = color.Strikethrough;
+                c.FontStyle = color.FontStyle;
 				c.FontWeight = color.FontWeight;
 				return c;
 			}

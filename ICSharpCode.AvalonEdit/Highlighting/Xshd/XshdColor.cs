@@ -53,11 +53,16 @@ namespace ICSharpCode.AvalonEdit.Highlighting.Xshd
 		/// Gets/sets the underline flag
 		/// </summary>
 		public bool? Underline { get; set; }
-		
-		/// <summary>
-		/// Gets/sets the font style.
-		/// </summary>
-		public FontStyle? FontStyle { get; set; }
+
+        /// <summary>
+        /// Gets/sets the strikethrough flag
+        /// </summary>
+        public bool? Strikethrough { get; set; }
+
+        /// <summary>
+        /// Gets/sets the font style.
+        /// </summary>
+        public FontStyle? FontStyle { get; set; }
 		
 		/// <summary>
 		/// Gets/Sets the example text that demonstrates where the color is used.
@@ -88,7 +93,9 @@ namespace ICSharpCode.AvalonEdit.Highlighting.Xshd
 			this.ExampleText = info.GetString("ExampleText");
 			if (info.GetBoolean("HasUnderline"))
 				this.Underline = info.GetBoolean("Underline");
-		}
+            if (info.GetBoolean("HasStrikethrough"))
+                this.Strikethrough = info.GetBoolean("Strikethrough");
+        }
 		
 		/// <summary>
 		/// Serializes this XshdColor instance.
@@ -108,7 +115,10 @@ namespace ICSharpCode.AvalonEdit.Highlighting.Xshd
 			info.AddValue("HasUnderline", this.Underline.HasValue);
 			if (this.Underline.HasValue)
 				info.AddValue("Underline", this.Underline.Value);
-			info.AddValue("HasWeight", this.FontWeight.HasValue);
+            info.AddValue("HasStrikethrough", this.Strikethrough.HasValue);
+            if (this.Strikethrough.HasValue)
+                info.AddValue("Strikethrough", this.Strikethrough.Value);
+            info.AddValue("HasWeight", this.FontWeight.HasValue);
 			if (this.FontWeight.HasValue)
 				info.AddValue("Weight", this.FontWeight.Value.ToOpenTypeWeight());
 			info.AddValue("HasStyle", this.FontStyle.HasValue);
