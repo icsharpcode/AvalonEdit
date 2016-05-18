@@ -30,6 +30,10 @@ namespace ICSharpCode.AvalonEdit.CodeCompletion
 	/// <summary>
 	/// Describes an entry in the <see cref="CompletionList"/>.
 	/// </summary>
+	/// <remarks>
+	/// Note that the CompletionList uses WPF data binding against the properties in this interface.
+	/// Thus, your implementation of the interface must use public properties; not explicit interface implementation.
+	/// </remarks>
 	public interface ICompletionData
 	{
 		/// <summary>
