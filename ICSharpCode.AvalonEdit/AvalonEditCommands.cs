@@ -45,7 +45,27 @@ namespace ICSharpCode.AvalonEdit
 			new InputGestureCollection {
 				new KeyGesture(Key.D, ModifierKeys.Control)
 			});
-		
+
+		/// <summary>
+		/// Swap the current line and the previous line.
+		/// The default shortcut is Alt+Up.
+		/// </summary>
+		public static readonly RoutedCommand SwapLinesUp = new RoutedCommand(
+			"SwapLinesUp", typeof(TextEditor),
+			new InputGestureCollection {
+				new KeyGesture(Key.Up, ModifierKeys.Alt)
+			});
+
+		/// <summary>
+		/// Swap the current line and the next line.
+		/// The default shortcut is Alt+Down.
+		/// </summary>
+		public static readonly RoutedCommand SwapLinesDown = new RoutedCommand(
+			"SwapLinesDown", typeof(TextEditor),
+			new InputGestureCollection {
+				new KeyGesture(Key.Down, ModifierKeys.Alt)
+			});
+
 		/// <summary>
 		/// Removes leading whitespace from the selected lines (or the whole document if the selection is empty).
 		/// </summary>

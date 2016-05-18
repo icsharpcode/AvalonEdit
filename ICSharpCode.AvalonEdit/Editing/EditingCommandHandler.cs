@@ -73,13 +73,16 @@ namespace ICSharpCode.AvalonEdit.Editing
 			AddBinding(EditingCommands.EnterLineBreak, ModifierKeys.Shift, Key.Enter, OnEnter);
 			AddBinding(EditingCommands.TabForward, ModifierKeys.None, Key.Tab, OnTab);
 			AddBinding(EditingCommands.TabBackward, ModifierKeys.Shift, Key.Tab, OnShiftTab);
-			
+
 			CommandBindings.Add(new CommandBinding(ApplicationCommands.Copy, OnCopy, CanCutOrCopy));
 			CommandBindings.Add(new CommandBinding(ApplicationCommands.Cut, OnCut, CanCutOrCopy));
 			CommandBindings.Add(new CommandBinding(ApplicationCommands.Paste, OnPaste, CanPaste));
 			
 			CommandBindings.Add(new CommandBinding(AvalonEditCommands.ToggleOverstrike, OnToggleOverstrike));
 			CommandBindings.Add(new CommandBinding(AvalonEditCommands.DeleteLine, OnDeleteLine));
+
+			CommandBindings.Add(new CommandBinding(AvalonEditCommands.SwapLinesUp, OnSwapLinesUp));
+			CommandBindings.Add(new CommandBinding(AvalonEditCommands.SwapLinesDown, OnSwapLinesDown));
 			
 			CommandBindings.Add(new CommandBinding(AvalonEditCommands.RemoveLeadingWhitespace, OnRemoveLeadingWhitespace));
 			CommandBindings.Add(new CommandBinding(AvalonEditCommands.RemoveTrailingWhitespace, OnRemoveTrailingWhitespace));
@@ -516,7 +519,65 @@ namespace ICSharpCode.AvalonEdit.Editing
 			}
 		}
 		#endregion
-		
+
+		#region SwapLines
+		static void OnSwapLinesUp(object target, ExecutedRoutedEventArgs args)
+		{
+			TextArea textArea = GetTextArea(target);
+			if (textArea != null && textArea.Document != null) {
+				TextLocation caretLocationBackup = textArea.Caret.Location;
+
+				var selectionLineRange = new SelectionLineRange(textArea.Caret, textArea.Selection);
+				if (selectionLineRange.FirstLine == 1) return;
+
+				DocumentLine movedLine = textArea.Document.GetLineByNumber(selectionLineRange.FirstLine - 1);
+				DocumentLine lastLine = textArea.Document.GetLineByNumber(selectionLineRange.LastLine);
+
+				using (textArea.Document.RunUpdate()) {
+					textArea.Selection = Selection.Create(textArea, movedLine.Offset, movedLine.Offset + movedLine.TotalLength);
+					string movedLineText = textArea.Selection.GetText();
+					if (lastLine.NextLine == null) {
+						movedLineText = movedLineText.RotateTailLinebreak();
+					}
+					textArea.Document.Insert(lastLine.Offset + lastLine.TotalLength, movedLineText);
+					textArea.RemoveSelectedText();
+
+					// TODO: Restore selection
+					textArea.Caret.Location = new TextLocation(caretLocationBackup.Line - 1, caretLocationBackup.Column);
+				}
+				args.Handled = true;
+			}
+		}
+
+		static void OnSwapLinesDown(object target, ExecutedRoutedEventArgs args)
+		{
+			TextArea textArea = GetTextArea(target);
+			if (textArea != null && textArea.Document != null)
+			{
+				TextLocation caretLocationBackup = textArea.Caret.Location;
+
+				var selectionLineRange = new SelectionLineRange(textArea.Caret, textArea.Selection);
+				if (selectionLineRange.LastLine == textArea.Document.LineCount) return;
+
+				DocumentLine firstLine = textArea.Document.GetLineByNumber(selectionLineRange.FirstLine);
+				DocumentLine lastLine = textArea.Document.GetLineByNumber(selectionLineRange.LastLine);
+				DocumentLine movedLine = textArea.Document.GetLineByNumber(selectionLineRange.LastLine + 1);
+
+				using (textArea.Document.RunUpdate())
+				{
+					textArea.Selection = Selection.Create(textArea, lastLine.EndOffset, movedLine.EndOffset);
+					string movedLineText = textArea.Selection.GetText().RotateHeadLinebreak();
+					textArea.Document.Insert(firstLine.Offset, movedLineText);
+					textArea.RemoveSelectedText();
+
+					// TODO: Restore selection
+					textArea.Caret.Location = new TextLocation(caretLocationBackup.Line + 1, caretLocationBackup.Column);
+				}
+				args.Handled = true;
+			}
+		}
+		#endregion
+
 		#region Remove..Whitespace / Convert Tabs-Spaces
 		static void OnRemoveLeadingWhitespace(object target, ExecutedRoutedEventArgs args)
 		{
@@ -656,6 +717,58 @@ namespace ICSharpCode.AvalonEdit.Editing
 				textArea.Caret.BringCaretToView();
 				args.Handled = true;
 			}
+		}
+	}
+
+	struct SelectionLineRange
+	{
+		public SelectionLineRange(Caret caret, Selection selection)
+		{
+			if (selection.IsEmpty) {
+				firstLine = lastLine = caret.Line;
+			} else {
+				int l1 = selection.StartPosition.Line, l2 = selection.EndPosition.Line;
+				firstLine = Math.Min(l1, l2);
+				lastLine = Math.Max(l1, l2);
+			}
+		}
+
+		int firstLine;
+		int lastLine;
+		public int FirstLine { get { return firstLine; } }
+		public int LastLine { get { return lastLine; } }
+	}
+
+	static class StringExtensions
+	{
+		/// <summary>
+		/// Move the head linebreak to the tail.
+		/// </summary>
+		/// <param name="self">A string which begins with one or more linebreaks.</param>
+		/// <returns></returns>
+		public static string RotateHeadLinebreak(this string self)
+		{
+			int len = self.Length;
+			string linebreak = 
+				(len >= 2 && self.Substring(0, 2) == "\r\n")
+				? "\r\n"
+				: self.Substring(0, 1);
+			return self.Remove(0, linebreak.Length) + linebreak;
+		}
+
+		/// <summary>
+		/// Move the tailing lineberak to the head.
+		/// </summary>
+		/// <param name="self">A string which ends with one or more linebreaks.</param>
+		/// <returns></returns>
+		public static string RotateTailLinebreak(this string self)
+		{
+			int len = self.Length;
+			string linebreak =
+				(len >= 2 && self.Substring(len - 2, 2) == "\r\n")
+				? "\r\n"
+				: self.Substring(len - 1, 1);
+			return linebreak + self.Remove(len - linebreak.Length);
 		}
 	}
 }
