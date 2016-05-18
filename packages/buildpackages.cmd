@@ -1,9 +1,9 @@
 @ECHO OFF
 SETLOCAL
+cd %~dp0
 SET msbuild=%windir%\microsoft.net\framework\v4.0.30319\msbuild
 SET documentation=..\Documentation
 SET project=..\ICSharpCode.AvalonEdit\ICSharpCode.AvalonEdit.csproj
-SET sample=..\ICSharpCode.AvalonEdit.Samle\ICSharpCode.AvalonEdit.Sample.csproj
 SET buildoptions=/t:Rebuild /p:Configuration=Release /p:DebugType=PdbOnly
 
 @echo Using this script requires nuget.exe to be in the PATH, and that Sandcastle Help File Builder is installed.
@@ -11,6 +11,10 @@ SET buildoptions=/t:Rebuild /p:Configuration=Release /p:DebugType=PdbOnly
 @ECHO ON
 :Clean debug build
 %msbuild% /m %project% /t:Clean /p:Configuration=Debug /p:OutputPath=%~dp0\AvalonEdit\lib\Net40
+@if %errorlevel% neq 0 exit /B 1
+
+:Normal build without modified output path; used by SHFB
+%msbuild% /m %project% %buildoptions% /p:Platform=Net40
 @if %errorlevel% neq 0 exit /B 1
 
 :BUILD .NET 4.0 version
