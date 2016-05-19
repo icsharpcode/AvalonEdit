@@ -776,22 +776,22 @@ namespace ICSharpCode.AvalonEdit.Editing
 		public SelectionPreserver(TextArea textArea)
 			: base(textArea)
 		{
-			startPosition = textArea.Selection.StartPosition;
-			endPosition = textArea.Selection.EndPosition;
+			startLocation = textArea.Selection.StartPosition.Location;
+			endLocation = textArea.Selection.EndPosition.Location;
 		}
 
 		public override void Restore()
 		{
-			TextArea.Selection = Selection.Create(TextArea, startPosition, endPosition);
+			TextArea.Selection = Selection.Create(TextArea, new TextViewPosition(startLocation), new TextViewPosition(endLocation));
 		}
 
 		public override void MoveLine(int i)
 		{
-			startPosition = new TextViewPosition(startPosition.Line + i, startPosition.Column);
-			endPosition = new TextViewPosition(endPosition.Line + i, endPosition.Column);
+			startLocation = new TextLocation(startLocation.Line + i, startLocation.Column);
+			endLocation = new TextLocation(endLocation.Line + i, endLocation.Column);
 		}
 
-		TextViewPosition startPosition, endPosition;
+		TextLocation startLocation, endLocation;
 	}
 
 	struct SelectionLineRange
