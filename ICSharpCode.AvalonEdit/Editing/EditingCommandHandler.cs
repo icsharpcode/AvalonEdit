@@ -525,25 +525,23 @@ namespace ICSharpCode.AvalonEdit.Editing
 		{
 			TextArea textArea = GetTextArea(target);
 			if (textArea != null && textArea.Document != null) {
-				TextLocation caretLocationBackup = textArea.Caret.Location;
+				using (var caretSelectionPreserver = CaretSelectionPreserver.Create(textArea)) {
+					var selectionLineRange = new SelectionLineRange(textArea.Caret, textArea.Selection);
+					if (selectionLineRange.FirstLine == 1) return;
 
-				var selectionLineRange = new SelectionLineRange(textArea.Caret, textArea.Selection);
-				if (selectionLineRange.FirstLine == 1) return;
+					DocumentLine movedLine = textArea.Document.GetLineByNumber(selectionLineRange.FirstLine - 1);
+					DocumentLine lastLine = textArea.Document.GetLineByNumber(selectionLineRange.LastLine);
 
-				DocumentLine movedLine = textArea.Document.GetLineByNumber(selectionLineRange.FirstLine - 1);
-				DocumentLine lastLine = textArea.Document.GetLineByNumber(selectionLineRange.LastLine);
-
-				using (textArea.Document.RunUpdate()) {
-					textArea.Selection = Selection.Create(textArea, movedLine.Offset, movedLine.Offset + movedLine.TotalLength);
-					string movedLineText = textArea.Selection.GetText();
-					if (lastLine.NextLine == null) {
-						movedLineText = movedLineText.RotateTailLinebreak();
+					using (textArea.Document.RunUpdate()) {
+						textArea.Selection = Selection.Create(textArea, movedLine.Offset, movedLine.Offset + movedLine.TotalLength);
+						string movedLineText = textArea.Selection.GetText();
+						if (lastLine.NextLine == null) {
+							movedLineText = movedLineText.RotateTailLinebreak();
+						}
+						textArea.Document.Insert(lastLine.Offset + lastLine.TotalLength, movedLineText);
+						textArea.RemoveSelectedText();
+						caretSelectionPreserver.MoveLine(-1);
 					}
-					textArea.Document.Insert(lastLine.Offset + lastLine.TotalLength, movedLineText);
-					textArea.RemoveSelectedText();
-
-					// TODO: Restore selection
-					textArea.Caret.Location = new TextLocation(caretLocationBackup.Line - 1, caretLocationBackup.Column);
 				}
 				args.Handled = true;
 			}
@@ -552,26 +550,22 @@ namespace ICSharpCode.AvalonEdit.Editing
 		static void OnSwapLinesDown(object target, ExecutedRoutedEventArgs args)
 		{
 			TextArea textArea = GetTextArea(target);
-			if (textArea != null && textArea.Document != null)
-			{
-				TextLocation caretLocationBackup = textArea.Caret.Location;
+			if (textArea != null && textArea.Document != null) {
+				using (var caretSelectionPreserver = CaretSelectionPreserver.Create(textArea)) {
+					var selectionLineRange = new SelectionLineRange(textArea.Caret, textArea.Selection);
+					if (selectionLineRange.LastLine == textArea.Document.LineCount) return;
 
-				var selectionLineRange = new SelectionLineRange(textArea.Caret, textArea.Selection);
-				if (selectionLineRange.LastLine == textArea.Document.LineCount) return;
+					DocumentLine firstLine = textArea.Document.GetLineByNumber(selectionLineRange.FirstLine);
+					DocumentLine lastLine = textArea.Document.GetLineByNumber(selectionLineRange.LastLine);
+					DocumentLine movedLine = textArea.Document.GetLineByNumber(selectionLineRange.LastLine + 1);
 
-				DocumentLine firstLine = textArea.Document.GetLineByNumber(selectionLineRange.FirstLine);
-				DocumentLine lastLine = textArea.Document.GetLineByNumber(selectionLineRange.LastLine);
-				DocumentLine movedLine = textArea.Document.GetLineByNumber(selectionLineRange.LastLine + 1);
-
-				using (textArea.Document.RunUpdate())
-				{
-					textArea.Selection = Selection.Create(textArea, lastLine.EndOffset, movedLine.EndOffset);
-					string movedLineText = textArea.Selection.GetText().RotateHeadLinebreak();
-					textArea.Document.Insert(firstLine.Offset, movedLineText);
-					textArea.RemoveSelectedText();
-
-					// TODO: Restore selection
-					textArea.Caret.Location = new TextLocation(caretLocationBackup.Line + 1, caretLocationBackup.Column);
+					using (textArea.Document.RunUpdate()) {
+						textArea.Selection = Selection.Create(textArea, lastLine.EndOffset, movedLine.EndOffset);
+						string movedLineText = textArea.Selection.GetText().RotateHeadLinebreak();
+						textArea.Document.Insert(firstLine.Offset, movedLineText);
+						textArea.RemoveSelectedText();
+						caretSelectionPreserver.MoveLine(+1);
+					}
 				}
 				args.Handled = true;
 			}
@@ -720,6 +714,86 @@ namespace ICSharpCode.AvalonEdit.Editing
 		}
 	}
 
+	abstract class CaretSelectionPreserver
+		: IDisposable
+	{
+		protected CaretSelectionPreserver(TextArea _textArea)
+		{
+			isDisposed = false;
+			textArea = _textArea;
+		}
+
+		public static CaretSelectionPreserver Create(TextArea textArea)
+		{
+			if (textArea.Selection.IsEmpty) {
+				return new CaretPreserver(textArea);
+			} else {
+				return new SelectionPreserver(textArea);
+			}
+		}
+
+		public void Dispose()
+		{
+			if (isDisposed) return;
+			isDisposed = true;
+			Restore();
+		}
+
+		public abstract void Restore();
+		public abstract void MoveLine(int i);
+
+		private bool isDisposed;
+
+		private TextArea textArea;
+		public TextArea TextArea { get { return textArea; } }
+	}
+	
+	class CaretPreserver 
+		: CaretSelectionPreserver
+	{
+		public CaretPreserver(TextArea textArea)
+			: base(textArea)
+		{
+			caretLocation = textArea.Caret.Location;
+		}
+
+		public override void Restore()
+		{
+			TextArea.Caret.Location = caretLocation;
+		}
+
+		public override void MoveLine(int i)
+		{
+			caretLocation = new TextLocation(caretLocation.Line + i, caretLocation.Column);
+		}
+
+		TextLocation caretLocation;
+	}
+
+	class SelectionPreserver
+		: CaretSelectionPreserver
+	{
+		public SelectionPreserver(TextArea textArea)
+			: base(textArea)
+		{
+			startPosition = textArea.Selection.StartPosition;
+			endPosition = textArea.Selection.EndPosition;
+		}
+
+		public override void Restore()
+		{
+			TextArea.Selection = Selection.Create(TextArea, startPosition, endPosition);
+		}
+
+		public override void MoveLine(int i)
+		{
+			startPosition = new TextViewPosition(startPosition.Line + i, startPosition.Column);
+			endPosition = new TextViewPosition(endPosition.Line + i, endPosition.Column);
+		}
+
+		TextViewPosition startPosition, endPosition;
+	}
+
 	struct SelectionLineRange
 	{
 		public SelectionLineRange(Caret caret, Selection selection)
@@ -738,7 +812,7 @@ namespace ICSharpCode.AvalonEdit.Editing
 		public int FirstLine { get { return firstLine; } }
 		public int LastLine { get { return lastLine; } }
 	}
-
+	
 	static class StringExtensions
 	{
 		/// <summary>
