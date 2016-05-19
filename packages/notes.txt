@@ -1,0 +1,16 @@
+The required version of SHFB is located at:
+
+https://github.com/icsharpcode/SharpDevelop-Vendor/tree/master/SHFB
+
+Please install SandcastleHelpFileBuilder.msi from this zip.
+
+Before running the buildpackage.cmd, you might need to set an environment variable:
+
+set SHFBROOT=C:\Program Files (x86)\EWSoftware\Sandcastle Help File Builder
+
+*
+
+Publishing the NuGet package: use nuget push for the main package (necessary for automatically uploading symbols)
+
+http://www.symbolsource.org/Public/Wiki/Publishing
+
