@@ -1055,11 +1055,16 @@ namespace ICSharpCode.AvalonEdit.Editing
 			get { return (bool)GetValue(OverstrikeModeProperty); }
 			set { SetValue(OverstrikeModeProperty, value); }
 		}
-		
+
 		#endregion
-		
-		/// <inheritdoc/>
-		protected override HitTestResult HitTestCore(PointHitTestParameters hitTestParameters)
+
+		protected override System.Windows.Automation.Peers.AutomationPeer OnCreateAutomationPeer()
+		{
+			return new TextAreaAutomationPeer(this);
+		}
+
+	/// <inheritdoc/>
+	protected override HitTestResult HitTestCore(PointHitTestParameters hitTestParameters)
 		{
 			// accept clicks even where the text area draws no background
 			return new PointHitTestResult(this, hitTestParameters.HitPoint);
