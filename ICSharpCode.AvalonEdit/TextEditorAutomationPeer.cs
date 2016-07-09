@@ -56,7 +56,13 @@ namespace ICSharpCode.AvalonEdit
 		bool IValueProvider.IsReadOnly {
 			get { return this.TextEditor.IsReadOnly; }
 		}
-		
+
+				/// /// <inheritdoc/>
+		protected override AutomationControlType GetAutomationControlTypeCore()
+		{
+			return AutomationControlType.Document;
+		}
+
 		/// <inheritdoc/>
 		public override object GetPattern(PatternInterface patternInterface)
 		{
