@@ -89,6 +89,22 @@ namespace ICSharpCode.AvalonEdit.Editing
 			this.textArea = textArea;
 		}
 		
+        static SelectionMouseHandler()
+        {
+            EventManager.RegisterClassHandler(typeof(TextArea), Mouse.LostMouseCaptureEvent, new MouseEventHandler(OnLostMouseCapture));
+        }
+
+        private static void OnLostMouseCapture(object sender, MouseEventArgs e)
+        {
+            TextArea textArea = (TextArea)sender;
+            if (Mouse.Captured != textArea)
+            {
+                SelectionMouseHandler handler = textArea.DefaultInputHandler.NestedInputHandlers.OfType<SelectionMouseHandler>().FirstOrDefault();
+                if (handler != null)
+                    handler.mode = SelectionMode.None;
+            }
+        }
+
 		public TextArea TextArea {
 			get { return textArea; }
 		}
