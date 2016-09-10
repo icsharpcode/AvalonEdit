@@ -178,6 +178,8 @@
     <Compile Include="Editing\ImeNativeWrapper.cs" />
     <Compile Include="Editing\SelectionSegment.cs" />
     <Compile Include="Editing\ImeSupport.cs" />
+    <Compile Include="Editing\TextAreaAutomationPeer.cs" />
+    <Compile Include="Editing\TextRangeProvider.cs" />
     <Compile Include="Folding\FoldingElementGenerator.cs" />
     <Compile Include="Folding\FoldingManager.cs" />
     <Compile Include="Folding\FoldingMargin.cs" />
