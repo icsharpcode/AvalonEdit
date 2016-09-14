@@ -16,7 +16,7 @@
 								</TextBox.Text>
 							</TextBox>
 							<search:DropDownButton Height="24">
-								<search:DropDownButton.DropDownContent>
+								<search:DropDownButton.DropDownContent Name="PART_dropdownPopup">
 									<Popup StaysOpen="False">
 										<Border Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" BorderBrush="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}" BorderThickness="1">
 											<StackPanel Orientation="Vertical">

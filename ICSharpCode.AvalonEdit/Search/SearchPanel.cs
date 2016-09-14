@@ -46,6 +46,7 @@ namespace ICSharpCode.AvalonEdit.Search
 		TextDocument currentDocument;
 		SearchResultBackgroundRenderer renderer;
 		TextBox searchTextBox;
+		Popup dropdownPopup;
 		SearchPanelAdorner adorner;
 		
 		#region DependencyProperties
@@ -275,7 +276,9 @@ namespace ICSharpCode.AvalonEdit.Search
 		public override void OnApplyTemplate()
 		{
 			base.OnApplyTemplate();
+			
 			searchTextBox = Template.FindName("PART_searchTextBox", this) as TextBox;
+			dropdownPopup = Template.FindName("PART_dropdownPopup", this) as Popup;
 		}
 		
 		void ValidateSearchText()
@@ -411,6 +414,8 @@ namespace ICSharpCode.AvalonEdit.Search
 			var layer = AdornerLayer.GetAdornerLayer(textArea);
 			if (layer != null)
 				layer.Remove(adorner);
+			if (dropdownPopup != null)
+            	dropdownPopup.IsOpen = false;
 			messageView.IsOpen = false;
 			textArea.TextView.BackgroundRenderers.Remove(renderer);
 			if (hasFocus)
