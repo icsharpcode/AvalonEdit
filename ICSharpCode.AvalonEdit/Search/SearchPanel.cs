@@ -45,6 +45,7 @@ namespace ICSharpCode.AvalonEdit.Search {
         SearchResultBackgroundRenderer renderer;
         TextBox searchTextBox;
         TextBox replaceTextBox;
+        Border searchPanel;
         SearchPanelAdorner adorner;
 
         #region DependencyProperties
@@ -294,6 +295,7 @@ namespace ICSharpCode.AvalonEdit.Search {
         /// <inheritdoc/>
         public override void OnApplyTemplate() {
             base.OnApplyTemplate();
+            searchPanel = Template.FindName("PART_searchPanel", this) as Border;
             searchTextBox = Template.FindName("PART_searchTextBox", this) as TextBox;
             replaceTextBox = Template.FindName("PART_replaceTextBox", this) as TextBox;
         }
@@ -405,7 +407,7 @@ namespace ICSharpCode.AvalonEdit.Search {
                 if (!renderer.CurrentResults.Any()) {
                     messageView.IsOpen = true;
                     messageView.Content = Localization.NoMatchesFoundText;
-                    messageView.PlacementTarget = searchTextBox;
+                    messageView.PlacementTarget = searchPanel;
                 } else
                     messageView.IsOpen = false;
             }
@@ -436,7 +438,7 @@ namespace ICSharpCode.AvalonEdit.Search {
                             var error = Validation.GetErrors(searchTextBox).FirstOrDefault();
                             if (error != null) {
                                 messageView.Content = Localization.ErrorText + " " + error.ErrorContent;
-                                messageView.PlacementTarget = searchTextBox;
+                                messageView.PlacementTarget = searchPanel;
                                 messageView.IsOpen = true;
                             }
                         }
