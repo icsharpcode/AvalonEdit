@@ -267,6 +267,8 @@ namespace ICSharpCode.AvalonEdit.Search {
             textArea.DocumentChanged += textArea_DocumentChanged;
             KeyDown += SearchLayerKeyDown;
 
+            this.CommandBindings.Add(new CommandBinding(SearchCommands.Find, (sender, e) => Open(false)));
+            this.CommandBindings.Add(new CommandBinding(SearchCommands.Replace, (sender, e) => Open(true)));
             this.CommandBindings.Add(new CommandBinding(SearchCommands.FindNext, (sender, e) => FindNext()));
             this.CommandBindings.Add(new CommandBinding(SearchCommands.FindPrevious, (sender, e) => FindPrevious()));
             this.CommandBindings.Add(new CommandBinding(SearchCommands.ReplaceNext, (sender, e) => ReplaceNext()));

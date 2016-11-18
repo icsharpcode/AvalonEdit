@@ -34,6 +34,22 @@ namespace ICSharpCode.AvalonEdit.Search {
     /// </summary>
     public static class SearchCommands {
         /// <summary>
+        /// Opens the Find panel
+        /// </summary>
+        public static readonly RoutedCommand Find = new RoutedCommand(
+            "Find", typeof(SearchPanel),
+            new InputGestureCollection { new KeyGesture(Key.F, ModifierKeys.Control) }
+        );
+
+        /// <summary>
+        /// Opens the Replace panel
+        /// </summary>
+        public static readonly RoutedCommand Replace = new RoutedCommand(
+            "Replace", typeof(SearchPanel),
+            new InputGestureCollection { new KeyGesture(Key.H, ModifierKeys.Control) }
+        );
+
+        /// <summary>
         /// Finds the next occurrence in the file.
         /// </summary>
         public static readonly RoutedCommand FindNext = new RoutedCommand(
@@ -97,6 +113,8 @@ namespace ICSharpCode.AvalonEdit.Search {
         internal void RegisterGlobalCommands(CommandBindingCollection commandBindings) {
             commandBindings.Add(new CommandBinding(ApplicationCommands.Find, ExecuteFind));
             commandBindings.Add(new CommandBinding(ApplicationCommands.Replace, ExecuteReplace));
+            commandBindings.Add(new CommandBinding(SearchCommands.Find, ExecuteFind));
+            commandBindings.Add(new CommandBinding(SearchCommands.Replace, ExecuteReplace));
             commandBindings.Add(new CommandBinding(SearchCommands.FindNext, ExecuteFindNext, CanExecuteWithOpenSearchPanel));
             commandBindings.Add(new CommandBinding(SearchCommands.FindPrevious, ExecuteFindPrevious, CanExecuteWithOpenSearchPanel));
             commandBindings.Add(new CommandBinding(SearchCommands.ReplaceNext, ExecuteReplaceNext, CanExecuteWithOpenSearchPanel));
@@ -106,6 +124,8 @@ namespace ICSharpCode.AvalonEdit.Search {
         void RegisterCommands(ICollection<CommandBinding> commandBindings) {
             commandBindings.Add(new CommandBinding(ApplicationCommands.Find, ExecuteFind));
             commandBindings.Add(new CommandBinding(ApplicationCommands.Replace, ExecuteReplace));
+            commandBindings.Add(new CommandBinding(SearchCommands.Find, ExecuteFind));
+            commandBindings.Add(new CommandBinding(SearchCommands.Replace, ExecuteReplace));
             commandBindings.Add(new CommandBinding(SearchCommands.FindNext, ExecuteFindNext, CanExecuteWithOpenSearchPanel));
             commandBindings.Add(new CommandBinding(SearchCommands.FindPrevious, ExecuteFindPrevious, CanExecuteWithOpenSearchPanel));
             commandBindings.Add(new CommandBinding(SearchCommands.ReplaceNext, ExecuteReplaceNext, CanExecuteWithOpenSearchPanel));
