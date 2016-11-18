@@ -70,6 +70,8 @@ namespace ICSharpCode.AvalonEdit.Sample {
             foldingUpdateTimer.Interval = TimeSpan.FromSeconds(2);
             foldingUpdateTimer.Tick += delegate { UpdateFoldings(); };
             foldingUpdateTimer.Start();
+
+            Search.SearchPanel.Install(textEditor);
         }
 
         string currentFileName;

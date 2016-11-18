@@ -449,4 +449,10 @@
   <ItemGroup>
     <EmbeddedResource Include="Highlighting\Resources\MarkDown-Mode.xshd" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Search\replacenext.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Search\replaceall.png" />
+  </ItemGroup>
 </Project>
