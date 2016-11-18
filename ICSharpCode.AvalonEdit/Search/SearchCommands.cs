@@ -28,179 +28,191 @@ using ICSharpCode.AvalonEdit.Document;
 using ICSharpCode.AvalonEdit.Editing;
 using ICSharpCode.AvalonEdit.Rendering;
 
-namespace ICSharpCode.AvalonEdit.Search {
-    /// <summary>
-    /// Search commands for AvalonEdit.
-    /// </summary>
-    public static class SearchCommands {
-        /// <summary>
-        /// Opens the Find panel
-        /// </summary>
-        public static readonly RoutedCommand Find = new RoutedCommand(
-            "Find", typeof(SearchPanel),
-            new InputGestureCollection { new KeyGesture(Key.F, ModifierKeys.Control) }
-        );
+namespace ICSharpCode.AvalonEdit.Search
+{
+	/// <summary>
+	/// Search commands for AvalonEdit.
+	/// </summary>
+	public static class SearchCommands
+	{
+		/// <summary>
+		/// Opens the Find panel
+		/// </summary>
+		public static readonly RoutedCommand Find = new RoutedCommand(
+			"Find", typeof(SearchPanel),
+			new InputGestureCollection { new KeyGesture(Key.F, ModifierKeys.Control) }
+		);
 
-        /// <summary>
-        /// Opens the Replace panel
-        /// </summary>
-        public static readonly RoutedCommand Replace = new RoutedCommand(
-            "Replace", typeof(SearchPanel),
-            new InputGestureCollection { new KeyGesture(Key.H, ModifierKeys.Control) }
-        );
+		/// <summary>
+		/// Opens the Replace panel
+		/// </summary>
+		public static readonly RoutedCommand Replace = new RoutedCommand(
+			"Replace", typeof(SearchPanel),
+			new InputGestureCollection { new KeyGesture(Key.H, ModifierKeys.Control) }
+		);
 
-        /// <summary>
-        /// Finds the next occurrence in the file.
-        /// </summary>
-        public static readonly RoutedCommand FindNext = new RoutedCommand(
-            "FindNext", typeof(SearchPanel),
-            new InputGestureCollection { new KeyGesture(Key.F3) }
-        );
+		/// <summary>
+		/// Finds the next occurrence in the file.
+		/// </summary>
+		public static readonly RoutedCommand FindNext = new RoutedCommand(
+			"FindNext", typeof(SearchPanel),
+			new InputGestureCollection { new KeyGesture(Key.F3) }
+		);
+		
+		/// <summary>
+		/// Finds the previous occurrence in the file.
+		/// </summary>
+		public static readonly RoutedCommand FindPrevious = new RoutedCommand(
+			"FindPrevious", typeof(SearchPanel),
+			new InputGestureCollection { new KeyGesture(Key.F3, ModifierKeys.Shift) }
+		);
+		
+		/// <summary>
+		/// Replaces the current occurrence and finds the next occurrence in the file.
+		/// </summary>
+		public static readonly RoutedCommand ReplaceNext = new RoutedCommand(
+			"ReplaceNext", typeof(SearchPanel),
+			new InputGestureCollection { new KeyGesture(Key.R, ModifierKeys.Alt) }
+		);
 
-        /// <summary>
-        /// Finds the previous occurrence in the file.
-        /// </summary>
-        public static readonly RoutedCommand FindPrevious = new RoutedCommand(
-            "FindPrevious", typeof(SearchPanel),
-            new InputGestureCollection { new KeyGesture(Key.F3, ModifierKeys.Shift) }
-        );
+		/// <summary>
+		/// Replaces all occurrence in the file.
+		/// </summary>
+		public static readonly RoutedCommand ReplaceAll = new RoutedCommand(
+			"ReplaceAll", typeof(SearchPanel),
+			new InputGestureCollection { new KeyGesture(Key.A, ModifierKeys.Alt) }
+		);
 
-        /// <summary>
-        /// Replaces the current occurrence and finds the next occurrence in the file.
-        /// </summary>
-        public static readonly RoutedCommand ReplaceNext = new RoutedCommand(
-            "ReplaceNext", typeof(SearchPanel),
-            new InputGestureCollection { new KeyGesture(Key.R, ModifierKeys.Alt) }
-        );
+		/// <summary>
+		/// Closes the SearchPanel.
+		/// </summary>
+		public static readonly RoutedCommand CloseSearchPanel = new RoutedCommand(
+			"CloseSearchPanel", typeof(SearchPanel),
+			new InputGestureCollection { new KeyGesture(Key.Escape) }
+		);
+	}
+	
+	/// <summary>
+	/// TextAreaInputHandler that registers all search-related commands.
+	/// </summary>
+	public class SearchInputHandler : TextAreaInputHandler
+	{
+		/// <summary>
+		/// Creates a new SearchInputHandler and registers the search-related commands.
+		/// </summary>
+		[Obsolete("Use SearchPanel.Install instead")]
+		public SearchInputHandler(TextArea textArea)
+			: base(textArea)
+		{
+			RegisterCommands(this.CommandBindings);
+			panel = SearchPanel.Install(textArea);
+		}
+		
+		internal SearchInputHandler(TextArea textArea, SearchPanel panel)
+			: base(textArea)
+		{
+			RegisterCommands(this.CommandBindings);
+			this.panel = panel;
+		}
+		
+		internal void RegisterGlobalCommands(CommandBindingCollection commandBindings)
+		{
+			commandBindings.Add(new CommandBinding(ApplicationCommands.Find, ExecuteFind));
+			commandBindings.Add(new CommandBinding(ApplicationCommands.Replace, ExecuteReplace));
+			commandBindings.Add(new CommandBinding(SearchCommands.Find, ExecuteFind));
+			commandBindings.Add(new CommandBinding(SearchCommands.Replace, ExecuteReplace));
+			commandBindings.Add(new CommandBinding(SearchCommands.FindNext, ExecuteFindNext, CanExecuteWithOpenSearchPanel));
+			commandBindings.Add(new CommandBinding(SearchCommands.FindPrevious, ExecuteFindPrevious, CanExecuteWithOpenSearchPanel));
+			commandBindings.Add(new CommandBinding(SearchCommands.ReplaceNext, ExecuteReplaceNext, CanExecuteWithOpenSearchPanel));
+			commandBindings.Add(new CommandBinding(SearchCommands.ReplaceAll, ExecuteReplaceAll, CanExecuteWithOpenSearchPanel));
+		}
 
-        /// <summary>
-        /// Replaces all occurrence in the file.
-        /// </summary>
-        public static readonly RoutedCommand ReplaceAll = new RoutedCommand(
-            "ReplaceAll", typeof(SearchPanel),
-            new InputGestureCollection { new KeyGesture(Key.A, ModifierKeys.Alt) }
-        );
+		void RegisterCommands(ICollection<CommandBinding> commandBindings)
+		{
+			commandBindings.Add(new CommandBinding(ApplicationCommands.Find, ExecuteFind));
+			commandBindings.Add(new CommandBinding(ApplicationCommands.Replace, ExecuteReplace));
+			commandBindings.Add(new CommandBinding(SearchCommands.Find, ExecuteFind));
+			commandBindings.Add(new CommandBinding(SearchCommands.Replace, ExecuteReplace));
+			commandBindings.Add(new CommandBinding(SearchCommands.FindNext, ExecuteFindNext, CanExecuteWithOpenSearchPanel));
+			commandBindings.Add(new CommandBinding(SearchCommands.FindPrevious, ExecuteFindPrevious, CanExecuteWithOpenSearchPanel));
+			commandBindings.Add(new CommandBinding(SearchCommands.ReplaceNext, ExecuteReplaceNext, CanExecuteWithOpenSearchPanel));
+			commandBindings.Add(new CommandBinding(SearchCommands.ReplaceAll, ExecuteReplaceAll, CanExecuteWithOpenSearchPanel));
+			commandBindings.Add(new CommandBinding(SearchCommands.CloseSearchPanel, ExecuteCloseSearchPanel, CanExecuteWithOpenSearchPanel));
+		}
+		
+		SearchPanel panel;
+		
+		void ExecuteFind(object sender, ExecutedRoutedEventArgs e)
+		{
+			panel.Open(false);
+			if (!(TextArea.Selection.IsEmpty || TextArea.Selection.IsMultiline))
+				panel.SearchPattern = TextArea.Selection.GetText();
+			Dispatcher.CurrentDispatcher.BeginInvoke(DispatcherPriority.Input, (Action)delegate { panel.Reactivate(); });
+		}
 
-        /// <summary>
-        /// Closes the SearchPanel.
-        /// </summary>
-        public static readonly RoutedCommand CloseSearchPanel = new RoutedCommand(
-            "CloseSearchPanel", typeof(SearchPanel),
-            new InputGestureCollection { new KeyGesture(Key.Escape) }
-        );
-    }
+		void ExecuteReplace(object sender, ExecutedRoutedEventArgs e) {
+			panel.Open(true);
+			if (!(TextArea.Selection.IsEmpty || TextArea.Selection.IsMultiline))
+				panel.SearchPattern = TextArea.Selection.GetText();
+			Dispatcher.CurrentDispatcher.BeginInvoke(DispatcherPriority.Input, (Action)delegate { panel.Reactivate(); });
+		}
 
-    /// <summary>
-    /// TextAreaInputHandler that registers all search-related commands.
-    /// </summary>
-    public class SearchInputHandler : TextAreaInputHandler {
-        /// <summary>
-        /// Creates a new SearchInputHandler and registers the search-related commands.
-        /// </summary>
-        [Obsolete("Use SearchPanel.Install instead")]
-        public SearchInputHandler(TextArea textArea)
-            : base(textArea) {
-            RegisterCommands(this.CommandBindings);
-            panel = SearchPanel.Install(textArea);
-        }
+		void CanExecuteWithOpenSearchPanel(object sender, CanExecuteRoutedEventArgs e)
+		{
+			if (panel.IsClosed) {
+				e.CanExecute = false;
+				// Continue routing so that the key gesture can be consumed by another component.
+				e.ContinueRouting = true;
+			} else {
+				e.CanExecute = true;
+				e.Handled = true;
+			}
+		}
+		
+		void ExecuteFindNext(object sender, ExecutedRoutedEventArgs e)
+		{
+			if (!panel.IsClosed) {
+				panel.FindNext();
+				e.Handled = true;
+			}
+		}
+		
+		void ExecuteFindPrevious(object sender, ExecutedRoutedEventArgs e)
+		{
+			if (!panel.IsClosed) {
+				panel.FindPrevious();
+				e.Handled = true;
+			}
+		}
+		
+		void ExecuteReplaceNext(object sender, ExecutedRoutedEventArgs e) {
+			if (!panel.IsClosed) {
+				panel.ReplaceNext();
+				e.Handled = true;
+			}
+		}
 
-        internal SearchInputHandler(TextArea textArea, SearchPanel panel)
-            : base(textArea) {
-            RegisterCommands(this.CommandBindings);
-            this.panel = panel;
-        }
+		void ExecuteReplaceAll(object sender, ExecutedRoutedEventArgs e) {
+			if (!panel.IsClosed) {
+				panel.ReplaceAll();
+				e.Handled = true;
+			}
+		}
 
-        internal void RegisterGlobalCommands(CommandBindingCollection commandBindings) {
-            commandBindings.Add(new CommandBinding(ApplicationCommands.Find, ExecuteFind));
-            commandBindings.Add(new CommandBinding(ApplicationCommands.Replace, ExecuteReplace));
-            commandBindings.Add(new CommandBinding(SearchCommands.Find, ExecuteFind));
-            commandBindings.Add(new CommandBinding(SearchCommands.Replace, ExecuteReplace));
-            commandBindings.Add(new CommandBinding(SearchCommands.FindNext, ExecuteFindNext, CanExecuteWithOpenSearchPanel));
-            commandBindings.Add(new CommandBinding(SearchCommands.FindPrevious, ExecuteFindPrevious, CanExecuteWithOpenSearchPanel));
-            commandBindings.Add(new CommandBinding(SearchCommands.ReplaceNext, ExecuteReplaceNext, CanExecuteWithOpenSearchPanel));
-            commandBindings.Add(new CommandBinding(SearchCommands.ReplaceAll, ExecuteReplaceAll, CanExecuteWithOpenSearchPanel));
-        }
-
-        void RegisterCommands(ICollection<CommandBinding> commandBindings) {
-            commandBindings.Add(new CommandBinding(ApplicationCommands.Find, ExecuteFind));
-            commandBindings.Add(new CommandBinding(ApplicationCommands.Replace, ExecuteReplace));
-            commandBindings.Add(new CommandBinding(SearchCommands.Find, ExecuteFind));
-            commandBindings.Add(new CommandBinding(SearchCommands.Replace, ExecuteReplace));
-            commandBindings.Add(new CommandBinding(SearchCommands.FindNext, ExecuteFindNext, CanExecuteWithOpenSearchPanel));
-            commandBindings.Add(new CommandBinding(SearchCommands.FindPrevious, ExecuteFindPrevious, CanExecuteWithOpenSearchPanel));
-            commandBindings.Add(new CommandBinding(SearchCommands.ReplaceNext, ExecuteReplaceNext, CanExecuteWithOpenSearchPanel));
-            commandBindings.Add(new CommandBinding(SearchCommands.ReplaceAll, ExecuteReplaceAll, CanExecuteWithOpenSearchPanel));
-            commandBindings.Add(new CommandBinding(SearchCommands.CloseSearchPanel, ExecuteCloseSearchPanel, CanExecuteWithOpenSearchPanel));
-        }
-
-        SearchPanel panel;
-
-        void ExecuteFind(object sender, ExecutedRoutedEventArgs e) {
-            panel.Open(false);
-            if (!(TextArea.Selection.IsEmpty || TextArea.Selection.IsMultiline))
-                panel.SearchPattern = TextArea.Selection.GetText();
-            Dispatcher.CurrentDispatcher.BeginInvoke(DispatcherPriority.Input, (Action)delegate { panel.Reactivate(); });
-        }
-
-        void ExecuteReplace(object sender, ExecutedRoutedEventArgs e) {
-            panel.Open(true);
-            if (!(TextArea.Selection.IsEmpty || TextArea.Selection.IsMultiline))
-                panel.SearchPattern = TextArea.Selection.GetText();
-            Dispatcher.CurrentDispatcher.BeginInvoke(DispatcherPriority.Input, (Action)delegate { panel.Reactivate(); });
-        }
-
-        void CanExecuteWithOpenSearchPanel(object sender, CanExecuteRoutedEventArgs e) {
-            if (panel.IsClosed) {
-                e.CanExecute = false;
-                // Continue routing so that the key gesture can be consumed by another component.
-                e.ContinueRouting = true;
-            } else {
-                e.CanExecute = true;
-                e.Handled = true;
-            }
-        }
-
-        void ExecuteFindNext(object sender, ExecutedRoutedEventArgs e) {
-            if (!panel.IsClosed) {
-                panel.FindNext();
-                e.Handled = true;
-            }
-        }
-
-        void ExecuteFindPrevious(object sender, ExecutedRoutedEventArgs e) {
-            if (!panel.IsClosed) {
-                panel.FindPrevious();
-                e.Handled = true;
-            }
-        }
-
-        void ExecuteReplaceNext(object sender, ExecutedRoutedEventArgs e) {
-            if (!panel.IsClosed) {
-                panel.ReplaceNext();
-                e.Handled = true;
-            }
-        }
-
-        void ExecuteReplaceAll(object sender, ExecutedRoutedEventArgs e) {
-            if (!panel.IsClosed) {
-                panel.ReplaceAll();
-                e.Handled = true;
-            }
-        }
-
-        void ExecuteCloseSearchPanel(object sender, ExecutedRoutedEventArgs e) {
-            if (!panel.IsClosed) {
-                panel.Close();
-                e.Handled = true;
-            }
-        }
-
-        /// <summary>
-        /// Fired when SearchOptions are modified inside the SearchPanel.
-        /// </summary>
-        public event EventHandler<SearchOptionsChangedEventArgs> SearchOptionsChanged {
-            add { panel.SearchOptionsChanged += value; }
-            remove { panel.SearchOptionsChanged -= value; }
-        }
-    }
+		void ExecuteCloseSearchPanel(object sender, ExecutedRoutedEventArgs e)
+		{
+			if (!panel.IsClosed) {
+				panel.Close();
+				e.Handled = true;
+			}
+		}
+		
+		/// <summary>
+		/// Fired when SearchOptions are modified inside the SearchPanel.
+		/// </summary>
+		public event EventHandler<SearchOptionsChangedEventArgs> SearchOptionsChanged {
+			add { panel.SearchOptionsChanged += value; }
+			remove { panel.SearchOptionsChanged -= value; }
+		}
+	}
 }
