@@ -376,6 +376,7 @@ namespace ICSharpCode.AvalonEdit.Search
 			SearchResult result = renderer.CurrentResults.FindFirstSegmentWithStartAfter(textArea.Caret.Offset);
 			var count = renderer.CurrentResults.Count;
 			if (result != null
+				&& !textArea.Selection.IsEmpty
 				&& textArea.Document.GetOffset(textArea.Selection.StartPosition.Location) == result.StartOffset
 				&& textArea.Document.GetOffset(textArea.Selection.EndPosition.Location) == result.EndOffset) {
 				Replace(result);
