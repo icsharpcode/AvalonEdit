@@ -163,12 +163,17 @@ namespace ICSharpCode.AvalonEdit.Editing
 
 		public IRawElementProviderSimple[] GetChildren()
 		{
-			return null;
+			Log("{0}.GetChildren()", ID);
+			return new IRawElementProviderSimple[0];
 		}
 
 		public IRawElementProviderSimple GetEnclosingElement()
 		{
-			return null;
+			Log("{0}.GetEnclosingElement()", ID);
+			var peer = TextAreaAutomationPeer.FromElement(textArea) as TextAreaAutomationPeer;
+			if (peer == null)
+				throw new NotSupportedException();
+			return peer.Provider;
 		}
 
 		public string GetText(int maxLength)

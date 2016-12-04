@@ -46,6 +46,11 @@ namespace ICSharpCode.AvalonEdit.Editing
 			return AutomationControlType.Document;
 		}
 
+		internal IRawElementProviderSimple Provider
+		{
+			get { return ProviderFromPeer(this); }
+		}
+
 		public bool IsReadOnly {
 			get { return TextArea.ReadOnlySectionProvider == ReadOnlySectionDocument.Instance; }
 		}
@@ -99,6 +104,11 @@ namespace ICSharpCode.AvalonEdit.Editing
 				return this;
 			if (patternInterface == PatternInterface.Value)
 				return this;
+			if (patternInterface == PatternInterface.Scroll) {
+				TextEditor editor = TextArea.GetService(typeof(TextEditor)) as TextEditor;
+				if (editor != null)
+					return FromElement(editor).GetPattern(patternInterface); 
+			}
 			return base.GetPattern(patternInterface);
 		}
 	}

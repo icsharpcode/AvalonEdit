@@ -68,13 +68,17 @@ namespace ICSharpCode.AvalonEdit
 		{
 			if (patternInterface == PatternInterface.Value)
 				return this;
-			
+
 			if (patternInterface == PatternInterface.Scroll) {
 				ScrollViewer scrollViewer = this.TextEditor.ScrollViewer;
 				if (scrollViewer != null)
 					return UIElementAutomationPeer.FromElement(scrollViewer);
 			}
-			
+
+			if (patternInterface == PatternInterface.Text) {
+				return FromElement(this.TextEditor.TextArea);
+			}
+
 			return base.GetPattern(patternInterface);
 		}
 		
