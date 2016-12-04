@@ -57,7 +57,7 @@ namespace ICSharpCode.AvalonEdit
 			get { return this.TextEditor.IsReadOnly; }
 		}
 
-				/// /// <inheritdoc/>
+		/// <inheritdoc/>
 		protected override AutomationControlType GetAutomationControlTypeCore()
 		{
 			return AutomationControlType.Document;
@@ -72,7 +72,7 @@ namespace ICSharpCode.AvalonEdit
 			if (patternInterface == PatternInterface.Scroll) {
 				ScrollViewer scrollViewer = this.TextEditor.ScrollViewer;
 				if (scrollViewer != null)
-					return UIElementAutomationPeer.CreatePeerForElement(scrollViewer);
+					return UIElementAutomationPeer.FromElement(scrollViewer);
 			}
 			
 			return base.GetPattern(patternInterface);

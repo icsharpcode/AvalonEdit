@@ -1058,13 +1058,14 @@ namespace ICSharpCode.AvalonEdit.Editing
 
 		#endregion
 
+		/// <inheritdoc/>
 		protected override System.Windows.Automation.Peers.AutomationPeer OnCreateAutomationPeer()
 		{
 			return new TextAreaAutomationPeer(this);
 		}
 
-	/// <inheritdoc/>
-	protected override HitTestResult HitTestCore(PointHitTestParameters hitTestParameters)
+		/// <inheritdoc/>
+		protected override HitTestResult HitTestCore(PointHitTestParameters hitTestParameters)
 		{
 			// accept clicks even where the text area draws no background
 			return new PointHitTestResult(this, hitTestParameters.HitPoint);
