@@ -16,8 +16,8 @@
 								</TextBox.Text>
 							</TextBox>
 							<search:DropDownButton Height="24">
-								<search:DropDownButton.DropDownContent Name="PART_dropdownPopup">
-									<Popup StaysOpen="False">
+								<search:DropDownButton.DropDownContent>
+									<Popup StaysOpen="False" Name="PART_dropdownPopup">
 										<Border Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" BorderBrush="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}" BorderThickness="1">
 											<StackPanel Orientation="Vertical">
 												<CheckBox IsChecked="{Binding MatchCase, RelativeSource={RelativeSource TemplatedParent}}" Content="{Binding Localization.MatchCaseText, RelativeSource={RelativeSource TemplatedParent}}" Margin="3" />
