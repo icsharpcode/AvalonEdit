@@ -99,7 +99,7 @@ namespace ICSharpCode.AvalonEdit.Editing
 			TextArea textArea = (TextArea)sender;
 			if (Mouse.Captured != textArea)
 			{
-				SelectionMouseHandler handler = textArea.DefaultInputHandler.NestedInputHandlers.OfType<SelectionMouseHandler>().FirstOrDefault();
+				SelectionMouseHandler handler = textArea.DefaultInputHandler.MouseSelection as SelectionMouseHandler;
 				if (handler != null)
 					handler.mode = SelectionMode.None;
 			}
