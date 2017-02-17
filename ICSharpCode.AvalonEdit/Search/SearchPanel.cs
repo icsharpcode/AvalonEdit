@@ -415,7 +415,7 @@ namespace ICSharpCode.AvalonEdit.Search
 			if (layer != null)
 				layer.Remove(adorner);
 			if (dropdownPopup != null)
-            	dropdownPopup.IsOpen = false;
+				dropdownPopup.IsOpen = false;
 			messageView.IsOpen = false;
 			textArea.TextView.BackgroundRenderers.Remove(renderer);
 			if (hasFocus)
