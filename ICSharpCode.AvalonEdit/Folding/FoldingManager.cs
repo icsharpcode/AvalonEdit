@@ -279,12 +279,12 @@ namespace ICSharpCode.AvalonEdit.Folding
 					// auto-close #regions only when opening the document
 					if (isFirstUpdate) {
 						section.IsFolded = newFolding.DefaultClosed;
-						isFirstUpdate = false;
 					}
 					section.Tag = newFolding;
 				}
 				section.Title = newFolding.Name;
 			}
+			isFirstUpdate = false;
 			// remove all outstanding old foldings:
 			while (oldFoldingIndex < oldFoldings.Length) {
 				FoldingSection oldSection = oldFoldings[oldFoldingIndex++];
