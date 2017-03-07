@@ -2,7 +2,7 @@
 <SyntaxDefinition name="Python" extensions=".py;.pyw" xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
 	<Color name="Comment" foreground="Green" exampleText="# comment" />
 	<Color name="String" foreground="Gray" exampleText="name = 'abc'"/>
-    <Color name="MethodCall" foreground="Purple" exampleText="def Hello()"/>
+	<Color name="MethodCall" foreground="Purple" exampleText="def Hello()"/>
 	<Color name="NumberLiteral" foreground="DarkBlue" exampleText="3.1415f"/>
 	<Color name="Keywords" fontWeight="bold" foreground="Blue" exampleText="if"/>
 
@@ -78,7 +78,7 @@
 			<Word>await</Word>
 		</Keywords>
 
-        <Rule color="MethodCall">
+		<Rule color="MethodCall">
 			\b
 			[\d\w_]+  # an identifier
 			(?=\s*\() # followed by (
