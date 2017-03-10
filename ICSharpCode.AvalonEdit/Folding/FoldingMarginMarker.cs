@@ -84,12 +84,12 @@ namespace ICSharpCode.AvalonEdit.Folding
 			double middleX = rect.Left + rect.Width / 2;
 			double middleY = rect.Top + rect.Height / 2;
 			double space = PixelSnapHelpers.Round(rect.Width / 8, pixelSize.Width) + pixelSize.Width;
-			drawingContext.DrawLine(activePen,
-			                        new Point(rect.Left + space, middleY),
+			drawingContext.DrawLine(IsMouseDirectlyOver ? activePen : inactivePen,
+                                    new Point(rect.Left + space, middleY),
 			                        new Point(rect.Right - space, middleY));
 			if (!isExpanded) {
-				drawingContext.DrawLine(activePen,
-				                        new Point(middleX, rect.Top + space),
+				drawingContext.DrawLine(IsMouseDirectlyOver ? activePen : inactivePen,
+                                        new Point(middleX, rect.Top + space),
 				                        new Point(middleX, rect.Bottom - space));
 			}
 		}
