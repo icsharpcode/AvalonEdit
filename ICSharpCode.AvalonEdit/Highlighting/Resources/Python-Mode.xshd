@@ -24,21 +24,21 @@
 			<Begin>\#</Begin>
 		</Span>
 
-    <Span color="String" multiline="true">
-      <Begin>"""</Begin>
-      <End>"""</End>
-      <RuleSet>
-        <Span begin='""' end=""/>
-      </RuleSet>
-    </Span>
-    <Span color="String" multiline="true">
-      <Begin>'''</Begin>
-      <End>'''</End>
-      <RuleSet>
-        <Span begin='""' end=""/>
-      </RuleSet>
-    </Span>
-    <Span color="String">
+		<Span color="String" multiline="true">
+			<Begin>"""</Begin>
+			<End>"""</End>
+			<RuleSet>
+				<Span begin='""' end=""/>
+			</RuleSet>
+		</Span>
+		<Span color="String" multiline="true">
+			<Begin>'''</Begin>
+			<End>'''</End>
+			<RuleSet>
+				<Span begin='""' end=""/>
+			</RuleSet>
+		</Span>
+		<Span color="String">
 			<Begin>"</Begin>
 			<End>"</End>
 			<RuleSet>
