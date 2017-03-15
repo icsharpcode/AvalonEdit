@@ -8,7 +8,7 @@
 <SyntaxDefinition name="VB" extensions=".vb" xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
 	<Color name="Comment" foreground="Green" exampleText="' comment" />
 	<Color name="String" exampleText="text = &quot;Hello, World!&quot;" />
-	
+
 	<Color name="DateLiteral" foreground="Blue" exampleText="endOfWorld = #2012-12-21#" />
 	<Color name="Preprocessor" foreground="Maroon" exampleText="#Region &quot;Title&quot;" />
 	<Color name="DataTypes" foreground="#FF6F002F" exampleText="Dim b As Boolean = True" />
@@ -17,9 +17,9 @@
 	<Color name="Keywords" foreground="Blue" exampleText="If a OrElse b Then" />
 	<Color name="FunctionKeywords" foreground="Blue" exampleText="CInt(a)" />
 	<Color name="ContextKeywords" foreground="Blue" exampleText="Declare Unicode Sub SomeMethod" />
-	
+
 	<Property name="DocCommentMarker" value="'''" />
-	
+
 	<RuleSet ignoreCase="true">
 		<Span color="String">
 			<Begin>"</Begin>
