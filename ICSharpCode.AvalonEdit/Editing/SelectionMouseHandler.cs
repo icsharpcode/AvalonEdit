@@ -498,18 +498,32 @@ namespace ICSharpCode.AvalonEdit.Editing
 				pos.Y = textView.ActualHeight;
 			pos += textView.ScrollOffset;
 			VisualLine line = textView.GetVisualLineFromVisualTop(pos.Y);
+
 			if (line != null) {
 				int visualColumn = line.GetVisualColumn(pos, textArea.Selection.EnableVirtualSpace);
-				int wordStartVC = line.GetNextCaretPosition(visualColumn + 1, LogicalDirection.Backward, CaretPositioningMode.WordStartOrSymbol, textArea.Selection.EnableVirtualSpace);
-				if (wordStartVC == -1)
-					wordStartVC = 0;
-				int wordEndVC = line.GetNextCaretPosition(wordStartVC, LogicalDirection.Forward, CaretPositioningMode.WordBorderOrSymbol, textArea.Selection.EnableVirtualSpace);
-				if (wordEndVC == -1)
-					wordEndVC = line.VisualLength;
 				int relOffset = line.FirstDocumentLine.Offset;
-				int wordStartOffset = line.GetRelativeOffset(wordStartVC) + relOffset;
-				int wordEndOffset = line.GetRelativeOffset(wordEndVC) + relOffset;
-				return new SimpleSegment(wordStartOffset, wordEndOffset - wordStartOffset);
+				int offset = line.GetRelativeOffset(visualColumn) + line.FirstDocumentLine.Offset;
+				var wsBefore = TextUtilities.GetWhitespaceBefore(textView.Document, offset);
+				var wsAfter = TextUtilities.GetWhitespaceAfter(textView.Document, offset);
+
+				if (wsBefore.Length > 0 && wsAfter.Length > 0) {
+					// there is whitespace before and after this position 
+					// return this whitespace as the "word" (consistent with VS)
+					int wordStartOffset = offset - wsBefore.Length;
+					int wordEndOffset = offset + wsAfter.Length;
+					return new SimpleSegment(wordStartOffset, wordEndOffset - wordStartOffset);
+				} else {
+
+					int wordStartVC = line.GetNextCaretPosition(visualColumn + 1, LogicalDirection.Backward, CaretPositioningMode.WordStartOrSymbol, textArea.Selection.EnableVirtualSpace);
+					if (wordStartVC == -1)
+						wordStartVC = 0;
+					int wordEndVC = line.GetNextCaretPosition(wordStartVC, LogicalDirection.Forward, CaretPositioningMode.WordBorderOrSymbol, textArea.Selection.EnableVirtualSpace);
+					if (wordEndVC == -1)
+						wordEndVC = line.VisualLength;
+					int wordStartOffset = line.GetRelativeOffset(wordStartVC) + relOffset;
+					int wordEndOffset = line.GetRelativeOffset(wordEndVC) + relOffset;
+					return new SimpleSegment(wordStartOffset, wordEndOffset - wordStartOffset);
+				}
 			} else {
 				return SimpleSegment.Invalid;
 			}
