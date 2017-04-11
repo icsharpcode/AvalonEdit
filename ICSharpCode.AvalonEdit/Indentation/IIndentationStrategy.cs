@@ -36,5 +36,13 @@ namespace ICSharpCode.AvalonEdit.Indentation
 		/// Reindents a set of lines.
 		/// </summary>
 		void IndentLines(TextDocument document, int beginLine, int endLine);
+		
+		/// <summary>
+		/// Allows the indentation strategy to act based upon the used entering new text.
+		/// </summary>
+		/// <example>
+		/// This allows indentation change when {/} block characters are entered (C#)
+		/// </example>
+		void OnLineChanged(TextDocument document, DocumentLine line, string newText);
 	}
 }

@@ -929,6 +929,9 @@ namespace ICSharpCode.AvalonEdit.Editing
 			if (this.Document == null)
 				throw ThrowUtil.NoDocumentAssigned();
 			selection.ReplaceSelectionWithText(newText);
+			
+			DocumentLine line = this.Document.GetLineByNumber(this.Caret.Line);
+			this.IndentationStrategy.OnLineChanged(this.Document, line, newText);
 		}
 		
 		internal ISegment[] GetDeletableSegments(ISegment segment)
