@@ -91,5 +91,15 @@ namespace ICSharpCode.AvalonEdit.Indentation.CSharp
 		{
 			Indent(new TextDocumentAccessor(document, beginLine, endLine), true);
 		}
+		
+		/// <inheritdoc cref="IIndentationStrategy.OnLineChanged"/>
+		public override void OnLineChanged(TextDocument document, DocumentLine line, string newText)
+		{
+			// Reformat line when blocks are created
+			if (newText == "{" || newText == "}")
+			{
+				IndentLine(document, line);
+			}
+		}
 	}
 }

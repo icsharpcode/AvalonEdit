@@ -53,5 +53,10 @@ namespace ICSharpCode.AvalonEdit.Indentation
 		public virtual void IndentLines(TextDocument document, int beginLine, int endLine)
 		{
 		}
+		
+		/// <inheritdoc/>
+		public virtual void OnLineChanged(TextDocument document, DocumentLine line, string newText)
+		{
+		}
 	}
 }
