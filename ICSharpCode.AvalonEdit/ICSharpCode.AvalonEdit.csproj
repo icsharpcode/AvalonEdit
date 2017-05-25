@@ -451,4 +451,7 @@
   <ItemGroup>
     <EmbeddedResource Include="Highlighting\Resources\MarkDown-Mode.xshd" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Highlighting\Resources\TSQL-Mode.xshd" />
+  </ItemGroup>
 </Project>
