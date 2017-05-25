@@ -641,7 +641,7 @@ namespace ICSharpCode.AvalonEdit.Editing
 		static void OnIndentSelection(object target, ExecutedRoutedEventArgs args)
 		{
 			TextArea textArea = GetTextArea(target);
-			if (textArea != null && textArea.Document != null) {
+			if (textArea != null && textArea.Document != null && textArea.IndentationStrategy != null) {
 				using (textArea.Document.RunUpdate()) {
 					int start, end;
 					if (textArea.Selection.IsEmpty) {
