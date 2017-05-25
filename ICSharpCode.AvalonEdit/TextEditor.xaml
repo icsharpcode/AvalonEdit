@@ -55,6 +55,7 @@
 			</Setter.Value>
 		</Setter>
 		<Setter Property="SelectionForeground" Value="{DynamicResource {x:Static SystemColors.HighlightTextBrushKey}}"/>
+		<Setter Property="TextOptions.TextFormattingMode" Value="{Binding (TextOptions.TextFormattingMode), RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ScrollContentPresenter}}" />
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type editing:TextArea}">
