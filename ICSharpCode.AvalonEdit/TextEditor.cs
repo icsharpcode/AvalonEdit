@@ -97,7 +97,7 @@ namespace ICSharpCode.AvalonEdit
 		{
 			base.OnGotKeyboardFocus(e);
 			if (e.NewFocus == this) {
-				Keyboard.Focus(this.TextArea);
+				Keyboard.Focus(textArea);
 				e.Handled = true;
 			}
 		}
@@ -299,18 +299,12 @@ namespace ICSharpCode.AvalonEdit
 		
 		bool CanExecute(RoutedUICommand command)
 		{
-			TextArea textArea = this.TextArea;
-			if (textArea == null)
-				return false;
-			else
-				return command.CanExecute(null, textArea);
+			return command.CanExecute(null, textArea);
 		}
 		
 		void Execute(RoutedUICommand command)
 		{
-			TextArea textArea = this.TextArea;
-			if (textArea != null)
-				command.Execute(null, textArea);
+			command.Execute(null, textArea);
 		}
 		#endregion
 		
@@ -341,13 +335,13 @@ namespace ICSharpCode.AvalonEdit
 		void OnSyntaxHighlightingChanged(IHighlightingDefinition newValue)
 		{
 			if (colorizer != null) {
-				this.TextArea.TextView.LineTransformers.Remove(colorizer);
+				textArea.TextView.LineTransformers.Remove(colorizer);
 				colorizer = null;
 			}
 			if (newValue != null) {
 				colorizer = CreateColorizer(newValue);
 				if (colorizer != null)
-					this.TextArea.TextView.LineTransformers.Insert(0, colorizer);
+					textArea.TextView.LineTransformers.Insert(0, colorizer);
 			}
 		}
 		
@@ -825,10 +819,9 @@ namespace ICSharpCode.AvalonEdit
 		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
 		public string SelectedText {
 			get {
-				TextArea textArea = this.TextArea;
 				// We'll get the text from the whole surrounding segment.
 				// This is done to ensure that SelectedText.Length == SelectionLength.
-				if (textArea != null && textArea.Document != null && !textArea.Selection.IsEmpty)
+				if (textArea.Document != null && !textArea.Selection.IsEmpty)
 					return textArea.Document.GetText(textArea.Selection.SurroundingSegment);
 				else
 					return string.Empty;
@@ -836,8 +829,7 @@ namespace ICSharpCode.AvalonEdit
 			set {
 				if (value == null)
 					throw new ArgumentNullException("value");
-				TextArea textArea = this.TextArea;
-				if (textArea != null && textArea.Document != null) {
+				if (textArea.Document != null) {
 					int offset = this.SelectionStart;
 					int length = this.SelectionLength;
 					textArea.Document.Replace(offset, length, value);
@@ -853,16 +845,10 @@ namespace ICSharpCode.AvalonEdit
 		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
 		public int CaretOffset {
 			get {
-				TextArea textArea = this.TextArea;
-				if (textArea != null)
-					return textArea.Caret.Offset;
-				else
-					return 0;
+				return textArea.Caret.Offset;
 			}
 			set {
-				TextArea textArea = this.TextArea;
-				if (textArea != null)
-					textArea.Caret.Offset = value;
+				textArea.Caret.Offset = value;
 			}
 		}
 		
@@ -872,15 +858,10 @@ namespace ICSharpCode.AvalonEdit
 		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
 		public int SelectionStart {
 			get {
-				TextArea textArea = this.TextArea;
-				if (textArea != null) {
-					if (textArea.Selection.IsEmpty)
-						return textArea.Caret.Offset;
-					else
-						return textArea.Selection.SurroundingSegment.Offset;
-				} else {
-					return 0;
-				}
+				if (textArea.Selection.IsEmpty)
+					return textArea.Caret.Offset;
+				else
+					return textArea.Selection.SurroundingSegment.Offset;
 			}
 			set {
 				Select(value, SelectionLength);
@@ -893,8 +874,7 @@ namespace ICSharpCode.AvalonEdit
 		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
 		public int SelectionLength {
 			get {
-				TextArea textArea = this.TextArea;
-				if (textArea != null && !textArea.Selection.IsEmpty)
+				if (!textArea.Selection.IsEmpty)
 					return textArea.Selection.SurroundingSegment.Length;
 				else
 					return 0;
