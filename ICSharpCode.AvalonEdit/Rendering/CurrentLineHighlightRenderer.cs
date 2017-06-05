@@ -92,7 +92,11 @@ namespace ICSharpCode.AvalonEdit.Rendering
 			
 			var linePosY = visualLine.VisualTop - this.textView.ScrollOffset.Y;
 			
-			builder.AddRectangle(textView, new Rect(0, linePosY, textView.ActualWidth, visualLine.Height));
+			// Currently, we can get here via the user maximizing the window, in which case 
+			// textView.ActualWidth is not yet updated, resulting in #20, "line highlighting 
+			// does not resize...". 32000 is elsewhere arbitrarily defined as the maximum possible
+			// width of a TextView. The highlight rectangle will be harmlessly clipped.
+			builder.AddRectangle(textView, new Rect(0, linePosY, 32000, visualLine.Height));
 			
 			Geometry geometry = builder.CreateGeometry();
 			if (geometry != null) {
