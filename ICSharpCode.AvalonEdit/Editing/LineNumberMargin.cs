@@ -80,10 +80,10 @@ namespace ICSharpCode.AvalonEdit.Editing
 			if (textView != null && textView.VisualLinesValid) {
 				var foreground = (Brush)GetValue(Control.ForegroundProperty);
 				foreach (VisualLine line in textView.VisualLines) {
-					int lineNumber = line.FirstDocumentLine.LineNumber;
+					string lineNumber = GetLineNumberString(line);
 					FormattedText text = TextFormatterFactory.CreateFormattedText(
 						this,
-						lineNumber.ToString(CultureInfo.CurrentCulture),
+						lineNumber,
 						typeface, emSize, foreground
 					);
 					double y = line.GetTextLineVisualYPosition(line.TextLines[0], VisualYPosition.TextTop);
@@ -91,7 +91,12 @@ namespace ICSharpCode.AvalonEdit.Editing
 				}
 			}
 		}
-		
+
+		protected virtual string GetLineNumberString(VisualLine line)
+		{
+			return line.FirstDocumentLine.LineNumber.ToString(CultureInfo.CurrentCulture);
+		}
+
 		/// <inheritdoc/>
 		protected override void OnTextViewChanged(TextView oldTextView, TextView newTextView)
 		{
