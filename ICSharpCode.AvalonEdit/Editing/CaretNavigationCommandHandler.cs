@@ -262,7 +262,7 @@ namespace ICSharpCode.AvalonEdit.Editing
 		
 		static TextViewPosition GetEndOfLineCaretPosition(VisualLine visualLine, TextLine textLine)
 		{
-			int newVC = visualLine.GetTextLineVisualStartColumn(textLine) + textLine.Length - textLine.TrailingWhitespaceLength;
+			int newVC = visualLine.GetTextLineVisualStartColumn(textLine) + textLine.Length - 1;
 			TextViewPosition pos = visualLine.GetTextViewPosition(newVC);
 			pos.IsAtEndOfLine = true;
 			return pos;
