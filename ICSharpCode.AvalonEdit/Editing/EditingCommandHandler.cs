@@ -217,8 +217,7 @@ namespace ICSharpCode.AvalonEdit.Editing
 							current = current.NextLine;
 						}
 					} else {
-						string indentationString = textArea.Options.GetIndentationString(textArea.Caret.Column);
-						textArea.ReplaceSelectionWithText(indentationString);
+						textArea.ReplaceSelectionWithText(textArea.Options.indentationString);
 					}
 				}
 				textArea.Caret.BringCaretToView();
