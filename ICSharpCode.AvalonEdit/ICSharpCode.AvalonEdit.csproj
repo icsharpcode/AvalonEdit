@@ -418,6 +418,7 @@
     <EmbeddedResource Include="Highlighting\Resources\JavaScript-Mode.xshd" />
     <EmbeddedResource Include="Highlighting\Resources\Patch-Mode.xshd" />
     <EmbeddedResource Include="Highlighting\Resources\PHP-Mode.xshd" />
+    <EmbeddedResource Include="Highlighting\Resources\Python-Mode.xshd" />
     <EmbeddedResource Include="Highlighting\Resources\Tex-Mode.xshd" />
     <EmbeddedResource Include="Highlighting\Resources\VB-Mode.xshd" />
     <EmbeddedResource Include="Highlighting\Resources\XML-Mode.xshd" />
