@@ -1595,7 +1595,7 @@ namespace ICSharpCode.AvalonEdit.Rendering
 		
 		void IScrollInfo.SetVerticalOffset(double offset)
 		{
-			offset = ValidateVisualOffset(offset);
+			offset = ValidateVisualOffset(AlignToDefaultLineHeight(offset));
 			if (!scrollOffset.Y.IsClose(offset)) {
 				SetScrollOffset(new Vector(scrollOffset.X, offset));
 				InvalidateMeasure(DispatcherPriority.Normal);
@@ -1649,6 +1649,21 @@ namespace ICSharpCode.AvalonEdit.Rendering
 				this.OnScrollChange();
 				InvalidateMeasure(DispatcherPriority.Normal);
 			}
+		}
+
+		/// <summary>
+		/// Aligns the vertical offset with DefaultLineHeight.
+		/// </summary>
+		private double AlignToDefaultLineHeight(double offset)
+		{
+			// do not align at the end of the scroll			
+			if (offset == (this as IScrollInfo).ExtentHeight - (this as IScrollInfo).ViewportHeight)
+				return offset;
+
+			if (DefaultLineHeight == 0)
+				return offset;
+			else
+				return Math.Round(offset / DefaultLineHeight) * DefaultLineHeight;
 		}
 		#endregion
 		
