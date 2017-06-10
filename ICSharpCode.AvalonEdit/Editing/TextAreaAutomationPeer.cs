@@ -22,6 +22,7 @@ using System.Windows.Automation;
 using System.Windows.Automation.Peers;
 using System.Windows.Automation.Provider;
 using ICSharpCode.AvalonEdit.Document;
+using System.Diagnostics;
 
 namespace ICSharpCode.AvalonEdit.Editing
 {
@@ -36,6 +37,7 @@ namespace ICSharpCode.AvalonEdit.Editing
 
 		private void OnSelectionChanged(object sender, EventArgs e)
 		{
+			Debug.WriteLine("RaiseAutomationEvent(AutomationEvents.TextPatternOnTextSelectionChanged)");
 			RaiseAutomationEvent(AutomationEvents.TextPatternOnTextSelectionChanged);
 		}
 
@@ -65,11 +67,15 @@ namespace ICSharpCode.AvalonEdit.Editing
 		}
 
 		public ITextRangeProvider DocumentRange {
-			get { return new TextRangeProvider(TextArea, TextArea.Document, 0, TextArea.Document.TextLength); }
+			get {
+				Debug.WriteLine("TextAreaAutomationPeer.get_DocumentRange()");
+				return new TextRangeProvider(TextArea, TextArea.Document, 0, TextArea.Document.TextLength);
+			}
 		}
 
 		public ITextRangeProvider[] GetSelection()
 		{
+			Debug.WriteLine("TextAreaAutomationPeer.GetSelection()");
 			if (TextArea.Selection.IsEmpty) {
 				var anchor = TextArea.Document.CreateAnchor(TextArea.Caret.Offset);
 				anchor.SurviveDeletion = true;
@@ -80,16 +86,19 @@ namespace ICSharpCode.AvalonEdit.Editing
 
 		public ITextRangeProvider[] GetVisibleRanges()
 		{
+			Debug.WriteLine("TextAreaAutomationPeer.GetVisibleRanges()");
 			throw new NotImplementedException();
 		}
 
 		public ITextRangeProvider RangeFromChild(IRawElementProviderSimple childElement)
 		{
+			Debug.WriteLine("TextAreaAutomationPeer.RangeFromChild()");
 			throw new NotImplementedException();
 		}
 
 		public ITextRangeProvider RangeFromPoint(System.Windows.Point screenLocation)
 		{
+			Debug.WriteLine("TextAreaAutomationPeer.RangeFromPoint()");
 			throw new NotImplementedException();
 		}
 
