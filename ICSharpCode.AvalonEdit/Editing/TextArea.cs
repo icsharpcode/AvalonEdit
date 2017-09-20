@@ -418,18 +418,18 @@ namespace ICSharpCode.AvalonEdit.Editing
 							if (oldSegmentOffset != newSegmentOffset) {
 								textView.Redraw(Math.Min(oldSegmentOffset, newSegmentOffset),
 								                Math.Abs(oldSegmentOffset - newSegmentOffset),
-								                DispatcherPriority.Background);
+								                DispatcherPriority.Render);
 							}
 							int oldSegmentEndOffset = oldSegment.EndOffset;
 							int newSegmentEndOffset = newSegment.EndOffset;
 							if (oldSegmentEndOffset != newSegmentEndOffset) {
 								textView.Redraw(Math.Min(oldSegmentEndOffset, newSegmentEndOffset),
 								                Math.Abs(oldSegmentEndOffset - newSegmentEndOffset),
-								                DispatcherPriority.Background);
+								                DispatcherPriority.Render);
 							}
 						} else {
-							textView.Redraw(oldSegment, DispatcherPriority.Background);
-							textView.Redraw(newSegment, DispatcherPriority.Background);
+							textView.Redraw(oldSegment, DispatcherPriority.Render);
+							textView.Redraw(newSegment, DispatcherPriority.Render);
 						}
 					}
 					selection = value;
