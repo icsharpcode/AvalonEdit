@@ -292,6 +292,7 @@ namespace ICSharpCode.AvalonEdit.Folding
 					break;
 				this.RemoveFolding(oldSection);
 			}
+			isFirstUpdate = false;
 		}
 		#endregion
 		
