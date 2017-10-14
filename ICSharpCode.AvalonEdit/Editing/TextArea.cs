@@ -397,7 +397,6 @@ namespace ICSharpCode.AvalonEdit.Editing
 		/// <summary>
 		/// Gets/Sets the selection in this text area.
 		/// </summary>
-		
 		public Selection Selection {
 			get { return selection; }
 			set {
@@ -505,8 +504,39 @@ namespace ICSharpCode.AvalonEdit.Editing
 			get { return (double)GetValue(SelectionCornerRadiusProperty); }
 			set { SetValue(SelectionCornerRadiusProperty, value); }
 		}
+
+		/// <summary>
+		/// Gets/Sets the active mouse selection mode.
+		/// 
+		/// Setting this property to MouseSelectionMode.None will cancel mouse selection
+		/// and release mouse capture.
+		/// 
+		/// Setting this property to another value will acquire mouse capture and
+		/// activate the mouse selection mode.
+		/// If mouse capture cannot be acquired, MouseSelectionMode will stay unchanged.
+		/// 
+		/// Currently, the setter only supports the values <c>None</c>, <c>Normal</c>
+		/// and <c>Rectangular</c>.
+		/// </summary>
+		public MouseSelectionMode MouseSelectionMode
+		{
+			get {
+				var mouseHandler = DefaultInputHandler.MouseSelection as SelectionMouseHandler;
+				if (mouseHandler != null) {
+					return mouseHandler.MouseSelectionMode;
+				} else {
+					return MouseSelectionMode.None;
+				}
+			}
+			set {
+				var mouseHandler = DefaultInputHandler.MouseSelection as SelectionMouseHandler;
+				if (mouseHandler != null) {
+					mouseHandler.MouseSelectionMode = value;
+				}
+			}
+		}
 		#endregion
-		
+
 		#region Force caret to stay inside selection
 		bool ensureSelectionValidRequested;
 		int allowCaretOutsideSelection;

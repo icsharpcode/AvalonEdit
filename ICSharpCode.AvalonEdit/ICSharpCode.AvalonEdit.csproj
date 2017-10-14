@@ -176,6 +176,7 @@
       <DependentUpon>Selection.cs</DependentUpon>
     </Compile>
     <Compile Include="Editing\ImeNativeWrapper.cs" />
+    <Compile Include="Editing\MouseSelectionMode.cs" />
     <Compile Include="Editing\SelectionSegment.cs" />
     <Compile Include="Editing\ImeSupport.cs" />
     <Compile Include="Editing\TextAreaAutomationPeer.cs" />
