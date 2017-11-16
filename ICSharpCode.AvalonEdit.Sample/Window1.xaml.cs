@@ -29,6 +29,7 @@ using System.Xml;
 using ICSharpCode.AvalonEdit.CodeCompletion;
 using ICSharpCode.AvalonEdit.Folding;
 using ICSharpCode.AvalonEdit.Highlighting;
+using ICSharpCode.AvalonEdit.Search;
 using Microsoft.Win32;
 
 namespace ICSharpCode.AvalonEdit.Sample
@@ -68,6 +69,7 @@ namespace ICSharpCode.AvalonEdit.Sample
 			
 			textEditor.TextArea.TextEntering += textEditor_TextArea_TextEntering;
 			textEditor.TextArea.TextEntered += textEditor_TextArea_TextEntered;
+			SearchPanel.Install(textEditor);
 			
 			DispatcherTimer foldingUpdateTimer = new DispatcherTimer();
 			foldingUpdateTimer.Interval = TimeSpan.FromSeconds(2);
