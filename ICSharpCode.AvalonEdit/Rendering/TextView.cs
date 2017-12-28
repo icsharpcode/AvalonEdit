@@ -1469,28 +1469,24 @@ namespace ICSharpCode.AvalonEdit.Rendering
 		{
 			((IScrollInfo)this).SetVerticalOffset(
 				scrollOffset.Y - (SystemParameters.WheelScrollLines * DefaultLineHeight));
-			OnScrollChange();
 		}
 		
 		void IScrollInfo.MouseWheelDown()
 		{
 			((IScrollInfo)this).SetVerticalOffset(
 				scrollOffset.Y + (SystemParameters.WheelScrollLines * DefaultLineHeight));
-			OnScrollChange();
 		}
 		
 		void IScrollInfo.MouseWheelLeft()
 		{
 			((IScrollInfo)this).SetHorizontalOffset(
 				scrollOffset.X - (SystemParameters.WheelScrollLines * WideSpaceWidth));
-			OnScrollChange();
 		}
 		
 		void IScrollInfo.MouseWheelRight()
 		{
 			((IScrollInfo)this).SetHorizontalOffset(
 				scrollOffset.X + (SystemParameters.WheelScrollLines * WideSpaceWidth));
-			OnScrollChange();
 		}
 		
 		bool defaultTextMetricsValid;
@@ -1591,6 +1587,7 @@ namespace ICSharpCode.AvalonEdit.Rendering
 				InvalidateVisual();
 				textLayer.InvalidateVisual();
 			}
+			OnScrollChange();
 		}
 		
 		void IScrollInfo.SetVerticalOffset(double offset)
@@ -1600,6 +1597,7 @@ namespace ICSharpCode.AvalonEdit.Rendering
 				SetScrollOffset(new Vector(scrollOffset.X, offset));
 				InvalidateMeasure(DispatcherPriority.Normal);
 			}
+			OnScrollChange();
 		}
 		
 		Rect IScrollInfo.MakeVisible(Visual visual, Rect rectangle)
