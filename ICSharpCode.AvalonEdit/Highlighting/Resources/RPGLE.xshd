@@ -1,0 +1,279 @@
+<SyntaxDefinition name="RPGLE"
+        xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
+  <Color name="Comment" foreground="Green" />
+  <Color name="String" foreground="Green" />
+  <Color name="ESQL" foreground="Blue" />
+
+  <!-- This is the main ruleset. -->
+  <RuleSet ignoreCase="true">
+    <Span color="Comment" begin="//" />
+    <Span color="Comment" begin="\*\*" />
+    
+    <Span color="String">
+      <Begin>'</Begin>
+      <End>'</End>
+    </Span>
+    
+    <Span color="ESQL" multiline="true" begin="EXEC SQL" end=";" />
+
+    <Keywords foreground="Brown">
+      <Word>CHAR</Word>
+      <Word>VARCHAR</Word>
+      <Word>BINDEC</Word>
+      <Word>FLOAT</Word>
+      <Word>INT</Word>
+      <Word>PACKED</Word>
+      <Word>UNS</Word>
+      <Word>ZONED</Word>
+      <Word>GRAPH</Word>
+      <Word>UCS2</Word>
+      <Word>DATE</Word>
+      <Word>TIME</Word>
+      <Word>TIMESTAMP</Word>
+      <Word>OBJECT</Word>
+      <Word>POINTER</Word>
+      <Word>IND</Word>
+    </Keywords>
+
+    <Keywords foreground="Brown">
+      <Word>ACTGRP</Word>
+      <Word>ALTSEQ</Word>
+      <Word>ALWNULL</Word>
+      <Word>AUT</Word>
+      <Word>BNDDIR</Word>
+      <Word>CCSID</Word>
+      <Word>COPYNEST</Word>
+      <Word>COPYRIGHT</Word>
+      <Word>CURSYM</Word>
+      <Word>CVTOPT</Word>
+      <Word>DATEDIT</Word>
+      <Word>DATFMT</Word>
+      <Word>DEBUG</Word>
+      <Word>DECEDIT</Word>
+      <Word>DFTACTGRP</Word>
+      <Word>DFTNAME</Word>
+      <Word>ENBPFRCOL</Word>
+      <Word>EXPROPTS</Word>
+      <Word>EXTBININT</Word>
+      <Word>FIXNBR</Word>
+      <Word>FLTDIV</Word>
+      <Word>FORMSALIGN</Word>
+      <Word>FTRANS</Word>
+      <Word>GENLVL</Word>
+      <Word>INDENT</Word>
+      <Word>INTPREC</Word>
+      <Word>LANGID</Word>
+      <Word>NOMAIN</Word>
+      <Word>OPENOPT</Word>
+      <Word>OPTIMIZE</Word>
+      <Word>OPTION</Word>
+      <Word>PRFDTA</Word>
+      <Word>SRTSEQ</Word>
+      <Word>TEXT</Word>
+      <Word>THREAD</Word>
+      <Word>TIMFMT</Word>
+      <Word>TRUNCNBR</Word>
+      <Word>USRPRF</Word>
+      <Word>ExtPgm</Word>
+      <Word>extproc</Word>
+      <Word>value</Word>
+      <Word>options</Word>
+      <Word>import</Word>
+      <Word>inz</Word>
+      <Word>const</Word>
+      <Word>qualified</Word>
+      <Word>dim</Word>
+      <Word>like</Word>
+      <Word>likeds</Word>
+      <Word>likerec</Word>
+      <Word>extname</Word>
+      <Word>ext</Word>
+      <Word>pos</Word>
+      <Word>overlay</Word>
+      <Word>extdesc</Word>
+      <Word>workstn</Word>
+      <Word>usage</Word>
+      <Word>keyed</Word>
+      <Word>disk</Word>
+      <Word>printer</Word>
+      <Word>seq</Word>
+      <Word>special</Word>
+      <Word>to</Word>
+      <Word>downto</Word>
+      <Word>export</Word>
+      <Word>handler</Word>
+      <Word>sfile</Word>
+      <Word>USROPN</Word>
+      <Word>EXTMBR</Word>
+      <Word>EXTFILE</Word>
+      <Word>RENAME</Word>
+      <Word>OFLIND</Word>
+      <Word>PERRCD</Word>
+      <Word>CTDATA</Word>
+      <Word>ALT</Word>
+    </Keywords>
+
+    <Keywords foreground="Purple">
+      <Word>ACQ</Word>
+      <Word>ADD</Word>
+      <Word>ADDDUR</Word>
+      <Word>ALLOC</Word>
+      <Word>AND</Word>
+      <Word>BEGSR</Word>
+      <Word>BITOFF</Word>
+      <Word>BITON</Word>
+      <Word>CALL</Word>
+      <Word>CALLB</Word>
+      <Word>CALLP</Word>
+      <Word>CAT</Word>
+      <Word>CHAIN</Word>
+      <Word>CHECK</Word>
+      <Word>CHECKR</Word>
+      <Word>CLEAR</Word>
+      <Word>CLOSE</Word>
+      <Word>COMMIT</Word>
+      <Word>COMP</Word>
+      <Word>DEALLOC</Word>
+      <Word>DEFINE</Word>
+      <Word>DELETE</Word>
+      <Word>DIV</Word>
+      <Word>DO</Word>
+      <Word>DOU</Word>
+      <Word>DOW</Word>
+      <Word>DSPLY</Word>
+      <Word>DATA-INTO</Word>
+      <Word>DUMP</Word>
+      <Word>ELSE</Word>
+      <Word>ELSEIF</Word>
+      <Word>ENDDO</Word>
+      <Word>ENDIF</Word>
+      <Word>ENDSR</Word>
+      <Word>ENDSL</Word>
+      <Word>ENDMON</Word>
+      <Word>EVAL</Word>
+      <Word>EVALR</Word>
+      <Word>EVAL-CORR</Word>
+      <Word>EXCEPT</Word>
+      <Word>EXFMT</Word>
+      <Word>EXSR</Word>
+      <Word>EXTRCT</Word>
+      <Word>FEOD</Word>
+      <Word>FOR</Word>
+      <Word>FORCE</Word>
+      <Word>GOTO</Word>
+      <Word>IF</Word>
+      <Word>IN</Word>
+      <Word>ITER</Word>
+      <Word>KFLD</Word>
+      <Word>KLIST</Word>
+      <Word>LEAVE</Word>
+      <Word>LEAVESR</Word>
+      <Word>LOOKUP</Word>
+      <Word>MHHZO</Word>
+      <Word>MHLZO</Word>
+      <Word>MLHZO</Word>
+      <Word>MLLZO</Word>
+      <Word>MONITOR</Word>
+      <Word>MOVE</Word>
+      <Word>MOVEA</Word>
+      <Word>MOVEL</Word>
+      <Word>MULT</Word>
+      <Word>MVR</Word>
+      <Word>NEXT</Word>
+      <Word>OCCUR</Word>
+      <Word>ON-ERROR</Word>
+      <Word>OPEN</Word>
+      <Word>OR</Word>
+      <Word>OTHER</Word>
+      <Word>OUT</Word>
+      <Word>PARM</Word>
+      <Word>PLIST</Word>
+      <Word>POST</Word>
+      <Word>READ</Word>
+      <Word>READC</Word>
+      <Word>READE</Word>
+      <Word>READP</Word>
+      <Word>READPE</Word>
+      <Word>REALLOC</Word>
+      <Word>REL</Word>
+      <Word>RESET</Word>
+      <Word>RETURN</Word>
+      <Word>ROLBK</Word>
+      <Word>SCAN</Word>
+      <Word>SELECT</Word>
+      <Word>SETGT</Word>
+      <Word>SETLL</Word>
+      <Word>SETOFF</Word>
+      <Word>SETON</Word>
+      <Word>SHTDN</Word>
+      <Word>SORTA</Word>
+      <Word>SQRT</Word>
+      <Word>SUB</Word>
+      <Word>SUBDUR</Word>
+      <Word>SUBST</Word>
+      <Word>TAG</Word>
+      <Word>TEST</Word>
+      <Word>TESTB</Word>
+      <Word>TESTN</Word>
+      <Word>TESTZ</Word>
+      <Word>TIME</Word>
+      <Word>UNLOCK</Word>
+      <Word>UPDATE</Word>
+      <Word>WHEN</Word>
+      <Word>WRITE</Word>
+      <Word>XFOOT</Word>
+      <Word>XLATE</Word>
+      <Word>XML-INTO</Word>
+      <Word>XML-SAX</Word>
+      <Word>Z-ADD</Word>
+      <Word>Z-SUB</Word>
+    </Keywords>
+
+    <Keywords foreground="Red">
+      <Word>DCL-S</Word>
+      <Word>DCL-C</Word>
+      <Word>DCL-DS</Word>
+      <Word>DCL-F</Word>
+      <Word>DCL-PI</Word>
+      <Word>DCL-PR</Word>
+      <Word>CTL-OPT</Word>
+      <Word>DCL-PROC</Word>
+      <Word>END-PROC</Word>
+      <Word>END-DS</Word>
+      <Word>END-PI</Word>
+      <Word>END-PR</Word>
+      <Word>DCL-PARM</Word>
+      <Word>DCL-SUBF</Word>
+    </Keywords>
+
+    <!-- Digits -->
+    <Rule foreground="Green">
+      \b0[xX][0-9a-fA-F]+  # hex number
+      |    \b
+      (    \d+(\.[0-9]+)?   #number with optional floating point
+      |    \.[0-9]+         #or just starting with floating point
+      )
+      ([eE][+-]?[0-9]+)? # optional exponent
+    </Rule>
+    
+    <!-- Directives -->
+    <Rule foreground="Blue">
+      \/\b(free|end-free|copy|include|set|restore|title|define|undefine|eof|if|elseif|else|endif)\b
+    </Rule>
+
+    <!-- BIFs -->
+    <Rule foreground="Blue">
+      \B\%\w+
+    </Rule>
+
+    <!-- Constants -->
+    <Rule foreground="Orange">
+      \B\*\w+
+    </Rule>
+
+    <!-- All free directive -->
+    <Rule foreground="Green">
+      \B\*\*\w+
+    </Rule>
+  </RuleSet>
+</SyntaxDefinition>
