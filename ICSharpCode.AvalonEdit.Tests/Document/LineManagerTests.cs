@@ -1,14 +1,14 @@
 ﻿// Copyright (c) 2014 AlphaSierraPapa for the SharpDevelop Team
-// 
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this
 // software and associated documentation files (the "Software"), to deal in the Software
 // without restriction, including without limitation the rights to use, copy, modify, merge,
 // publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons
 // to whom the Software is furnished to do so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in all copies or
 // substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
 // INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
 // PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE
@@ -16,24 +16,24 @@
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
 
+using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using NUnit.Framework;
 
 namespace ICSharpCode.AvalonEdit.Document
 {
 	[TestFixture]
 	public class LineManagerTests
 	{
-		TextDocument document;
-		
+		private TextDocument document;
+
 		[SetUp]
 		public void SetUp()
 		{
 			document = new TextDocument();
 		}
-		
+
 		[Test]
 		public void CheckEmptyDocument()
 		{
@@ -41,7 +41,7 @@ namespace ICSharpCode.AvalonEdit.Document
 			Assert.AreEqual(0, document.TextLength);
 			Assert.AreEqual(1, document.LineCount);
 		}
-		
+
 		[Test]
 		public void CheckClearingDocument()
 		{
@@ -58,7 +58,7 @@ namespace ICSharpCode.AvalonEdit.Document
 			Assert.IsNull(oldLines[0].NextLine);
 			Assert.IsNull(oldLines[1].PreviousLine);
 		}
-		
+
 		[Test]
 		public void CheckGetLineInEmptyDocument()
 		{
@@ -70,7 +70,7 @@ namespace ICSharpCode.AvalonEdit.Document
 			Assert.AreSame(line, document.GetLineByNumber(1));
 			Assert.AreSame(line, document.GetLineByOffset(0));
 		}
-		
+
 		[Test]
 		public void CheckLineSegmentInEmptyDocument()
 		{
@@ -82,7 +82,7 @@ namespace ICSharpCode.AvalonEdit.Document
 			Assert.AreEqual(0, line.TotalLength);
 			Assert.AreEqual(0, line.DelimiterLength);
 		}
-		
+
 		[Test]
 		public void LineIndexOfTest()
 		{
@@ -97,7 +97,7 @@ namespace ICSharpCode.AvalonEdit.Document
 			Assert.IsTrue(middleLine.IsDeleted);
 			Assert.AreEqual(-1, document.Lines.IndexOf(middleLine));
 		}
-		
+
 		[Test]
 		public void InsertInEmptyDocument()
 		{
@@ -106,7 +106,7 @@ namespace ICSharpCode.AvalonEdit.Document
 			DocumentLine line = document.GetLineByNumber(1);
 			Assert.AreEqual("a", document.GetText(line));
 		}
-		
+
 		[Test]
 		public void SetText()
 		{
@@ -115,7 +115,7 @@ namespace ICSharpCode.AvalonEdit.Document
 			DocumentLine line = document.GetLineByNumber(1);
 			Assert.AreEqual("a", document.GetText(line));
 		}
-		
+
 		[Test]
 		public void InsertNothing()
 		{
@@ -123,19 +123,19 @@ namespace ICSharpCode.AvalonEdit.Document
 			Assert.AreEqual(document.LineCount, 1);
 			Assert.AreEqual(document.TextLength, 0);
 		}
-		
+
 		[Test, ExpectedException(typeof(ArgumentNullException))]
 		public void InsertNull()
 		{
 			document.Insert(0, (string)null);
 		}
-		
+
 		[Test, ExpectedException(typeof(ArgumentNullException))]
 		public void SetTextNull()
 		{
 			document.Text = null;
 		}
-		
+
 		[Test]
 		public void RemoveNothing()
 		{
@@ -143,95 +143,94 @@ namespace ICSharpCode.AvalonEdit.Document
 			Assert.AreEqual(document.LineCount, 1);
 			Assert.AreEqual(document.TextLength, 0);
 		}
-		
+
 		[Test, ExpectedException(typeof(ArgumentOutOfRangeException))]
 		public void GetCharAt0EmptyDocument()
 		{
 			document.GetCharAt(0);
 		}
-		
+
 		[Test, ExpectedException(typeof(ArgumentOutOfRangeException))]
 		public void GetCharAtNegativeOffset()
 		{
 			document.Text = "a\nb";
 			document.GetCharAt(-1);
 		}
-		
+
 		[Test, ExpectedException(typeof(ArgumentOutOfRangeException))]
 		public void GetCharAtEndOffset()
 		{
 			document.Text = "a\nb";
 			document.GetCharAt(document.TextLength);
 		}
-		
+
 		[Test, ExpectedException(typeof(ArgumentOutOfRangeException))]
 		public void InsertAtNegativeOffset()
 		{
 			document.Text = "a\nb";
 			document.Insert(-1, "text");
 		}
-		
+
 		[Test, ExpectedException(typeof(ArgumentOutOfRangeException))]
 		public void InsertAfterEndOffset()
 		{
 			document.Text = "a\nb";
 			document.Insert(4, "text");
 		}
-		
+
 		[Test, ExpectedException(typeof(ArgumentOutOfRangeException))]
 		public void RemoveNegativeAmount()
 		{
 			document.Text = "abcd";
 			document.Remove(2, -1);
 		}
-		
+
 		[Test, ExpectedException(typeof(ArgumentOutOfRangeException))]
 		public void RemoveTooMuch()
 		{
 			document.Text = "abcd";
 			document.Remove(2, 10);
 		}
-		
+
 		[Test, ExpectedException(typeof(ArgumentOutOfRangeException))]
 		public void GetLineByNumberNegative()
 		{
 			document.Text = "a\nb";
 			document.GetLineByNumber(-1);
 		}
-		
+
 		[Test, ExpectedException(typeof(ArgumentOutOfRangeException))]
 		public void GetLineByNumberTooHigh()
 		{
 			document.Text = "a\nb";
 			document.GetLineByNumber(3);
 		}
-		
+
 		[Test, ExpectedException(typeof(ArgumentOutOfRangeException))]
 		public void GetLineByOffsetNegative()
 		{
 			document.Text = "a\nb";
 			document.GetLineByOffset(-1);
 		}
-		
-		
+
 		[Test, ExpectedException(typeof(ArgumentOutOfRangeException))]
 		public void GetLineByOffsetToHigh()
 		{
 			document.Text = "a\nb";
 			document.GetLineByOffset(10);
 		}
-		
+
 		[Test]
 		public void InsertAtEndOffset()
 		{
 			document.Text = "a\nb";
 			CheckDocumentLines("a",
-			                   "b");
+							   "b");
 			document.Insert(3, "text");
 			CheckDocumentLines("a",
-			                   "btext");
+							   "btext");
 		}
-		
+
 		[Test]
 		public void GetCharAt()
 		{
@@ -241,7 +240,7 @@ namespace ICSharpCode.AvalonEdit.Document
 			Assert.AreEqual('\n', document.GetCharAt(2));
 			Assert.AreEqual('b', document.GetCharAt(3));
 		}
-		
+
 		[Test]
 		public void CheckMixedNewLineTest()
 		{
@@ -249,7 +248,8 @@ namespace ICSharpCode.AvalonEdit.Document
 			document.Text = mixedNewlineText;
 			Assert.AreEqual(mixedNewlineText, document.Text);
 			Assert.AreEqual(4, document.LineCount);
-			for (int i = 1; i < 4; i++) {
+			for (int i = 1; i < 4; i++)
+			{
 				DocumentLine line = document.GetLineByNumber(i);
 				Assert.AreEqual(i, line.LineNumber);
 				Assert.AreEqual("line " + i, document.GetText(line));
@@ -259,17 +259,17 @@ namespace ICSharpCode.AvalonEdit.Document
 			Assert.AreEqual(1, document.GetLineByNumber(3).DelimiterLength);
 			Assert.AreEqual(0, document.GetLineByNumber(4).DelimiterLength);
 		}
-		
+
 		[Test]
 		public void LfCrIsTwoNewLinesTest()
 		{
 			document.Text = "a\n\rb";
 			Assert.AreEqual("a\n\rb", document.Text);
 			CheckDocumentLines("a",
-			                   "",
-			                   "b");
+							   "",
+							   "b");
 		}
-		
+
 		[Test]
 		public void RemoveFirstPartOfDelimiter()
 		{
@@ -277,9 +277,9 @@ namespace ICSharpCode.AvalonEdit.Document
 			document.Remove(1, 1);
 			Assert.AreEqual("a\nb", document.Text);
 			CheckDocumentLines("a",
-			                   "b");
+							   "b");
 		}
-		
+
 		[Test]
 		public void RemoveLineContentAndJoinDelimiters()
 		{
@@ -287,9 +287,9 @@ namespace ICSharpCode.AvalonEdit.Document
 			document.Remove(2, 1);
 			Assert.AreEqual("a\r\nc", document.Text);
 			CheckDocumentLines("a",
-			                   "c");
+							   "c");
 		}
-		
+
 		[Test]
 		public void RemoveLineContentAndJoinDelimiters2()
 		{
@@ -297,9 +297,9 @@ namespace ICSharpCode.AvalonEdit.Document
 			document.Remove(2, 3);
 			Assert.AreEqual("a\r\nd", document.Text);
 			CheckDocumentLines("a",
-			                   "d");
+							   "d");
 		}
-		
+
 		[Test]
 		public void RemoveLineContentAndJoinDelimiters3()
 		{
@@ -307,9 +307,9 @@ namespace ICSharpCode.AvalonEdit.Document
 			document.Remove(2, 2);
 			Assert.AreEqual("a\r\nc", document.Text);
 			CheckDocumentLines("a",
-			                   "c");
+							   "c");
 		}
-		
+
 		[Test]
 		public void RemoveLineContentAndJoinNonMatchingDelimiters()
 		{
@@ -317,10 +317,10 @@ namespace ICSharpCode.AvalonEdit.Document
 			document.Remove(2, 1);
 			Assert.AreEqual("a\n\nc", document.Text);
 			CheckDocumentLines("a",
-			                   "",
-			                   "c");
+							   "",
+							   "c");
 		}
-		
+
 		[Test]
 		public void RemoveLineContentAndJoinNonMatchingDelimiters2()
 		{
@@ -328,10 +328,10 @@ namespace ICSharpCode.AvalonEdit.Document
 			document.Remove(2, 1);
 			Assert.AreEqual("a\n\rc", document.Text);
 			CheckDocumentLines("a",
-			                   "",
-			                   "c");
+							   "",
+							   "c");
 		}
-		
+
 		[Test]
 		public void RemoveMultilineUpToFirstPartOfDelimiter()
 		{
@@ -339,9 +339,9 @@ namespace ICSharpCode.AvalonEdit.Document
 			document.Remove(1, 3);
 			Assert.AreEqual("0\n2", document.Text);
 			CheckDocumentLines("0",
-			                   "2");
+							   "2");
 		}
-		
+
 		[Test]
 		public void RemoveSecondPartOfDelimiter()
 		{
@@ -349,9 +349,9 @@ namespace ICSharpCode.AvalonEdit.Document
 			document.Remove(2, 1);
 			Assert.AreEqual("a\rb", document.Text);
 			CheckDocumentLines("a",
-			                   "b");
+							   "b");
 		}
-		
+
 		[Test]
 		public void RemoveFromSecondPartOfDelimiter()
 		{
@@ -359,9 +359,9 @@ namespace ICSharpCode.AvalonEdit.Document
 			document.Remove(2, 3);
 			Assert.AreEqual("a\rc", document.Text);
 			CheckDocumentLines("a",
-			                   "c");
+							   "c");
 		}
-		
+
 		[Test]
 		public void RemoveFromSecondPartOfDelimiterToDocumentEnd()
 		{
@@ -369,9 +369,9 @@ namespace ICSharpCode.AvalonEdit.Document
 			document.Remove(2, 2);
 			Assert.AreEqual("a\r", document.Text);
 			CheckDocumentLines("a",
-			                   "");
+							   "");
 		}
-		
+
 		[Test]
 		public void RemoveUpToMatchingDelimiter1()
 		{
@@ -379,9 +379,9 @@ namespace ICSharpCode.AvalonEdit.Document
 			document.Remove(2, 2);
 			Assert.AreEqual("a\r\nc", document.Text);
 			CheckDocumentLines("a",
-			                   "c");
+							   "c");
 		}
-		
+
 		[Test]
 		public void RemoveUpToMatchingDelimiter2()
 		{
@@ -389,9 +389,9 @@ namespace ICSharpCode.AvalonEdit.Document
 			document.Remove(2, 3);
 			Assert.AreEqual("a\r\nc", document.Text);
 			CheckDocumentLines("a",
-			                   "c");
+							   "c");
 		}
-		
+
 		[Test]
 		public void RemoveUpToNonMatchingDelimiter()
 		{
@@ -399,10 +399,10 @@ namespace ICSharpCode.AvalonEdit.Document
 			document.Remove(2, 2);
 			Assert.AreEqual("a\r\rc", document.Text);
 			CheckDocumentLines("a",
-			                   "",
-			                   "c");
+							   "",
+							   "c");
 		}
-		
+
 		[Test]
 		public void RemoveTwoCharDelimiter()
 		{
@@ -411,7 +411,7 @@ namespace ICSharpCode.AvalonEdit.Document
 			Assert.AreEqual("ab", document.Text);
 			CheckDocumentLines("ab");
 		}
-		
+
 		[Test]
 		public void RemoveOneCharDelimiter()
 		{
@@ -420,15 +420,16 @@ namespace ICSharpCode.AvalonEdit.Document
 			Assert.AreEqual("ab", document.Text);
 			CheckDocumentLines("ab");
 		}
-		
-		void CheckDocumentLines(params string[] lines)
+
+		private void CheckDocumentLines(params string[] lines)
 		{
 			Assert.AreEqual(lines.Length, document.LineCount, "LineCount");
-			for (int i = 0; i < lines.Length; i++) {
-				Assert.AreEqual(lines[i],  document.GetText(document.Lines[i]), "Text of line " + (i + 1));
+			for (int i = 0; i < lines.Length; i++)
+			{
+				Assert.AreEqual(lines[i], document.GetText(document.Lines[i]), "Text of line " + (i + 1));
 			}
 		}
-		
+
 		[Test]
 		public void FixUpFirstPartOfDelimiter()
 		{
@@ -436,9 +437,9 @@ namespace ICSharpCode.AvalonEdit.Document
 			document.Replace(1, 1, "\r");
 			Assert.AreEqual("a\r\nb", document.Text);
 			CheckDocumentLines("a",
-			                   "b");
+							   "b");
 		}
-		
+
 		[Test]
 		public void FixUpSecondPartOfDelimiter()
 		{
@@ -446,9 +447,9 @@ namespace ICSharpCode.AvalonEdit.Document
 			document.Replace(2, 1, "\n");
 			Assert.AreEqual("a\r\nb", document.Text);
 			CheckDocumentLines("a",
-			                   "b");
+							   "b");
 		}
-		
+
 		[Test]
 		public void InsertInsideDelimiter()
 		{
@@ -456,10 +457,10 @@ namespace ICSharpCode.AvalonEdit.Document
 			document.Insert(2, "b");
 			Assert.AreEqual("a\rb\nc", document.Text);
 			CheckDocumentLines("a",
-			                   "b",
-			                   "c");
+							   "b",
+							   "c");
 		}
-		
+
 		[Test]
 		public void InsertInsideDelimiter2()
 		{
@@ -467,11 +468,11 @@ namespace ICSharpCode.AvalonEdit.Document
 			document.Insert(2, "b\nc");
 			Assert.AreEqual("a\rb\nc\nd", document.Text);
 			CheckDocumentLines("a",
-			                   "b",
-			                   "c",
-			                   "d");
+							   "b",
+							   "c",
+							   "d");
 		}
-		
+
 		[Test]
 		public void InsertInsideDelimiter3()
 		{
@@ -479,10 +480,10 @@ namespace ICSharpCode.AvalonEdit.Document
 			document.Insert(2, "b\r");
 			Assert.AreEqual("a\rb\r\nc", document.Text);
 			CheckDocumentLines("a",
-			                   "b",
-			                   "c");
+							   "b",
+							   "c");
 		}
-		
+
 		[Test]
 		public void ExtendDelimiter1()
 		{
@@ -490,9 +491,9 @@ namespace ICSharpCode.AvalonEdit.Document
 			document.Insert(1, "b\r");
 			Assert.AreEqual("ab\r\nc", document.Text);
 			CheckDocumentLines("ab",
-			                   "c");
+							   "c");
 		}
-		
+
 		[Test]
 		public void ExtendDelimiter2()
 		{
@@ -500,9 +501,9 @@ namespace ICSharpCode.AvalonEdit.Document
 			document.Insert(2, "\nb");
 			Assert.AreEqual("a\r\nbc", document.Text);
 			CheckDocumentLines("a",
-			                   "bc");
+							   "bc");
 		}
-		
+
 		[Test]
 		public void ReplaceLineContentBetweenMatchingDelimiters()
 		{
@@ -510,10 +511,10 @@ namespace ICSharpCode.AvalonEdit.Document
 			document.Replace(2, 1, "x");
 			Assert.AreEqual("a\rx\nc", document.Text);
 			CheckDocumentLines("a",
-			                   "x",
-			                   "c");
+							   "x",
+							   "c");
 		}
-		
+
 		[Test]
 		public void GetOffset()
 		{
@@ -527,7 +528,7 @@ namespace ICSharpCode.AvalonEdit.Document
 			Assert.AreEqual(12, document.GetOffset(2, 6));
 			Assert.AreEqual(13, document.GetOffset(2, 7));
 		}
-		
+
 		[Test]
 		public void GetOffsetIgnoreNegativeColumns()
 		{
@@ -539,7 +540,7 @@ namespace ICSharpCode.AvalonEdit.Document
 			Assert.AreEqual(7, document.GetOffset(2, -100));
 			Assert.AreEqual(7, document.GetOffset(2, 0));
 		}
-		
+
 		[Test]
 		public void GetOffsetIgnoreTooHighColumns()
 		{

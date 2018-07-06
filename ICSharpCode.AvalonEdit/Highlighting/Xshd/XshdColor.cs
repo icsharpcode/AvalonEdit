@@ -1,14 +1,14 @@
 ﻿// Copyright (c) 2014 AlphaSierraPapa for the SharpDevelop Team
-// 
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this
 // software and associated documentation files (the "Software"), to deal in the Software
 // without restriction, including without limitation the rights to use, copy, modify, merge,
 // publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons
 // to whom the Software is furnished to do so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in all copies or
 // substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
 // INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
 // PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE
@@ -33,44 +33,44 @@ namespace ICSharpCode.AvalonEdit.Highlighting.Xshd
 		/// Gets/sets the name.
 		/// </summary>
 		public string Name { get; set; }
-		
+
 		/// <summary>
 		/// Gets/sets the foreground brush.
 		/// </summary>
 		public HighlightingBrush Foreground { get; set; }
-		
+
 		/// <summary>
 		/// Gets/sets the background brush.
 		/// </summary>
 		public HighlightingBrush Background { get; set; }
-		
+
 		/// <summary>
 		/// Gets/sets the font weight.
 		/// </summary>
 		public FontWeight? FontWeight { get; set; }
-		
+
 		/// <summary>
 		/// Gets/sets the underline flag
 		/// </summary>
 		public bool? Underline { get; set; }
-		
+
 		/// <summary>
 		/// Gets/sets the font style.
 		/// </summary>
 		public FontStyle? FontStyle { get; set; }
-		
+
 		/// <summary>
 		/// Gets/Sets the example text that demonstrates where the color is used.
 		/// </summary>
 		public string ExampleText { get; set; }
-		
+
 		/// <summary>
 		/// Creates a new XshdColor instance.
 		/// </summary>
 		public XshdColor()
 		{
 		}
-		
+
 		/// <summary>
 		/// Deserializes an XshdColor.
 		/// </summary>
@@ -89,15 +89,16 @@ namespace ICSharpCode.AvalonEdit.Highlighting.Xshd
 			if (info.GetBoolean("HasUnderline"))
 				this.Underline = info.GetBoolean("Underline");
 		}
-		
+
 		/// <summary>
 		/// Serializes this XshdColor instance.
 		/// </summary>
-		#if DOTNET4
+#if DOTNET4
 		[System.Security.SecurityCritical]
-		#else
+#else
+
 		[SecurityPermission(SecurityAction.LinkDemand, Flags = SecurityPermissionFlag.SerializationFormatter)]
-		#endif
+#endif
 		public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
 			if (info == null)
@@ -116,7 +117,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting.Xshd
 				info.AddValue("Style", this.FontStyle.Value.ToString());
 			info.AddValue("ExampleText", this.ExampleText);
 		}
-		
+
 		/// <inheritdoc/>
 		public override object AcceptVisitor(IXshdVisitor visitor)
 		{

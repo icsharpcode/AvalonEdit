@@ -1,14 +1,14 @@
 ﻿// Copyright (c) 2014 AlphaSierraPapa for the SharpDevelop Team
-// 
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this
 // software and associated documentation files (the "Software"), to deal in the Software
 // without restriction, including without limitation the rights to use, copy, modify, merge,
 // publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons
 // to whom the Software is furnished to do so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in all copies or
 // substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
 // INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
 // PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE
@@ -17,8 +17,6 @@
 // DEALINGS IN THE SOFTWARE.
 
 using System;
-using ICSharpCode.AvalonEdit.Document;
-using ICSharpCode.NRefactory.Editor;
 
 namespace ICSharpCode.AvalonEdit.Document
 {
@@ -29,16 +27,19 @@ namespace ICSharpCode.AvalonEdit.Document
 	[Serializable]
 	public class DocumentChangeEventArgs : TextChangeEventArgs
 	{
-		volatile OffsetChangeMap offsetChangeMap;
-		
+		private volatile OffsetChangeMap offsetChangeMap;
+
 		/// <summary>
 		/// Gets the OffsetChangeMap associated with this document change.
 		/// </summary>
 		/// <remarks>The OffsetChangeMap instance is guaranteed to be frozen and thus thread-safe.</remarks>
-		public OffsetChangeMap OffsetChangeMap {
-			get {
+		public OffsetChangeMap OffsetChangeMap
+		{
+			get
+			{
 				OffsetChangeMap map = offsetChangeMap;
-				if (map == null) {
+				if (map == null)
+				{
 					// create OffsetChangeMap on demand
 					map = OffsetChangeMap.FromSingleElement(CreateSingleChangeMapEntry());
 					offsetChangeMap = map;
@@ -46,21 +47,23 @@ namespace ICSharpCode.AvalonEdit.Document
 				return map;
 			}
 		}
-		
+
 		internal OffsetChangeMapEntry CreateSingleChangeMapEntry()
 		{
 			return new OffsetChangeMapEntry(this.Offset, this.RemovalLength, this.InsertionLength);
 		}
-		
+
 		/// <summary>
 		/// Gets the OffsetChangeMap, or null if the default offset map (=single replacement) is being used.
 		/// </summary>
-		internal OffsetChangeMap OffsetChangeMapOrNull {
-			get {
+		internal OffsetChangeMap OffsetChangeMapOrNull
+		{
+			get
+			{
 				return offsetChangeMap;
 			}
 		}
-		
+
 		/// <summary>
 		/// Gets the new offset where the specified offset moves after this document change.
 		/// </summary>
@@ -71,7 +74,7 @@ namespace ICSharpCode.AvalonEdit.Document
 			else
 				return CreateSingleChangeMapEntry().GetNewOffset(offset, movementType);
 		}
-		
+
 		/// <summary>
 		/// Creates a new DocumentChangeEventArgs object.
 		/// </summary>
@@ -79,7 +82,7 @@ namespace ICSharpCode.AvalonEdit.Document
 			: this(offset, removedText, insertedText, null)
 		{
 		}
-		
+
 		/// <summary>
 		/// Creates a new DocumentChangeEventArgs object.
 		/// </summary>
@@ -88,7 +91,7 @@ namespace ICSharpCode.AvalonEdit.Document
 		{
 			SetOffsetChangeMap(offsetChangeMap);
 		}
-		
+
 		/// <summary>
 		/// Creates a new DocumentChangeEventArgs object.
 		/// </summary>
@@ -97,10 +100,11 @@ namespace ICSharpCode.AvalonEdit.Document
 		{
 			SetOffsetChangeMap(offsetChangeMap);
 		}
-		
-		void SetOffsetChangeMap(OffsetChangeMap offsetChangeMap)
+
+		private void SetOffsetChangeMap(OffsetChangeMap offsetChangeMap)
 		{
-			if (offsetChangeMap != null) {
+			if (offsetChangeMap != null)
+			{
 				if (!offsetChangeMap.IsFrozen)
 					throw new ArgumentException("The OffsetChangeMap must be frozen before it can be used in DocumentChangeEventArgs");
 				if (!offsetChangeMap.IsValidForDocumentChange(this.Offset, this.RemovalLength, this.InsertionLength))
@@ -108,12 +112,13 @@ namespace ICSharpCode.AvalonEdit.Document
 				this.offsetChangeMap = offsetChangeMap;
 			}
 		}
-		
+
 		/// <inheritdoc/>
 		public override TextChangeEventArgs Invert()
 		{
 			OffsetChangeMap map = this.OffsetChangeMapOrNull;
-			if (map != null) {
+			if (map != null)
+			{
 				map = map.Invert();
 				map.Freeze();
 			}

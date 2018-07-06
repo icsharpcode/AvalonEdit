@@ -1,14 +1,14 @@
 ﻿// Copyright (c) 2014 AlphaSierraPapa for the SharpDevelop Team
-// 
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this
 // software and associated documentation files (the "Software"), to deal in the Software
 // without restriction, including without limitation the rights to use, copy, modify, merge,
 // publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons
 // to whom the Software is furnished to do so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in all copies or
 // substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
 // INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
 // PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE
@@ -16,6 +16,7 @@
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
 
+using ICSharpCode.AvalonEdit.Utils;
 using System;
 using System.Globalization;
 using System.Runtime.Serialization;
@@ -23,7 +24,6 @@ using System.Security.Permissions;
 using System.Text;
 using System.Windows;
 using System.Windows.Media;
-using ICSharpCode.AvalonEdit.Utils;
 
 namespace ICSharpCode.AvalonEdit.Highlighting
 {
@@ -34,106 +34,124 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 	public class HighlightingColor : ISerializable, IFreezable, ICloneable, IEquatable<HighlightingColor>
 	{
 		internal static readonly HighlightingColor Empty = FreezableHelper.FreezeAndReturn(new HighlightingColor());
-		
-		string name;
-		FontWeight? fontWeight;
-		FontStyle? fontStyle;
-		bool? underline;
-		HighlightingBrush foreground;
-		HighlightingBrush background;
-		bool frozen;
-		
+
+		private string name;
+		private FontWeight? fontWeight;
+		private FontStyle? fontStyle;
+		private bool? underline;
+		private HighlightingBrush foreground;
+		private HighlightingBrush background;
+		private bool frozen;
+
 		/// <summary>
 		/// Gets/Sets the name of the color.
 		/// </summary>
-		public string Name {
-			get {
+		public string Name
+		{
+			get
+			{
 				return name;
 			}
-			set {
+			set
+			{
 				if (frozen)
 					throw new InvalidOperationException();
 				name = value;
 			}
 		}
-		
+
 		/// <summary>
 		/// Gets/sets the font weight. Null if the highlighting color does not change the font weight.
 		/// </summary>
-		public FontWeight? FontWeight {
-			get {
+		public FontWeight? FontWeight
+		{
+			get
+			{
 				return fontWeight;
 			}
-			set {
+			set
+			{
 				if (frozen)
 					throw new InvalidOperationException();
 				fontWeight = value;
 			}
 		}
-		
+
 		/// <summary>
 		/// Gets/sets the font style. Null if the highlighting color does not change the font style.
 		/// </summary>
-		public FontStyle? FontStyle {
-			get {
+		public FontStyle? FontStyle
+		{
+			get
+			{
 				return fontStyle;
 			}
-			set {
+			set
+			{
 				if (frozen)
 					throw new InvalidOperationException();
 				fontStyle = value;
 			}
 		}
-		
+
 		/// <summary>
 		///  Gets/sets the underline flag. Null if the underline status does not change the font style.
 		/// </summary>
-		public bool? Underline {
-			get {
+		public bool? Underline
+		{
+			get
+			{
 				return underline;
 			}
-			set {
+			set
+			{
 				if (frozen)
 					throw new InvalidOperationException();
 				underline = value;
 			}
 		}
-		
+
 		/// <summary>
 		/// Gets/sets the foreground color applied by the highlighting.
 		/// </summary>
-		public HighlightingBrush Foreground {
-			get {
+		public HighlightingBrush Foreground
+		{
+			get
+			{
 				return foreground;
 			}
-			set {
+			set
+			{
 				if (frozen)
 					throw new InvalidOperationException();
 				foreground = value;
 			}
 		}
-		
+
 		/// <summary>
 		/// Gets/sets the background color applied by the highlighting.
 		/// </summary>
-		public HighlightingBrush Background {
-			get {
+		public HighlightingBrush Background
+		{
+			get
+			{
 				return background;
 			}
-			set {
+			set
+			{
 				if (frozen)
 					throw new InvalidOperationException();
 				background = value;
 			}
 		}
-		
+
 		/// <summary>
 		/// Creates a new HighlightingColor instance.
 		/// </summary>
 		public HighlightingColor()
 		{
 		}
-		
+
 		/// <summary>
 		/// Deserializes a HighlightingColor.
 		/// </summary>
@@ -151,15 +169,16 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 			this.Foreground = (HighlightingBrush)info.GetValue("Foreground", typeof(HighlightingBrush));
 			this.Background = (HighlightingBrush)info.GetValue("Background", typeof(HighlightingBrush));
 		}
-		
+
 		/// <summary>
 		/// Serializes this HighlightingColor instance.
 		/// </summary>
-		#if DOTNET4
+#if DOTNET4
 		[System.Security.SecurityCritical]
-		#else
+#else
+
 		[SecurityPermission(SecurityAction.LinkDemand, Flags = SecurityPermissionFlag.SerializationFormatter)]
-		#endif
+#endif
 		public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
 			if (info == null)
@@ -177,7 +196,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 			info.AddValue("Foreground", this.Foreground);
 			info.AddValue("Background", this.Background);
 		}
-		
+
 		/// <summary>
 		/// Gets CSS code for the color.
 		/// </summary>
@@ -185,18 +204,22 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 		public virtual string ToCss()
 		{
 			StringBuilder b = new StringBuilder();
-			if (Foreground != null) {
+			if (Foreground != null)
+			{
 				Color? c = Foreground.GetColor(null);
-				if (c != null) {
+				if (c != null)
+				{
 					b.AppendFormat(CultureInfo.InvariantCulture, "color: #{0:x2}{1:x2}{2:x2}; ", c.Value.R, c.Value.G, c.Value.B);
 				}
 			}
-			if (FontWeight != null) {
+			if (FontWeight != null)
+			{
 				b.Append("font-weight: ");
 				b.Append(FontWeight.Value.ToString().ToLowerInvariant());
 				b.Append("; ");
 			}
-			if (FontStyle != null) {
+			if (FontStyle != null)
+			{
 				b.Append("font-style: ");
 				b.Append(FontStyle.Value.ToString().ToLowerInvariant());
 				b.Append("; ");
@@ -209,13 +232,13 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 			}
 			return b.ToString();
 		}
-		
+
 		/// <inheritdoc/>
 		public override string ToString()
 		{
 			return "[" + GetType().Name + " " + (string.IsNullOrEmpty(this.Name) ? ToCss() : this.Name) + "]";
 		}
-		
+
 		/// <summary>
 		/// Prevent further changes to this highlighting color.
 		/// </summary>
@@ -223,14 +246,15 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 		{
 			frozen = true;
 		}
-		
+
 		/// <summary>
 		/// Gets whether this HighlightingColor instance is frozen.
 		/// </summary>
-		public bool IsFrozen {
+		public bool IsFrozen
+		{
 			get { return frozen; }
 		}
-		
+
 		/// <summary>
 		/// Clones this highlighting color.
 		/// If this color is frozen, the clone will be unfrozen.
@@ -241,18 +265,18 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 			c.frozen = false;
 			return c;
 		}
-		
+
 		object ICloneable.Clone()
 		{
 			return Clone();
 		}
-		
+
 		/// <inheritdoc/>
 		public override sealed bool Equals(object obj)
 		{
 			return Equals(obj as HighlightingColor);
 		}
-		
+
 		/// <inheritdoc/>
 		public virtual bool Equals(HighlightingColor other)
 		{
@@ -262,12 +286,13 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 				&& this.fontStyle == other.fontStyle && this.underline == other.underline
 				&& object.Equals(this.foreground, other.foreground) && object.Equals(this.background, other.background);
 		}
-		
+
 		/// <inheritdoc/>
 		public override int GetHashCode()
 		{
 			int hashCode = 0;
-			unchecked {
+			unchecked
+			{
 				if (name != null)
 					hashCode += 1000000007 * name.GetHashCode();
 				hashCode += 1000000009 * fontWeight.GetHashCode();
@@ -279,7 +304,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 			}
 			return hashCode;
 		}
-		
+
 		/// <summary>
 		/// Overwrites the properties in this HighlightingColor with those from the given color;
 		/// but maintains the current values where the properties of the given color return <c>null</c>.
@@ -298,9 +323,11 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 			if (color.underline != null)
 				this.underline = color.underline;
 		}
-		
-		internal bool IsEmptyForMerge {
-			get {
+
+		internal bool IsEmptyForMerge
+		{
+			get
+			{
 				return fontWeight == null && fontStyle == null && underline == null
 					&& foreground == null && background == null;
 			}

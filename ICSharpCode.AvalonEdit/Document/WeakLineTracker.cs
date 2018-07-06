@@ -1,14 +1,14 @@
 ﻿// Copyright (c) 2014 AlphaSierraPapa for the SharpDevelop Team
-// 
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this
 // software and associated documentation files (the "Software"), to deal in the Software
 // without restriction, including without limitation the rights to use, copy, modify, merge,
 // publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons
 // to whom the Software is furnished to do so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in all copies or
 // substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
 // INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
 // PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE
@@ -25,15 +25,15 @@ namespace ICSharpCode.AvalonEdit.Document
 	/// </summary>
 	public sealed class WeakLineTracker : ILineTracker
 	{
-		TextDocument textDocument;
-		WeakReference targetObject;
-		
+		private TextDocument textDocument;
+		private WeakReference targetObject;
+
 		private WeakLineTracker(TextDocument textDocument, ILineTracker targetTracker)
 		{
 			this.textDocument = textDocument;
 			this.targetObject = new WeakReference(targetTracker);
 		}
-		
+
 		/// <summary>
 		/// Registers the <paramref name="targetTracker"/> as line tracker for the <paramref name="textDocument"/>.
 		/// A weak reference to the target tracker will be used, and the WeakLineTracker will deregister itself
@@ -49,18 +49,19 @@ namespace ICSharpCode.AvalonEdit.Document
 			textDocument.LineTrackers.Add(wlt);
 			return wlt;
 		}
-		
+
 		/// <summary>
 		/// Deregisters the weak line tracker.
 		/// </summary>
 		public void Deregister()
 		{
-			if (textDocument != null) {
+			if (textDocument != null)
+			{
 				textDocument.LineTrackers.Remove(this);
 				textDocument = null;
 			}
 		}
-		
+
 		void ILineTracker.BeforeRemoveLine(DocumentLine line)
 		{
 			ILineTracker targetTracker = targetObject.Target as ILineTracker;
@@ -69,7 +70,7 @@ namespace ICSharpCode.AvalonEdit.Document
 			else
 				Deregister();
 		}
-		
+
 		void ILineTracker.SetLineLength(DocumentLine line, int newTotalLength)
 		{
 			ILineTracker targetTracker = targetObject.Target as ILineTracker;
@@ -78,7 +79,7 @@ namespace ICSharpCode.AvalonEdit.Document
 			else
 				Deregister();
 		}
-		
+
 		void ILineTracker.LineInserted(DocumentLine insertionPos, DocumentLine newLine)
 		{
 			ILineTracker targetTracker = targetObject.Target as ILineTracker;
@@ -87,7 +88,7 @@ namespace ICSharpCode.AvalonEdit.Document
 			else
 				Deregister();
 		}
-		
+
 		void ILineTracker.RebuildDocument()
 		{
 			ILineTracker targetTracker = targetObject.Target as ILineTracker;
@@ -96,7 +97,7 @@ namespace ICSharpCode.AvalonEdit.Document
 			else
 				Deregister();
 		}
-		
+
 		void ILineTracker.ChangeComplete(DocumentChangeEventArgs e)
 		{
 			ILineTracker targetTracker = targetObject.Target as ILineTracker;

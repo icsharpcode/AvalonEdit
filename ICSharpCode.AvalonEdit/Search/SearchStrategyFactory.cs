@@ -1,14 +1,14 @@
 ﻿// Copyright (c) 2014 AlphaSierraPapa for the SharpDevelop Team
-// 
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this
 // software and associated documentation files (the "Software"), to deal in the Software
 // without restriction, including without limitation the rights to use, copy, modify, merge,
 // publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons
 // to whom the Software is furnished to do so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in all copies or
 // substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
 // INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
 // PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE
@@ -19,8 +19,6 @@
 using System;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Windows.Controls;
-using ICSharpCode.AvalonEdit.Document;
 
 namespace ICSharpCode.AvalonEdit.Search
 {
@@ -39,44 +37,53 @@ namespace ICSharpCode.AvalonEdit.Search
 			RegexOptions options = RegexOptions.Compiled | RegexOptions.Multiline;
 			if (ignoreCase)
 				options |= RegexOptions.IgnoreCase;
-			
-			switch (mode) {
+
+			switch (mode)
+			{
 				case SearchMode.Normal:
 					searchPattern = Regex.Escape(searchPattern);
 					break;
+
 				case SearchMode.Wildcard:
 					searchPattern = ConvertWildcardsToRegex(searchPattern);
 					break;
 			}
-			try {
+			try
+			{
 				Regex pattern = new Regex(searchPattern, options);
 				return new RegexSearchStrategy(pattern, matchWholeWords);
-			} catch (ArgumentException ex) {
+			}
+			catch (ArgumentException ex)
+			{
 				throw new SearchPatternException(ex.Message, ex);
 			}
 		}
-		
-		static string ConvertWildcardsToRegex(string searchPattern)
+
+		private static string ConvertWildcardsToRegex(string searchPattern)
 		{
 			if (string.IsNullOrEmpty(searchPattern))
 				return "";
-			
+
 			StringBuilder builder = new StringBuilder();
-			
-			foreach (char ch in searchPattern) {
-				switch (ch) {
+
+			foreach (char ch in searchPattern)
+			{
+				switch (ch)
+				{
 					case '?':
 						builder.Append(".");
 						break;
+
 					case '*':
 						builder.Append(".*");
 						break;
+
 					default:
 						builder.Append(Regex.Escape(ch.ToString()));
 						break;
 				}
 			}
-			
+
 			return builder.ToString();
 		}
 	}

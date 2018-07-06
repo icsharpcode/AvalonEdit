@@ -1,14 +1,14 @@
 ﻿// Copyright (c) 2014 AlphaSierraPapa for the SharpDevelop Team
-// 
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this
 // software and associated documentation files (the "Software"), to deal in the Software
 // without restriction, including without limitation the rights to use, copy, modify, merge,
 // publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons
 // to whom the Software is furnished to do so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in all copies or
 // substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
 // INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
 // PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE
@@ -36,14 +36,17 @@ namespace ICSharpCode.AvalonEdit.Utils
 			if (visual == null)
 				throw new ArgumentNullException("visual");
 			PresentationSource source = PresentationSource.FromVisual(visual);
-			if (source != null) {
+			if (source != null)
+			{
 				Matrix matrix = source.CompositionTarget.TransformFromDevice;
 				return new Size(matrix.M11, matrix.M22);
-			} else {
+			}
+			else
+			{
 				return new Size(1, 1);
 			}
 		}
-		
+
 		/// <summary>
 		/// Aligns <paramref name="value"/> on the next middle of a pixel.
 		/// </summary>
@@ -58,7 +61,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 			// 1 -> 1.5
 			return pixelSize * (Math.Round((value / pixelSize) + 0.5, MidpointRounding.AwayFromZero) - 0.5);
 		}
-		
+
 		/// <summary>
 		/// Aligns the borders of rect on the middles of pixels.
 		/// </summary>
@@ -70,7 +73,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 			rect.Height = Round(rect.Height, pixelSize.Height);
 			return rect;
 		}
-		
+
 		/// <summary>
 		/// Rounds <paramref name="point"/> to whole number of pixels.
 		/// </summary>
@@ -78,16 +81,16 @@ namespace ICSharpCode.AvalonEdit.Utils
 		{
 			return new Point(Round(point.X, pixelSize.Width), Round(point.Y, pixelSize.Height));
 		}
-		
+
 		/// <summary>
 		/// Rounds val to whole number of pixels.
 		/// </summary>
 		public static Rect Round(Rect rect, Size pixelSize)
 		{
 			return new Rect(Round(rect.X, pixelSize.Width), Round(rect.Y, pixelSize.Height),
-			                Round(rect.Width, pixelSize.Width), Round(rect.Height, pixelSize.Height));
+							Round(rect.Width, pixelSize.Width), Round(rect.Height, pixelSize.Height));
 		}
-		
+
 		/// <summary>
 		/// Rounds <paramref name="value"/> to a whole number of pixels.
 		/// </summary>
@@ -95,7 +98,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 		{
 			return pixelSize * Math.Round(value / pixelSize, MidpointRounding.AwayFromZero);
 		}
-		
+
 		/// <summary>
 		/// Rounds <paramref name="value"/> to an whole odd number of pixels.
 		/// </summary>

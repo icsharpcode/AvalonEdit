@@ -1,14 +1,14 @@
 ﻿// Copyright (c) 2016 Daniel Grunwald
-// 
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this
 // software and associated documentation files (the "Software"), to deal in the Software
 // without restriction, including without limitation the rights to use, copy, modify, merge,
 // publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons
 // to whom the Software is furnished to do so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in all copies or
 // substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
 // INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
 // PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE
@@ -16,16 +16,16 @@
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
 
+using ICSharpCode.AvalonEdit.Document;
 using System;
 using System.Linq;
 using System.Windows.Automation;
 using System.Windows.Automation.Peers;
 using System.Windows.Automation.Provider;
-using ICSharpCode.AvalonEdit.Document;
 
 namespace ICSharpCode.AvalonEdit.Editing
 {
-	class TextAreaAutomationPeer : FrameworkElementAutomationPeer, IValueProvider, ITextProvider
+	internal class TextAreaAutomationPeer : FrameworkElementAutomationPeer, IValueProvider, ITextProvider
 	{
 		public TextAreaAutomationPeer(TextArea owner)
 			: base(owner)
@@ -51,7 +51,8 @@ namespace ICSharpCode.AvalonEdit.Editing
 			get { return ProviderFromPeer(this); }
 		}
 
-		public bool IsReadOnly {
+		public bool IsReadOnly
+		{
 			get { return TextArea.ReadOnlySectionProvider == ReadOnlySectionDocument.Instance; }
 		}
 
@@ -60,20 +61,23 @@ namespace ICSharpCode.AvalonEdit.Editing
 			TextArea.Document.Text = value;
 		}
 
-		public string Value {
+		public string Value
+		{
 			get { return TextArea.Document.Text; }
 		}
 
-		public ITextRangeProvider DocumentRange {
+		public ITextRangeProvider DocumentRange
+		{
 			get { return new TextRangeProvider(TextArea, TextArea.Document, 0, TextArea.Document.TextLength); }
 		}
 
 		public ITextRangeProvider[] GetSelection()
 		{
-			if (TextArea.Selection.IsEmpty) {
+			if (TextArea.Selection.IsEmpty)
+			{
 				var anchor = TextArea.Document.CreateAnchor(TextArea.Caret.Offset);
 				anchor.SurviveDeletion = true;
-				return new ITextRangeProvider[] { new TextRangeProvider(TextArea, TextArea.Document, new AnchorSegment(anchor, anchor))};
+				return new ITextRangeProvider[] { new TextRangeProvider(TextArea, TextArea.Document, new AnchorSegment(anchor, anchor)) };
 			}
 			return TextArea.Selection.Segments.Select(s => new TextRangeProvider(TextArea, TextArea.Document, s)).ToArray();
 		}
@@ -104,10 +108,11 @@ namespace ICSharpCode.AvalonEdit.Editing
 				return this;
 			if (patternInterface == PatternInterface.Value)
 				return this;
-			if (patternInterface == PatternInterface.Scroll) {
+			if (patternInterface == PatternInterface.Scroll)
+			{
 				TextEditor editor = TextArea.GetService(typeof(TextEditor)) as TextEditor;
 				if (editor != null)
-					return FromElement(editor).GetPattern(patternInterface); 
+					return FromElement(editor).GetPattern(patternInterface);
 			}
 			return base.GetPattern(patternInterface);
 		}

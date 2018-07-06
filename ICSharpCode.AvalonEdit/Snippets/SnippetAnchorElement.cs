@@ -1,14 +1,14 @@
 ﻿// Copyright (c) 2014 AlphaSierraPapa for the SharpDevelop Team
-// 
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this
 // software and associated documentation files (the "Software"), to deal in the Software
 // without restriction, including without limitation the rights to use, copy, modify, merge,
 // publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons
 // to whom the Software is furnished to do so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in all copies or
 // substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
 // INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
 // PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE
@@ -16,9 +16,7 @@
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
 
-using System;
 using ICSharpCode.AvalonEdit.Document;
-using ICSharpCode.NRefactory.Editor;
 
 namespace ICSharpCode.AvalonEdit.Snippets
 {
@@ -31,7 +29,7 @@ namespace ICSharpCode.AvalonEdit.Snippets
 		/// Gets or sets the name of the anchor.
 		/// </summary>
 		public string Name { get; private set; }
-		
+
 		/// <summary>
 		/// Creates a SnippetAnchorElement with the supplied name.
 		/// </summary>
@@ -39,7 +37,7 @@ namespace ICSharpCode.AvalonEdit.Snippets
 		{
 			this.Name = name;
 		}
-		
+
 		/// <inheritdoc />
 		public override void Insert(InsertionContext context)
 		{
@@ -50,25 +48,27 @@ namespace ICSharpCode.AvalonEdit.Snippets
 			context.RegisterActiveElement(this, new AnchorElement(segment, Name, context));
 		}
 	}
-	
+
 	/// <summary>
 	/// AnchorElement created by SnippetAnchorElement.
 	/// </summary>
 	public sealed class AnchorElement : IActiveElement
 	{
 		/// <inheritdoc />
-		public bool IsEditable {
+		public bool IsEditable
+		{
 			get { return false; }
 		}
-		
-		AnchorSegment segment;
-		InsertionContext context;
-		
+
+		private AnchorSegment segment;
+		private InsertionContext context;
+
 		/// <inheritdoc />
-		public ISegment Segment {
+		public ISegment Segment
+		{
 			get { return segment; }
 		}
-		
+
 		/// <summary>
 		/// Creates a new AnchorElement.
 		/// </summary>
@@ -78,33 +78,36 @@ namespace ICSharpCode.AvalonEdit.Snippets
 			this.context = context;
 			this.Name = name;
 		}
-		
+
 		/// <summary>
 		/// Gets or sets the text at the anchor.
 		/// </summary>
-		public string Text {
+		public string Text
+		{
 			get { return context.Document.GetText(segment); }
-			set {
+			set
+			{
 				int offset = segment.Offset;
 				int length = segment.Length;
 				context.Document.Replace(offset, length, value);
-				if (length == 0) {
+				if (length == 0)
+				{
 					// replacing an empty anchor segment with text won't enlarge it, so we have to recreate it
 					segment = new AnchorSegment(context.Document, offset, value.Length);
 				}
 			}
 		}
-		
+
 		/// <summary>
 		/// Gets or sets the name of the anchor.
 		/// </summary>
 		public string Name { get; private set; }
-		
+
 		/// <inheritdoc />
 		public void OnInsertionCompleted()
 		{
 		}
-		
+
 		/// <inheritdoc />
 		public void Deactivate(SnippetEventArgs e)
 		{

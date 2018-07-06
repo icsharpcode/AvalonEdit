@@ -1,14 +1,14 @@
 ﻿// Copyright (c) 2014 AlphaSierraPapa for the SharpDevelop Team
-// 
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this
 // software and associated documentation files (the "Software"), to deal in the Software
 // without restriction, including without limitation the rights to use, copy, modify, merge,
 // publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons
 // to whom the Software is furnished to do so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in all copies or
 // substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
 // INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
 // PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE
@@ -19,6 +19,7 @@
 using System;
 using System.Diagnostics;
 using System.Globalization;
+
 #if NREFACTORY
 using ICSharpCode.NRefactory.Editor;
 #endif
@@ -43,137 +44,158 @@ namespace ICSharpCode.AvalonEdit.Document
 	public sealed partial class DocumentLine : IDocumentLine
 	{
 		#region Constructor
-		#if DEBUG
+
+#if DEBUG
+
 		// Required for thread safety check which is done only in debug builds.
 		// To save space, we don't store the document reference in release builds as we don't need it there.
-		readonly TextDocument document;
-		#endif
-		
+		private readonly TextDocument document;
+
+#endif
+
 		internal bool isDeleted;
-		
+
 		internal DocumentLine(TextDocument document)
 		{
-			#if DEBUG
+#if DEBUG
 			Debug.Assert(document != null);
 			this.document = document;
-			#endif
+#endif
 		}
-		
+
 		[Conditional("DEBUG")]
-		void DebugVerifyAccess()
+		private void DebugVerifyAccess()
 		{
-			#if DEBUG
+#if DEBUG
 			document.DebugVerifyAccess();
-			#endif
+#endif
 		}
-		#endregion
-		
+
+		#endregion Constructor
+
 		#region Events
-//		/// <summary>
-//		/// Is raised when the line is deleted.
-//		/// </summary>
-//		public event EventHandler Deleted;
-//
-//		/// <summary>
-//		/// Is raised when the line's text changes.
-//		/// </summary>
-//		public event EventHandler TextChanged;
-//
-//		/// <summary>
-//		/// Raises the Deleted or TextChanged event.
-//		/// </summary>
-//		internal void RaiseChanged()
-//		{
-//			if (IsDeleted) {
-//				if (Deleted != null)
-//					Deleted(this, EventArgs.Empty);
-//			} else {
-//				if (TextChanged != null)
-//					TextChanged(this, EventArgs.Empty);
-//			}
-//		}
-		#endregion
-		
+
+		//		/// <summary>
+		//		/// Is raised when the line is deleted.
+		//		/// </summary>
+		//		public event EventHandler Deleted;
+		//
+		//		/// <summary>
+		//		/// Is raised when the line's text changes.
+		//		/// </summary>
+		//		public event EventHandler TextChanged;
+		//
+		//		/// <summary>
+		//		/// Raises the Deleted or TextChanged event.
+		//		/// </summary>
+		//		internal void RaiseChanged()
+		//		{
+		//			if (IsDeleted) {
+		//				if (Deleted != null)
+		//					Deleted(this, EventArgs.Empty);
+		//			} else {
+		//				if (TextChanged != null)
+		//					TextChanged(this, EventArgs.Empty);
+		//			}
+		//		}
+
+		#endregion Events
+
 		#region Properties stored in tree
+
 		/// <summary>
 		/// Gets if this line was deleted from the document.
 		/// </summary>
-		public bool IsDeleted {
-			get {
+		public bool IsDeleted
+		{
+			get
+			{
 				DebugVerifyAccess();
 				return isDeleted;
 			}
 		}
-		
+
 		/// <summary>
 		/// Gets the number of this line.
 		/// Runtime: O(log n)
 		/// </summary>
 		/// <exception cref="InvalidOperationException">The line was deleted.</exception>
-		public int LineNumber {
-			get {
+		public int LineNumber
+		{
+			get
+			{
 				if (IsDeleted)
 					throw new InvalidOperationException();
 				return DocumentLineTree.GetIndexFromNode(this) + 1;
 			}
 		}
-		
+
 		/// <summary>
 		/// Gets the starting offset of the line in the document's text.
 		/// Runtime: O(log n)
 		/// </summary>
 		/// <exception cref="InvalidOperationException">The line was deleted.</exception>
-		public int Offset {
-			get {
+		public int Offset
+		{
+			get
+			{
 				if (IsDeleted)
 					throw new InvalidOperationException();
 				return DocumentLineTree.GetOffsetFromNode(this);
 			}
 		}
-		
+
 		/// <summary>
 		/// Gets the end offset of the line in the document's text (the offset before the line delimiter).
 		/// Runtime: O(log n)
 		/// </summary>
 		/// <exception cref="InvalidOperationException">The line was deleted.</exception>
 		/// <remarks>EndOffset = <see cref="Offset"/> + <see cref="Length"/>.</remarks>
-		public int EndOffset {
+		public int EndOffset
+		{
 			get { return this.Offset + this.Length; }
 		}
-		#endregion
-		
+
+		#endregion Properties stored in tree
+
 		#region Length
-		int totalLength;
-		byte delimiterLength;
-		
+
+		private int totalLength;
+		private byte delimiterLength;
+
 		/// <summary>
 		/// Gets the length of this line. The length does not include the line delimiter. O(1)
 		/// </summary>
 		/// <remarks>This property is still available even if the line was deleted;
 		/// in that case, it contains the line's length before the deletion.</remarks>
-		public int Length {
-			get {
+		public int Length
+		{
+			get
+			{
 				DebugVerifyAccess();
 				return totalLength - delimiterLength;
 			}
 		}
-		
+
 		/// <summary>
 		/// Gets the length of this line, including the line delimiter. O(1)
 		/// </summary>
 		/// <remarks>This property is still available even if the line was deleted;
 		/// in that case, it contains the line's length before the deletion.</remarks>
-		public int TotalLength {
-			get {
+		public int TotalLength
+		{
+			get
+			{
 				DebugVerifyAccess();
 				return totalLength;
 			}
-			internal set {
+			internal set
+			{
 				// this is set by DocumentLineTree
 				totalLength = value;
 			}
 		}
-		
+
 		/// <summary>
 		/// <para>Gets the length of the line delimiter.</para>
 		/// <para>The value is 1 for single <c>"\r"</c> or <c>"\n"</c>, 2 for the <c>"\r\n"</c> sequence;
@@ -181,33 +203,44 @@ namespace ICSharpCode.AvalonEdit.Document
 		/// </summary>
 		/// <remarks>This property is still available even if the line was deleted;
 		/// in that case, it contains the line delimiter's length before the deletion.</remarks>
-		public int DelimiterLength {
-			get {
+		public int DelimiterLength
+		{
+			get
+			{
 				DebugVerifyAccess();
 				return delimiterLength;
 			}
-			internal set {
+			internal set
+			{
 				Debug.Assert(value >= 0 && value <= 2);
 				delimiterLength = (byte)value;
 			}
 		}
-		#endregion
-		
+
+		#endregion Length
+
 		#region Previous / Next Line
+
 		/// <summary>
 		/// Gets the next line in the document.
 		/// </summary>
 		/// <returns>The line following this line, or null if this is the last line.</returns>
-		public DocumentLine NextLine {
-			get {
+		public DocumentLine NextLine
+		{
+			get
+			{
 				DebugVerifyAccess();
-				
-				if (right != null) {
+
+				if (right != null)
+				{
 					return right.LeftMost;
-				} else {
+				}
+				else
+				{
 					DocumentLine node = this;
 					DocumentLine oldNode;
-					do {
+					do
+					{
 						oldNode = node;
 						node = node.parent;
 						// we are on the way up from the right part, don't output node again
@@ -216,21 +249,27 @@ namespace ICSharpCode.AvalonEdit.Document
 				}
 			}
 		}
-		
+
 		/// <summary>
 		/// Gets the previous line in the document.
 		/// </summary>
 		/// <returns>The line before this line, or null if this is the first line.</returns>
-		public DocumentLine PreviousLine {
-			get {
+		public DocumentLine PreviousLine
+		{
+			get
+			{
 				DebugVerifyAccess();
-				
-				if (left != null) {
+
+				if (left != null)
+				{
 					return left.RightMost;
-				} else {
+				}
+				else
+				{
 					DocumentLine node = this;
 					DocumentLine oldNode;
-					do {
+					do
+					{
 						oldNode = node;
 						node = node.parent;
 						// we are on the way up from the left part, don't output node again
@@ -239,17 +278,21 @@ namespace ICSharpCode.AvalonEdit.Document
 				}
 			}
 		}
-		
-		IDocumentLine IDocumentLine.NextLine {
+
+		IDocumentLine IDocumentLine.NextLine
+		{
 			get { return this.NextLine; }
 		}
-		
-		IDocumentLine IDocumentLine.PreviousLine {
+
+		IDocumentLine IDocumentLine.PreviousLine
+		{
 			get { return this.PreviousLine; }
 		}
-		#endregion
-		
+
+		#endregion Previous / Next Line
+
 		#region ToString
+
 		/// <summary>
 		/// Gets a string with debug output showing the line number and offset.
 		/// Does not include the line's text.
@@ -263,6 +306,7 @@ namespace ICSharpCode.AvalonEdit.Document
 					CultureInfo.InvariantCulture,
 					"[DocumentLine Number={0} Offset={1} Length={2}]", LineNumber, Offset, Length);
 		}
-		#endregion
+
+		#endregion ToString
 	}
 }
