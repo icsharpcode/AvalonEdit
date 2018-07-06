@@ -1,14 +1,14 @@
 ﻿// Copyright (c) 2014 AlphaSierraPapa for the SharpDevelop Team
-// 
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this
 // software and associated documentation files (the "Software"), to deal in the Software
 // without restriction, including without limitation the rights to use, copy, modify, merge,
 // publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons
 // to whom the Software is furnished to do so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in all copies or
 // substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
 // INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
 // PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE
@@ -16,23 +16,17 @@
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
 
+using ICSharpCode.AvalonEdit.Document;
+using ICSharpCode.AvalonEdit.Editing;
+using ICSharpCode.AvalonEdit.Rendering;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
-using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Threading;
-using ICSharpCode.AvalonEdit.Document;
-using ICSharpCode.AvalonEdit.Editing;
-using ICSharpCode.AvalonEdit.Folding;
-using ICSharpCode.AvalonEdit.Rendering;
 
 namespace ICSharpCode.AvalonEdit.Search
 {
@@ -41,131 +35,141 @@ namespace ICSharpCode.AvalonEdit.Search
 	/// </summary>
 	public class SearchPanel : Control
 	{
-		TextArea textArea;
-		SearchInputHandler handler;
-		TextDocument currentDocument;
-		SearchResultBackgroundRenderer renderer;
-		TextBox searchTextBox;
-		Popup dropdownPopup;
-		SearchPanelAdorner adorner;
-		
+		private TextArea textArea;
+		private SearchInputHandler handler;
+		private TextDocument currentDocument;
+		private SearchResultBackgroundRenderer renderer;
+		private TextBox searchTextBox;
+		private Popup dropdownPopup;
+		private SearchPanelAdorner adorner;
+
 		#region DependencyProperties
+
 		/// <summary>
 		/// Dependency property for <see cref="UseRegex"/>.
 		/// </summary>
 		public static readonly DependencyProperty UseRegexProperty =
 			DependencyProperty.Register("UseRegex", typeof(bool), typeof(SearchPanel),
-			                            new FrameworkPropertyMetadata(false, SearchPatternChangedCallback));
-		
+										new FrameworkPropertyMetadata(false, SearchPatternChangedCallback));
+
 		/// <summary>
 		/// Gets/sets whether the search pattern should be interpreted as regular expression.
 		/// </summary>
-		public bool UseRegex {
+		public bool UseRegex
+		{
 			get { return (bool)GetValue(UseRegexProperty); }
 			set { SetValue(UseRegexProperty, value); }
 		}
-		
+
 		/// <summary>
 		/// Dependency property for <see cref="MatchCase"/>.
 		/// </summary>
 		public static readonly DependencyProperty MatchCaseProperty =
 			DependencyProperty.Register("MatchCase", typeof(bool), typeof(SearchPanel),
-			                            new FrameworkPropertyMetadata(false, SearchPatternChangedCallback));
-		
+										new FrameworkPropertyMetadata(false, SearchPatternChangedCallback));
+
 		/// <summary>
 		/// Gets/sets whether the search pattern should be interpreted case-sensitive.
 		/// </summary>
-		public bool MatchCase {
+		public bool MatchCase
+		{
 			get { return (bool)GetValue(MatchCaseProperty); }
 			set { SetValue(MatchCaseProperty, value); }
 		}
-		
+
 		/// <summary>
 		/// Dependency property for <see cref="WholeWords"/>.
 		/// </summary>
 		public static readonly DependencyProperty WholeWordsProperty =
 			DependencyProperty.Register("WholeWords", typeof(bool), typeof(SearchPanel),
-			                            new FrameworkPropertyMetadata(false, SearchPatternChangedCallback));
-		
+										new FrameworkPropertyMetadata(false, SearchPatternChangedCallback));
+
 		/// <summary>
 		/// Gets/sets whether the search pattern should only match whole words.
 		/// </summary>
-		public bool WholeWords {
+		public bool WholeWords
+		{
 			get { return (bool)GetValue(WholeWordsProperty); }
 			set { SetValue(WholeWordsProperty, value); }
 		}
-		
+
 		/// <summary>
 		/// Dependency property for <see cref="SearchPattern"/>.
 		/// </summary>
 		public static readonly DependencyProperty SearchPatternProperty =
 			DependencyProperty.Register("SearchPattern", typeof(string), typeof(SearchPanel),
-			                            new FrameworkPropertyMetadata("", SearchPatternChangedCallback));
-		
+										new FrameworkPropertyMetadata("", SearchPatternChangedCallback));
+
 		/// <summary>
 		/// Gets/sets the search pattern.
 		/// </summary>
-		public string SearchPattern {
+		public string SearchPattern
+		{
 			get { return (string)GetValue(SearchPatternProperty); }
 			set { SetValue(SearchPatternProperty, value); }
 		}
-		
+
 		/// <summary>
 		/// Dependency property for <see cref="MarkerBrush"/>.
 		/// </summary>
 		public static readonly DependencyProperty MarkerBrushProperty =
 			DependencyProperty.Register("MarkerBrush", typeof(Brush), typeof(SearchPanel),
-			                            new FrameworkPropertyMetadata(Brushes.LightGreen, MarkerBrushChangedCallback));
-		
+										new FrameworkPropertyMetadata(Brushes.LightGreen, MarkerBrushChangedCallback));
+
 		/// <summary>
 		/// Gets/sets the Brush used for marking search results in the TextView.
 		/// </summary>
-		public Brush MarkerBrush {
+		public Brush MarkerBrush
+		{
 			get { return (Brush)GetValue(MarkerBrushProperty); }
 			set { SetValue(MarkerBrushProperty, value); }
 		}
-		
+
 		/// <summary>
 		/// Dependency property for <see cref="Localization"/>.
 		/// </summary>
 		public static readonly DependencyProperty LocalizationProperty =
 			DependencyProperty.Register("Localization", typeof(Localization), typeof(SearchPanel),
-			                            new FrameworkPropertyMetadata(new Localization()));
-		
+										new FrameworkPropertyMetadata(new Localization()));
+
 		/// <summary>
 		/// Gets/sets the localization for the SearchPanel.
 		/// </summary>
-		public Localization Localization {
+		public Localization Localization
+		{
 			get { return (Localization)GetValue(LocalizationProperty); }
 			set { SetValue(LocalizationProperty, value); }
 		}
-		#endregion
-		
-		static void MarkerBrushChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
+
+		#endregion DependencyProperties
+
+		private static void MarkerBrushChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
 		{
 			SearchPanel panel = d as SearchPanel;
-			if (panel != null) {
+			if (panel != null)
+			{
 				panel.renderer.MarkerBrush = (Brush)e.NewValue;
 			}
 		}
-		
+
 		static SearchPanel()
 		{
 			DefaultStyleKeyProperty.OverrideMetadata(typeof(SearchPanel), new FrameworkPropertyMetadata(typeof(SearchPanel)));
 		}
-		
-		ISearchStrategy strategy;
-		
-		static void SearchPatternChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
+
+		private ISearchStrategy strategy;
+
+		private static void SearchPatternChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
 		{
 			SearchPanel panel = d as SearchPanel;
-			if (panel != null) {
+			if (panel != null)
+			{
 				panel.ValidateSearchText();
 				panel.UpdateSearch();
 			}
 		}
 
-		void UpdateSearch()
+		private void UpdateSearch()
 		{
 			// only reset as long as there are results
 			// if no results are found, the "no matches found" message should not flicker.
@@ -176,14 +180,14 @@ namespace ICSharpCode.AvalonEdit.Search
 			OnSearchOptionsChanged(new SearchOptionsChangedEventArgs(SearchPattern, MatchCase, UseRegex, WholeWords));
 			DoSearch(true);
 		}
-		
+
 		/// <summary>
 		/// Creates a new SearchPanel.
 		/// </summary>
-		SearchPanel()
+		private SearchPanel()
 		{
 		}
-		
+
 		/// <summary>
 		/// Attaches this SearchPanel to a TextArea instance.
 		/// </summary>
@@ -194,7 +198,7 @@ namespace ICSharpCode.AvalonEdit.Search
 				throw new ArgumentNullException("textArea");
 			AttachInternal(textArea);
 		}
-		
+
 		/// <summary>
 		/// Creates a SearchPanel and installs it to the TextEditor's TextArea.
 		/// </summary>
@@ -205,7 +209,7 @@ namespace ICSharpCode.AvalonEdit.Search
 				throw new ArgumentNullException("editor");
 			return Install(editor.TextArea);
 		}
-		
+
 		/// <summary>
 		/// Creates a SearchPanel and installs it to the TextArea.
 		/// </summary>
@@ -227,7 +231,7 @@ namespace ICSharpCode.AvalonEdit.Search
 		{
 			handler.RegisterGlobalCommands(commandBindings);
 		}
-		
+
 		/// <summary>
 		/// Removes the SearchPanel from the TextArea.
 		/// </summary>
@@ -236,42 +240,43 @@ namespace ICSharpCode.AvalonEdit.Search
 			CloseAndRemove();
 			textArea.DefaultInputHandler.NestedInputHandlers.Remove(handler);
 		}
-		
-		void AttachInternal(TextArea textArea)
+
+		private void AttachInternal(TextArea textArea)
 		{
 			this.textArea = textArea;
 			adorner = new SearchPanelAdorner(textArea, this);
 			DataContext = this;
-			
+
 			renderer = new SearchResultBackgroundRenderer();
 			currentDocument = textArea.Document;
 			if (currentDocument != null)
 				currentDocument.TextChanged += textArea_Document_TextChanged;
 			textArea.DocumentChanged += textArea_DocumentChanged;
 			KeyDown += SearchLayerKeyDown;
-			
+
 			this.CommandBindings.Add(new CommandBinding(SearchCommands.FindNext, (sender, e) => FindNext()));
 			this.CommandBindings.Add(new CommandBinding(SearchCommands.FindPrevious, (sender, e) => FindPrevious()));
 			this.CommandBindings.Add(new CommandBinding(SearchCommands.CloseSearchPanel, (sender, e) => Close()));
 			IsClosed = true;
 		}
 
-		void textArea_DocumentChanged(object sender, EventArgs e)
+		private void textArea_DocumentChanged(object sender, EventArgs e)
 		{
 			if (currentDocument != null)
 				currentDocument.TextChanged -= textArea_Document_TextChanged;
 			currentDocument = textArea.Document;
-			if (currentDocument != null) {
+			if (currentDocument != null)
+			{
 				currentDocument.TextChanged += textArea_Document_TextChanged;
 				DoSearch(false);
 			}
 		}
 
-		void textArea_Document_TextChanged(object sender, EventArgs e)
+		private void textArea_Document_TextChanged(object sender, EventArgs e)
 		{
 			DoSearch(false);
 		}
-		
+
 		/// <inheritdoc/>
 		public override void OnApplyTemplate()
 		{
@@ -280,21 +285,24 @@ namespace ICSharpCode.AvalonEdit.Search
 			searchTextBox = Template.FindName("PART_searchTextBox", this) as TextBox;
 			dropdownPopup = Template.FindName("PART_dropdownPopup", this) as Popup;
 		}
-		
-		void ValidateSearchText()
+
+		private void ValidateSearchText()
 		{
 			if (searchTextBox == null)
 				return;
 			var be = searchTextBox.GetBindingExpression(TextBox.TextProperty);
-			try {
+			try
+			{
 				Validation.ClearInvalid(be);
 				UpdateSearch();
-			} catch (SearchPatternException ex) {
+			}
+			catch (SearchPatternException ex)
+			{
 				var ve = new ValidationError(be.ParentBinding.ValidationRules[0], be, ex.Message, ex);
 				Validation.MarkInvalid(be, ve);
 			}
 		}
-		
+
 		/// <summary>
 		/// Reactivates the SearchPanel by setting the focus on the search box and selecting all text.
 		/// </summary>
@@ -305,7 +313,7 @@ namespace ICSharpCode.AvalonEdit.Search
 			searchTextBox.Focus();
 			searchTextBox.SelectAll();
 		}
-		
+
 		/// <summary>
 		/// Moves to the next occurrence in the file.
 		/// </summary>
@@ -314,7 +322,8 @@ namespace ICSharpCode.AvalonEdit.Search
 			SearchResult result = renderer.CurrentResults.FindFirstSegmentWithStartAfter(textArea.Caret.Offset + 1);
 			if (result == null)
 				result = renderer.CurrentResults.FirstSegment;
-			if (result != null) {
+			if (result != null)
+			{
 				SelectResult(result);
 			}
 		}
@@ -329,43 +338,50 @@ namespace ICSharpCode.AvalonEdit.Search
 				result = renderer.CurrentResults.GetPreviousSegment(result);
 			if (result == null)
 				result = renderer.CurrentResults.LastSegment;
-			if (result != null) {
+			if (result != null)
+			{
 				SelectResult(result);
 			}
 		}
-		
-		ToolTip messageView = new ToolTip { Placement = PlacementMode.Bottom, StaysOpen = true, Focusable = false };
 
-		void DoSearch(bool changeSelection)
+		private ToolTip messageView = new ToolTip { Placement = PlacementMode.Bottom, StaysOpen = true, Focusable = false };
+
+		private void DoSearch(bool changeSelection)
 		{
 			if (IsClosed)
 				return;
 			renderer.CurrentResults.Clear();
-			
-			if (!string.IsNullOrEmpty(SearchPattern)) {
+
+			if (!string.IsNullOrEmpty(SearchPattern))
+			{
 				int offset = textArea.Caret.Offset;
-				if (changeSelection) {
+				if (changeSelection)
+				{
 					textArea.ClearSelection();
 				}
 				// We cast from ISearchResult to SearchResult; this is safe because we always use the built-in strategy
-				foreach (SearchResult result in strategy.FindAll(textArea.Document, 0, textArea.Document.TextLength)) {
-					if (changeSelection && result.StartOffset >= offset) {
+				foreach (SearchResult result in strategy.FindAll(textArea.Document, 0, textArea.Document.TextLength))
+				{
+					if (changeSelection && result.StartOffset >= offset)
+					{
 						SelectResult(result);
 						changeSelection = false;
 					}
 					renderer.CurrentResults.Add(result);
 				}
-				if (!renderer.CurrentResults.Any()) {
+				if (!renderer.CurrentResults.Any())
+				{
 					messageView.IsOpen = true;
 					messageView.Content = Localization.NoMatchesFoundText;
 					messageView.PlacementTarget = searchTextBox;
-				} else
+				}
+				else
 					messageView.IsOpen = false;
 			}
 			textArea.TextView.InvalidateLayer(KnownLayer.Selection);
 		}
 
-		void SelectResult(SearchResult result)
+		private void SelectResult(SearchResult result)
 		{
 			textArea.Caret.Offset = result.StartOffset;
 			textArea.Selection = Selection.Create(textArea, result.StartOffset, result.EndOffset);
@@ -373,44 +389,48 @@ namespace ICSharpCode.AvalonEdit.Search
 			// show caret even if the editor does not have the Keyboard Focus
 			textArea.Caret.Show();
 		}
-		
-		void SearchLayerKeyDown(object sender, KeyEventArgs e)
+
+		private void SearchLayerKeyDown(object sender, KeyEventArgs e)
 		{
-			switch (e.Key) {
+			switch (e.Key)
+			{
 				case Key.Enter:
 					e.Handled = true;
 					if ((Keyboard.Modifiers & ModifierKeys.Shift) == ModifierKeys.Shift)
 						FindPrevious();
 					else
 						FindNext();
-					if (searchTextBox != null) {
+					if (searchTextBox != null)
+					{
 						var error = Validation.GetErrors(searchTextBox).FirstOrDefault();
-						if (error != null) {
+						if (error != null)
+						{
 							messageView.Content = Localization.ErrorText + " " + error.ErrorContent;
 							messageView.PlacementTarget = searchTextBox;
 							messageView.IsOpen = true;
 						}
 					}
 					break;
+
 				case Key.Escape:
 					e.Handled = true;
 					Close();
 					break;
 			}
 		}
-		
+
 		/// <summary>
 		/// Gets whether the Panel is already closed.
 		/// </summary>
 		public bool IsClosed { get; private set; }
-		
+
 		/// <summary>
 		/// Closes the SearchPanel.
 		/// </summary>
 		public void Close()
 		{
 			bool hasFocus = this.IsKeyboardFocusWithin;
-			
+
 			var layer = AdornerLayer.GetAdornerLayer(textArea);
 			if (layer != null)
 				layer.Remove(adorner);
@@ -421,11 +441,11 @@ namespace ICSharpCode.AvalonEdit.Search
 			if (hasFocus)
 				textArea.Focus();
 			IsClosed = true;
-			
+
 			// Clear existing search results so that the segments don't have to be maintained
 			renderer.CurrentResults.Clear();
 		}
-		
+
 		/// <summary>
 		/// Closes the SearchPanel and removes it.
 		/// </summary>
@@ -437,7 +457,7 @@ namespace ICSharpCode.AvalonEdit.Search
 			if (currentDocument != null)
 				currentDocument.TextChanged -= textArea_Document_TextChanged;
 		}
-		
+
 		/// <summary>
 		/// Opens the an existing search panel.
 		/// </summary>
@@ -451,23 +471,24 @@ namespace ICSharpCode.AvalonEdit.Search
 			IsClosed = false;
 			DoSearch(false);
 		}
-		
+
 		/// <summary>
 		/// Fired when SearchOptions are changed inside the SearchPanel.
 		/// </summary>
 		public event EventHandler<SearchOptionsChangedEventArgs> SearchOptionsChanged;
-		
+
 		/// <summary>
 		/// Raises the <see cref="SearchPanel.SearchOptionsChanged" /> event.
 		/// </summary>
 		protected virtual void OnSearchOptionsChanged(SearchOptionsChangedEventArgs e)
 		{
-			if (SearchOptionsChanged != null) {
+			if (SearchOptionsChanged != null)
+			{
 				SearchOptionsChanged(this, e);
 			}
 		}
 	}
-	
+
 	/// <summary>
 	/// EventArgs for <see cref="SearchPanel.SearchOptionsChanged"/> event.
 	/// </summary>
@@ -477,22 +498,22 @@ namespace ICSharpCode.AvalonEdit.Search
 		/// Gets the search pattern.
 		/// </summary>
 		public string SearchPattern { get; private set; }
-		
+
 		/// <summary>
 		/// Gets whether the search pattern should be interpreted case-sensitive.
 		/// </summary>
 		public bool MatchCase { get; private set; }
-		
+
 		/// <summary>
 		/// Gets whether the search pattern should be interpreted as regular expression.
 		/// </summary>
 		public bool UseRegex { get; private set; }
-		
+
 		/// <summary>
 		/// Gets whether the search pattern should only match whole words.
 		/// </summary>
 		public bool WholeWords { get; private set; }
-		
+
 		/// <summary>
 		/// Creates a new SearchOptionsChangedEventArgs instance.
 		/// </summary>
@@ -504,19 +525,20 @@ namespace ICSharpCode.AvalonEdit.Search
 			this.WholeWords = wholeWords;
 		}
 	}
-	
-	class SearchPanelAdorner : Adorner
+
+	internal class SearchPanelAdorner : Adorner
 	{
-		SearchPanel panel;
-		
+		private SearchPanel panel;
+
 		public SearchPanelAdorner(TextArea textArea, SearchPanel panel)
 			: base(textArea)
 		{
 			this.panel = panel;
 			AddVisualChild(panel);
 		}
-		
-		protected override int VisualChildrenCount {
+
+		protected override int VisualChildrenCount
+		{
 			get { return 1; }
 		}
 
@@ -526,7 +548,7 @@ namespace ICSharpCode.AvalonEdit.Search
 				throw new ArgumentOutOfRangeException();
 			return panel;
 		}
-		
+
 		protected override Size ArrangeOverride(Size finalSize)
 		{
 			panel.Arrange(new Rect(new Point(0, 0), finalSize));

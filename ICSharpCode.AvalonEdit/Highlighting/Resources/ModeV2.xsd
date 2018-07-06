@@ -5,15 +5,15 @@
 		<xsd:union>
 			<xsd:simpleType>
 				<xsd:restriction base="xsd:integer">
-					<xsd:minInclusive value="1"/>
-					<xsd:maxInclusive value="999"/>
+					<xsd:minInclusive value="1" />
+					<xsd:maxInclusive value="999" />
 				</xsd:restriction>
 			</xsd:simpleType>
 			<xsd:simpleType>
 				<xsd:restriction base="xsd:string">
-					<xsd:enumeration value="bold"/>
-					<xsd:enumeration value="normal"/>
-					<xsd:enumeration value="regular"/>
+					<xsd:enumeration value="bold" />
+					<xsd:enumeration value="normal" />
+					<xsd:enumeration value="regular" />
 					<!-- should we support other font weight names? -->
 				</xsd:restriction>
 			</xsd:simpleType>
@@ -23,9 +23,9 @@
 	<!-- Font Style -->
 	<xsd:simpleType name="FontStyle">
 		<xsd:restriction base="xsd:string">
-			<xsd:enumeration value="italic"/>
-			<xsd:enumeration value="normal"/>
-			<xsd:enumeration value="oblique"/>
+			<xsd:enumeration value="italic" />
+			<xsd:enumeration value="normal" />
+			<xsd:enumeration value="oblique" />
 		</xsd:restriction>
 	</xsd:simpleType>
 
@@ -48,7 +48,7 @@
 		<xsd:complexType>
 			<xsd:attribute name="name" type="xsd:string" use="required" />
 			<xsd:attribute name="exampleText" type="xsd:string" use="optional" />
-			<xsd:attributeGroup ref="ColorAttributes"/>
+			<xsd:attributeGroup ref="ColorAttributes" />
 		</xsd:complexType>
 	</xsd:element>
 
@@ -62,20 +62,20 @@
 
 	<!-- Regular expression -->
 	<xsd:simpleType name="regex">
-		<xsd:restriction base="xsd:string"/>
+		<xsd:restriction base="xsd:string" />
 	</xsd:simpleType>
 
 	<xsd:simpleType name="regexIgnorePatternWhitespace">
-		<xsd:restriction base="xsd:string"/>
+		<xsd:restriction base="xsd:string" />
 	</xsd:simpleType>
 
 	<!-- Keywords -->
 	<xsd:element name="Keywords">
 		<xsd:complexType>
 			<xsd:sequence>
-				<xsd:element ref="Word" minOccurs="1" maxOccurs="unbounded"/>
+				<xsd:element ref="Word" minOccurs="1" maxOccurs="unbounded" />
 			</xsd:sequence>
-			<xsd:attributeGroup ref="ColorReferenceAttributes"/>
+			<xsd:attributeGroup ref="ColorReferenceAttributes" />
 		</xsd:complexType>
 	</xsd:element>
 
@@ -93,34 +93,34 @@
 	<xsd:element name="Span">
 		<xsd:complexType>
 			<xsd:sequence>
-				<xsd:element ref="Begin" minOccurs="0" maxOccurs="1"/>
-				<xsd:element ref="End" minOccurs="0" maxOccurs="1"/>
-				<xsd:element ref="RuleSet" minOccurs="0" maxOccurs="1"/>
+				<xsd:element ref="Begin" minOccurs="0" maxOccurs="1" />
+				<xsd:element ref="End" minOccurs="0" maxOccurs="1" />
+				<xsd:element ref="RuleSet" minOccurs="0" maxOccurs="1" />
 			</xsd:sequence>
 
-			<xsd:attributeGroup ref="ColorReferenceAttributes"/>
-			<xsd:attribute name="multiline" type="xsd:boolean" use="optional"/>
-			<xsd:attribute name="ruleSet" type="xsd:string" use="optional"/>
-			<xsd:attribute name="begin" type="regex" use="optional"/>
-			<xsd:attribute name="end" type="regex" use="optional"/>
+			<xsd:attributeGroup ref="ColorReferenceAttributes" />
+			<xsd:attribute name="multiline" type="xsd:boolean" use="optional" />
+			<xsd:attribute name="ruleSet" type="xsd:string" use="optional" />
+			<xsd:attribute name="begin" type="regex" use="optional" />
+			<xsd:attribute name="end" type="regex" use="optional" />
 		</xsd:complexType>
 	</xsd:element>
 
 	<xsd:complexType name="SpanBeginEnd">
 		<xsd:simpleContent>
 			<xsd:extension base="regexIgnorePatternWhitespace">
-				<xsd:attributeGroup ref="ColorReferenceAttributes"/>
+				<xsd:attributeGroup ref="ColorReferenceAttributes" />
 			</xsd:extension>
 		</xsd:simpleContent>
 	</xsd:complexType>
 
-	<xsd:element name="Begin" type="SpanBeginEnd"/>
-	<xsd:element name="End" type="SpanBeginEnd"/>
+	<xsd:element name="Begin" type="SpanBeginEnd" />
+	<xsd:element name="End" type="SpanBeginEnd" />
 
 	<!-- Imports -->
 	<xsd:element name="Import">
 		<xsd:complexType>
-			<xsd:attribute name="ruleSet" type="xsd:string" use="required"/>
+			<xsd:attribute name="ruleSet" type="xsd:string" use="required" />
 		</xsd:complexType>
 	</xsd:element>
 
@@ -129,7 +129,7 @@
 		<xsd:complexType>
 			<xsd:simpleContent>
 				<xsd:extension base="regexIgnorePatternWhitespace">
-					<xsd:attributeGroup ref="ColorReferenceAttributes"/>
+					<xsd:attributeGroup ref="ColorReferenceAttributes" />
 				</xsd:extension>
 			</xsd:simpleContent>
 		</xsd:complexType>
@@ -139,10 +139,10 @@
 	<xsd:element name="RuleSet">
 		<xsd:complexType>
 			<xsd:choice minOccurs="0" maxOccurs="unbounded">
-				<xsd:element ref="Keywords"/>
-				<xsd:element ref="Span"/>
-				<xsd:element ref="Import"/>
-				<xsd:element ref="Rule"/>
+				<xsd:element ref="Keywords" />
+				<xsd:element ref="Span" />
+				<xsd:element ref="Import" />
+				<xsd:element ref="Rule" />
 				<xsd:any namespace="##other" processContents="lax" />
 			</xsd:choice>
 			<xsd:attribute name="name" type="xsd:string" use="optional" />
@@ -155,9 +155,9 @@
 	<xsd:element name="SyntaxDefinition">
 		<xsd:complexType>
 			<xsd:choice minOccurs="1" maxOccurs="unbounded">
-				<xsd:element ref="Property"/>
-				<xsd:element ref="Color"/>
-				<xsd:element ref="RuleSet"/>
+				<xsd:element ref="Property" />
+				<xsd:element ref="Color" />
+				<xsd:element ref="RuleSet" />
 				<xsd:any namespace="##other" processContents="lax" />
 			</xsd:choice>
 			<xsd:attribute name="name" type="xsd:string" use="optional" />

@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" >
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
 	<xsd:annotation>
 		<xsd:documentation>
 		This schema defines the syntax for mode definitions in SharpDevelop.
 		The schema can be simplified quite a bit but it does the job as is.
-
 
 		If you are using this file as a reference it is probably easiest to scroll to
 		the botton to find the definition of the root element called SyntaxDefinition and
@@ -39,29 +38,29 @@
 
 		<xsd:choice minOccurs="0" maxOccurs="unbounded">
 			<xsd:element name="Default" type="EnvironmentEntry" minOccurs="0" maxOccurs="1" />
-			<xsd:element name="Selection" type="EnvironmentEntry" minOccurs="0" maxOccurs="1"/>
-			<xsd:element name="VRuler" type="EnvironmentEntry" minOccurs="0" maxOccurs="1"/>
-			<xsd:element name="InvalidLines" type="EnvironmentEntry" minOccurs="0" maxOccurs="1"/>
-			<xsd:element name="CaretMarker" type="EnvironmentEntry" minOccurs="0" maxOccurs="1"/>
-			<xsd:element name="CaretLine" type="EnvironmentEntry" minOccurs="0" maxOccurs="1"/>
+			<xsd:element name="Selection" type="EnvironmentEntry" minOccurs="0" maxOccurs="1" />
+			<xsd:element name="VRuler" type="EnvironmentEntry" minOccurs="0" maxOccurs="1" />
+			<xsd:element name="InvalidLines" type="EnvironmentEntry" minOccurs="0" maxOccurs="1" />
+			<xsd:element name="CaretMarker" type="EnvironmentEntry" minOccurs="0" maxOccurs="1" />
+			<xsd:element name="CaretLine" type="EnvironmentEntry" minOccurs="0" maxOccurs="1" />
 
-			<xsd:element name="LineNumbers" type="EnvironmentEntry" minOccurs="0" maxOccurs="1"/>
+			<xsd:element name="LineNumbers" type="EnvironmentEntry" minOccurs="0" maxOccurs="1" />
 
-			<xsd:element name="FoldLine" type="EnvironmentEntry" minOccurs="0" maxOccurs="1"/>
-			<xsd:element name="FoldMarker" type="EnvironmentEntry" minOccurs="0" maxOccurs="1"/>
-			<xsd:element name="SelectedFoldLine" type="EnvironmentEntry" minOccurs="0" maxOccurs="1"/>
+			<xsd:element name="FoldLine" type="EnvironmentEntry" minOccurs="0" maxOccurs="1" />
+			<xsd:element name="FoldMarker" type="EnvironmentEntry" minOccurs="0" maxOccurs="1" />
+			<xsd:element name="SelectedFoldLine" type="EnvironmentEntry" minOccurs="0" maxOccurs="1" />
 
-			<xsd:element name="EOLMarkers" type="EnvironmentEntry" minOccurs="0" maxOccurs="1"/>
-			<xsd:element name="SpaceMarkers" type="EnvironmentEntry" minOccurs="0" maxOccurs="1"/>
-			<xsd:element name="TabMarkers" type="EnvironmentEntry" minOccurs="0" maxOccurs="1"/>
+			<xsd:element name="EOLMarkers" type="EnvironmentEntry" minOccurs="0" maxOccurs="1" />
+			<xsd:element name="SpaceMarkers" type="EnvironmentEntry" minOccurs="0" maxOccurs="1" />
+			<xsd:element name="TabMarkers" type="EnvironmentEntry" minOccurs="0" maxOccurs="1" />
 
-			<xsd:element name="Custom" type="CustomEnvironmentEntry" minOccurs="0" maxOccurs="unbounded"/>
+			<xsd:element name="Custom" type="CustomEnvironmentEntry" minOccurs="0" maxOccurs="unbounded" />
 		</xsd:choice>
 	</xsd:complexType>
 
 	<xsd:complexType name="Properties">
 		<xsd:sequence>
-			<xsd:element name="Property" type="Property" minOccurs="0" maxOccurs="unbounded"/>
+			<xsd:element name="Property" type="Property" minOccurs="0" maxOccurs="unbounded" />
 		</xsd:sequence>
 	</xsd:complexType>
 
@@ -185,7 +184,6 @@
 		<xsd:attribute name="word" type="xsd:string" />
 	</xsd:complexType>
 
-
 	<!-- A grouping of keywords that sholuld be colored the same way -->
 	<xsd:complexType name="KeyWords">
 		<xsd:sequence>
@@ -267,13 +265,13 @@
 			<xsd:sequence>
 				<!-- The Environment tag defines colors, for various standard elements in the SharpDevelop GUI, if
 				     not given the default values are used. -->
-				<xsd:element name="Environment" type="Environment" minOccurs="0" maxOccurs="1"/>
+				<xsd:element name="Environment" type="Environment" minOccurs="0" maxOccurs="1" />
 
 				<!-- The Properties section defines properties which are bound to the highlighting -->
 				<xsd:element name="Properties" type="Properties" minOccurs="0" maxOccurs="1" />
 
 				<!-- The Digits tag defines the color for rendering Digits-->
-				<xsd:element name="Digits" type="Digits" minOccurs="0" maxOccurs="1"/>
+				<xsd:element name="Digits" type="Digits" minOccurs="0" maxOccurs="1" />
 
 				<!-- The RuleSets tag defines the rule sets that are used in the mode. Note that all modes are defined in
 					 a flat structture even if they are used recursively. For an example of a mode that uses
@@ -292,5 +290,4 @@
 			<xsd:attribute name="extends" type="xsd:string" />
 		</xsd:complexType>
 	</xsd:element>
-
 </xsd:schema>

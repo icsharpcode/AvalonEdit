@@ -1,14 +1,14 @@
 ﻿// Copyright (c) 2014 AlphaSierraPapa for the SharpDevelop Team
-// 
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this
 // software and associated documentation files (the "Software"), to deal in the Software
 // without restriction, including without limitation the rights to use, copy, modify, merge,
 // publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons
 // to whom the Software is furnished to do so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in all copies or
 // substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
 // INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
 // PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE
@@ -16,13 +16,12 @@
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
 
+using ICSharpCode.AvalonEdit.Document;
+using ICSharpCode.AvalonEdit.Utils;
 using System;
 using System.Collections.Generic;
 using System.Windows.Documents;
 using System.Windows.Media.TextFormatting;
-
-using ICSharpCode.AvalonEdit.Document;
-using ICSharpCode.AvalonEdit.Utils;
 
 namespace ICSharpCode.AvalonEdit.Rendering
 {
@@ -31,15 +30,16 @@ namespace ICSharpCode.AvalonEdit.Rendering
 	/// </summary>
 	public class VisualLineText : VisualLineElement
 	{
-		VisualLine parentVisualLine;
-		
+		private VisualLine parentVisualLine;
+
 		/// <summary>
 		/// Gets the parent visual line.
 		/// </summary>
-		public VisualLine ParentVisualLine {
+		public VisualLine ParentVisualLine
+		{
 			get { return parentVisualLine; }
 		}
-		
+
 		/// <summary>
 		/// Creates a visual line text element with the specified length.
 		/// It uses the <see cref="ITextRunConstructionContext.VisualLine"/> and its
@@ -51,7 +51,7 @@ namespace ICSharpCode.AvalonEdit.Rendering
 				throw new ArgumentNullException("parentVisualLine");
 			this.parentVisualLine = parentVisualLine;
 		}
-		
+
 		/// <summary>
 		/// Override this method to control the type of new VisualLineText instances when
 		/// the visual line is split due to syntax highlighting.
@@ -60,42 +60,43 @@ namespace ICSharpCode.AvalonEdit.Rendering
 		{
 			return new VisualLineText(parentVisualLine, length);
 		}
-		
+
 		/// <inheritdoc/>
 		public override TextRun CreateTextRun(int startVisualColumn, ITextRunConstructionContext context)
 		{
 			if (context == null)
 				throw new ArgumentNullException("context");
-			
+
 			int relativeOffset = startVisualColumn - VisualColumn;
 			StringSegment text = context.GetText(context.VisualLine.FirstDocumentLine.Offset + RelativeTextOffset + relativeOffset, DocumentLength - relativeOffset);
 			return new TextCharacters(text.Text, text.Offset, text.Count, this.TextRunProperties);
 		}
-		
+
 		/// <inheritdoc/>
 		public override bool IsWhitespace(int visualColumn)
 		{
 			int offset = visualColumn - this.VisualColumn + parentVisualLine.FirstDocumentLine.Offset + this.RelativeTextOffset;
 			return char.IsWhiteSpace(parentVisualLine.Document.GetCharAt(offset));
 		}
-		
+
 		/// <inheritdoc/>
 		public override TextSpan<CultureSpecificCharacterBufferRange> GetPrecedingText(int visualColumnLimit, ITextRunConstructionContext context)
 		{
 			if (context == null)
 				throw new ArgumentNullException("context");
-			
+
 			int relativeOffset = visualColumnLimit - VisualColumn;
 			StringSegment text = context.GetText(context.VisualLine.FirstDocumentLine.Offset + RelativeTextOffset, relativeOffset);
 			CharacterBufferRange range = new CharacterBufferRange(text.Text, text.Offset, text.Count);
 			return new TextSpan<CultureSpecificCharacterBufferRange>(range.Length, new CultureSpecificCharacterBufferRange(this.TextRunProperties.CultureInfo, range));
 		}
-		
+
 		/// <inheritdoc/>
-		public override bool CanSplit {
+		public override bool CanSplit
+		{
 			get { return true; }
 		}
-		
+
 		/// <inheritdoc/>
 		public override void Split(int splitVisualColumn, IList<VisualLineElement> elements, int elementIndex)
 		{
@@ -110,19 +111,19 @@ namespace ICSharpCode.AvalonEdit.Rendering
 			SplitHelper(this, splitPart, splitVisualColumn, relativeSplitPos + RelativeTextOffset);
 			elements.Insert(elementIndex + 1, splitPart);
 		}
-		
+
 		/// <inheritdoc/>
 		public override int GetRelativeOffset(int visualColumn)
 		{
 			return this.RelativeTextOffset + visualColumn - this.VisualColumn;
 		}
-		
+
 		/// <inheritdoc/>
 		public override int GetVisualColumn(int relativeTextOffset)
 		{
 			return this.VisualColumn + relativeTextOffset - this.RelativeTextOffset;
 		}
-		
+
 		/// <inheritdoc/>
 		public override int GetNextCaretPosition(int visualColumn, LogicalDirection direction, CaretPositioningMode mode)
 		{

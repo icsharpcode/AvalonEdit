@@ -1,14 +1,14 @@
 ﻿// Copyright (c) 2014 AlphaSierraPapa for the SharpDevelop Team
-// 
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this
 // software and associated documentation files (the "Software"), to deal in the Software
 // without restriction, including without limitation the rights to use, copy, modify, merge,
 // publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons
 // to whom the Software is furnished to do so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in all copies or
 // substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
 // INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
 // PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE
@@ -16,9 +16,8 @@
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
 
-using System;
-using ICSharpCode.NRefactory.Editor;
 using ICSharpCode.AvalonEdit.Document;
+using System;
 
 namespace ICSharpCode.AvalonEdit.Indentation
 {
@@ -36,17 +35,18 @@ namespace ICSharpCode.AvalonEdit.Indentation
 			if (line == null)
 				throw new ArgumentNullException("line");
 			DocumentLine previousLine = line.PreviousLine;
-			if (previousLine != null) {
+			if (previousLine != null)
+			{
 				ISegment indentationSegment = TextUtilities.GetWhitespaceAfter(document, previousLine.Offset);
 				string indentation = document.GetText(indentationSegment);
 				// copy indentation to line
 				indentationSegment = TextUtilities.GetWhitespaceAfter(document, line.Offset);
 				document.Replace(indentationSegment.Offset, indentationSegment.Length, indentation,
-				                 OffsetChangeMappingType.RemoveAndInsert);
+								 OffsetChangeMappingType.RemoveAndInsert);
 				// OffsetChangeMappingType.RemoveAndInsert guarantees the caret moves behind the new indentation.
 			}
 		}
-		
+
 		/// <summary>
 		/// Does nothing: indenting multiple lines is useless without a smart indentation strategy.
 		/// </summary>

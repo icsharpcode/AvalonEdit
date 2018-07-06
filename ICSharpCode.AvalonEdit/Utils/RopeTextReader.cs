@@ -1,14 +1,14 @@
 ﻿// Copyright (c) 2014 AlphaSierraPapa for the SharpDevelop Team
-// 
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this
 // software and associated documentation files (the "Software"), to deal in the Software
 // without restriction, including without limitation the rights to use, copy, modify, merge,
 // publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons
 // to whom the Software is furnished to do so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in all copies or
 // substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
 // INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
 // PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE
@@ -28,10 +28,10 @@ namespace ICSharpCode.AvalonEdit.Utils
 	/// </summary>
 	public sealed class RopeTextReader : TextReader
 	{
-		Stack<RopeNode<char>> stack = new Stack<RopeNode<char>>();
-		RopeNode<char> currentNode;
-		int indexInsideNode;
-		
+		private Stack<RopeNode<char>> stack = new Stack<RopeNode<char>>();
+		private RopeNode<char> currentNode;
+		private int indexInsideNode;
+
 		/// <summary>
 		/// Creates a new RopeTextReader.
 		/// Internally, this method creates a Clone of the rope; so the text reader will always read through the old
@@ -41,23 +41,26 @@ namespace ICSharpCode.AvalonEdit.Utils
 		{
 			if (rope == null)
 				throw new ArgumentNullException("rope");
-			
+
 			// We force the user to iterate through a clone of the rope to keep the API contract of RopeTextReader simple
 			// (what happens when a rope is modified while iterating through it?)
 			rope.root.Publish();
-			
+
 			// special case for the empty rope:
 			// leave currentNode initialized to null (RopeTextReader doesn't support empty nodes)
-			if (rope.Length != 0) {
+			if (rope.Length != 0)
+			{
 				currentNode = rope.root;
 				GoToLeftMostLeaf();
 			}
 		}
-		
-		void GoToLeftMostLeaf()
+
+		private void GoToLeftMostLeaf()
 		{
-			while (currentNode.contents == null) {
-				if (currentNode.height == 0) {
+			while (currentNode.contents == null)
+			{
+				if (currentNode.height == 0)
+				{
 					// this is a function node - move to its contained rope
 					currentNode = currentNode.GetContentNode();
 					continue;
@@ -68,7 +71,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 			}
 			Debug.Assert(currentNode.height == 0);
 		}
-		
+
 		/// <inheritdoc/>
 		public override int Peek()
 		{
@@ -76,7 +79,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 				return -1;
 			return currentNode.contents[indexInsideNode];
 		}
-		
+
 		/// <inheritdoc/>
 		public override int Read()
 		{
@@ -87,29 +90,35 @@ namespace ICSharpCode.AvalonEdit.Utils
 				GoToNextNode();
 			return result;
 		}
-		
-		void GoToNextNode()
+
+		private void GoToNextNode()
 		{
-			if (stack.Count == 0) {
+			if (stack.Count == 0)
+			{
 				currentNode = null;
-			} else {
+			}
+			else
+			{
 				indexInsideNode = 0;
 				currentNode = stack.Pop();
 				GoToLeftMostLeaf();
 			}
 		}
-		
+
 		/// <inheritdoc/>
 		public override int Read(char[] buffer, int index, int count)
 		{
 			if (currentNode == null)
 				return 0;
 			int amountInCurrentNode = currentNode.length - indexInsideNode;
-			if (count < amountInCurrentNode) {
+			if (count < amountInCurrentNode)
+			{
 				Array.Copy(currentNode.contents, indexInsideNode, buffer, index, count);
 				indexInsideNode += count;
 				return count;
-			} else {
+			}
+			else
+			{
 				// read to end of current node
 				Array.Copy(currentNode.contents, indexInsideNode, buffer, index, amountInCurrentNode);
 				GoToNextNode();

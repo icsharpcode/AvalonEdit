@@ -1,14 +1,14 @@
 ﻿// Copyright (c) 2014 AlphaSierraPapa for the SharpDevelop Team
-// 
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this
 // software and associated documentation files (the "Software"), to deal in the Software
 // without restriction, including without limitation the rights to use, copy, modify, merge,
 // publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons
 // to whom the Software is furnished to do so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in all copies or
 // substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
 // INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
 // PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE
@@ -26,9 +26,10 @@ using System.Xml;
 
 namespace ICSharpCode.AvalonEdit.Utils
 {
-	static class ExtensionMethods
+	internal static class ExtensionMethods
 	{
 		#region Epsilon / IsClose / CoerceValue
+
 		/// <summary>
 		/// Epsilon used for <c>IsClose()</c> implementations.
 		/// We can use up quite a few digits in front of the decimal point (due to visual positions being relative to document origin),
@@ -38,7 +39,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 		/// http://community.sharpdevelop.net/forums/t/16048.aspx
 		/// </summary>
 		public const double Epsilon = 0.01;
-		
+
 		/// <summary>
 		/// Returns true if the doubles are close (difference smaller than 0.01).
 		/// </summary>
@@ -48,7 +49,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 				return true;
 			return Math.Abs(d1 - d2) < Epsilon;
 		}
-		
+
 		/// <summary>
 		/// Returns true if the doubles are close (difference smaller than 0.01).
 		/// </summary>
@@ -56,7 +57,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 		{
 			return IsClose(d1.Width, d2.Width) && IsClose(d1.Height, d2.Height);
 		}
-		
+
 		/// <summary>
 		/// Returns true if the doubles are close (difference smaller than 0.01).
 		/// </summary>
@@ -64,7 +65,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 		{
 			return IsClose(d1.X, d2.X) && IsClose(d1.Y, d2.Y);
 		}
-		
+
 		/// <summary>
 		/// Forces the value to stay between mininum and maximum.
 		/// </summary>
@@ -75,7 +76,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 		{
 			return Math.Max(Math.Min(value, maximum), minimum);
 		}
-		
+
 		/// <summary>
 		/// Forces the value to stay between mininum and maximum.
 		/// </summary>
@@ -86,28 +87,32 @@ namespace ICSharpCode.AvalonEdit.Utils
 		{
 			return Math.Max(Math.Min(value, maximum), minimum);
 		}
-		#endregion
-		
+
+		#endregion Epsilon / IsClose / CoerceValue
+
 		#region CreateTypeface
+
 		/// <summary>
 		/// Creates typeface from the framework element.
 		/// </summary>
 		public static Typeface CreateTypeface(this FrameworkElement fe)
 		{
 			return new Typeface((FontFamily)fe.GetValue(TextBlock.FontFamilyProperty),
-			                    (FontStyle)fe.GetValue(TextBlock.FontStyleProperty),
-			                    (FontWeight)fe.GetValue(TextBlock.FontWeightProperty),
-			                    (FontStretch)fe.GetValue(TextBlock.FontStretchProperty));
+								(FontStyle)fe.GetValue(TextBlock.FontStyleProperty),
+								(FontWeight)fe.GetValue(TextBlock.FontWeightProperty),
+								(FontStretch)fe.GetValue(TextBlock.FontStretchProperty));
 		}
-		#endregion
-		
+
+		#endregion CreateTypeface
+
 		#region AddRange / Sequence
+
 		public static void AddRange<T>(this ICollection<T> collection, IEnumerable<T> elements)
 		{
 			foreach (T e in elements)
 				collection.Add(e);
 		}
-		
+
 		/// <summary>
 		/// Creates an IEnumerable with a single value.
 		/// </summary>
@@ -115,9 +120,11 @@ namespace ICSharpCode.AvalonEdit.Utils
 		{
 			yield return value;
 		}
-		#endregion
-		
+
+		#endregion AddRange / Sequence
+
 		#region XML reading
+
 		/// <summary>
 		/// Gets the value of the attribute, or null if the attribute does not exist.
 		/// </summary>
@@ -126,7 +133,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 			XmlAttribute attr = element.GetAttributeNode(attributeName);
 			return attr != null ? attr.Value : null;
 		}
-		
+
 		/// <summary>
 		/// Gets the value of the attribute as boolean, or null if the attribute does not exist.
 		/// </summary>
@@ -135,7 +142,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 			XmlAttribute attr = element.GetAttributeNode(attributeName);
 			return attr != null ? (bool?)XmlConvert.ToBoolean(attr.Value) : null;
 		}
-		
+
 		/// <summary>
 		/// Gets the value of the attribute as boolean, or null if the attribute does not exist.
 		/// </summary>
@@ -147,95 +154,107 @@ namespace ICSharpCode.AvalonEdit.Utils
 			else
 				return XmlConvert.ToBoolean(attributeValue);
 		}
-		#endregion
-		
+
+		#endregion XML reading
+
 		#region DPI independence
+
 		public static Rect TransformToDevice(this Rect rect, Visual visual)
 		{
 			Matrix matrix = PresentationSource.FromVisual(visual).CompositionTarget.TransformToDevice;
 			return Rect.Transform(rect, matrix);
 		}
-		
+
 		public static Rect TransformFromDevice(this Rect rect, Visual visual)
 		{
 			Matrix matrix = PresentationSource.FromVisual(visual).CompositionTarget.TransformFromDevice;
 			return Rect.Transform(rect, matrix);
 		}
-		
+
 		public static Size TransformToDevice(this Size size, Visual visual)
 		{
 			Matrix matrix = PresentationSource.FromVisual(visual).CompositionTarget.TransformToDevice;
 			return new Size(size.Width * matrix.M11, size.Height * matrix.M22);
 		}
-		
+
 		public static Size TransformFromDevice(this Size size, Visual visual)
 		{
 			Matrix matrix = PresentationSource.FromVisual(visual).CompositionTarget.TransformFromDevice;
 			return new Size(size.Width * matrix.M11, size.Height * matrix.M22);
 		}
-		
+
 		public static Point TransformToDevice(this Point point, Visual visual)
 		{
 			Matrix matrix = PresentationSource.FromVisual(visual).CompositionTarget.TransformToDevice;
 			return new Point(point.X * matrix.M11, point.Y * matrix.M22);
 		}
-		
+
 		public static Point TransformFromDevice(this Point point, Visual visual)
 		{
 			Matrix matrix = PresentationSource.FromVisual(visual).CompositionTarget.TransformFromDevice;
 			return new Point(point.X * matrix.M11, point.Y * matrix.M22);
 		}
-		#endregion
-		
+
+		#endregion DPI independence
+
 		#region System.Drawing <-> WPF conversions
+
 		public static System.Drawing.Point ToSystemDrawing(this Point p)
 		{
 			return new System.Drawing.Point((int)p.X, (int)p.Y);
 		}
-		
+
 		public static Point ToWpf(this System.Drawing.Point p)
 		{
 			return new Point(p.X, p.Y);
 		}
-		
+
 		public static Size ToWpf(this System.Drawing.Size s)
 		{
 			return new Size(s.Width, s.Height);
 		}
-		
+
 		public static Rect ToWpf(this System.Drawing.Rectangle rect)
 		{
 			return new Rect(rect.Location.ToWpf(), rect.Size.ToWpf());
 		}
-		#endregion
-		
+
+		#endregion System.Drawing <-> WPF conversions
+
 		public static IEnumerable<DependencyObject> VisualAncestorsAndSelf(this DependencyObject obj)
 		{
-			while (obj != null) {
+			while (obj != null)
+			{
 				yield return obj;
-				if (obj is Visual || obj is System.Windows.Media.Media3D.Visual3D) {
+				if (obj is Visual || obj is System.Windows.Media.Media3D.Visual3D)
+				{
 					obj = VisualTreeHelper.GetParent(obj);
-				} else if (obj is FrameworkContentElement) {
+				}
+				else if (obj is FrameworkContentElement)
+				{
 					// When called with a non-visual such as a TextElement, walk up the
 					// logical tree instead.
 					obj = ((FrameworkContentElement)obj).Parent;
-				} else {
+				}
+				else
+				{
 					break;
 				}
 			}
 		}
-		
+
 		[Conditional("DEBUG")]
 		public static void CheckIsFrozen(Freezable f)
 		{
 			if (f != null && !f.IsFrozen)
 				Debug.WriteLine("Performance warning: Not frozen: " + f.ToString());
 		}
-		
+
 		[Conditional("DEBUG")]
 		public static void Log(bool condition, string format, params object[] args)
 		{
-			if (condition) {
+			if (condition)
+			{
 				string output = DateTime.Now.ToString("hh:MM:ss") + ": " + string.Format(format, args) + Environment.NewLine + Environment.StackTrace;
 				Console.WriteLine(output);
 				Debug.WriteLine(output);

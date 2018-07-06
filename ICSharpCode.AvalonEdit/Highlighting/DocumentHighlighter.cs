@@ -1,14 +1,14 @@
 ﻿// Copyright (c) 2014 AlphaSierraPapa for the SharpDevelop Team
-// 
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this
 // software and associated documentation files (the "Software"), to deal in the Software
 // without restriction, including without limitation the rights to use, copy, modify, merge,
 // publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons
 // to whom the Software is furnished to do so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in all copies or
 // substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
 // INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
 // PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE
@@ -16,13 +16,12 @@
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
 
+using ICSharpCode.AvalonEdit.Document;
+using ICSharpCode.AvalonEdit.Utils;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using ICSharpCode.NRefactory.Editor;
-using ICSharpCode.AvalonEdit.Document;
-using ICSharpCode.AvalonEdit.Utils;
 using SpanStack = ICSharpCode.AvalonEdit.Utils.ImmutableStack<ICSharpCode.AvalonEdit.Highlighting.HighlightingSpan>;
 
 namespace ICSharpCode.AvalonEdit.Highlighting
@@ -38,23 +37,25 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 		/// storedSpanStacks[0] = state at beginning of document
 		/// storedSpanStacks[i] = state after line i
 		/// </summary>
-		readonly CompressingTreeList<SpanStack> storedSpanStacks = new CompressingTreeList<SpanStack>(object.ReferenceEquals);
-		readonly CompressingTreeList<bool> isValid = new CompressingTreeList<bool>((a, b) => a == b);
-		readonly IDocument document;
-		readonly IHighlightingDefinition definition;
-		readonly HighlightingEngine engine;
-		readonly WeakLineTracker weakLineTracker;
-		bool isHighlighting;
-		bool isInHighlightingGroup;
-		bool isDisposed;
-		
+		private readonly CompressingTreeList<SpanStack> storedSpanStacks = new CompressingTreeList<SpanStack>(object.ReferenceEquals);
+
+		private readonly CompressingTreeList<bool> isValid = new CompressingTreeList<bool>((a, b) => a == b);
+		private readonly IDocument document;
+		private readonly IHighlightingDefinition definition;
+		private readonly HighlightingEngine engine;
+		private readonly WeakLineTracker weakLineTracker;
+		private bool isHighlighting;
+		private bool isInHighlightingGroup;
+		private bool isDisposed;
+
 		/// <summary>
 		/// Gets the document that this DocumentHighlighter is highlighting.
 		/// </summary>
-		public IDocument Document {
+		public IDocument Document
+		{
 			get { return document; }
 		}
-		
+
 		/// <summary>
 		/// Creates a new DocumentHighlighter instance.
 		/// </summary>
@@ -71,8 +72,8 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 			weakLineTracker = WeakLineTracker.Register(document, this);
 			InvalidateSpanStacks();
 		}
-		
-		#if NREFACTORY
+
+#if NREFACTORY
 		/// <summary>
 		/// Creates a new DocumentHighlighter instance.
 		/// </summary>
@@ -87,8 +88,8 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 			this.engine = new HighlightingEngine(definition.MainRuleSet);
 			InvalidateHighlighting();
 		}
-		#endif
-		
+#endif
+
 		/// <summary>
 		/// Disposes the document highlighter.
 		/// </summary>
@@ -98,20 +99,21 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 				weakLineTracker.Deregister();
 			isDisposed = true;
 		}
-		
+
 		void ILineTracker.BeforeRemoveLine(DocumentLine line)
 		{
 			CheckIsHighlighting();
 			int number = line.LineNumber;
 			storedSpanStacks.RemoveAt(number);
 			isValid.RemoveAt(number);
-			if (number < isValid.Count) {
+			if (number < isValid.Count)
+			{
 				isValid[number] = false;
 				if (number < firstInvalidLine)
 					firstInvalidLine = number;
 			}
 		}
-		
+
 		void ILineTracker.SetLineLength(DocumentLine line, int newTotalLength)
 		{
 			CheckIsHighlighting();
@@ -120,7 +122,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 			if (number < firstInvalidLine)
 				firstInvalidLine = number;
 		}
-		
+
 		void ILineTracker.LineInserted(DocumentLine insertionPos, DocumentLine newLine)
 		{
 			CheckIsHighlighting();
@@ -131,29 +133,31 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 			if (lineNumber < firstInvalidLine)
 				firstInvalidLine = lineNumber;
 		}
-		
+
 		void ILineTracker.RebuildDocument()
 		{
 			InvalidateSpanStacks();
 		}
-		
+
 		void ILineTracker.ChangeComplete(DocumentChangeEventArgs e)
 		{
 		}
-		
-		ImmutableStack<HighlightingSpan> initialSpanStack = SpanStack.Empty;
-		
+
+		private ImmutableStack<HighlightingSpan> initialSpanStack = SpanStack.Empty;
+
 		/// <summary>
 		/// Gets/sets the the initial span stack of the document. Default value is <see cref="SpanStack.Empty" />.
 		/// </summary>
-		public ImmutableStack<HighlightingSpan> InitialSpanStack {
+		public ImmutableStack<HighlightingSpan> InitialSpanStack
+		{
 			get { return initialSpanStack; }
-			set {
+			set
+			{
 				initialSpanStack = value ?? SpanStack.Empty;
 				InvalidateHighlighting();
 			}
 		}
-		
+
 		/// <summary>
 		/// Invalidates all stored highlighting info.
 		/// When the document changes, the highlighting is invalidated automatically, this method
@@ -164,11 +168,11 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 			InvalidateSpanStacks();
 			OnHighlightStateChanged(1, document.LineCount); // force a redraw with the new highlighting
 		}
-		
+
 		/// <summary>
 		/// Invalidates stored highlighting info, but does not raise the HighlightingStateChanged event.
 		/// </summary>
-		void InvalidateSpanStacks()
+		private void InvalidateSpanStacks()
 		{
 			CheckIsHighlighting();
 			storedSpanStacks.Clear();
@@ -179,26 +183,29 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 			isValid.InsertRange(1, document.LineCount, false);
 			firstInvalidLine = 1;
 		}
-		
-		int firstInvalidLine;
-		
+
+		private int firstInvalidLine;
+
 		/// <inheritdoc/>
 		public HighlightedLine HighlightLine(int lineNumber)
 		{
 			ThrowUtil.CheckInRangeInclusive(lineNumber, "lineNumber", 1, document.LineCount);
 			CheckIsHighlighting();
 			isHighlighting = true;
-			try {
+			try
+			{
 				HighlightUpTo(lineNumber - 1);
 				IDocumentLine line = document.GetLineByNumber(lineNumber);
 				HighlightedLine result = engine.HighlightLine(document, line);
 				UpdateTreeList(lineNumber);
 				return result;
-			} finally {
+			}
+			finally
+			{
 				isHighlighting = false;
 			}
 		}
-		
+
 		/// <summary>
 		/// Gets the span stack at the end of the specified line.
 		/// -> GetSpanStack(1) returns the spans at the start of the second line.
@@ -210,55 +217,66 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 		public SpanStack GetSpanStack(int lineNumber)
 		{
 			ThrowUtil.CheckInRangeInclusive(lineNumber, "lineNumber", 0, document.LineCount);
-			if (firstInvalidLine <= lineNumber) {
+			if (firstInvalidLine <= lineNumber)
+			{
 				UpdateHighlightingState(lineNumber);
 			}
 			return storedSpanStacks[lineNumber];
 		}
-		
+
 		/// <inheritdoc/>
 		public IEnumerable<HighlightingColor> GetColorStack(int lineNumber)
 		{
 			return GetSpanStack(lineNumber).Select(s => s.SpanColor).Where(s => s != null);
 		}
-		
-		void CheckIsHighlighting()
+
+		private void CheckIsHighlighting()
 		{
-			if (isDisposed) {
+			if (isDisposed)
+			{
 				throw new ObjectDisposedException("DocumentHighlighter");
 			}
-			if (isHighlighting) {
+			if (isHighlighting)
+			{
 				throw new InvalidOperationException("Invalid call - a highlighting operation is currently running.");
 			}
 		}
-		
+
 		/// <inheritdoc/>
 		public void UpdateHighlightingState(int lineNumber)
 		{
 			CheckIsHighlighting();
 			isHighlighting = true;
-			try {
+			try
+			{
 				HighlightUpTo(lineNumber);
-			} finally {
+			}
+			finally
+			{
 				isHighlighting = false;
 			}
 		}
-		
+
 		/// <summary>
 		/// Sets the engine's CurrentSpanStack to the end of the target line.
 		/// Updates the span stack for all lines up to (and including) the target line, if necessary.
 		/// </summary>
-		void HighlightUpTo(int targetLineNumber)
+		private void HighlightUpTo(int targetLineNumber)
 		{
-			for (int currentLine = 0; currentLine <= targetLineNumber; currentLine++) {
-				if (firstInvalidLine > currentLine) {
+			for (int currentLine = 0; currentLine <= targetLineNumber; currentLine++)
+			{
+				if (firstInvalidLine > currentLine)
+				{
 					// (this branch is always taken on the first loop iteration, as firstInvalidLine > 0)
-					
-					if (firstInvalidLine <= targetLineNumber) {
+
+					if (firstInvalidLine <= targetLineNumber)
+					{
 						// Skip valid lines to next invalid line:
 						engine.CurrentSpanStack = storedSpanStacks[firstInvalidLine - 1];
 						currentLine = firstInvalidLine;
-					} else {
+					}
+					else
+					{
 						// Skip valid lines to target line:
 						engine.CurrentSpanStack = storedSpanStacks[targetLineNumber];
 						break;
@@ -270,30 +288,36 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 			}
 			Debug.Assert(EqualSpanStacks(engine.CurrentSpanStack, storedSpanStacks[targetLineNumber]));
 		}
-		
-		void UpdateTreeList(int lineNumber)
+
+		private void UpdateTreeList(int lineNumber)
 		{
-			if (!EqualSpanStacks(engine.CurrentSpanStack, storedSpanStacks[lineNumber])) {
+			if (!EqualSpanStacks(engine.CurrentSpanStack, storedSpanStacks[lineNumber]))
+			{
 				isValid[lineNumber] = true;
 				//Debug.WriteLine("Span stack in line " + lineNumber + " changed from " + storedSpanStacks[lineNumber] + " to " + spanStack);
 				storedSpanStacks[lineNumber] = engine.CurrentSpanStack;
-				if (lineNumber + 1 < isValid.Count) {
+				if (lineNumber + 1 < isValid.Count)
+				{
 					isValid[lineNumber + 1] = false;
 					firstInvalidLine = lineNumber + 1;
-				} else {
+				}
+				else
+				{
 					firstInvalidLine = int.MaxValue;
 				}
 				if (lineNumber + 1 < document.LineCount)
 					OnHighlightStateChanged(lineNumber + 1, lineNumber + 1);
-			} else if (firstInvalidLine == lineNumber) {
+			}
+			else if (firstInvalidLine == lineNumber)
+			{
 				isValid[lineNumber] = true;
 				firstInvalidLine = isValid.IndexOf(false);
 				if (firstInvalidLine < 0)
 					firstInvalidLine = int.MaxValue;
 			}
 		}
-		
-		static bool EqualSpanStacks(SpanStack a, SpanStack b)
+
+		private static bool EqualSpanStacks(SpanStack a, SpanStack b)
 		{
 			// We must use value equality between the stacks because HighlightingColorizer.OnHighlightStateChanged
 			// depends on the fact that equal input state + unchanged line contents produce equal output state.
@@ -301,7 +325,8 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 				return true;
 			if (a == null || b == null)
 				return false;
-			while (!a.IsEmpty && !b.IsEmpty) {
+			while (!a.IsEmpty && !b.IsEmpty)
+			{
 				if (a.Peek() != b.Peek())
 					return false;
 				a = a.Pop();
@@ -311,10 +336,10 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 			}
 			return a.IsEmpty && b.IsEmpty;
 		}
-		
+
 		/// <inheritdoc/>
 		public event HighlightingStateChangedEventHandler HighlightingStateChanged;
-		
+
 		/// <summary>
 		/// Is called when the highlighting state at the end of the specified line has changed.
 		/// </summary>
@@ -326,12 +351,13 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 			if (HighlightingStateChanged != null)
 				HighlightingStateChanged(fromLineNumber, toLineNumber);
 		}
-		
+
 		/// <inheritdoc/>
-		public HighlightingColor DefaultTextColor {
+		public HighlightingColor DefaultTextColor
+		{
 			get { return null; }
 		}
-		
+
 		/// <inheritdoc/>
 		public void BeginHighlighting()
 		{
@@ -339,7 +365,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 				throw new InvalidOperationException("Highlighting group is already open");
 			isInHighlightingGroup = true;
 		}
-		
+
 		/// <inheritdoc/>
 		public void EndHighlighting()
 		{
@@ -347,7 +373,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 				throw new InvalidOperationException("Highlighting group is not open");
 			isInHighlightingGroup = false;
 		}
-		
+
 		/// <inheritdoc/>
 		public HighlightingColor GetNamedColor(string name)
 		{

@@ -1,14 +1,14 @@
 ﻿// Copyright (c) 2014 AlphaSierraPapa for the SharpDevelop Team
-// 
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this
 // software and associated documentation files (the "Software"), to deal in the Software
 // without restriction, including without limitation the rights to use, copy, modify, merge,
 // publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons
 // to whom the Software is furnished to do so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in all copies or
 // substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
 // INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
 // PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE
@@ -17,9 +17,11 @@
 // DEALINGS IN THE SOFTWARE.
 
 using System;
+
 #if NREFACTORY
 using ICSharpCode.NRefactory.Editor;
 #endif
+
 using ICSharpCode.AvalonEdit.Utils;
 
 namespace ICSharpCode.AvalonEdit.Document
@@ -40,14 +42,14 @@ namespace ICSharpCode.AvalonEdit.Document
 			{
 				source.UpdateStarted += DeliverEvent;
 			}
-			
+
 			/// <inheritdoc/>
 			protected override void StopListening(TextDocument source)
 			{
 				source.UpdateStarted -= DeliverEvent;
 			}
 		}
-		
+
 		/// <summary>
 		/// Weak event manager for the <see cref="TextDocument.UpdateFinished"/> event.
 		/// </summary>
@@ -59,14 +61,14 @@ namespace ICSharpCode.AvalonEdit.Document
 			{
 				source.UpdateFinished += DeliverEvent;
 			}
-			
+
 			/// <inheritdoc/>
 			protected override void StopListening(TextDocument source)
 			{
 				source.UpdateFinished -= DeliverEvent;
 			}
 		}
-		
+
 		/// <summary>
 		/// Weak event manager for the <see cref="TextDocument.Changing"/> event.
 		/// </summary>
@@ -78,14 +80,14 @@ namespace ICSharpCode.AvalonEdit.Document
 			{
 				source.Changing += DeliverEvent;
 			}
-			
+
 			/// <inheritdoc/>
 			protected override void StopListening(TextDocument source)
 			{
 				source.Changing -= DeliverEvent;
 			}
 		}
-		
+
 		/// <summary>
 		/// Weak event manager for the <see cref="TextDocument.Changed"/> event.
 		/// </summary>
@@ -97,14 +99,14 @@ namespace ICSharpCode.AvalonEdit.Document
 			{
 				source.Changed += DeliverEvent;
 			}
-			
+
 			/// <inheritdoc/>
 			protected override void StopListening(TextDocument source)
 			{
 				source.Changed -= DeliverEvent;
 			}
 		}
-		
+
 		/// <summary>
 		/// Weak event manager for the <see cref="TextDocument.LineCountChanged"/> event.
 		/// </summary>
@@ -117,14 +119,14 @@ namespace ICSharpCode.AvalonEdit.Document
 			{
 				source.LineCountChanged += DeliverEvent;
 			}
-			
+
 			/// <inheritdoc/>
 			protected override void StopListening(TextDocument source)
 			{
 				source.LineCountChanged -= DeliverEvent;
 			}
 		}
-		
+
 		/// <summary>
 		/// Weak event manager for the <see cref="TextDocument.TextLengthChanged"/> event.
 		/// </summary>
@@ -137,14 +139,14 @@ namespace ICSharpCode.AvalonEdit.Document
 			{
 				source.TextLengthChanged += DeliverEvent;
 			}
-			
+
 			/// <inheritdoc/>
 			protected override void StopListening(TextDocument source)
 			{
 				source.TextLengthChanged -= DeliverEvent;
 			}
 		}
-		
+
 		/// <summary>
 		/// Weak event manager for the <see cref="TextDocument.TextChanged"/> event.
 		/// </summary>
@@ -156,7 +158,7 @@ namespace ICSharpCode.AvalonEdit.Document
 			{
 				source.TextChanged += DeliverEvent;
 			}
-			
+
 			/// <inheritdoc/>
 			protected override void StopListening(TextDocument source)
 			{

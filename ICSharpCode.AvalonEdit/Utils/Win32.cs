@@ -1,14 +1,14 @@
 ﻿// Copyright (c) 2014 AlphaSierraPapa for the SharpDevelop Team
-// 
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this
 // software and associated documentation files (the "Software"), to deal in the Software
 // without restriction, including without limitation the rights to use, copy, modify, merge,
 // publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons
 // to whom the Software is furnished to do so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in all copies or
 // substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
 // INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
 // PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE
@@ -28,15 +28,16 @@ namespace ICSharpCode.AvalonEdit.Utils
 	/// <summary>
 	/// Wrapper around Win32 functions.
 	/// </summary>
-	static class Win32
+	internal static class Win32
 	{
 		/// <summary>
 		/// Gets the caret blink time.
 		/// </summary>
-		public static TimeSpan CaretBlinkTime {
+		public static TimeSpan CaretBlinkTime
+		{
 			get { return TimeSpan.FromMilliseconds(SafeNativeMethods.GetCaretBlinkTime()); }
 		}
-		
+
 		/// <summary>
 		/// Creates an invisible Win32 caret for the specified Visual with the specified size (coordinates local to the owner visual).
 		/// </summary>
@@ -45,14 +46,17 @@ namespace ICSharpCode.AvalonEdit.Utils
 			if (owner == null)
 				throw new ArgumentNullException("owner");
 			HwndSource source = PresentationSource.FromVisual(owner) as HwndSource;
-			if (source != null) {
+			if (source != null)
+			{
 				Vector r = owner.PointToScreen(new Point(size.Width, size.Height)) - owner.PointToScreen(new Point(0, 0));
 				return SafeNativeMethods.CreateCaret(source.Handle, IntPtr.Zero, (int)Math.Ceiling(r.X), (int)Math.Ceiling(r.Y));
-			} else {
+			}
+			else
+			{
 				return false;
 			}
 		}
-		
+
 		/// <summary>
 		/// Sets the position of the caret previously created using <see cref="CreateCaret"/>. position is relative to the owner visual.
 		/// </summary>
@@ -61,15 +65,18 @@ namespace ICSharpCode.AvalonEdit.Utils
 			if (owner == null)
 				throw new ArgumentNullException("owner");
 			HwndSource source = PresentationSource.FromVisual(owner) as HwndSource;
-			if (source != null) {
+			if (source != null)
+			{
 				Point pointOnRootVisual = owner.TransformToAncestor(source.RootVisual).Transform(position);
 				Point pointOnHwnd = pointOnRootVisual.TransformToDevice(source.RootVisual);
 				return SafeNativeMethods.SetCaretPos((int)pointOnHwnd.X, (int)pointOnHwnd.Y);
-			} else {
+			}
+			else
+			{
 				return false;
 			}
 		}
-		
+
 		/// <summary>
 		/// Destroys the caret previously created using <see cref="CreateCaret"/>.
 		/// </summary>
@@ -77,21 +84,21 @@ namespace ICSharpCode.AvalonEdit.Utils
 		{
 			return SafeNativeMethods.DestroyCaret();
 		}
-		
+
 		[SuppressUnmanagedCodeSecurity]
-		static class SafeNativeMethods
+		private static class SafeNativeMethods
 		{
 			[DllImport("user32.dll")]
 			public static extern int GetCaretBlinkTime();
-			
+
 			[DllImport("user32.dll")]
 			[return: MarshalAs(UnmanagedType.Bool)]
 			public static extern bool CreateCaret(IntPtr hWnd, IntPtr hBitmap, int nWidth, int nHeight);
-			
+
 			[DllImport("user32.dll")]
 			[return: MarshalAs(UnmanagedType.Bool)]
 			public static extern bool SetCaretPos(int x, int y);
-			
+
 			[DllImport("user32.dll")]
 			[return: MarshalAs(UnmanagedType.Bool)]
 			public static extern bool DestroyCaret();

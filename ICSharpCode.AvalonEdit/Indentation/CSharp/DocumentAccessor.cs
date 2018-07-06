@@ -1,14 +1,14 @@
 ﻿// Copyright (c) 2014 AlphaSierraPapa for the SharpDevelop Team
-// 
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this
 // software and associated documentation files (the "Software"), to deal in the Software
 // without restriction, including without limitation the rights to use, copy, modify, merge,
 // publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons
 // to whom the Software is furnished to do so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in all copies or
 // substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
 // INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
 // PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE
@@ -16,11 +16,8 @@
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
 
-using System;
-using System.Collections.Generic;
-using System.IO;
-
 using ICSharpCode.AvalonEdit.Document;
+using System;
 
 namespace ICSharpCode.AvalonEdit.Indentation.CSharp
 {
@@ -32,24 +29,28 @@ namespace ICSharpCode.AvalonEdit.Indentation.CSharp
 		/// <summary>Gets if the current line is read only (because it is not in the
 		/// selected text region)</summary>
 		bool IsReadOnly { get; }
+
 		/// <summary>Gets the number of the current line.</summary>
 		int LineNumber { get; }
+
 		/// <summary>Gets/Sets the text of the current line.</summary>
 		string Text { get; set; }
+
 		/// <summary>Advances to the next line.</summary>
 		bool MoveNext();
 	}
-	
+
 	#region TextDocumentAccessor
+
 	/// <summary>
 	/// Adapter IDocumentAccessor -> TextDocument
 	/// </summary>
 	public sealed class TextDocumentAccessor : IDocumentAccessor
 	{
-		readonly TextDocument doc;
-		readonly int minLine;
-		readonly int maxLine;
-		
+		private readonly TextDocument doc;
+		private readonly int minLine;
+		private readonly int maxLine;
+
 		/// <summary>
 		/// Creates a new TextDocumentAccessor.
 		/// </summary>
@@ -61,7 +62,7 @@ namespace ICSharpCode.AvalonEdit.Indentation.CSharp
 			this.minLine = 1;
 			this.maxLine = doc.LineCount;
 		}
-		
+
 		/// <summary>
 		/// Creates a new TextDocumentAccessor that indents only a part of the document.
 		/// </summary>
@@ -73,41 +74,48 @@ namespace ICSharpCode.AvalonEdit.Indentation.CSharp
 			this.minLine = minLine;
 			this.maxLine = maxLine;
 		}
-		
-		int num;
-		string text;
-		DocumentLine line;
-		
+
+		private int num;
+		private string text;
+		private DocumentLine line;
+
 		/// <inheritdoc/>
-		public bool IsReadOnly {
-			get {
+		public bool IsReadOnly
+		{
+			get
+			{
 				return num < minLine;
 			}
 		}
-		
+
 		/// <inheritdoc/>
-		public int LineNumber {
-			get {
+		public int LineNumber
+		{
+			get
+			{
 				return num;
 			}
 		}
-		
-		bool lineDirty;
-		
+
+		private bool lineDirty;
+
 		/// <inheritdoc/>
-		public string Text {
+		public string Text
+		{
 			get { return text; }
-			set {
+			set
+			{
 				if (num < minLine) return;
 				text = value;
 				lineDirty = true;
 			}
 		}
-		
+
 		/// <inheritdoc/>
 		public bool MoveNext()
 		{
-			if (lineDirty) {
+			if (lineDirty)
+			{
 				doc.Replace(line, text);
 				lineDirty = false;
 			}
@@ -118,5 +126,6 @@ namespace ICSharpCode.AvalonEdit.Indentation.CSharp
 			return true;
 		}
 	}
-	#endregion
+
+	#endregion TextDocumentAccessor
 }

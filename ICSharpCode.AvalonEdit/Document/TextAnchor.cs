@@ -1,14 +1,14 @@
 ﻿// Copyright (c) 2014 AlphaSierraPapa for the SharpDevelop Team
-// 
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this
 // software and associated documentation files (the "Software"), to deal in the Software
 // without restriction, including without limitation the rights to use, copy, modify, merge,
 // publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons
 // to whom the Software is furnished to do so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in all copies or
 // substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
 // INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
 // PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE
@@ -16,11 +16,8 @@
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
 
-using System;
 using ICSharpCode.AvalonEdit.Utils;
-using ICSharpCode.NRefactory;
-using ICSharpCode.NRefactory.Editor;
-using ICSharpCode.AvalonEdit.Document;
+using System;
 
 namespace ICSharpCode.AvalonEdit.Document
 {
@@ -53,61 +50,68 @@ namespace ICSharpCode.AvalonEdit.Document
 	/// </example>
 	public sealed class TextAnchor : ITextAnchor
 	{
-		readonly TextDocument document;
+		private readonly TextDocument document;
 		internal TextAnchorNode node;
-		
+
 		internal TextAnchor(TextDocument document)
 		{
 			this.document = document;
 		}
-		
+
 		/// <summary>
 		/// Gets the document owning the anchor.
 		/// </summary>
-		public TextDocument Document {
+		public TextDocument Document
+		{
 			get { return document; }
 		}
-		
+
 		/// <inheritdoc/>
 		public AnchorMovementType MovementType { get; set; }
-		
+
 		/// <inheritdoc/>
 		public bool SurviveDeletion { get; set; }
-		
+
 		/// <inheritdoc/>
-		public bool IsDeleted {
-			get {
+		public bool IsDeleted
+		{
+			get
+			{
 				document.DebugVerifyAccess();
 				return node == null;
 			}
 		}
-		
+
 		/// <inheritdoc/>
 		public event EventHandler Deleted;
-		
+
 		internal void OnDeleted(DelayedEvents delayedEvents)
 		{
 			node = null;
 			delayedEvents.DelayedRaise(Deleted, this, EventArgs.Empty);
 		}
-		
+
 		/// <summary>
 		/// Gets the offset of the text anchor.
 		/// </summary>
 		/// <exception cref="InvalidOperationException">Thrown when trying to get the Offset from a deleted anchor.</exception>
-		public int Offset {
-			get {
+		public int Offset
+		{
+			get
+			{
 				document.DebugVerifyAccess();
-				
+
 				TextAnchorNode n = this.node;
 				if (n == null)
 					throw new InvalidOperationException();
-				
+
 				int offset = n.length;
 				if (n.left != null)
 					offset += n.left.totalLength;
-				while (n.parent != null) {
-					if (n == n.parent.right) {
+				while (n.parent != null)
+				{
+					if (n == n.parent.right)
+					{
 						if (n.parent.left != null)
 							offset += n.parent.left.totalLength;
 						offset += n.parent.length;
@@ -117,38 +121,44 @@ namespace ICSharpCode.AvalonEdit.Document
 				return offset;
 			}
 		}
-		
+
 		/// <summary>
 		/// Gets the line number of the anchor.
 		/// </summary>
 		/// <exception cref="InvalidOperationException">Thrown when trying to get the Offset from a deleted anchor.</exception>
-		public int Line {
-			get {
+		public int Line
+		{
+			get
+			{
 				return document.GetLineByOffset(this.Offset).LineNumber;
 			}
 		}
-		
+
 		/// <summary>
 		/// Gets the column number of this anchor.
 		/// </summary>
 		/// <exception cref="InvalidOperationException">Thrown when trying to get the Offset from a deleted anchor.</exception>
-		public int Column {
-			get {
+		public int Column
+		{
+			get
+			{
 				int offset = this.Offset;
 				return offset - document.GetLineByOffset(offset).Offset + 1;
 			}
 		}
-		
+
 		/// <summary>
 		/// Gets the text location of this anchor.
 		/// </summary>
 		/// <exception cref="InvalidOperationException">Thrown when trying to get the Offset from a deleted anchor.</exception>
-		public TextLocation Location {
-			get {
+		public TextLocation Location
+		{
+			get
+			{
 				return document.GetLocation(this.Offset);
 			}
 		}
-		
+
 		/// <inheritdoc/>
 		public override string ToString()
 		{

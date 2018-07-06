@@ -1,15 +1,15 @@
-﻿<!-- 
+﻿<!--
 	Copyright (c) 2009 Daniel Grunwald
-	
+
 	Permission is hereby granted, free of charge, to any person obtaining a copy of this
 	software and associated documentation files (the "Software"), to deal in the Software
 	without restriction, including without limitation the rights to use, copy, modify, merge,
 	publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons
 	to whom the Software is furnished to do so, subject to the following conditions:
-	
+
 	The above copyright notice and this permission notice shall be included in all copies or
 	substantial portions of the Software.
-	
+
 	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
 	INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
 	PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE
@@ -22,8 +22,7 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit"
 	xmlns:forms="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
-	Title="AvalonEdit.Sample" Height="500" Width="700"
-	>
+	Title="AvalonEdit.Sample" Height="500" Width="700">
 	<DockPanel>
 		<ToolBar DockPanel.Dock="Top">
 			<ToolBar.Resources>
@@ -35,19 +34,19 @@
 					</Style.Triggers>
 				</Style>
 			</ToolBar.Resources>
-			<Button Click="openFileClick"><Image Source="Images/Open.png" Height="16"/></Button>
-			<Button Click="saveFileClick"><Image Source="Images/Save.png" Height="16"/></Button>
-			<Separator/>
-			<Button Command="Cut"><Image Source="Images/Cut.png" Height="16"/></Button>
-			<Button Command="Copy"><Image Source="Images/Copy.png" Height="16"/></Button>
-			<Button Command="Paste"><Image Source="Images/Paste.png" Height="16"/></Button>
-			<Button Command="Delete"><Image Source="Images/Delete.png" Height="16"/></Button>
-		    <Separator/>
-			<Button Command="Undo"><Image Source="Images/Undo.png" Height="16"/></Button>
-			<Button Command="Redo"><Image Source="Images/Redo.png" Height="16"/></Button>
-			<Separator/>
+			<Button Click="openFileClick"><Image Source="Images/Open.png" Height="16" /></Button>
+			<Button Click="saveFileClick"><Image Source="Images/Save.png" Height="16" /></Button>
+			<Separator />
+			<Button Command="Cut"><Image Source="Images/Cut.png" Height="16" /></Button>
+			<Button Command="Copy"><Image Source="Images/Copy.png" Height="16" /></Button>
+			<Button Command="Paste"><Image Source="Images/Paste.png" Height="16" /></Button>
+			<Button Command="Delete"><Image Source="Images/Delete.png" Height="16" /></Button>
+		    <Separator />
+			<Button Command="Undo"><Image Source="Images/Undo.png" Height="16" /></Button>
+			<Button Command="Redo"><Image Source="Images/Redo.png" Height="16" /></Button>
+			<Separator />
 			<CheckBox IsChecked="{Binding ElementName=textEditor,Path=WordWrap}">
-				<Image Source="Images/WordWrap.png" Height="16"/>
+				<Image Source="Images/WordWrap.png" Height="16" />
 			</CheckBox>
 			<CheckBox IsChecked="{Binding ElementName=textEditor,Path=ShowLineNumbers}">
 				<TextBlock Width="16" TextAlignment="Center">#</TextBlock>
@@ -58,12 +57,12 @@
 			<ComboBox Name="highlightingComboBox"
 				SelectedItem="{Binding SyntaxHighlighting, ElementName=textEditor}"
 				ItemsSource="{Binding Source={x:Static avalonEdit:HighlightingManager.Instance}, Path=HighlightingDefinitions}"
-				SelectionChanged="HighlightingComboBox_SelectionChanged"/>
+				SelectionChanged="HighlightingComboBox_SelectionChanged" />
 		</ToolBar>
 		<Grid>
 			<Grid.ColumnDefinitions>
-				<ColumnDefinition Width="1*"/>
-				<ColumnDefinition Width="100"/>
+				<ColumnDefinition Width="1*" />
+				<ColumnDefinition Width="100" />
 			</Grid.ColumnDefinitions>
 			<avalonEdit:TextEditor
 				Name="textEditor"
@@ -72,7 +71,7 @@
 				SyntaxHighlighting="C#"
 			>Welcome to AvalonEdit!
 			</avalonEdit:TextEditor>
-			<GridSplitter Grid.Column="1" Width="4" HorizontalAlignment="Left"/>
+			<GridSplitter Grid.Column="1" Width="4" HorizontalAlignment="Left" />
 			<DockPanel Grid.Column="1" Margin="4 0 0 0">
 				<ComboBox Name="propertyGridComboBox" DockPanel.Dock="Top"
 				          SelectedIndex="0" SelectionChanged="propertyGridComboBoxSelectionChanged">
@@ -81,7 +80,7 @@
 					<ComboBoxItem>Options</ComboBoxItem>
 				</ComboBox>
 				<WindowsFormsHost DockPanel.Dock="Right" Name="propertyGridHost">
-					<forms:PropertyGrid x:Name="propertyGrid"/>
+					<forms:PropertyGrid x:Name="propertyGrid" />
 				</WindowsFormsHost>
 			</DockPanel>
 		</Grid>

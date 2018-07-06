@@ -1,14 +1,14 @@
 ﻿// Copyright (c) 2014 AlphaSierraPapa for the SharpDevelop Team
-// 
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this
 // software and associated documentation files (the "Software"), to deal in the Software
 // without restriction, including without limitation the rights to use, copy, modify, merge,
 // publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons
 // to whom the Software is furnished to do so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in all copies or
 // substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
 // INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
 // PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE
@@ -32,7 +32,7 @@ namespace ICSharpCode.AvalonEdit.Rendering
 		/// Gets the list of elements currently being transformed.
 		/// </summary>
 		protected IList<VisualLineElement> CurrentElements { get; private set; }
-		
+
 		/// <summary>
 		/// <see cref="IVisualLineTransformer.Transform"/> implementation.
 		/// Sets <see cref="CurrentElements"/> and calls <see cref="Colorize"/>.
@@ -44,18 +44,21 @@ namespace ICSharpCode.AvalonEdit.Rendering
 			if (this.CurrentElements != null)
 				throw new InvalidOperationException("Recursive Transform() call");
 			this.CurrentElements = elements;
-			try {
+			try
+			{
 				Colorize(context);
-			} finally {
+			}
+			finally
+			{
 				this.CurrentElements = null;
 			}
 		}
-		
+
 		/// <summary>
 		/// Performs the colorization.
 		/// </summary>
 		protected abstract void Colorize(ITextRunConstructionContext context);
-		
+
 		/// <summary>
 		/// Changes visual element properties.
 		/// This method accesses <see cref="CurrentElements"/>, so it must be called only during
@@ -71,50 +74,57 @@ namespace ICSharpCode.AvalonEdit.Rendering
 		{
 			if (action == null)
 				throw new ArgumentNullException("action");
-			for (int i = 0; i < CurrentElements.Count; i++) {
+			for (int i = 0; i < CurrentElements.Count; i++)
+			{
 				VisualLineElement e = CurrentElements[i];
 				if (e.VisualColumn > visualEndColumn)
 					break;
 				if (e.VisualColumn < visualStartColumn &&
-				    e.VisualColumn + e.VisualLength > visualStartColumn)
+					e.VisualColumn + e.VisualLength > visualStartColumn)
 				{
-					if (e.CanSplit) {
+					if (e.CanSplit)
+					{
 						e.Split(visualStartColumn, CurrentElements, i--);
 						continue;
 					}
 				}
-				if (e.VisualColumn >= visualStartColumn && e.VisualColumn < visualEndColumn) {
-					if (e.VisualColumn + e.VisualLength > visualEndColumn) {
-						if (e.CanSplit) {
+				if (e.VisualColumn >= visualStartColumn && e.VisualColumn < visualEndColumn)
+				{
+					if (e.VisualColumn + e.VisualLength > visualEndColumn)
+					{
+						if (e.CanSplit)
+						{
 							e.Split(visualEndColumn, CurrentElements, i--);
 							continue;
 						}
-					} else {
+					}
+					else
+					{
 						action(e);
 					}
 				}
 			}
 		}
-		
+
 		/// <summary>
 		/// Called when added to a text view.
 		/// </summary>
 		protected virtual void OnAddToTextView(TextView textView)
 		{
 		}
-		
+
 		/// <summary>
 		/// Called when removed from a text view.
 		/// </summary>
 		protected virtual void OnRemoveFromTextView(TextView textView)
 		{
 		}
-		
+
 		void ITextViewConnect.AddToTextView(TextView textView)
 		{
 			OnAddToTextView(textView);
 		}
-		
+
 		void ITextViewConnect.RemoveFromTextView(TextView textView)
 		{
 			OnRemoveFromTextView(textView);

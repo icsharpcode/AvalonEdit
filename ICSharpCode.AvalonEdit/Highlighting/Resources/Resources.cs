@@ -16,14 +16,13 @@
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
 
-using System;
 using System.IO;
 
 namespace ICSharpCode.AvalonEdit.Highlighting
 {
-	static class Resources
+	internal static class Resources
 	{
-		static readonly string Prefix = typeof(Resources).FullName + ".";
+		private static readonly string Prefix = typeof(Resources).FullName + ".";
 
 		public static Stream OpenStream(string name)
 		{
@@ -45,7 +44,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 			hlm.RegisterHighlighting("Boo", new[] { ".boo" }, "Boo.xshd");
 			hlm.RegisterHighlighting("Coco", new[] { ".atg" }, "Coco-Mode.xshd");
 			hlm.RegisterHighlighting("CSS", new[] { ".css" }, "CSS-Mode.xshd");
-			hlm.RegisterHighlighting("C++", new[] { ".c", ".h", ".cc", ".cpp" , ".hpp" }, "CPP-Mode.xshd");
+			hlm.RegisterHighlighting("C++", new[] { ".c", ".h", ".cc", ".cpp", ".hpp" }, "CPP-Mode.xshd");
 			hlm.RegisterHighlighting("Java", new[] { ".java" }, "Java-Mode.xshd");
 			hlm.RegisterHighlighting("Patch", new[] { ".patch", ".diff" }, "Patch-Mode.xshd");
 			hlm.RegisterHighlighting("PowerShell", new[] { ".ps1", ".psm1", ".psd1" }, "PowerShell.xshd");
@@ -55,10 +54,10 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 			hlm.RegisterHighlighting("TSQL", new[] { ".sql" }, "TSQL-Mode.xshd");
 			hlm.RegisterHighlighting("VB", new[] { ".vb" }, "VB-Mode.xshd");
 			hlm.RegisterHighlighting("XML", (".xml;.xsl;.xslt;.xsd;.manifest;.config;.addin;" +
-			                                 ".xshd;.wxs;.wxi;.wxl;.proj;.csproj;.vbproj;.ilproj;" +
-			                                 ".booproj;.build;.xfrm;.targets;.xaml;.xpt;" +
-			                                 ".xft;.map;.wsdl;.disco;.ps1xml;.nuspec").Split(';'),
-			                         "XML-Mode.xshd");
+											 ".xshd;.wxs;.wxi;.wxl;.proj;.csproj;.vbproj;.ilproj;" +
+											 ".booproj;.build;.xfrm;.targets;.xaml;.xpt;" +
+											 ".xft;.map;.wsdl;.disco;.ps1xml;.nuspec").Split(';'),
+									 "XML-Mode.xshd");
 			hlm.RegisterHighlighting("MarkDown", new[] { ".md" }, "MarkDown-Mode.xshd");
 		}
 	}

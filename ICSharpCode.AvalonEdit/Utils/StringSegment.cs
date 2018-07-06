@@ -1,14 +1,14 @@
 ﻿// Copyright (c) 2014 AlphaSierraPapa for the SharpDevelop Team
-// 
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this
 // software and associated documentation files (the "Software"), to deal in the Software
 // without restriction, including without limitation the rights to use, copy, modify, merge,
 // publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons
 // to whom the Software is furnished to do so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in all copies or
 // substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
 // INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
 // PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE
@@ -26,10 +26,10 @@ namespace ICSharpCode.AvalonEdit.Utils
 	/// </summary>
 	public struct StringSegment : IEquatable<StringSegment>
 	{
-		readonly string text;
-		readonly int offset;
-		readonly int count;
-		
+		private readonly string text;
+		private readonly int offset;
+		private readonly int count;
+
 		/// <summary>
 		/// Creates a new StringSegment.
 		/// </summary>
@@ -45,7 +45,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 			this.offset = offset;
 			this.count = count;
 		}
-		
+
 		/// <summary>
 		/// Creates a new StringSegment.
 		/// </summary>
@@ -57,29 +57,33 @@ namespace ICSharpCode.AvalonEdit.Utils
 			this.offset = 0;
 			this.count = text.Length;
 		}
-		
+
 		/// <summary>
 		/// Gets the string used for this segment.
 		/// </summary>
-		public string Text {
+		public string Text
+		{
 			get { return text; }
 		}
-		
+
 		/// <summary>
 		/// Gets the start offset of the segment with the text.
 		/// </summary>
-		public int Offset {
+		public int Offset
+		{
 			get { return offset; }
 		}
-		
+
 		/// <summary>
 		/// Gets the length of the segment.
 		/// </summary>
-		public int Count {
+		public int Count
+		{
 			get { return count; }
 		}
-		
+
 		#region Equals and GetHashCode implementation
+
 		/// <inheritdoc/>
 		public override bool Equals(object obj)
 		{
@@ -88,20 +92,20 @@ namespace ICSharpCode.AvalonEdit.Utils
 			else
 				return false;
 		}
-		
+
 		/// <inheritdoc/>
 		public bool Equals(StringSegment other)
 		{
 			// add comparisions for all members here
 			return object.ReferenceEquals(this.text, other.text) && offset == other.offset && count == other.count;
 		}
-		
+
 		/// <inheritdoc/>
 		public override int GetHashCode()
 		{
 			return text.GetHashCode() ^ offset ^ count;
 		}
-		
+
 		/// <summary>
 		/// Equality operator.
 		/// </summary>
@@ -109,7 +113,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 		{
 			return left.Equals(right);
 		}
-		
+
 		/// <summary>
 		/// Inequality operator.
 		/// </summary>
@@ -117,6 +121,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 		{
 			return !left.Equals(right);
 		}
-		#endregion
+
+		#endregion Equals and GetHashCode implementation
 	}
 }

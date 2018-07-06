@@ -1,14 +1,14 @@
 ﻿// Copyright (c) 2014 AlphaSierraPapa for the SharpDevelop Team
-// 
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this
 // software and associated documentation files (the "Software"), to deal in the Software
 // without restriction, including without limitation the rights to use, copy, modify, merge,
 // publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons
 // to whom the Software is furnished to do so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in all copies or
 // substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
 // INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
 // PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE
@@ -16,12 +16,10 @@
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
 
-using System;
+using ICSharpCode.AvalonEdit.Document;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Input;
-
-using ICSharpCode.AvalonEdit.Document;
 
 namespace ICSharpCode.AvalonEdit.Editing
 {
@@ -34,17 +32,17 @@ namespace ICSharpCode.AvalonEdit.Editing
 		/// Gets the caret navigation input handler.
 		/// </summary>
 		public TextAreaInputHandler CaretNavigation { get; private set; }
-		
+
 		/// <summary>
 		/// Gets the editing input handler.
 		/// </summary>
 		public TextAreaInputHandler Editing { get; private set; }
-		
+
 		/// <summary>
 		/// Gets the mouse selection input handler.
 		/// </summary>
 		public ITextAreaInputHandler MouseSelection { get; private set; }
-		
+
 		/// <summary>
 		/// Creates a new TextAreaDefaultInputHandler instance.
 		/// </summary>
@@ -53,11 +51,11 @@ namespace ICSharpCode.AvalonEdit.Editing
 			this.NestedInputHandlers.Add(CaretNavigation = CaretNavigationCommandHandler.Create(textArea));
 			this.NestedInputHandlers.Add(Editing = EditingCommandHandler.Create(textArea));
 			this.NestedInputHandlers.Add(MouseSelection = new SelectionMouseHandler(textArea));
-			
+
 			this.CommandBindings.Add(new CommandBinding(ApplicationCommands.Undo, ExecuteUndo, CanExecuteUndo));
 			this.CommandBindings.Add(new CommandBinding(ApplicationCommands.Redo, ExecuteRedo, CanExecuteRedo));
 		}
-		
+
 		internal static KeyBinding CreateFrozenKeyBinding(ICommand command, ModifierKeys modifiers, Key key)
 		{
 			KeyBinding kb = new KeyBinding(command, key, modifiers);
@@ -68,7 +66,7 @@ namespace ICSharpCode.AvalonEdit.Editing
 				f.Freeze();
 			return kb;
 		}
-		
+
 		internal static void WorkaroundWPFMemoryLeak(List<InputBinding> inputBindings)
 		{
 			// Work around WPF memory leak:
@@ -78,9 +76,10 @@ namespace ICSharpCode.AvalonEdit.Editing
 			UIElement dummyElement = new UIElement();
 			dummyElement.InputBindings.AddRange(inputBindings);
 		}
-		
+
 		#region Undo / Redo
-		UndoStack GetUndoStack()
+
+		private UndoStack GetUndoStack()
 		{
 			TextDocument document = this.TextArea.Document;
 			if (document != null)
@@ -88,48 +87,55 @@ namespace ICSharpCode.AvalonEdit.Editing
 			else
 				return null;
 		}
-		
-		void ExecuteUndo(object sender, ExecutedRoutedEventArgs e)
+
+		private void ExecuteUndo(object sender, ExecutedRoutedEventArgs e)
 		{
 			var undoStack = GetUndoStack();
-			if (undoStack != null) {
-				if (undoStack.CanUndo) {
+			if (undoStack != null)
+			{
+				if (undoStack.CanUndo)
+				{
 					undoStack.Undo();
 					this.TextArea.Caret.BringCaretToView();
 				}
 				e.Handled = true;
 			}
 		}
-		
-		void CanExecuteUndo(object sender, CanExecuteRoutedEventArgs e)
+
+		private void CanExecuteUndo(object sender, CanExecuteRoutedEventArgs e)
 		{
 			var undoStack = GetUndoStack();
-			if (undoStack != null) {
+			if (undoStack != null)
+			{
 				e.Handled = true;
 				e.CanExecute = undoStack.CanUndo;
 			}
 		}
-		
-		void ExecuteRedo(object sender, ExecutedRoutedEventArgs e)
+
+		private void ExecuteRedo(object sender, ExecutedRoutedEventArgs e)
 		{
 			var undoStack = GetUndoStack();
-			if (undoStack != null) {
-				if (undoStack.CanRedo) {
+			if (undoStack != null)
+			{
+				if (undoStack.CanRedo)
+				{
 					undoStack.Redo();
 					this.TextArea.Caret.BringCaretToView();
 				}
 				e.Handled = true;
 			}
 		}
-		
-		void CanExecuteRedo(object sender, CanExecuteRoutedEventArgs e)
+
+		private void CanExecuteRedo(object sender, CanExecuteRoutedEventArgs e)
 		{
 			var undoStack = GetUndoStack();
-			if (undoStack != null) {
+			if (undoStack != null)
+			{
 				e.Handled = true;
 				e.CanExecute = undoStack.CanRedo;
 			}
 		}
-		#endregion
+
+		#endregion Undo / Redo
 	}
 }

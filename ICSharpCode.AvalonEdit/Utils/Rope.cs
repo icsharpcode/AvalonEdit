@@ -1,14 +1,14 @@
 ﻿// Copyright (c) 2014 AlphaSierraPapa for the SharpDevelop Team
-// 
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this
 // software and associated documentation files (the "Software"), to deal in the Software
 // without restriction, including without limitation the rights to use, copy, modify, merge,
 // publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons
 // to whom the Software is furnished to do so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in all copies or
 // substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
 // INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
 // PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE
@@ -17,11 +17,10 @@
 // DEALINGS IN THE SOFTWARE.
 
 using System;
-using System.Linq;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
-using System.Runtime.Serialization;
+using System.Linq;
 using System.Text;
 
 namespace ICSharpCode.AvalonEdit.Utils
@@ -40,13 +39,13 @@ namespace ICSharpCode.AvalonEdit.Utils
 	public sealed class Rope<T> : IList<T>, ICloneable
 	{
 		internal RopeNode<T> root;
-		
+
 		internal Rope(RopeNode<T> root)
 		{
 			this.root = root;
 			root.CheckInvariants();
 		}
-		
+
 		/// <summary>
 		/// Creates a new rope representing the empty string.
 		/// </summary>
@@ -56,7 +55,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 			this.root = RopeNode<T>.emptyRopeNode;
 			root.CheckInvariants();
 		}
-		
+
 		/// <summary>
 		/// Creates a rope from the specified input.
 		/// This operation runs in O(N).
@@ -67,23 +66,29 @@ namespace ICSharpCode.AvalonEdit.Utils
 			if (input == null)
 				throw new ArgumentNullException("input");
 			Rope<T> inputRope = input as Rope<T>;
-			if (inputRope != null) {
+			if (inputRope != null)
+			{
 				// clone ropes instead of copying them
 				inputRope.root.Publish();
 				this.root = inputRope.root;
-			} else {
+			}
+			else
+			{
 				string text = input as string;
-				if (text != null) {
+				if (text != null)
+				{
 					// if a string is IEnumerable<T>, then T must be char
 					((Rope<char>)(object)this).root = CharRope.InitFromString(text);
-				} else {
+				}
+				else
+				{
 					T[] arr = ToArray(input);
 					this.root = RopeNode<T>.CreateFromArray(arr, 0, arr.Length);
 				}
 			}
 			this.root.CheckInvariants();
 		}
-		
+
 		/// <summary>
 		/// Creates a rope from a part of the array.
 		/// This operation runs in O(N).
@@ -95,7 +100,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 			this.root = RopeNode<T>.CreateFromArray(array, arrayIndex, count);
 			this.root.CheckInvariants();
 		}
-		
+
 		/// <summary>
 		/// Creates a new rope that lazily initalizes its content.
 		/// </summary>
@@ -122,20 +127,23 @@ namespace ICSharpCode.AvalonEdit.Utils
 				throw new ArgumentNullException("initializer");
 			if (length < 0)
 				throw new ArgumentOutOfRangeException("length", length, "Length must not be negative");
-			if (length == 0) {
+			if (length == 0)
+			{
 				this.root = RopeNode<T>.emptyRopeNode;
-			} else {
+			}
+			else
+			{
 				this.root = new FunctionNode<T>(length, initializer);
 			}
 			this.root.CheckInvariants();
 		}
-		
-		static T[] ToArray(IEnumerable<T> input)
+
+		private static T[] ToArray(IEnumerable<T> input)
 		{
 			T[] arr = input as T[];
 			return arr ?? input.ToArray();
 		}
-		
+
 		/// <summary>
 		/// Clones the rope.
 		/// This operation runs in linear time to the number of rope nodes touched since the last clone was created.
@@ -152,12 +160,12 @@ namespace ICSharpCode.AvalonEdit.Utils
 			root.Publish();
 			return new Rope<T>(root);
 		}
-		
+
 		object ICloneable.Clone()
 		{
 			return this.Clone();
 		}
-		
+
 		/// <summary>
 		/// Resets the rope to an empty list.
 		/// Runs in O(1).
@@ -167,7 +175,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 			root = RopeNode<T>.emptyRopeNode;
 			OnChanged();
 		}
-		
+
 		/// <summary>
 		/// Gets the length of the rope.
 		/// Runs in O(1).
@@ -175,10 +183,11 @@ namespace ICSharpCode.AvalonEdit.Utils
 		/// <remarks>
 		/// This method counts as a read access and may be called concurrently to other read accesses.
 		/// </remarks>
-		public int Length {
+		public int Length
+		{
 			get { return root.length; }
 		}
-		
+
 		/// <summary>
 		/// Gets the length of the rope.
 		/// Runs in O(1).
@@ -186,10 +195,11 @@ namespace ICSharpCode.AvalonEdit.Utils
 		/// <remarks>
 		/// This method counts as a read access and may be called concurrently to other read accesses.
 		/// </remarks>
-		public int Count {
+		public int Count
+		{
 			get { return root.length; }
 		}
-		
+
 		/// <summary>
 		/// Inserts another rope into this rope.
 		/// Runs in O(lg N + lg M), plus a per-node cost as if <c>newElements.Clone()</c> was called.
@@ -198,7 +208,8 @@ namespace ICSharpCode.AvalonEdit.Utils
 		/// <exception cref="ArgumentOutOfRangeException">index or length is outside the valid range.</exception>
 		public void InsertRange(int index, Rope<T> newElements)
 		{
-			if (index < 0 || index > this.Length) {
+			if (index < 0 || index > this.Length)
+			{
 				throw new ArgumentOutOfRangeException("index", index, "0 <= index <= " + this.Length.ToString(CultureInfo.InvariantCulture));
 			}
 			if (newElements == null)
@@ -207,7 +218,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 			root = root.Insert(index, newElements.root);
 			OnChanged();
 		}
-		
+
 		/// <summary>
 		/// Inserts new elemetns into this rope.
 		/// Runs in O(lg N + M), where N is the length of this rope and M is the number of new elements.
@@ -219,14 +230,17 @@ namespace ICSharpCode.AvalonEdit.Utils
 			if (newElements == null)
 				throw new ArgumentNullException("newElements");
 			Rope<T> newElementsRope = newElements as Rope<T>;
-			if (newElementsRope != null) {
+			if (newElementsRope != null)
+			{
 				InsertRange(index, newElementsRope);
-			} else {
+			}
+			else
+			{
 				T[] arr = ToArray(newElements);
 				InsertRange(index, arr, 0, arr.Length);
 			}
 		}
-		
+
 		/// <summary>
 		/// Inserts new elements into this rope.
 		/// Runs in O(lg N + M), where N is the length of this rope and M is the number of new elements.
@@ -235,16 +249,18 @@ namespace ICSharpCode.AvalonEdit.Utils
 		/// <exception cref="ArgumentOutOfRangeException">index or length is outside the valid range.</exception>
 		public void InsertRange(int index, T[] array, int arrayIndex, int count)
 		{
-			if (index < 0 || index > this.Length) {
+			if (index < 0 || index > this.Length)
+			{
 				throw new ArgumentOutOfRangeException("index", index, "0 <= index <= " + this.Length.ToString(CultureInfo.InvariantCulture));
 			}
 			VerifyArrayWithRange(array, arrayIndex, count);
-			if (count > 0) {
+			if (count > 0)
+			{
 				root = root.Insert(index, array, arrayIndex, count);
 				OnChanged();
 			}
 		}
-		
+
 		/// <summary>
 		/// Appends multiple elements to the end of this rope.
 		/// Runs in O(lg N + M), where N is the length of this rope and M is the number of new elements.
@@ -254,7 +270,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 		{
 			InsertRange(this.Length, newElements);
 		}
-		
+
 		/// <summary>
 		/// Appends another rope to the end of this rope.
 		/// Runs in O(lg N + lg M), plus a per-node cost as if <c>newElements.Clone()</c> was called.
@@ -264,7 +280,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 		{
 			InsertRange(this.Length, newElements);
 		}
-		
+
 		/// <summary>
 		/// Appends new elements to the end of this rope.
 		/// Runs in O(lg N + M), where N is the length of this rope and M is the number of new elements.
@@ -274,7 +290,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 		{
 			InsertRange(this.Length, array, arrayIndex, count);
 		}
-		
+
 		/// <summary>
 		/// Removes a range of elements from the rope.
 		/// Runs in O(lg N).
@@ -283,12 +299,13 @@ namespace ICSharpCode.AvalonEdit.Utils
 		public void RemoveRange(int index, int count)
 		{
 			VerifyRange(index, count);
-			if (count > 0) {
+			if (count > 0)
+			{
 				root = root.RemoveRange(index, count);
 				OnChanged();
 			}
 		}
-		
+
 		/// <summary>
 		/// Copies a range of the specified array into the rope, overwriting existing elements.
 		/// Runs in O(lg N + M).
@@ -297,12 +314,13 @@ namespace ICSharpCode.AvalonEdit.Utils
 		{
 			VerifyRange(index, count);
 			VerifyArrayWithRange(array, arrayIndex, count);
-			if (count > 0) {
+			if (count > 0)
+			{
 				root = root.StoreElements(index, array, arrayIndex, count);
 				OnChanged();
 			}
 		}
-		
+
 		/// <summary>
 		/// Creates a new rope and initializes it with a part of this rope.
 		/// Runs in O(lg N) plus a per-node cost as if <c>this.Clone()</c> was called.
@@ -320,9 +338,11 @@ namespace ICSharpCode.AvalonEdit.Utils
 			newRope.RemoveRange(0, index);
 			return newRope;
 		}
-		
+
 		/*
+
 		#region Equality
+
 		/// <summary>
 		/// Gets whether the two ropes have the same content.
 		/// Runs in O(N + M).
@@ -352,7 +372,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 				}
 			}
 		}
-		
+
 		/// <summary>
 		/// Gets whether two ropes have the same content.
 		/// Runs in O(N + M).
@@ -361,7 +381,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 		{
 			return Equals(obj as Rope);
 		}
-		
+
 		/// <summary>
 		/// Calculates the hash code of the rope's content.
 		/// Runs in O(N).
@@ -382,9 +402,11 @@ namespace ICSharpCode.AvalonEdit.Utils
 			}
 			return hashcode;
 		}
-		#endregion
+
+		#endregion Equality
+
 		 */
-		
+
 		/// <summary>
 		/// Concatenates two ropes. The input ropes are not modified.
 		/// Runs in O(lg N + lg M).
@@ -403,7 +425,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 			right.root.Publish();
 			return new Rope<T>(RopeNode<T>.Concat(left.root, right.root));
 		}
-		
+
 		/// <summary>
 		/// Concatenates multiple ropes. The input ropes are not modified.
 		/// </summary>
@@ -420,38 +442,41 @@ namespace ICSharpCode.AvalonEdit.Utils
 				result.AddRange(r);
 			return result;
 		}
-		
+
 		#region Caches / Changed event
+
 		internal struct RopeCacheEntry
 		{
 			internal readonly RopeNode<T> node;
 			internal readonly int nodeStartIndex;
-			
+
 			internal RopeCacheEntry(RopeNode<T> node, int nodeStartOffset)
 			{
 				this.node = node;
 				this.nodeStartIndex = nodeStartOffset;
 			}
-			
+
 			internal bool IsInside(int offset)
 			{
 				return offset >= nodeStartIndex && offset < nodeStartIndex + node.length;
 			}
 		}
-		
+
 		// cached pointer to 'last used node', used to speed up accesses by index that are close together
 		[NonSerialized]
-		volatile ImmutableStack<RopeCacheEntry> lastUsedNodeStack;
-		
+		private volatile ImmutableStack<RopeCacheEntry> lastUsedNodeStack;
+
 		internal void OnChanged()
 		{
 			lastUsedNodeStack = null;
-			
+
 			root.CheckInvariants();
 		}
-		#endregion
-		
+
+		#endregion Caches / Changed event
+
 		#region GetChar / SetChar
+
 		/// <summary>
 		/// Gets/Sets a single character.
 		/// Runs in O(lg N) for random access. Sequential read-only access benefits from a special optimization and runs in amortized O(1).
@@ -460,17 +485,22 @@ namespace ICSharpCode.AvalonEdit.Utils
 		/// <remarks>
 		/// The getter counts as a read access and may be called concurrently to other read accesses.
 		/// </remarks>
-		public T this[int index] {
-			get {
+		public T this[int index]
+		{
+			get
+			{
 				// use unsigned integers - this way negative values for index overflow and can be tested for with the same check
-				if (unchecked((uint)index >= (uint)this.Length)) {
+				if (unchecked((uint)index >= (uint)this.Length))
+				{
 					throw new ArgumentOutOfRangeException("index", index, "0 <= index < " + this.Length.ToString(CultureInfo.InvariantCulture));
 				}
 				RopeCacheEntry entry = FindNodeUsingCache(index).PeekOrDefault();
 				return entry.node.contents[index - entry.nodeStartIndex];
 			}
-			set {
-				if (index < 0 || index >= this.Length) {
+			set
+			{
+				if (index < 0 || index >= this.Length)
+				{
 					throw new ArgumentOutOfRangeException("index", index, "0 <= index < " + this.Length.ToString(CultureInfo.InvariantCulture));
 				}
 				root = root.SetElement(index, value);
@@ -514,30 +544,35 @@ namespace ICSharpCode.AvalonEdit.Utils
 				}*/
 			}
 		}
-		
+
 		internal ImmutableStack<RopeCacheEntry> FindNodeUsingCache(int index)
 		{
 			Debug.Assert(index >= 0 && index < this.Length);
-			
+
 			// thread safety: fetch stack into local variable
 			ImmutableStack<RopeCacheEntry> stack = lastUsedNodeStack;
 			ImmutableStack<RopeCacheEntry> oldStack = stack;
-			
-			if (stack == null) {
+
+			if (stack == null)
+			{
 				stack = ImmutableStack<RopeCacheEntry>.Empty.Push(new RopeCacheEntry(root, 0));
 			}
 			while (!stack.PeekOrDefault().IsInside(index))
 				stack = stack.Pop();
-			while (true) {
+			while (true)
+			{
 				RopeCacheEntry entry = stack.PeekOrDefault();
 				// check if we've reached a leaf or function node
-				if (entry.node.height == 0) {
-					if (entry.node.contents == null) {
+				if (entry.node.height == 0)
+				{
+					if (entry.node.contents == null)
+					{
 						// this is a function node - go down into its subtree
 						entry = new RopeCacheEntry(entry.node.GetContentNode(), entry.nodeStartIndex);
 						// entry is now guaranteed NOT to be another function node
 					}
-					if (entry.node.contents != null) {
+					if (entry.node.contents != null)
+					{
 						// this is a node containing actual content, so we're done
 						break;
 					}
@@ -548,43 +583,50 @@ namespace ICSharpCode.AvalonEdit.Utils
 				else
 					stack = stack.Push(new RopeCacheEntry(entry.node.left, entry.nodeStartIndex));
 			}
-			
+
 			// write back stack to volatile cache variable
 			// (in multithreaded access, it doesn't matter which of the threads wins - it's just a cache)
-			if (oldStack != stack) {
+			if (oldStack != stack)
+			{
 				// no need to write when we the cache variable didn't change
 				lastUsedNodeStack = stack;
 			}
-			
+
 			// this method guarantees that it finds a leaf node
 			Debug.Assert(stack.Peek().node.contents != null);
 			return stack;
 		}
-		#endregion
-		
+
+		#endregion GetChar / SetChar
+
 		#region ToString / WriteTo
+
 		internal void VerifyRange(int startIndex, int length)
 		{
-			if (startIndex < 0 || startIndex > this.Length) {
+			if (startIndex < 0 || startIndex > this.Length)
+			{
 				throw new ArgumentOutOfRangeException("startIndex", startIndex, "0 <= startIndex <= " + this.Length.ToString(CultureInfo.InvariantCulture));
 			}
-			if (length < 0 || startIndex + length > this.Length) {
+			if (length < 0 || startIndex + length > this.Length)
+			{
 				throw new ArgumentOutOfRangeException("length", length, "0 <= length, startIndex(" + startIndex + ")+length <= " + this.Length.ToString(CultureInfo.InvariantCulture));
 			}
 		}
-		
+
 		internal static void VerifyArrayWithRange(T[] array, int arrayIndex, int count)
 		{
 			if (array == null)
 				throw new ArgumentNullException("array");
-			if (arrayIndex < 0 || arrayIndex > array.Length) {
+			if (arrayIndex < 0 || arrayIndex > array.Length)
+			{
 				throw new ArgumentOutOfRangeException("startIndex", arrayIndex, "0 <= arrayIndex <= " + array.Length.ToString(CultureInfo.InvariantCulture));
 			}
-			if (count < 0 || arrayIndex + count > array.Length) {
+			if (count < 0 || arrayIndex + count > array.Length)
+			{
 				throw new ArgumentOutOfRangeException("count", count, "0 <= length, arrayIndex(" + arrayIndex + ")+count <= " + array.Length.ToString(CultureInfo.InvariantCulture));
 			}
 		}
-		
+
 		/// <summary>
 		/// Creates a string from the rope. Runs in O(N).
 		/// </summary>
@@ -597,11 +639,15 @@ namespace ICSharpCode.AvalonEdit.Utils
 		public override string ToString()
 		{
 			Rope<char> charRope = this as Rope<char>;
-			if (charRope != null) {
+			if (charRope != null)
+			{
 				return charRope.ToString(0, this.Length);
-			} else {
+			}
+			else
+			{
 				StringBuilder b = new StringBuilder();
-				foreach (T element in this) {
+				foreach (T element in this)
+				{
 					if (b.Length == 0)
 						b.Append('{');
 					else
@@ -612,21 +658,23 @@ namespace ICSharpCode.AvalonEdit.Utils
 				return b.ToString();
 			}
 		}
-		
+
 		internal string GetTreeAsString()
 		{
-			#if DEBUG
+#if DEBUG
 			return root.GetTreeAsString();
-			#else
+#else
 			return "Not available in release build.";
-			#endif
+#endif
 		}
-		#endregion
-		
-		bool ICollection<T>.IsReadOnly {
+
+		#endregion ToString / WriteTo
+
+		bool ICollection<T>.IsReadOnly
+		{
 			get { return false; }
 		}
-		
+
 		/// <summary>
 		/// Finds the first occurance of item.
 		/// Runs in O(N).
@@ -639,7 +687,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 		{
 			return IndexOf(item, 0, this.Length);
 		}
-		
+
 		/// <summary>
 		/// Gets the index of the first occurrence the specified item.
 		/// </summary>
@@ -653,8 +701,9 @@ namespace ICSharpCode.AvalonEdit.Utils
 		public int IndexOf(T item, int startIndex, int count)
 		{
 			VerifyRange(startIndex, count);
-			
-			while (count > 0) {
+
+			while (count > 0)
+			{
 				var entry = FindNodeUsingCache(startIndex).PeekOrDefault();
 				T[] contents = entry.node.contents;
 				int startWithinNode = startIndex - entry.nodeStartIndex;
@@ -667,7 +716,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 			}
 			return -1;
 		}
-		
+
 		/// <summary>
 		/// Gets the index of the last occurrence of the specified item in this rope.
 		/// </summary>
@@ -675,7 +724,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 		{
 			return LastIndexOf(item, 0, this.Length);
 		}
-		
+
 		/// <summary>
 		/// Gets the index of the last occurrence of the specified item in this rope.
 		/// </summary>
@@ -688,15 +737,16 @@ namespace ICSharpCode.AvalonEdit.Utils
 		public int LastIndexOf(T item, int startIndex, int count)
 		{
 			VerifyRange(startIndex, count);
-			
+
 			var comparer = EqualityComparer<T>.Default;
-			for (int i = startIndex + count - 1; i >= startIndex; i--) {
+			for (int i = startIndex + count - 1; i >= startIndex; i--)
+			{
 				if (comparer.Equals(this[i], item))
 					return i;
 			}
 			return -1;
 		}
-		
+
 		/// <summary>
 		/// Inserts the item at the specified index in the rope.
 		/// Runs in O(lg N).
@@ -705,7 +755,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 		{
 			InsertRange(index, new[] { item }, 0, 1);
 		}
-		
+
 		/// <summary>
 		/// Removes a single item from the rope.
 		/// Runs in O(lg N).
@@ -714,7 +764,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 		{
 			RemoveRange(index, 1);
 		}
-		
+
 		/// <summary>
 		/// Appends the item at the end of the rope.
 		/// Runs in O(lg N).
@@ -723,7 +773,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 		{
 			InsertRange(this.Length, new[] { item }, 0, 1);
 		}
-		
+
 		/// <summary>
 		/// Searches the item in the rope.
 		/// Runs in O(N).
@@ -735,7 +785,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 		{
 			return IndexOf(item) >= 0;
 		}
-		
+
 		/// <summary>
 		/// Copies the whole content of the rope into the specified array.
 		/// Runs in O(N).
@@ -747,7 +797,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 		{
 			CopyTo(0, array, arrayIndex, this.Length);
 		}
-		
+
 		/// <summary>
 		/// Copies the a part of the rope into the specified array.
 		/// Runs in O(lg N + M).
@@ -761,7 +811,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 			VerifyArrayWithRange(array, arrayIndex, count);
 			this.root.CopyTo(index, array, arrayIndex, count);
 		}
-		
+
 		/// <summary>
 		/// Removes the first occurance of an item from the rope.
 		/// Runs in O(N).
@@ -769,13 +819,14 @@ namespace ICSharpCode.AvalonEdit.Utils
 		public bool Remove(T item)
 		{
 			int index = IndexOf(item);
-			if (index >= 0) {
+			if (index >= 0)
+			{
 				RemoveAt(index);
 				return true;
 			}
 			return false;
 		}
-		
+
 		/// <summary>
 		/// Retrieves an enumerator to iterate through the rope.
 		/// The enumerator will reflect the state of the rope from the GetEnumerator() call, further modifications
@@ -789,7 +840,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 			this.root.Publish();
 			return Enumerate(root);
 		}
-		
+
 		/// <summary>
 		/// Creates an array and copies the contents of the rope into it.
 		/// Runs in O(N).
@@ -803,7 +854,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 			this.root.CopyTo(0, arr, 0, arr.Length);
 			return arr;
 		}
-		
+
 		/// <summary>
 		/// Creates an array and copies the contents of the rope into it.
 		/// Runs in O(N).
@@ -818,14 +869,17 @@ namespace ICSharpCode.AvalonEdit.Utils
 			CopyTo(startIndex, arr, 0, count);
 			return arr;
 		}
-		
-		static IEnumerator<T> Enumerate(RopeNode<T> node)
+
+		private static IEnumerator<T> Enumerate(RopeNode<T> node)
 		{
 			Stack<RopeNode<T>> stack = new Stack<RopeNode<T>>();
-			while (node != null) {
+			while (node != null)
+			{
 				// go to leftmost node, pushing the right parts that we'll have to visit later
-				while (node.contents == null) {
-					if (node.height == 0) {
+				while (node.contents == null)
+				{
+					if (node.height == 0)
+					{
 						// go down into function nodes
 						node = node.GetContentNode();
 						continue;
@@ -835,7 +889,8 @@ namespace ICSharpCode.AvalonEdit.Utils
 					node = node.left;
 				}
 				// yield contents of leaf node
-				for (int i = 0; i < node.length; i++) {
+				for (int i = 0; i < node.length; i++)
+				{
 					yield return node.contents[i];
 				}
 				// go up to the next node not visited yet
@@ -845,7 +900,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 					node = null;
 			}
 		}
-		
+
 		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
 		{
 			return this.GetEnumerator();

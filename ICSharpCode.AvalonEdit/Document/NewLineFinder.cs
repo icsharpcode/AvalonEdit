@@ -1,14 +1,14 @@
 ﻿// Copyright (c) 2014 AlphaSierraPapa for the SharpDevelop Team
-// 
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this
 // software and associated documentation files (the "Software"), to deal in the Software
 // without restriction, including without limitation the rights to use, copy, modify, merge,
 // publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons
 // to whom the Software is furnished to do so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in all copies or
 // substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
 // INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
 // PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE
@@ -18,18 +18,19 @@
 
 using System;
 using System.Text;
+
 #if NREFACTORY
 using ICSharpCode.NRefactory.Editor;
 #endif
 
 namespace ICSharpCode.AvalonEdit.Document
 {
-	static class NewLineFinder
+	internal static class NewLineFinder
 	{
-		static readonly char[] newline = { '\r', '\n' };
-		
+		private static readonly char[] newline = { '\r', '\n' };
+
 		internal static readonly string[] NewlineStrings = { "\r\n", "\r", "\n" };
-		
+
 		/// <summary>
 		/// Gets the location of the next new line character, or SimpleSegment.Invalid
 		/// if none is found.
@@ -37,8 +38,10 @@ namespace ICSharpCode.AvalonEdit.Document
 		internal static SimpleSegment NextNewLine(string text, int offset)
 		{
 			int pos = text.IndexOfAny(newline, offset);
-			if (pos >= 0) {
-				if (text[pos] == '\r') {
+			if (pos >= 0)
+			{
+				if (text[pos] == '\r')
+				{
 					if (pos + 1 < text.Length && text[pos + 1] == '\n')
 						return new SimpleSegment(pos, 2);
 				}
@@ -46,7 +49,7 @@ namespace ICSharpCode.AvalonEdit.Document
 			}
 			return SimpleSegment.Invalid;
 		}
-		
+
 		/// <summary>
 		/// Gets the location of the next new line character, or SimpleSegment.Invalid
 		/// if none is found.
@@ -55,8 +58,10 @@ namespace ICSharpCode.AvalonEdit.Document
 		{
 			int textLength = text.TextLength;
 			int pos = text.IndexOfAny(newline, offset, textLength - offset);
-			if (pos >= 0) {
-				if (text.GetCharAt(pos) == '\r') {
+			if (pos >= 0)
+			{
+				if (text.GetCharAt(pos) == '\r')
+				{
 					if (pos + 1 < textLength && text.GetCharAt(pos + 1) == '\n')
 						return new SimpleSegment(pos, 2);
 				}
@@ -65,7 +70,7 @@ namespace ICSharpCode.AvalonEdit.Document
 			return SimpleSegment.Invalid;
 		}
 	}
-	
+
 	partial class TextUtilities
 	{
 		/// <summary>
@@ -83,21 +88,29 @@ namespace ICSharpCode.AvalonEdit.Document
 			if (offset < 0 || offset > text.TextLength)
 				throw new ArgumentOutOfRangeException("offset", offset, "offset is outside of text source");
 			SimpleSegment s = NewLineFinder.NextNewLine(text, offset);
-			if (s == SimpleSegment.Invalid) {
+			if (s == SimpleSegment.Invalid)
+			{
 				newLineType = null;
 				return -1;
-			} else {
-				if (s.Length == 2) {
+			}
+			else
+			{
+				if (s.Length == 2)
+				{
 					newLineType = "\r\n";
-				} else if (text.GetCharAt(s.Offset) == '\n') {
+				}
+				else if (text.GetCharAt(s.Offset) == '\n')
+				{
 					newLineType = "\n";
-				} else {
+				}
+				else
+				{
 					newLineType = "\r";
 				}
 				return s.Offset;
 			}
 		}
-		
+
 		/// <summary>
 		/// Gets whether the specified string is a newline sequence.
 		/// </summary>
@@ -105,7 +118,7 @@ namespace ICSharpCode.AvalonEdit.Document
 		{
 			return newLine == "\r\n" || newLine == "\n" || newLine == "\r";
 		}
-		
+
 		/// <summary>
 		/// Normalizes all new lines in <paramref name="input"/> to be <paramref name="newLine"/>.
 		/// </summary>
@@ -120,7 +133,8 @@ namespace ICSharpCode.AvalonEdit.Document
 				return input;
 			StringBuilder b = new StringBuilder(input.Length);
 			int lastEndOffset = 0;
-			do {
+			do
+			{
 				b.Append(input, lastEndOffset, ds.Offset - lastEndOffset);
 				b.Append(newLine);
 				lastEndOffset = ds.EndOffset;
@@ -130,14 +144,15 @@ namespace ICSharpCode.AvalonEdit.Document
 			b.Append(input, lastEndOffset, input.Length - lastEndOffset);
 			return b.ToString();
 		}
-		
+
 		/// <summary>
 		/// Gets the newline sequence used in the document at the specified line.
 		/// </summary>
 		public static string GetNewLineFromDocument(IDocument document, int lineNumber)
 		{
 			IDocumentLine line = document.GetLineByNumber(lineNumber);
-			if (line.DelimiterLength == 0) {
+			if (line.DelimiterLength == 0)
+			{
 				// at the end of the document, there's no line delimiter, so use the delimiter
 				// from the previous line
 				line = line.PreviousLine;

@@ -1,14 +1,14 @@
 ﻿// Copyright (c) 2016 Daniel Grunwald
-// 
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this
 // software and associated documentation files (the "Software"), to deal in the Software
 // without restriction, including without limitation the rights to use, copy, modify, merge,
 // publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons
 // to whom the Software is furnished to do so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in all copies or
 // substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
 // INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
 // PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE
@@ -16,20 +16,20 @@
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
 
-using System;
-using System.Windows.Automation.Provider;
-using System.Windows.Documents;
 using ICSharpCode.AvalonEdit.Document;
-using System.Windows.Automation.Text;
+using System;
 using System.Diagnostics;
+using System.Windows.Automation.Provider;
+using System.Windows.Automation.Text;
+using System.Windows.Documents;
 
 namespace ICSharpCode.AvalonEdit.Editing
 {
-	class TextRangeProvider : ITextRangeProvider
+	internal class TextRangeProvider : ITextRangeProvider
 	{
-		readonly TextArea textArea;
-		readonly TextDocument doc;
-		ISegment segment;
+		private readonly TextArea textArea;
+		private readonly TextDocument doc;
+		private ISegment segment;
 
 		public TextRangeProvider(TextArea textArea, TextDocument doc, ISegment segment)
 		{
@@ -45,14 +45,16 @@ namespace ICSharpCode.AvalonEdit.Editing
 			this.segment = new AnchorSegment(doc, offset, length);
 		}
 
-		string ID {
-			get {
+		private string ID
+		{
+			get
+			{
 				return string.Format("({0}: {1})", GetHashCode().ToString("x8"), segment);
 			}
 		}
 
 		[Conditional("DEBUG")]
-		static void Log(string format, params object[] args)
+		private static void Log(string format, params object[] args)
 		{
 			Debug.WriteLine(string.Format(format, args));
 		}
@@ -71,7 +73,7 @@ namespace ICSharpCode.AvalonEdit.Editing
 
 		public bool Compare(ITextRangeProvider range)
 		{
-			TextRangeProvider other = (TextRangeProvider) range;
+			TextRangeProvider other = (TextRangeProvider)range;
 			bool result = doc == other.doc
 				&& segment.Offset == other.segment.Offset
 				&& segment.EndOffset == other.segment.EndOffset;
@@ -79,13 +81,16 @@ namespace ICSharpCode.AvalonEdit.Editing
 			return result;
 		}
 
-		int GetEndpoint(TextPatternRangeEndpoint endpoint)
+		private int GetEndpoint(TextPatternRangeEndpoint endpoint)
 		{
-			switch (endpoint) {
+			switch (endpoint)
+			{
 				case TextPatternRangeEndpoint.Start:
 					return segment.Offset;
+
 				case TextPatternRangeEndpoint.End:
 					return segment.EndOffset;
+
 				default:
 					throw new ArgumentOutOfRangeException("endpoint");
 			}
@@ -93,7 +98,7 @@ namespace ICSharpCode.AvalonEdit.Editing
 
 		public int CompareEndpoints(TextPatternRangeEndpoint endpoint, ITextRangeProvider targetRange, TextPatternRangeEndpoint targetEndpoint)
 		{
-			TextRangeProvider other = (TextRangeProvider) targetRange;
+			TextRangeProvider other = (TextRangeProvider)targetRange;
 			int result = GetEndpoint(endpoint).CompareTo(other.GetEndpoint(targetEndpoint));
 			Log("{0}.CompareEndpoints({1}, {2}, {3}) = {4}", ID, endpoint, other.ID, targetEndpoint, result);
 			return result;
@@ -102,18 +107,22 @@ namespace ICSharpCode.AvalonEdit.Editing
 		public void ExpandToEnclosingUnit(TextUnit unit)
 		{
 			Log("{0}.ExpandToEnclosingUnit({1})", ID, unit);
-			switch (unit) {
+			switch (unit)
+			{
 				case TextUnit.Character:
 					ExpandToEnclosingUnit(CaretPositioningMode.Normal);
 					break;
+
 				case TextUnit.Format:
 				case TextUnit.Word:
 					ExpandToEnclosingUnit(CaretPositioningMode.WordStartOrSymbol);
 					break;
+
 				case TextUnit.Line:
 				case TextUnit.Paragraph:
 					segment = doc.GetLineByOffset(segment.Offset);
 					break;
+
 				case TextUnit.Document:
 					segment = new AnchorSegment(doc, 0, doc.TextLength);
 					break;
@@ -143,7 +152,8 @@ namespace ICSharpCode.AvalonEdit.Editing
 			string segmentText = doc.GetText(segment);
 			var comparison = ignoreCase ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
 			int pos = backward ? segmentText.LastIndexOf(text, comparison) : segmentText.IndexOf(text, comparison);
-			if (pos >= 0) {
+			if (pos >= 0)
+			{
 				return new TextRangeProvider(textArea, doc, segment.Offset + pos, text.Length);
 			}
 			return null;
@@ -201,12 +211,15 @@ namespace ICSharpCode.AvalonEdit.Editing
 			SetEndpoint(endpoint, other.GetEndpoint(targetEndpoint));
 		}
 
-		void SetEndpoint(TextPatternRangeEndpoint endpoint, int targetOffset)
+		private void SetEndpoint(TextPatternRangeEndpoint endpoint, int targetOffset)
 		{
-			if (endpoint == TextPatternRangeEndpoint.Start) {
+			if (endpoint == TextPatternRangeEndpoint.Start)
+			{
 				// set start of this range to targetOffset
 				segment = new AnchorSegment(doc, targetOffset, Math.Max(0, segment.EndOffset - targetOffset));
-			} else {
+			}
+			else
+			{
 				// set end of this range to targetOffset
 				int newStart = Math.Min(segment.Offset, targetOffset);
 				segment = new AnchorSegment(doc, newStart, targetOffset - newStart);
@@ -217,20 +230,24 @@ namespace ICSharpCode.AvalonEdit.Editing
 		{
 			Log("{0}.MoveEndpointByUnit({1}, {2}, {3})", ID, endpoint, unit, count);
 			int offset = GetEndpoint(endpoint);
-			switch (unit) {
+			switch (unit)
+			{
 				case TextUnit.Character:
 					offset = MoveOffset(offset, CaretPositioningMode.Normal, count);
 					break;
+
 				case TextUnit.Format:
 				case TextUnit.Word:
 					offset = MoveOffset(offset, CaretPositioningMode.WordStart, count);
 					break;
+
 				case TextUnit.Line:
 				case TextUnit.Paragraph:
 					int line = doc.GetLineByOffset(offset).LineNumber;
 					int newLine = Math.Max(1, Math.Min(doc.LineCount, line + count));
 					offset = doc.GetLineByNumber(newLine).Offset;
 					break;
+
 				case TextUnit.Document:
 					offset = count < 0 ? 0 : doc.TextLength;
 					break;
@@ -243,7 +260,8 @@ namespace ICSharpCode.AvalonEdit.Editing
 		{
 			var direction = count < 0 ? LogicalDirection.Backward : LogicalDirection.Forward;
 			count = Math.Abs(count);
-			for (int i = 0; i < count; i++) {
+			for (int i = 0; i < count; i++)
+			{
 				int newOffset = TextUtilities.GetNextCaretPosition(doc, offset, direction, mode);
 				if (newOffset == offset || newOffset < 0)
 					break;
