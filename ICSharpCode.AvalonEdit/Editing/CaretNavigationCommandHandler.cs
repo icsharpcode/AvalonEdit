@@ -127,6 +127,7 @@ namespace ICSharpCode.AvalonEdit.Editing
 				args.Handled = true;
 				textArea.Caret.Offset = textArea.Document.TextLength;
 				textArea.Selection = SimpleSelection.Create(textArea, 0, textArea.Document.TextLength);
+				textArea.Caret.BringCaretToView();
 			}
 		}
 		
