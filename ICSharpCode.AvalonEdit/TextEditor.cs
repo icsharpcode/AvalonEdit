@@ -1123,8 +1123,21 @@ namespace ICSharpCode.AvalonEdit
 		/// </summary>
 		public void ScrollTo(int line, int column)
 		{
-			const double MinimumScrollPercentage = 0.3;
-			
+			const double MinimumScrollFraction = 0.3;
+			ScrollTo(line, column, VisualYPosition.LineMiddle, null != scrollViewer ? scrollViewer.ViewportHeight / 2 : 0.0, MinimumScrollFraction);
+		}
+
+		/// <summary>
+		/// Scrolls to the specified line/column.
+		/// This method requires that the TextEditor was already assigned a size (WPF layout must have run prior).
+		/// </summary>
+		/// <param name="line">Line to scroll to.</param>
+		/// <param name="column">Column to scroll to (important if wrapping is 'on', and for the horizontal scroll position).</param>
+		/// <param name="yPositionMode">The mode how to reference the Y position of the line.</param>
+		/// <param name="referencedVerticalViewPortOffset">Offset from the top of the viewport to where the referenced line/column should be positioned.</param>
+		/// <param name="minimumScrollFraction">The minimum vertical and/or horizontal scroll offset, expressed as fraction of the height or width of the viewport window, respectively.</param>
+		public void ScrollTo(int line, int column, VisualYPosition yPositionMode, double referencedVerticalViewPortOffset, double minimumScrollFraction)
+		{
 			TextView textView = textArea.TextView;
 			TextDocument document = textView.Document;
 			if (scrollViewer != null && document != null) {
@@ -1139,7 +1152,8 @@ namespace ICSharpCode.AvalonEdit
 					// to the correct position.
 					// This avoids that the user has to repeat the ScrollTo() call several times when there are very long lines.
 					VisualLine vl = textView.GetOrConstructVisualLine(document.GetLineByNumber(line));
-					double remainingHeight = scrollViewer.ViewportHeight / 2;
+					double remainingHeight = referencedVerticalViewPortOffset;
+
 					while (remainingHeight > 0) {
 						DocumentLine prevLine = vl.FirstDocumentLine.PreviousLine;
 						if (prevLine == null)
@@ -1149,15 +1163,15 @@ namespace ICSharpCode.AvalonEdit
 					}
 				}
 				
-				Point p = textArea.TextView.GetVisualPosition(new TextViewPosition(line, Math.Max(1, column)), VisualYPosition.LineMiddle);
-				double verticalPos = p.Y - scrollViewer.ViewportHeight / 2;
-				if (Math.Abs(verticalPos - scrollViewer.VerticalOffset) > MinimumScrollPercentage * scrollViewer.ViewportHeight) {
+				Point p = textArea.TextView.GetVisualPosition(new TextViewPosition(line, Math.Max(1, column)), yPositionMode);
+				double verticalPos = p.Y - referencedVerticalViewPortOffset;
+				if (Math.Abs(verticalPos - scrollViewer.VerticalOffset) > minimumScrollFraction * scrollViewer.ViewportHeight) {
 					scrollViewer.ScrollToVerticalOffset(Math.Max(0, verticalPos));
 				}
 				if (column > 0) {
 					if (p.X > scrollViewer.ViewportWidth - Caret.MinimumDistanceToViewBorder * 2) {
 						double horizontalPos = Math.Max(0, p.X - scrollViewer.ViewportWidth / 2);
-						if (Math.Abs(horizontalPos - scrollViewer.HorizontalOffset) > MinimumScrollPercentage * scrollViewer.ViewportWidth) {
+						if (Math.Abs(horizontalPos - scrollViewer.HorizontalOffset) > minimumScrollFraction * scrollViewer.ViewportWidth) {
 							scrollViewer.ScrollToHorizontalOffset(horizontalPos);
 						}
 					} else {
