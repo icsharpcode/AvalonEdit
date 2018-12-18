@@ -196,7 +196,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting.Xshd
 				HighlightingColor c;
 				if (color.Name != null)
 					c = def.colorDict[color.Name];
-				else if (color.Foreground == null && color.FontStyle == null && color.FontWeight == null)
+				else if (color.Foreground == null && color.Background == null && color.Underline == null && color.FontStyle == null && color.FontWeight == null)
 					return null;
 				else
 					c = new HighlightingColor();
