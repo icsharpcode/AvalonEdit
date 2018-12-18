@@ -2050,7 +2050,7 @@ namespace ICSharpCode.AvalonEdit.Rendering
 		/// <seealso cref="TextEditorOptions.ShowColumnRuler"/>
 		/// </summary>
 		public static readonly DependencyProperty ColumnRulerPenProperty =
-			DependencyProperty.Register("ColumnRulerBrush", typeof(Pen), typeof(TextView),
+			DependencyProperty.Register("ColumnRulerPen", typeof(Pen), typeof(TextView),
 			                            new FrameworkPropertyMetadata(CreateFrozenPen(Brushes.LightGray)));
 		
 		static Pen CreateFrozenPen(SolidColorBrush brush)
