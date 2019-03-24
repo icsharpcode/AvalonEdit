@@ -31,39 +31,40 @@
     </WorkingPath>
     <BuildLogFile>
     </BuildLogFile>
-    <FrameworkVersion>.NET Framework 4.0</FrameworkVersion>
+    <FrameworkVersion>.NET Framework 4.5</FrameworkVersion>
     <HelpTitle>AvalonEdit</HelpTitle>
     <CopyrightText>Copyright 2008-2019, Daniel Grunwald</CopyrightText>
     <PresentationStyle>VS2013</PresentationStyle>
     <HelpFileVersion>4.4.0.0</HelpFileVersion>
     <ComponentConfigurations>
-      <ComponentConfig id="Reflection Index Data (ESENT Cache)" enabled="True">
+      <ComponentConfig id="Reflection Index Data (ESENT Cache)" enabled="False">
         <component id="Reflection Index Data (ESENT Cache)">
-          <index name="reflection" value="/reflection/apis/api" key="@id" cache="15" localCacheSize="2500" frameworkCachePath="{@LocalDataFolder}Cache\ReflectionIndexCache" projectCachePath="">
-            <data base="{@SHFBFolder}Data\Reflection" recurse="true" files="*.xml" duplicateWarning="false" groupId="ReflectionIndexCache">
+  <index name="reflection" value="/reflection/apis/api" key="@id" cache="15" localCacheSize="2500" frameworkCachePath="{@LocalDataFolder}Cache\ReflectionIndexCache" projectCachePath="">
+    <data base="{@SHFBFolder}Data\Reflection" recurse="true" files="*.xml" duplicateWarning="false" groupId="ReflectionIndexCache">
 		{@ReferenceLinkNamespaceFiles}
 	</data>
-            <data files="reflection.xml" groupId="Project_Ref_{@UniqueID}" />
-          </index>
-          <copy name="reflection" source="*" target="/document/reference" />
-        </component>
+    <data files="reflection.xml" groupId="Project_Ref_{@UniqueID}" />
+  </index>
+  <copy name="reflection" source="*" target="/document/reference" />
+</component>
       </ComponentConfig>
-<ComponentConfig id="Comments Index Data (ESENT Cache)" enabled="True"><component id="Comments Index Data (ESENT Cache)"><index name="comments" value="/doc/members/member" key="@name" cache="30" localCacheSize="2500" frameworkCachePath="{@LocalDataFolder}Cache\CommentsIndexCache" projectCachePath="">
+<ComponentConfig id="Comments Index Data (ESENT Cache)" enabled="False"><component id="Comments Index Data (ESENT Cache)">
+  <index name="comments" value="/doc/members/member" key="@name" cache="30" localCacheSize="2500" frameworkCachePath="{@LocalDataFolder}Cache\CommentsIndexCache" projectCachePath="">
 	{@FrameworkCommentList}
 	{@CommentFileList}
-</index><copy name="comments" source="*" target="/document/comments" /></component></ComponentConfig>
-<ComponentConfig id="Code Block Component" enabled="True"><component id="Code Block Component">
+</index>
+  <copy name="comments" source="*" target="/document/comments" />
+</component></ComponentConfig>
+<ComponentConfig id="Code Block Component" enabled="False"><component id="Code Block Component">
   <basePath value="{@HtmlEncProjectFolder}" />
   <outputPaths>{@HelpFormatOutputPaths}</outputPaths>
   <allowMissingSource value="false" />
   <removeRegionMarkers value="false" />
-  <colorizer syntaxFile="{@SHFBFolder}Colorizer\highlight.xml" styleFile="{@SHFBFolder}Colorizer\highlight.xsl" stylesheet="{@SHFBFolder}Colorizer\highlight.css" scriptFile="{@SHFBFolder}Colorizer\highlight.js" disabled="{@DisableCodeBlockComponent}" language="cs" tabSize="0" numberLines="false" outlining="false" keepSeeTags="false" defaultTitle="true" />
+  <colorizer syntaxFile="{@SHFBFolder}PresentationStyles\Colorizer\highlight.xml" styleFile="{@SHFBFolder}PresentationStyles\Colorizer\highlight.xsl" stylesheet="{@SHFBFolder}PresentationStyles\Colorizer\highlight.css" scriptFile="{@SHFBFolder}PresentationStyles\Colorizer\highlight.js" disabled="{@DisableCodeBlockComponent}" language="cs" tabSize="0" numberLines="false" outlining="false" keepSeeTags="false" defaultTitle="true" />
 </component></ComponentConfig>
-<ComponentConfig id="IntelliSense Component" enabled="True"><component id="IntelliSense Component"><!-- Output options (optional)
-  Attributes:
-    Include namespaces (false by default)
-    Namespaces comments filename ("Namespaces" if not specified or empty)
-    Output folder (current folder if not specified or empty) --><output includeNamespaces="false" namespacesFile="Namespaces" folder="{@OutputFolder}\..\IntelliSense" /></component></ComponentConfig>
+<ComponentConfig id="IntelliSense Component" enabled="False"><component id="IntelliSense Component">
+  <output includeNamespaces="false" namespacesFile="Namespaces" folder="{@OutputFolder}\..\IntelliSense" boundedCapacity="100" />
+</component></ComponentConfig>
 <ComponentConfig id="Resolve Reference Links (ESENT Cache)" enabled="True"><component id="Resolve Reference Links (ESENT Cache)"><locale value="{@Locale}" /><linkTarget value="{@SdkLinkTarget}" /><helpOutput format="HtmlHelp1"><msdnContentIdCache path="{@LocalDataFolder}Cache\MsdnContentId.cache" cachePath="{@LocalDataFolder}Cache\ESentMsdnContentIdCache" localCacheSize="2500" /><targets base="{@SHFBFolder}Data\Reflection" recurse="true" files="*.xml" type="{@HtmlSdkLinkType}" id="FrameworkTargets" cachePath="{@LocalDataFolder}Cache\ESentFrameworkTargetCache" localCacheSize="2500">
 		{@ReferenceLinkNamespaceFiles}
 	</targets><targets files="reflection.xml" type="Local" id="ProjectTargets" cachePath="" localCacheSize="2500" noReload="true" /></helpOutput><helpOutput format="MSHelpViewer"><msdnContentIdCache path="{@LocalDataFolder}Cache\MsdnContentId.cache" cachePath="{@LocalDataFolder}Cache\ESentMsdnContentIdCache" localCacheSize="2500" /><targets base="{@SHFBFolder}Data\Reflection" recurse="true" files="*.xml" type="{@MSHelpViewerSdkLinkType}" id="FrameworkTargets" cachePath="{@LocalDataFolder}Cache\ESentFrameworkTargetCache" localCacheSize="2500">
@@ -71,7 +72,7 @@
 	</targets><targets files="reflection.xml" type="Id" id="ProjectTargets" cachePath="" localCacheSize="2500" noReload="true" /></helpOutput><helpOutput format="Website"><msdnContentIdCache path="{@LocalDataFolder}Cache\MsdnContentId.cache" cachePath="{@LocalDataFolder}Cache\ESentMsdnContentIdCache" localCacheSize="2500" /><targets base="{@SHFBFolder}Data\Reflection" recurse="true" files="*.xml" type="{@WebsiteSdkLinkType}" id="FrameworkTargets" cachePath="{@LocalDataFolder}Cache\ESentFrameworkTargetCache" localCacheSize="2500">
 		{@ReferenceLinkNamespaceFiles}
 	</targets><targets files="reflection.xml" type="Local" id="ProjectTargets" cachePath="" localCacheSize="2500" noReload="true" /></helpOutput></component></ComponentConfig>
-<ComponentConfig id="API Token Resolution" enabled="True"><component id="API Token Resolution">{@TokenFiles}
+<ComponentConfig id="API Token Resolution" enabled="False"><component id="API Token Resolution">{@TokenFiles}
 <replace elements="/*//token" item="string(.)" /></component></ComponentConfig></ComponentConfigurations>
     <DocumentationSources>
       <DocumentationSource sourceFile="..\ICSharpCode.AvalonEdit\ICSharpCode.AvalonEdit.csproj" />
@@ -103,7 +104,7 @@ Additionally, the class HighlightingColorizer provides integration of the highli
     <Language>en-US</Language>
     <ContentPlacement>AboveNamespaces</ContentPlacement>
     <BuildAssemblerVerbosity>OnlyWarningsAndErrors</BuildAssemblerVerbosity>
-    <HelpFileFormat>HtmlHelp1, MSHelpViewer, Website</HelpFileFormat>
+    <HelpFileFormat>Website</HelpFileFormat>
     <IndentHtml>False</IndentHtml>
     <KeepLogFile>True</KeepLogFile>
     <DisableCodeBlockComponent>False</DisableCodeBlockComponent>
