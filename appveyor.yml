@@ -10,13 +10,23 @@ dotnet_csproj:
   informational_version: '{version}'
   
 configuration: Debug
-image: Visual Studio 2019 Preview 
-platform: Net40
+
+image: Visual Studio 2019 Preview
+
 before_build:
-- nuget restore ICSharpCode.AvalonEdit.sln
+  - nuget restore ICSharpCode.AvalonEdit.sln
+
 build:
   project: ICSharpCode.AvalonEdit.sln
   parallel: true
   verbosity: minimal
+
+after_build:
+  - ps: .\packages\create_nuget.ps1
+
 after_test:
-- python ICSharpCode.AvalonEdit.Tests\tidy.py
+  - python ICSharpCode.AvalonEdit.Tests\tidy.py
+  
+artifacts:
+  - path: 'ICSharpCode.AvalonEdit.*.nupkg'
+    name: NuGet
