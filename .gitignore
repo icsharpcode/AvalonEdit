@@ -3,6 +3,7 @@ obj/
 bin/
 .vs/
 *.user
+lib/
 /Documentation/Help
 /packages/AvalonEdit
 /packages/AvalonEdit.Sample
