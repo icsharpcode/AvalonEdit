@@ -1,4 +1,4 @@
 To build the Sandcaste Documentation, please install SHFB from:
 https://github.com/EWSoftware/SHFB/releases
 
-The build of the Documentation can take very long, be patiant.
+The build of the Documentation can take very long, be patient.
