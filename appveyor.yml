@@ -1,5 +1,6 @@
 version: 1.0.{build}
 configuration: Debug
+image: Visual Studio 2019 Preview 
 platform: Net40
 before_build:
 - nuget restore ICSharpCode.AvalonEdit.sln
