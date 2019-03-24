@@ -4,11 +4,13 @@
     <TargetFrameworks>netcoreapp3.0;net40;net45;net35</TargetFrameworks>
 	<UseWPF>true</UseWPF>
 	<UseWindowsForms>true</UseWindowsForms>
-	<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <DefineConstants>TRACE;DOTNET4</DefineConstants>
+	<DefineConstants>TRACE;DOTNET4</DefineConstants>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>ICSharpCode.AvalonEdit.snk</AssemblyOriginatorKeyFile>
     <DocumentationFile>bin\Debug\netcoreapp3.0\ICSharpCode.AvalonEdit.xml</DocumentationFile>
+    <Company>ic#code</Company>
+    <Copyright>2000-2019 AlphaSierraPapa for the SharpDevelop Team</Copyright>
+    <Description>WPF-based extensible text editor</Description>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp3.0' ">
     <DefineConstants>TRACE;DOTNET4</DefineConstants>

@@ -1,4 +1,14 @@
 version: 5.5.{build}
+
+dotnet_csproj:
+  patch: true
+  file: '**\*.csproj'
+  version: '{version}'
+  package_version: '{version}'
+  assembly_version: '{version}'
+  file_version: '{version}'
+  informational_version: '{version}'
+  
 configuration: Debug
 image: Visual Studio 2019 Preview 
 platform: Net40
