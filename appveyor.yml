@@ -13,6 +13,9 @@ configuration: Debug
 
 image: Visual Studio 2019 Preview
 
+install:
+  - cmd: choco install dotnetcore-sdk --pre
+
 before_build:
   - nuget restore ICSharpCode.AvalonEdit.sln
 
