@@ -20,6 +20,5 @@
 		<file src="lib\net40\*.*" target="lib\net40" />
 		<file src="lib\net45\*.*" target="lib\net45" />
 		<file src="lib\netcoreapp3.0\*.*" target="lib\netcoreapp3.0" />
-		<file src="..\..\ICSharpCode.AvalonEdit\**\*.cs" target="src" />
 	</files>
 </package>

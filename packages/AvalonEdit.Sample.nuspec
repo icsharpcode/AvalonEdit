@@ -25,6 +25,6 @@ StartupUri="/Samples/AvalonEdit/Window1.xaml"</description>
 		<tags>WPF Text Editor SharpDevelop AvalonEdit</tags>
   </metadata>
   <files>
-  	<file src="..\..\ICSharpCode.AvalonEdit.Sample\**\*.cs" target="src" />
+  	<file src="..\ICSharpCode.AvalonEdit.Sample\**\*.cs" target="src" />
   </files>
 </package>
