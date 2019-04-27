@@ -7,8 +7,8 @@
 	<DefineConstants>TRACE;DOTNET4</DefineConstants>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>ICSharpCode.AvalonEdit.snk</AssemblyOriginatorKeyFile>
-	<OutputPath>..\lib</OutputPath>
-    <DocumentationFile>..\lib\netcoreapp3.0\ICSharpCode.AvalonEdit.xml</DocumentationFile>
+	<OutputPath>..\packages\lib</OutputPath>
+    <DocumentationFile>..\packages\lib\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
     <Company>ic#code</Company>
     <Copyright>2000-2019 AlphaSierraPapa for the SharpDevelop Team</Copyright>
     <Description>WPF-based extensible text editor</Description>
