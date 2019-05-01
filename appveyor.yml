@@ -8,7 +8,7 @@ dotnet_csproj:
   assembly_version: '{version}'
   file_version: '{version}'
   informational_version: '{version}'
-  
+
 configuration: Debug
 
 image: Visual Studio 2019 Preview
@@ -26,6 +26,7 @@ build:
 
 after_build:
   - ps: .\packages\create_nuget.ps1
+  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
 
 after_test:
   - python ICSharpCode.AvalonEdit.Tests\tidy.py
