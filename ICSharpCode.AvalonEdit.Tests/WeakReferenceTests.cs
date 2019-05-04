@@ -117,12 +117,12 @@ namespace ICSharpCode.AvalonEdit
 		
 		static void GarbageCollect()
 		{
-			for (int i = 0; i < 5; i++) {
+			for (int i = 0; i < 15; i++) {
 				GC.WaitForPendingFinalizers();
 				GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced);
 				// pump WPF messages so that WeakEventManager can unregister
-				Thread.Sleep(5);
 				Dispatcher.CurrentDispatcher.Invoke(DispatcherPriority.Background, new Action(delegate {}));
+				Thread.Yield();
 			}
 		}
 	}
