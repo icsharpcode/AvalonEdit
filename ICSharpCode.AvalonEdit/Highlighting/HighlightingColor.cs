@@ -42,6 +42,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
         FontWeight? fontWeight;
 		FontStyle? fontStyle;
 		bool? underline;
+		bool? strikethrough;
 		HighlightingBrush foreground;
 		HighlightingBrush background;
 		bool frozen;
@@ -135,7 +136,24 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 				underline = value;
 			}
 		}
-		
+
+		/// <summary>
+		///  Gets/sets the strikethrough flag. Null if the strikethrough status does not change the font style.
+		/// </summary>
+		public bool? Strikethrough
+		{
+			get
+			{
+				return strikethrough;
+			}
+			set
+			{
+				if (frozen)
+					throw new InvalidOperationException();
+				strikethrough = value;
+			}
+		}
+
 		/// <summary>
 		/// Gets/sets the foreground color applied by the highlighting.
 		/// </summary>
@@ -185,6 +203,8 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 				this.FontStyle = (FontStyle?)new FontStyleConverter().ConvertFromInvariantString(info.GetString("Style"));
 			if (info.GetBoolean("HasUnderline"))
 				this.Underline = info.GetBoolean("Underline");
+			if (info.GetBoolean("HasStrikethrough"))
+				this.Strikethrough = info.GetBoolean("Strikethrough");
 			this.Foreground = (HighlightingBrush)info.GetValue("Foreground", typeof(HighlightingBrush));
 			this.Background = (HighlightingBrush)info.GetValue("Background", typeof(HighlightingBrush));
             if (info.GetBoolean("HasFamily"))
@@ -212,6 +232,8 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 			info.AddValue("HasUnderline", this.Underline.HasValue);
 			if (this.Underline.HasValue)
 				info.AddValue("Underline", this.Underline.Value);
+			if (this.Strikethrough.HasValue)
+				info.AddValue("Strikethrough", this.Strikethrough.Value);
 			info.AddValue("Foreground", this.Foreground);
 			info.AddValue("Background", this.Background);
             info.AddValue("HasFamily", this.FontFamily != null);
@@ -249,6 +271,15 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 			{
 				b.Append("text-decoration: ");
 				b.Append(Underline.Value ? "underline" : "none");
+				b.Append("; ");
+			}
+			if (Strikethrough != null)
+			{
+				if (Underline == null)
+					b.Append("text-decoration:  ");
+
+				b.Remove(b.Length - 1, 1);
+				b.Append(Strikethrough.Value ? " line-through" : " none");
 				b.Append("; ");
 			}
 			return b.ToString();
@@ -303,7 +334,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 			if (other == null)
 				return false;
 			return this.name == other.name && this.fontWeight == other.fontWeight
-				&& this.fontStyle == other.fontStyle && this.underline == other.underline
+				&& this.fontStyle == other.fontStyle && this.underline == other.underline && this.strikethrough == other.strikethrough
 				&& object.Equals(this.foreground, other.foreground) && object.Equals(this.background, other.background)
                 && object.Equals(this.fontFamily, other.fontFamily) && object.Equals(this.FontSize, other.FontSize);
 		}
@@ -346,7 +377,9 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 				this.background = color.background;
             if (color.underline != null)
                 this.underline = color.underline;
-            if (color.fontFamily != null)
+            if (color.strikethrough != null)
+	            this.strikethrough = color.strikethrough;
+			if (color.fontFamily != null)
                 this.fontFamily = color.fontFamily;
             if (color.fontSize != null)
                 this.fontSize = color.fontSize;
@@ -354,9 +387,9 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 
         internal bool IsEmptyForMerge {
 			get {
-				return fontWeight == null && fontStyle == null && underline == null
-					&& foreground == null && background == null && fontFamily == null 
-                    && fontSize == null;
+				return fontWeight == null && fontStyle == null && underline == null 
+				       && strikethrough == null && foreground == null && background == null 
+				       && fontFamily == null && fontSize == null;
 			}
 		}
 	}
