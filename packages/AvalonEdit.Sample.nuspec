@@ -5,7 +5,7 @@
     <version>1.0.0</version>
     <authors>Daniel Grunwald</authors>
     <owners>SharpDevelop</owners>
-    <license>MIT</license>
+    <license type="expression">MIT</license>
     <projectUrl>http://www.avalonedit.net</projectUrl>
     <iconUrl>http://community.sharpdevelop.net/blogs/mattward/SharpDevelop.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
