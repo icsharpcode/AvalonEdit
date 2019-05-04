@@ -1234,7 +1234,13 @@ namespace ICSharpCode.AvalonEdit.Rendering
 			DisconnectFromTextView(renderer);
 			InvalidateLayer(renderer.Layer);
 		}
-		
+
+		protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo)
+		{
+			base.OnRenderSizeChanged(sizeInfo);
+			InvalidateLayer(KnownLayer.Selection);
+		}
+
 		/// <inheritdoc/>
 		protected override void OnRender(DrawingContext drawingContext)
 		{

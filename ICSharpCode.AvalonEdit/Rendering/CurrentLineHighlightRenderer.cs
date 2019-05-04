@@ -20,8 +20,6 @@ using System;
 using System.Windows;
 using System.Windows.Media;
 
-using ICSharpCode.AvalonEdit.Rendering;
-
 namespace ICSharpCode.AvalonEdit.Rendering
 {
 	sealed class CurrentLineHighlightRenderer : IBackgroundRenderer
