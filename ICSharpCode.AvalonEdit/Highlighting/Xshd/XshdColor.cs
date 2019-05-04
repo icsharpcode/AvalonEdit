@@ -17,9 +17,11 @@
 // DEALINGS IN THE SOFTWARE.
 
 using System;
+using System.Linq;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
 using System.Windows;
+using System.Windows.Media;
 
 namespace ICSharpCode.AvalonEdit.Highlighting.Xshd
 {
@@ -33,11 +35,21 @@ namespace ICSharpCode.AvalonEdit.Highlighting.Xshd
 		/// Gets/sets the name.
 		/// </summary>
 		public string Name { get; set; }
-		
-		/// <summary>
-		/// Gets/sets the foreground brush.
-		/// </summary>
-		public HighlightingBrush Foreground { get; set; }
+
+        /// <summary>
+        /// Gets/sets the font family
+        /// </summary>
+        public FontFamily FontFamily { get; set; }
+
+        /// <summary>
+        /// Gets/sets the font size.
+        /// </summary>
+        public int? FontSize { get; set; }
+
+        /// <summary>
+        /// Gets/sets the foreground brush.
+        /// </summary>
+        public HighlightingBrush Foreground { get; set; }
 		
 		/// <summary>
 		/// Gets/sets the background brush.
@@ -88,6 +100,10 @@ namespace ICSharpCode.AvalonEdit.Highlighting.Xshd
 			this.ExampleText = info.GetString("ExampleText");
 			if (info.GetBoolean("HasUnderline"))
 				this.Underline = info.GetBoolean("Underline");
+            if (info.GetBoolean("HasFamily"))
+                this.FontFamily = new FontFamily(info.GetString("Family"));
+            if (info.GetBoolean("HasSize"))
+                this.FontSize = info.GetInt32("Size");
 		}
 		
 		/// <summary>
@@ -111,10 +127,16 @@ namespace ICSharpCode.AvalonEdit.Highlighting.Xshd
 			if (this.FontStyle.HasValue)
 				info.AddValue("Style", this.FontStyle.Value.ToString());
 			info.AddValue("ExampleText", this.ExampleText);
-		}
-		
-		/// <inheritdoc/>
-		public override object AcceptVisitor(IXshdVisitor visitor)
+            info.AddValue("HasFamily", this.FontFamily != null);
+            if (this.FontFamily != null)
+                info.AddValue("Family", this.FontFamily.FamilyNames.FirstOrDefault());
+            info.AddValue("HasSize", this.FontSize.HasValue);
+            if (this.FontSize.HasValue)
+                info.AddValue("Size", this.FontSize.Value.ToString());
+        }
+
+        /// <inheritdoc/>
+        public override object AcceptVisitor(IXshdVisitor visitor)
 		{
 			return visitor.VisitColor(this);
 		}
