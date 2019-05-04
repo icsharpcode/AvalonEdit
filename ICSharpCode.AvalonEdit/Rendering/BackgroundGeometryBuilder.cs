@@ -96,7 +96,7 @@ namespace ICSharpCode.AvalonEdit.Rendering
 		/// </summary>
 		/// <remarks>
 		/// This overload will align the coordinates according to
-		/// <see cref="AlignToWholePixels"/> or <see cref="AlignToMiddleOfPixels"/>.
+		/// <see cref="AlignToWholePixels"/>.
 		/// Use the <see cref="AddRectangle(double,double,double,double)"/>-overload instead if the coordinates should not be aligned.
 		/// </remarks>
 		public void AddRectangle(TextView textView, Rect rectangle)
@@ -290,7 +290,7 @@ namespace ICSharpCode.AvalonEdit.Rendering
 		/// </summary>
 		/// <remarks>
 		/// This overload assumes that the coordinates are aligned properly
-		/// (see <see cref="AlignToWholePixels"/>, <see cref="AlignToMiddleOfPixels"/>).
+		/// (see <see cref="AlignToWholePixels"/>).
 		/// Use the <see cref="AddRectangle(TextView,Rect)"/>-overload instead if the coordinates are not yet aligned.
 		/// </remarks>
 		public void AddRectangle(double left, double top, double right, double bottom)
