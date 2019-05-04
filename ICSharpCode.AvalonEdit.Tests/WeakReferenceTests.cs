@@ -17,7 +17,6 @@
 // DEALINGS IN THE SOFTWARE.
 
 using System;
-using System.Threading;
 using System.Windows.Threading;
 using ICSharpCode.AvalonEdit.Document;
 using ICSharpCode.AvalonEdit.Editing;
@@ -55,12 +54,15 @@ namespace ICSharpCode.AvalonEdit
 			GarbageCollect();
 			if (wr.IsAlive)
 				Assert.Warn("TextView is still alive, but Weakreaf could really not be tested");
-			// document cannot immediately clear the line tracker
-			Assert.AreEqual(1, textDocument.LineTrackers.Count);
-			
-			// but it should clear it on the next change
-			textDocument.Insert(0, "a");
-			Assert.AreEqual(0, textDocument.LineTrackers.Count);
+			else
+			{
+				// document cannot immediately clear the line tracker
+				Assert.AreEqual(1, textDocument.LineTrackers.Count);
+				
+				// but it should clear it on the next change
+				textDocument.Insert(0, "a");
+				Assert.AreEqual(0, textDocument.LineTrackers.Count);
+			}
 		}
 		
 		[Test]
