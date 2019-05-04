@@ -396,18 +396,6 @@ namespace ICSharpCode.AvalonEdit.Utils
 			int runLength = GetNode(ref indexInRun).count;
 			return index - indexInRun + runLength;
 		}
-
-		/// <summary>
-		/// Gets the number of elements after <paramref name="index"/> that have the same value as each other.
-		/// </summary>
-		[Obsolete("This method may be confusing as it returns only the remaining run length after index. " +
-		          "Use GetStartOfRun/GetEndOfRun instead.")]
-		public int GetRunLength(int index)
-		{
-			if (index < 0 || index >= this.Count)
-				throw new ArgumentOutOfRangeException("index", index, "Value must be between 0 and " + (this.Count - 1));
-			return GetNode(ref index).count - index;
-		}
 		
 		/// <summary>
 		/// Applies the conversion function to all elements in this CompressingTreeList.

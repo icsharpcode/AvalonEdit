@@ -66,23 +66,6 @@ namespace ICSharpCode.AvalonEdit.Rendering
 		/// </summary>
 		public double BorderThickness { get; set; }
 		
-		bool alignToMiddleOfPixels;
-		
-		/// <summary>
-		/// Gets/Sets whether to align the geometry to the middle of pixels.
-		/// </summary>
-		[Obsolete("Use the AlignToWholePixels and BorderThickness properties instead. "
-		          + "Setting AlignToWholePixels=true and setting the BorderThickness to the pixel size " 
-		          + "is equivalent to aligning the geometry to the middle of pixels.")]
-		public bool AlignToMiddleOfPixels {
-			get {
-				return alignToMiddleOfPixels;
-			}
-			set {
-				alignToMiddleOfPixels = value;
-			}
-		}
-		
 		/// <summary>
 		/// Gets/Sets whether to extend the rectangles to full width at line end.
 		/// </summary>
@@ -130,11 +113,6 @@ namespace ICSharpCode.AvalonEdit.Rendering
 				             PixelSnapHelpers.Round(r.Right + halfBorder, pixelSize.Width) - halfBorder,
 				             PixelSnapHelpers.Round(r.Bottom + halfBorder, pixelSize.Height) - halfBorder);
 				//Debug.WriteLine(r.ToString() + " -> " + new Rect(lastLeft, lastTop, lastRight-lastLeft, lastBottom-lastTop).ToString());
-			} else if (alignToMiddleOfPixels) {
-				AddRectangle(PixelSnapHelpers.PixelAlign(r.Left, pixelSize.Width),
-				             PixelSnapHelpers.PixelAlign(r.Top, pixelSize.Height),
-				             PixelSnapHelpers.PixelAlign(r.Right, pixelSize.Width),
-				             PixelSnapHelpers.PixelAlign(r.Bottom, pixelSize.Height));
 			} else {
 				AddRectangle(r.Left, r.Top, r.Right, r.Bottom);
 			}
