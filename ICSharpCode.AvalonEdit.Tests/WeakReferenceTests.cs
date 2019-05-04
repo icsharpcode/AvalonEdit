@@ -17,6 +17,7 @@
 // DEALINGS IN THE SOFTWARE.
 
 using System;
+using System.Threading;
 using System.Windows.Threading;
 using ICSharpCode.AvalonEdit.Document;
 using ICSharpCode.AvalonEdit.Editing;
@@ -116,10 +117,11 @@ namespace ICSharpCode.AvalonEdit
 		
 		static void GarbageCollect()
 		{
-			for (int i = 0; i < 3; i++) {
+			for (int i = 0; i < 5; i++) {
 				GC.WaitForPendingFinalizers();
 				GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced);
 				// pump WPF messages so that WeakEventManager can unregister
+				Thread.Sleep(5);
 				Dispatcher.CurrentDispatcher.Invoke(DispatcherPriority.Background, new Action(delegate {}));
 			}
 		}
