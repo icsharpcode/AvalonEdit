@@ -5,6 +5,14 @@ Write-Host "root: $root"
 $version = [System.Reflection.Assembly]::LoadFile("$root\packages\lib\net45\ICSharpCode.AvalonEdit.dll").GetName().Version
 $versionStr = "{0}.{1}.{2}" -f ($version.Major, $version.Minor, $version.Build)
 
+$semver = ''
+if (Test-Path ENV:semverinfo) {
+  $semver = Get-ChildItem ENV:semverinfo
+}
+if ($semver) { 
+  $versionStr = "{0}.{1}-{2}" -f ($version.Major, $version.Minor, $semver)
+}
+
 Write-Host "Setting .nuspec version tag to $versionStr"
 
 $content = (Get-Content $root\packages\AvalonEdit.nuspec) 

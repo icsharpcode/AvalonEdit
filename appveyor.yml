@@ -1,5 +1,8 @@
 version: '6.0.{build}'
 
+environment:
+  semverinfo: ''
+
 dotnet_csproj:
   patch: true
   file: '**\*.csproj'
