@@ -7,7 +7,7 @@ $versionStr = "{0}.{1}.{2}" -f ($version.Major, $version.Minor, $version.Build)
 
 $semver = ''
 if (Test-Path ENV:semverinfo) {
-  $semver = Get-ChildItem ENV:semverinfo.Value
+  $semver = (Get-ChildItem ENV:semverinfo).Value
 }
 if ($semver) { 
   $versionStr = "{0}.{1}-{2}" -f ($version.Major, $version.Minor, $semver)
