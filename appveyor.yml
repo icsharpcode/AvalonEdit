@@ -1,7 +1,7 @@
 version: '6.0.{build}'
 
 environment:
-  semverinfo: ''
+  semverinfo: 'netcore3p4alpha1'
 
 dotnet_csproj:
   patch: true

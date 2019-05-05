@@ -12,6 +12,9 @@
     <Company>ic#code</Company>
     <Copyright>2000-2019 AlphaSierraPapa for the SharpDevelop Team</Copyright>
     <Description>WPF-based extensible text editor</Description>
+    <Version>6.0</Version>
+    <AssemblyVersion>6.0.0.0</AssemblyVersion>
+    <FileVersion>6.0.0.0</FileVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp3.0' ">
     <DefineConstants>TRACE;DOTNET4</DefineConstants>
