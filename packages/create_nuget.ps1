@@ -7,7 +7,7 @@ $versionStr = "{0}.{1}.{2}" -f ($version.Major, $version.Minor, $version.Build)
 
 $semver = ''
 if (Test-Path ENV:semverinfo) {
-  $semver = Get-ChildItem ENV:semverinfo
+  $semver = Get-ChildItem ENV:semverinfo.Value
 }
 if ($semver) { 
   $versionStr = "{0}.{1}-{2}" -f ($version.Major, $version.Minor, $semver)
@@ -25,7 +25,7 @@ $content | Out-File $root\packages\AvalonEdit.compiled.nuspec
 NuGet pack $root\packages\AvalonEdit.compiled.nuspec
 
 $content = (Get-Content $root\packages\AvalonEdit.Sample.nuspec) 
-$content = $content -replace '\$version\$',$versionStr
+$content = $content -replace '\<version\>.*?\</version\>',$versionStr
 $content = $content -replace '\$releasenotes\$',$env:APPVEYOR_REPO_COMMIT_MESSAGE
 
 $content | Out-File $root\packages\AvalonEdit.Sample.nuspec.compiled.nuspec
