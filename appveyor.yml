@@ -9,7 +9,9 @@ dotnet_csproj:
   file_version: '{version}'
   informational_version: '{version}'
 
-configuration: Debug
+configuration:
+- Debug
+- Release
 
 image: Visual Studio 2019 Preview
 
@@ -32,5 +34,5 @@ after_test:
   - python ICSharpCode.AvalonEdit.Tests\tidy.py
   
 artifacts:
-  - path: '.\packages\ICSharpCode.AvalonEdit.*.nupkg'
+  - path: '**\*.nupkg'
     name: NuGet
