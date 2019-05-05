@@ -15,8 +15,9 @@ if ($semver) {
 
 Write-Host "Setting .nuspec version tag to $versionStr"
 
+$versionStr = "<version>" + $versionStr + "</version>"
 $content = (Get-Content $root\packages\AvalonEdit.nuspec) 
-$content = $content -replace '\$version\$',$versionStr
+$content = $content -replace '\<version\>.*?\</version\>',$versionStr
 $content = $content -replace '\$releasenotes\$',$env:APPVEYOR_REPO_COMMIT_MESSAGE
 
 $content | Out-File $root\packages\AvalonEdit.compiled.nuspec
