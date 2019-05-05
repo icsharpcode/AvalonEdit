@@ -32,5 +32,5 @@ after_test:
   - python ICSharpCode.AvalonEdit.Tests\tidy.py
   
 artifacts:
-  - path: 'ICSharpCode.AvalonEdit.*.nupkg'
+  - path: '.\packages\ICSharpCode.AvalonEdit.*.nupkg'
     name: NuGet
