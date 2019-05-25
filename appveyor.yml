@@ -29,15 +29,8 @@ build:
   parallel: true
   verbosity: minimal
   publish_nuget: true
+  publish_nuget_symbols: true 
+  use_snupkg_format: true
   
-after_build:
-  #- ps: .\packages\create_nuget.ps1
-  #- ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
-
 after_test:
   - python ICSharpCode.AvalonEdit.Tests\tidy.py
-  
-artifacts:
-  - path: '**\*.nupkg'
-    name: NuGet
-  - path: '**\*.snupkg'

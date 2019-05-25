@@ -10,6 +10,7 @@
 	<Company>ic#code</Company>
     <Copyright>2000-2019 AlphaSierraPapa for the SharpDevelop Team</Copyright>
     <Description>Tests for WPF-based extensible text editor</Description>
+	<IsPackable>false</IsPackable>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp3.0' ">
     <DefineConstants>TRACE;DOTNET4</DefineConstants>
