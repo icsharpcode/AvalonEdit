@@ -7,8 +7,7 @@
     <DefineConstants>TRACE;DOTNET4</DefineConstants>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>ICSharpCode.AvalonEdit.snk</AssemblyOriginatorKeyFile>
-    <OutputPath>..\packages\lib</OutputPath>
-    <DocumentationFile>..\packages\lib\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
+    <DocumentationFile>ICSharpCode.AvalonEdit.xml</DocumentationFile>
     <Company>ic#code</Company>
     <Copyright>2000-2019 AlphaSierraPapa for the SharpDevelop Team</Copyright>
     <Description>AvalonEdit is the WPF-based text editor used in SharpDevelop. There are four builds of AvalonEdit included in this package. .NET 3.5, 4.0, 4.5 and .NET Core 3.0.</Description>

@@ -7,7 +7,7 @@ dotnet_csproj:
   patch: true
   file: '**\*.csproj'
   version: '{version}'
-  package_version: '{version}'
+  package_version: '{version}-preview2'
   assembly_version: '{version}'
   file_version: '{version}'
   informational_version: '{version}'
@@ -28,9 +28,11 @@ build:
   project: ICSharpCode.AvalonEdit.sln
   parallel: true
   verbosity: minimal
-
+  publish_nuget_symbols: true 
+  use_snupkg_format: true
+  
 after_build:
-  - ps: .\packages\create_nuget.ps1
+  #- ps: .\packages\create_nuget.ps1
   #- ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
 
 after_test:
@@ -39,3 +41,4 @@ after_test:
 artifacts:
   - path: '**\*.nupkg'
     name: NuGet
+  - path: '**\*.snupkg'
