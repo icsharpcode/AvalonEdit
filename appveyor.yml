@@ -28,8 +28,7 @@ build:
   project: ICSharpCode.AvalonEdit.sln
   parallel: true
   verbosity: minimal
-  publish_nuget_symbols: true 
-  use_snupkg_format: true
+  publish_nuget: true
   
 after_build:
   #- ps: .\packages\create_nuget.ps1
