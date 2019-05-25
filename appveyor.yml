@@ -1,16 +1,11 @@
 version: '6.0.{build}'
 
-environment:
-  semverinfo: 'netcore3p4alpha1'
-
 dotnet_csproj:
   patch: true
   file: '**\*.csproj'
-  version: '{version}'
-  package_version: '{version}-preview2'
+  version: '6.0-netcore3p5alpha2'
   assembly_version: '{version}'
   file_version: '{version}'
-  informational_version: '{version}'
 
 configuration:
 - Debug
