@@ -66,23 +66,6 @@ namespace ICSharpCode.AvalonEdit.Rendering
 		/// </summary>
 		public double BorderThickness { get; set; }
 		
-		bool alignToMiddleOfPixels;
-		
-		/// <summary>
-		/// Gets/Sets whether to align the geometry to the middle of pixels.
-		/// </summary>
-		[Obsolete("Use the AlignToWholePixels and BorderThickness properties instead. "
-		          + "Setting AlignToWholePixels=true and setting the BorderThickness to the pixel size " 
-		          + "is equivalent to aligning the geometry to the middle of pixels.")]
-		public bool AlignToMiddleOfPixels {
-			get {
-				return alignToMiddleOfPixels;
-			}
-			set {
-				alignToMiddleOfPixels = value;
-			}
-		}
-		
 		/// <summary>
 		/// Gets/Sets whether to extend the rectangles to full width at line end.
 		/// </summary>
@@ -113,7 +96,7 @@ namespace ICSharpCode.AvalonEdit.Rendering
 		/// </summary>
 		/// <remarks>
 		/// This overload will align the coordinates according to
-		/// <see cref="AlignToWholePixels"/> or <see cref="AlignToMiddleOfPixels"/>.
+		/// <see cref="AlignToWholePixels"/>.
 		/// Use the <see cref="AddRectangle(double,double,double,double)"/>-overload instead if the coordinates should not be aligned.
 		/// </remarks>
 		public void AddRectangle(TextView textView, Rect rectangle)
@@ -130,11 +113,6 @@ namespace ICSharpCode.AvalonEdit.Rendering
 				             PixelSnapHelpers.Round(r.Right + halfBorder, pixelSize.Width) - halfBorder,
 				             PixelSnapHelpers.Round(r.Bottom + halfBorder, pixelSize.Height) - halfBorder);
 				//Debug.WriteLine(r.ToString() + " -> " + new Rect(lastLeft, lastTop, lastRight-lastLeft, lastBottom-lastTop).ToString());
-			} else if (alignToMiddleOfPixels) {
-				AddRectangle(PixelSnapHelpers.PixelAlign(r.Left, pixelSize.Width),
-				             PixelSnapHelpers.PixelAlign(r.Top, pixelSize.Height),
-				             PixelSnapHelpers.PixelAlign(r.Right, pixelSize.Width),
-				             PixelSnapHelpers.PixelAlign(r.Bottom, pixelSize.Height));
 			} else {
 				AddRectangle(r.Left, r.Top, r.Right, r.Bottom);
 			}
@@ -312,7 +290,7 @@ namespace ICSharpCode.AvalonEdit.Rendering
 		/// </summary>
 		/// <remarks>
 		/// This overload assumes that the coordinates are aligned properly
-		/// (see <see cref="AlignToWholePixels"/>, <see cref="AlignToMiddleOfPixels"/>).
+		/// (see <see cref="AlignToWholePixels"/>).
 		/// Use the <see cref="AddRectangle(TextView,Rect)"/>-overload instead if the coordinates are not yet aligned.
 		/// </remarks>
 		public void AddRectangle(double left, double top, double right, double bottom)

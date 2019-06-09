@@ -260,14 +260,7 @@ namespace ICSharpCode.AvalonEdit.Document
 				return rope.Length;
 			}
 		}
-		
-		/// <summary>
-		/// Is raised when the TextLength property changes.
-		/// </summary>
-		/// <remarks><inheritdoc cref="Changing"/></remarks>
-		[Obsolete("This event will be removed in a future version; use the PropertyChanged event instead")]
-		public event EventHandler TextLengthChanged;
-		
+
 		/// <summary>
 		/// Is raised when one of the properties <see cref="Text"/>, <see cref="TextLength"/>, <see cref="LineCount"/>,
 		/// <see cref="UndoStack"/> changes.
@@ -528,15 +521,11 @@ namespace ICSharpCode.AvalonEdit.Document
 				int textLength = rope.Length;
 				if (textLength != oldTextLength) {
 					oldTextLength = textLength;
-					if (TextLengthChanged != null)
-						TextLengthChanged(this, EventArgs.Empty);
 					OnPropertyChanged("TextLength");
 				}
 				int lineCount = lineTree.LineCount;
 				if (lineCount != oldLineCount) {
 					oldLineCount = lineCount;
-					if (LineCountChanged != null)
-						LineCountChanged(this, EventArgs.Empty);
 					OnPropertyChanged("LineCount");
 				}
 			}
@@ -1049,11 +1038,6 @@ namespace ICSharpCode.AvalonEdit.Document
 			}
 		}
 		
-		/// <summary>
-		/// Is raised when the LineCount property changes.
-		/// </summary>
-		[Obsolete("This event will be removed in a future version; use the PropertyChanged event instead")]
-		public event EventHandler LineCountChanged;
 		#endregion
 		
 		#region Debugging

@@ -31,11 +31,6 @@ using System.Windows.Markup;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("ICSharpCode.AvalonEdit")]
-[assembly: AssemblyDescription("WPF-based extensible text editor")]
-[assembly: AssemblyConfiguration("")]
-[assembly: AssemblyTrademark("")]
-[assembly: AssemblyCulture("")]
 
 [assembly: CLSCompliant(true)]
 
@@ -51,10 +46,6 @@ using System.Windows.Markup;
 )]
 
 [assembly: System.Runtime.InteropServices.ComVisible(false)]
-[assembly: AssemblyCompany("ic#code")]
-[assembly: AssemblyProduct("SharpDevelop")]
-[assembly: AssemblyCopyright("2000-2014 AlphaSierraPapa for the SharpDevelop Team")]
-[assembly: AssemblyVersion("5.0.3")]
 [assembly: NeutralResourcesLanguage("en-US")]
 
 [assembly: XmlnsPrefix("http://icsharpcode.net/sharpdevelop/avalonedit", "avalonedit")]

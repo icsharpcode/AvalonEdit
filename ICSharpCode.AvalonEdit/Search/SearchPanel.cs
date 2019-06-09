@@ -185,17 +185,6 @@ namespace ICSharpCode.AvalonEdit.Search
 		}
 		
 		/// <summary>
-		/// Attaches this SearchPanel to a TextArea instance.
-		/// </summary>
-		[Obsolete("Use the Install method instead")]
-		public void Attach(TextArea textArea)
-		{
-			if (textArea == null)
-				throw new ArgumentNullException("textArea");
-			AttachInternal(textArea);
-		}
-		
-		/// <summary>
 		/// Creates a SearchPanel and installs it to the TextEditor's TextArea.
 		/// </summary>
 		/// <remarks>This is a convenience wrapper.</remarks>
@@ -233,7 +222,10 @@ namespace ICSharpCode.AvalonEdit.Search
 		/// </summary>
 		public void Uninstall()
 		{
-			CloseAndRemove();
+			Close();
+			textArea.DocumentChanged -= textArea_DocumentChanged;
+			if (currentDocument != null)
+				currentDocument.TextChanged -= textArea_Document_TextChanged;
 			textArea.DefaultInputHandler.NestedInputHandlers.Remove(handler);
 		}
 		
@@ -425,19 +417,7 @@ namespace ICSharpCode.AvalonEdit.Search
 			// Clear existing search results so that the segments don't have to be maintained
 			renderer.CurrentResults.Clear();
 		}
-		
-		/// <summary>
-		/// Closes the SearchPanel and removes it.
-		/// </summary>
-		[Obsolete("Use the Uninstall method instead!")]
-		public void CloseAndRemove()
-		{
-			Close();
-			textArea.DocumentChanged -= textArea_DocumentChanged;
-			if (currentDocument != null)
-				currentDocument.TextChanged -= textArea_Document_TextChanged;
-		}
-		
+
 		/// <summary>
 		/// Opens the an existing search panel.
 		/// </summary>

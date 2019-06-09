@@ -51,22 +51,6 @@ namespace ICSharpCode.AvalonEdit.Editing
 		}
 		
 		/// <summary>
-		/// Creates a vertical dotted line to separate the line numbers from the text view.
-		/// </summary>
-		[Obsolete("This method got published accidentally; and will be removed again in a future version. Use the parameterless overload instead.")]
-		public static UIElement Create(TextEditor editor)
-		{
-			Line line = (Line)Create();
-			
-			line.SetBinding(
-				Line.StrokeProperty,
-				new Binding("LineNumbersForeground") { Source = editor }
-			);
-			
-			return line;
-		}
-		
-		/// <summary>
 		/// Gets whether the specified UIElement is the result of a DottedLineMargin.Create call.
 		/// </summary>
 		public static bool IsDottedLineMargin(UIElement element)
