@@ -4,7 +4,7 @@
     <TargetFrameworks>netcoreapp3.0;net40;net45</TargetFrameworks>
 	<UseWPF>true</UseWPF>
 	<UseWindowsForms>true</UseWindowsForms>
-	<DefineConstants>TRACE;DOTNET4</DefineConstants>
+	<DefineConstants>TRACE</DefineConstants>
     <SignAssembly>true</SignAssembly>
 	<AssemblyOriginatorKeyFile>..\ICSharpCode.AvalonEdit\ICSharpCode.AvalonEdit.snk</AssemblyOriginatorKeyFile>
     <RootNamespace>AvalonEdit.Sample</RootNamespace>
@@ -14,13 +14,13 @@
 	<IsPackable>false</IsPackable>	
   </PropertyGroup>
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp3.0' ">
-    <DefineConstants>TRACE;DOTNET4</DefineConstants>
+    <DefineConstants>TRACE</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(TargetFramework)' == 'net40' ">
-    <DefineConstants>TRACE;DOTNET4</DefineConstants>
+    <DefineConstants>TRACE</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(TargetFramework)' == 'net45' ">
-    <DefineConstants>TRACE;DOTNET4</DefineConstants>
+    <DefineConstants>TRACE</DefineConstants>
   </PropertyGroup>
   <ItemGroup Condition=" '$(TargetFramework)' == 'net40' ">
 		<Reference Include="System.Windows.Forms" />

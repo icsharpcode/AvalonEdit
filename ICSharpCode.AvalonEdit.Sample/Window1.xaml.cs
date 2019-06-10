@@ -56,9 +56,9 @@ namespace ICSharpCode.AvalonEdit.Sample
 			
 			
 			InitializeComponent();
-			#if DOTNET4
+
 			this.SetValue(TextOptions.TextFormattingModeProperty, TextFormattingMode.Display);
-			#endif
+
 			propertyGridComboBox.SelectedIndex = 2;
 			
 			//textEditor.TextArea.SelectionBorder = null;
