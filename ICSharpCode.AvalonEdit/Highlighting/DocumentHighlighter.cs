@@ -20,7 +20,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using ICSharpCode.NRefactory.Editor;
 using ICSharpCode.AvalonEdit.Document;
 using ICSharpCode.AvalonEdit.Utils;
 using SpanStack = ICSharpCode.AvalonEdit.Utils.ImmutableStack<ICSharpCode.AvalonEdit.Highlighting.HighlightingSpan>;
@@ -71,23 +70,6 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 			weakLineTracker = WeakLineTracker.Register(document, this);
 			InvalidateSpanStacks();
 		}
-		
-		#if NREFACTORY
-		/// <summary>
-		/// Creates a new DocumentHighlighter instance.
-		/// </summary>
-		public DocumentHighlighter(ReadOnlyDocument document, IHighlightingDefinition definition)
-		{
-			if (document == null)
-				throw new ArgumentNullException("document");
-			if (definition == null)
-				throw new ArgumentNullException("definition");
-			this.document = document;
-			this.definition = definition;
-			this.engine = new HighlightingEngine(definition.MainRuleSet);
-			InvalidateHighlighting();
-		}
-		#endif
 		
 		/// <summary>
 		/// Disposes the document highlighter.

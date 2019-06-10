@@ -18,7 +18,6 @@
 
 using System;
 using System.Runtime.Serialization;
-using ICSharpCode.NRefactory.Editor;
 using ICSharpCode.AvalonEdit.Document;
 
 namespace ICSharpCode.AvalonEdit.Snippets

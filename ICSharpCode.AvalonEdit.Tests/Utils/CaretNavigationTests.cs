@@ -19,9 +19,6 @@
 using System;
 using System.Windows.Documents;
 using ICSharpCode.AvalonEdit.Document;
-#if NREFACTORY
-using ICSharpCode.NRefactory.Editor;
-#endif
 using NUnit.Framework;
 
 namespace ICSharpCode.AvalonEdit.Utils

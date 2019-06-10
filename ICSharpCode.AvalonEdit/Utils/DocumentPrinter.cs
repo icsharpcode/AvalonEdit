@@ -20,8 +20,6 @@ using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Documents;
-
-using ICSharpCode.NRefactory.Editor;
 using ICSharpCode.AvalonEdit.Document;
 using ICSharpCode.AvalonEdit.Highlighting;
 
@@ -32,21 +30,6 @@ namespace ICSharpCode.AvalonEdit.Utils
 	/// </summary>
 	public static class DocumentPrinter
 	{
-		#if NREFACTORY
-		/// <summary>
-		/// Converts a readonly TextDocument to a Block and applies the provided highlighting definition.
-		/// </summary>
-		public static Block ConvertTextDocumentToBlock(ReadOnlyDocument document, IHighlightingDefinition highlightingDefinition)
-		{
-			IHighlighter highlighter;
-			if (highlightingDefinition != null)
-				highlighter = new DocumentHighlighter(document, highlightingDefinition);
-			else
-				highlighter = null;
-			return ConvertTextDocumentToBlock(document, highlighter);
-		}
-		#endif
-		
 		/// <summary>
 		/// Converts an IDocument to a Block and applies the provided highlighter.
 		/// </summary>
@@ -69,21 +52,6 @@ namespace ICSharpCode.AvalonEdit.Utils
 			}
 			return p;
 		}
-		
-		#if NREFACTORY
-		/// <summary>
-		/// Converts a readonly TextDocument to a RichText and applies the provided highlighting definition.
-		/// </summary>
-		public static RichText ConvertTextDocumentToRichText(ReadOnlyDocument document, IHighlightingDefinition highlightingDefinition)
-		{
-			IHighlighter highlighter;
-			if (highlightingDefinition != null)
-				highlighter = new DocumentHighlighter(document, highlightingDefinition);
-			else
-				highlighter = null;
-			return ConvertTextDocumentToRichText(document, highlighter);
-		}
-		#endif
 		
 		/// <summary>
 		/// Converts an IDocument to a RichText and applies the provided highlighter.

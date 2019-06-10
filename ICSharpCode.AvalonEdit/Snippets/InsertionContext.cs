@@ -19,7 +19,6 @@
 using System;
 using System.Collections.Generic;
 using System.Windows;
-using ICSharpCode.NRefactory.Editor;
 using ICSharpCode.AvalonEdit.Document;
 using ICSharpCode.AvalonEdit.Editing;
 

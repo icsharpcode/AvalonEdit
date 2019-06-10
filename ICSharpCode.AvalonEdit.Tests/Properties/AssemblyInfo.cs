@@ -16,15 +16,11 @@
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
 
-#region Using directives
-
 using System;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading;
 using NUnit.Framework;
-
-#endregion
 
 // This sets the default COM visibility of types in the assembly to invisible.
 // If you need to expose a type to COM, use [ComVisible(true)] on that type.
@@ -34,5 +30,3 @@ using NUnit.Framework;
 // Run unit tests on STA thread.
 [assembly: Apartment(ApartmentState.STA)]
 #endif
-
-namespace ICSharpCode.NRefactory.Editor {}

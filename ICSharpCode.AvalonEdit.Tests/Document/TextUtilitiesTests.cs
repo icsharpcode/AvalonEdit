@@ -17,9 +17,6 @@
 // DEALINGS IN THE SOFTWARE.
 
 using System;
-#if NREFACTORY
-using ICSharpCode.NRefactory.Editor;
-#endif
 using NUnit.Framework;
 
 namespace ICSharpCode.AvalonEdit.Document
