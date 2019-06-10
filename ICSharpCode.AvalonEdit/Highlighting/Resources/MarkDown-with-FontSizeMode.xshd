@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0"?>
-<SyntaxDefinition name="MarkDown" extensions=".md" xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
+<SyntaxDefinition name="MarkDown-with-FontSize" extensions=".md" xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
     <Color name="Heading1" foreground="Maroon" fontSize="30" exampleText="# Title #" />
     <Color name="Heading2" foreground="Maroon" fontSize="27" exampleText="# Title #" />
     <Color name="Heading3" foreground="Maroon" fontSize="24" exampleText="# Title #" />
