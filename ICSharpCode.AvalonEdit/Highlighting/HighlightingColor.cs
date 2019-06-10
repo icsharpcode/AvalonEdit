@@ -217,7 +217,6 @@ namespace ICSharpCode.AvalonEdit.Highlighting
         /// Serializes this HighlightingColor instance.
         /// </summary>
 		[System.Security.SecurityCritical]
-		#endif
 		public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
 			if (info == null)
