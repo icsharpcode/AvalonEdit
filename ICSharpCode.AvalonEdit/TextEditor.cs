@@ -77,12 +77,6 @@ namespace ICSharpCode.AvalonEdit
 			SetCurrentValue(DocumentProperty, new TextDocument());
 		}
 		
-		#if !DOTNET4
-		void SetCurrentValue(DependencyProperty property, object value)
-		{
-			SetValue(property, value);
-		}
-		#endif
 		#endregion
 		
 		/// <inheritdoc/>

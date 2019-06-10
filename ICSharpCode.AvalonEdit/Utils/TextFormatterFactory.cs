@@ -31,19 +31,6 @@ namespace ICSharpCode.AvalonEdit.Utils
 	/// </summary>
 	static class TextFormatterFactory
 	{
-		#if !DOTNET4
-		readonly static DependencyProperty TextFormattingModeProperty;
-		
-		static TextFormatterFactory()
-		{
-			Assembly presentationFramework = typeof(FrameworkElement).Assembly;
-			Type textOptionsType = presentationFramework.GetType("System.Windows.Media.TextOptions", false);
-			if (textOptionsType != null) {
-				TextFormattingModeProperty = textOptionsType.GetField("TextFormattingModeProperty").GetValue(null) as DependencyProperty;
-			}
-		}
-		#endif
-		
 		/// <summary>
 		/// Creates a <see cref="TextFormatter"/> using the formatting mode used by the specified owner object.
 		/// </summary>
@@ -51,21 +38,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 		{
 			if (owner == null)
 				throw new ArgumentNullException("owner");
-			#if DOTNET4
 			return TextFormatter.Create(TextOptions.GetTextFormattingMode(owner));
-			#else
-			if (TextFormattingModeProperty != null) {
-				object formattingMode = owner.GetValue(TextFormattingModeProperty);
-				return (TextFormatter)typeof(TextFormatter).InvokeMember(
-					"Create",
-					BindingFlags.InvokeMethod | BindingFlags.Public | BindingFlags.Static,
-					null, null,
-					new object[] { formattingMode },
-					CultureInfo.InvariantCulture);
-			} else {
-				return TextFormatter.Create();
-			}
-			#endif
 		}
 		
 		/// <summary>
@@ -74,11 +47,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 		/// </summary>
 		public static bool PropertyChangeAffectsTextFormatter(DependencyProperty dp)
 		{
-			#if DOTNET4
 			return dp == TextOptions.TextFormattingModeProperty;
-			#else
-			return dp == TextFormattingModeProperty && TextFormattingModeProperty != null;
-			#endif
 		}
 		
 		/// <summary>
@@ -102,7 +71,6 @@ namespace ICSharpCode.AvalonEdit.Utils
 				emSize = TextBlock.GetFontSize(element);
 			if (foreground == null)
 				foreground = TextBlock.GetForeground(element);
-			#if DOTNET4
 			return new FormattedText(
 				text,
 				CultureInfo.CurrentCulture,
@@ -113,31 +81,6 @@ namespace ICSharpCode.AvalonEdit.Utils
 				null,
 				TextOptions.GetTextFormattingMode(element)
 			);
-			#else
-			if (TextFormattingModeProperty != null) {
-				object formattingMode = element.GetValue(TextFormattingModeProperty);
-				return (FormattedText)Activator.CreateInstance(
-					typeof(FormattedText),
-					text,
-					CultureInfo.CurrentCulture,
-					FlowDirection.LeftToRight,
-					typeface,
-					emSize,
-					foreground,
-					null,
-					formattingMode
-				);
-			} else {
-				return new FormattedText(
-					text,
-					CultureInfo.CurrentCulture,
-					FlowDirection.LeftToRight,
-					typeface,
-					emSize.Value,
-					foreground
-				);
-			}
-			#endif
 		}
 	}
 }
