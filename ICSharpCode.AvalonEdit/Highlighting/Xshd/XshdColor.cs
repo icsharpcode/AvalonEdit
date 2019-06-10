@@ -36,31 +36,31 @@ namespace ICSharpCode.AvalonEdit.Highlighting.Xshd
 		/// </summary>
 		public string Name { get; set; }
 
-        /// <summary>
-        /// Gets/sets the font family
-        /// </summary>
-        public FontFamily FontFamily { get; set; }
+		/// <summary>
+		/// Gets/sets the font family
+		/// </summary>
+		public FontFamily FontFamily { get; set; }
 
-        /// <summary>
-        /// Gets/sets the font size.
-        /// </summary>
-        public int? FontSize { get; set; }
+		/// <summary>
+		/// Gets/sets the font size.
+		/// </summary>
+		public int? FontSize { get; set; }
 
-        /// <summary>
-        /// Gets/sets the foreground brush.
-        /// </summary>
-        public HighlightingBrush Foreground { get; set; }
-		
+		/// <summary>
+		/// Gets/sets the foreground brush.
+		/// </summary>
+		public HighlightingBrush Foreground { get; set; }
+
 		/// <summary>
 		/// Gets/sets the background brush.
 		/// </summary>
 		public HighlightingBrush Background { get; set; }
-		
+
 		/// <summary>
 		/// Gets/sets the font weight.
 		/// </summary>
 		public FontWeight? FontWeight { get; set; }
-		
+
 		/// <summary>
 		/// Gets/sets the underline flag
 		/// </summary>
@@ -75,19 +75,19 @@ namespace ICSharpCode.AvalonEdit.Highlighting.Xshd
 		/// Gets/sets the font style.
 		/// </summary>
 		public FontStyle? FontStyle { get; set; }
-		
+
 		/// <summary>
 		/// Gets/Sets the example text that demonstrates where the color is used.
 		/// </summary>
 		public string ExampleText { get; set; }
-		
+
 		/// <summary>
 		/// Creates a new XshdColor instance.
 		/// </summary>
 		public XshdColor()
 		{
 		}
-		
+
 		/// <summary>
 		/// Deserializes an XshdColor.
 		/// </summary>
@@ -108,11 +108,11 @@ namespace ICSharpCode.AvalonEdit.Highlighting.Xshd
 			if (info.GetBoolean("HasStrikethrough"))
 				this.Strikethrough = info.GetBoolean("Strikethrough");
 			if (info.GetBoolean("HasFamily"))
-                this.FontFamily = new FontFamily(info.GetString("Family"));
-            if (info.GetBoolean("HasSize"))
-                this.FontSize = info.GetInt32("Size");
+				this.FontFamily = new FontFamily(info.GetString("Family"));
+			if (info.GetBoolean("HasSize"))
+				this.FontSize = info.GetInt32("Size");
 		}
-		
+
 		/// <summary>
 		/// Serializes this XshdColor instance.
 		/// </summary>
@@ -138,16 +138,16 @@ namespace ICSharpCode.AvalonEdit.Highlighting.Xshd
 			if (this.FontStyle.HasValue)
 				info.AddValue("Style", this.FontStyle.Value.ToString());
 			info.AddValue("ExampleText", this.ExampleText);
-            info.AddValue("HasFamily", this.FontFamily != null);
-            if (this.FontFamily != null)
-                info.AddValue("Family", this.FontFamily.FamilyNames.FirstOrDefault());
-            info.AddValue("HasSize", this.FontSize.HasValue);
-            if (this.FontSize.HasValue)
-                info.AddValue("Size", this.FontSize.Value.ToString());
-        }
+			info.AddValue("HasFamily", this.FontFamily != null);
+			if (this.FontFamily != null)
+				info.AddValue("Family", this.FontFamily.FamilyNames.FirstOrDefault());
+			info.AddValue("HasSize", this.FontSize.HasValue);
+			if (this.FontSize.HasValue)
+				info.AddValue("Size", this.FontSize.Value.ToString());
+		}
 
-        /// <inheritdoc/>
-        public override object AcceptVisitor(IXshdVisitor visitor)
+		/// <inheritdoc/>
+		public override object AcceptVisitor(IXshdVisitor visitor)
 		{
 			return visitor.VisitColor(this);
 		}

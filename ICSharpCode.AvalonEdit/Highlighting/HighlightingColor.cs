@@ -20,7 +20,6 @@ using System;
 using System.Globalization;
 using System.Linq;
 using System.Runtime.Serialization;
-using System.Security.Permissions;
 using System.Text;
 using System.Windows;
 using System.Windows.Media;
@@ -35,102 +34,114 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 	public class HighlightingColor : ISerializable, IFreezable, ICloneable, IEquatable<HighlightingColor>
 	{
 		internal static readonly HighlightingColor Empty = FreezableHelper.FreezeAndReturn(new HighlightingColor());
-		
+
 		string name;
-        FontFamily fontFamily = null;
-        int? fontSize;
-        FontWeight? fontWeight;
+		FontFamily fontFamily = null;
+		int? fontSize;
+		FontWeight? fontWeight;
 		FontStyle? fontStyle;
 		bool? underline;
 		bool? strikethrough;
 		HighlightingBrush foreground;
 		HighlightingBrush background;
 		bool frozen;
-		
+
 		/// <summary>
 		/// Gets/Sets the name of the color.
 		/// </summary>
-		public string Name {
-			get {
+		public string Name
+		{
+			get
+			{
 				return name;
 			}
-			set {
+			set
+			{
 				if (frozen)
 					throw new InvalidOperationException();
 				name = value;
 			}
 		}
 
-        /// <summary>
-        /// Gets/sets the font family. Null if the highlighting color does not change the font style.
-        /// </summary>
-        public FontFamily FontFamily
-        {
-            get
-            {
-                return fontFamily;
-            }
-            set
-            {
-                if (frozen)
-                    throw new InvalidOperationException();
-                fontFamily = value;
-            }
-        }
+		/// <summary>
+		/// Gets/sets the font family. Null if the highlighting color does not change the font style.
+		/// </summary>
+		public FontFamily FontFamily
+		{
+			get
+			{
+				return fontFamily;
+			}
+			set
+			{
+				if (frozen)
+					throw new InvalidOperationException();
+				fontFamily = value;
+			}
+		}
 
-        /// <summary>
-        /// Gets/sets the font size. Null if the highlighting color does not change the font style.
-        /// </summary>
-        public int? FontSize
-        {
-            get
-            {
-                return fontSize;
-            }
-            set
-            {
-                if (frozen)
-                    throw new InvalidOperationException();
-                fontSize = value;
-            }
-        }
+		/// <summary>
+		/// Gets/sets the font size. Null if the highlighting color does not change the font style.
+		/// </summary>
+		public int? FontSize
+		{
+			get
+			{
+				return fontSize;
+			}
+			set
+			{
+				if (frozen)
+					throw new InvalidOperationException();
+				fontSize = value;
+			}
+		}
 
-        /// <summary>
-        /// Gets/sets the font weight. Null if the highlighting color does not change the font weight.
-        /// </summary>
-        public FontWeight? FontWeight {
-			get {
+		/// <summary>
+		/// Gets/sets the font weight. Null if the highlighting color does not change the font weight.
+		/// </summary>
+		public FontWeight? FontWeight
+		{
+			get
+			{
 				return fontWeight;
 			}
-			set {
+			set
+			{
 				if (frozen)
 					throw new InvalidOperationException();
 				fontWeight = value;
 			}
 		}
-		
+
 		/// <summary>
 		/// Gets/sets the font style. Null if the highlighting color does not change the font style.
 		/// </summary>
-		public FontStyle? FontStyle {
-			get {
+		public FontStyle? FontStyle
+		{
+			get
+			{
 				return fontStyle;
 			}
-			set {
+			set
+			{
 				if (frozen)
 					throw new InvalidOperationException();
 				fontStyle = value;
 			}
 		}
-		
+
 		/// <summary>
 		///  Gets/sets the underline flag. Null if the underline status does not change the font style.
 		/// </summary>
-		public bool? Underline {
-			get {
+		public bool? Underline
+		{
+			get
+			{
 				return underline;
 			}
-			set {
+			set
+			{
 				if (frozen)
 					throw new InvalidOperationException();
 				underline = value;
@@ -157,38 +168,44 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 		/// <summary>
 		/// Gets/sets the foreground color applied by the highlighting.
 		/// </summary>
-		public HighlightingBrush Foreground {
-			get {
+		public HighlightingBrush Foreground
+		{
+			get
+			{
 				return foreground;
 			}
-			set {
+			set
+			{
 				if (frozen)
 					throw new InvalidOperationException();
 				foreground = value;
 			}
 		}
-		
+
 		/// <summary>
 		/// Gets/sets the background color applied by the highlighting.
 		/// </summary>
-		public HighlightingBrush Background {
-			get {
+		public HighlightingBrush Background
+		{
+			get
+			{
 				return background;
 			}
-			set {
+			set
+			{
 				if (frozen)
 					throw new InvalidOperationException();
 				background = value;
 			}
 		}
-		
+
 		/// <summary>
 		/// Creates a new HighlightingColor instance.
 		/// </summary>
 		public HighlightingColor()
 		{
 		}
-		
+
 		/// <summary>
 		/// Deserializes a HighlightingColor.
 		/// </summary>
@@ -207,15 +224,15 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 				this.Strikethrough = info.GetBoolean("Strikethrough");
 			this.Foreground = (HighlightingBrush)info.GetValue("Foreground", typeof(HighlightingBrush));
 			this.Background = (HighlightingBrush)info.GetValue("Background", typeof(HighlightingBrush));
-            if (info.GetBoolean("HasFamily"))
-                this.FontFamily = new FontFamily(info.GetString("Family"));
-            if (info.GetBoolean("HasSize"))
-                this.FontSize = info.GetInt32("Size");
-        }
+			if (info.GetBoolean("HasFamily"))
+				this.FontFamily = new FontFamily(info.GetString("Family"));
+			if (info.GetBoolean("HasSize"))
+				this.FontSize = info.GetInt32("Size");
+		}
 
-        /// <summary>
-        /// Serializes this HighlightingColor instance.
-        /// </summary>
+		/// <summary>
+		/// Serializes this HighlightingColor instance.
+		/// </summary>
 		[System.Security.SecurityCritical]
 		public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
@@ -235,33 +252,37 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 				info.AddValue("Strikethrough", this.Strikethrough.Value);
 			info.AddValue("Foreground", this.Foreground);
 			info.AddValue("Background", this.Background);
-            info.AddValue("HasFamily", this.FontFamily != null);
-            if (this.FontFamily != null)
-                info.AddValue("Family", this.FontFamily.FamilyNames.FirstOrDefault());
-            info.AddValue("HasSize", this.FontSize.HasValue);
-            if (this.FontSize.HasValue)
-                info.AddValue("Size", this.FontSize.Value.ToString());
-        }
+			info.AddValue("HasFamily", this.FontFamily != null);
+			if (this.FontFamily != null)
+				info.AddValue("Family", this.FontFamily.FamilyNames.FirstOrDefault());
+			info.AddValue("HasSize", this.FontSize.HasValue);
+			if (this.FontSize.HasValue)
+				info.AddValue("Size", this.FontSize.Value.ToString());
+		}
 
-        /// <summary>
-        /// Gets CSS code for the color.
-        /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase", Justification = "CSS usually uses lowercase, and all possible values are English-only")]
+		/// <summary>
+		/// Gets CSS code for the color.
+		/// </summary>
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase", Justification = "CSS usually uses lowercase, and all possible values are English-only")]
 		public virtual string ToCss()
 		{
 			StringBuilder b = new StringBuilder();
-			if (Foreground != null) {
+			if (Foreground != null)
+			{
 				Color? c = Foreground.GetColor(null);
-				if (c != null) {
+				if (c != null)
+				{
 					b.AppendFormat(CultureInfo.InvariantCulture, "color: #{0:x2}{1:x2}{2:x2}; ", c.Value.R, c.Value.G, c.Value.B);
 				}
 			}
-			if (FontWeight != null) {
+			if (FontWeight != null)
+			{
 				b.Append("font-weight: ");
 				b.Append(FontWeight.Value.ToString().ToLowerInvariant());
 				b.Append("; ");
 			}
-			if (FontStyle != null) {
+			if (FontStyle != null)
+			{
 				b.Append("font-style: ");
 				b.Append(FontStyle.Value.ToString().ToLowerInvariant());
 				b.Append("; ");
@@ -283,13 +304,13 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 			}
 			return b.ToString();
 		}
-		
+
 		/// <inheritdoc/>
 		public override string ToString()
 		{
 			return "[" + GetType().Name + " " + (string.IsNullOrEmpty(this.Name) ? ToCss() : this.Name) + "]";
 		}
-		
+
 		/// <summary>
 		/// Prevent further changes to this highlighting color.
 		/// </summary>
@@ -297,14 +318,15 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 		{
 			frozen = true;
 		}
-		
+
 		/// <summary>
 		/// Gets whether this HighlightingColor instance is frozen.
 		/// </summary>
-		public bool IsFrozen {
+		public bool IsFrozen
+		{
 			get { return frozen; }
 		}
-		
+
 		/// <summary>
 		/// Clones this highlighting color.
 		/// If this color is frozen, the clone will be unfrozen.
@@ -315,18 +337,18 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 			c.frozen = false;
 			return c;
 		}
-		
+
 		object ICloneable.Clone()
 		{
 			return Clone();
 		}
-		
+
 		/// <inheritdoc/>
 		public override sealed bool Equals(object obj)
 		{
 			return Equals(obj as HighlightingColor);
 		}
-		
+
 		/// <inheritdoc/>
 		public virtual bool Equals(HighlightingColor other)
 		{
@@ -335,30 +357,31 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 			return this.name == other.name && this.fontWeight == other.fontWeight
 				&& this.fontStyle == other.fontStyle && this.underline == other.underline && this.strikethrough == other.strikethrough
 				&& object.Equals(this.foreground, other.foreground) && object.Equals(this.background, other.background)
-                && object.Equals(this.fontFamily, other.fontFamily) && object.Equals(this.FontSize, other.FontSize);
+				&& object.Equals(this.fontFamily, other.fontFamily) && object.Equals(this.FontSize, other.FontSize);
 		}
-		
+
 		/// <inheritdoc/>
 		public override int GetHashCode()
 		{
 			int hashCode = 0;
-			unchecked {
+			unchecked
+			{
 				if (name != null)
 					hashCode += 1000000007 * name.GetHashCode();
 				hashCode += 1000000009 * fontWeight.GetHashCode();
 				hashCode += 1000000021 * fontStyle.GetHashCode();
 				if (foreground != null)
 					hashCode += 1000000033 * foreground.GetHashCode();
-                if (background != null)
-                    hashCode += 1000000087 * background.GetHashCode();
-                if (fontFamily != null)
-                    hashCode += 1000000123 * fontFamily.GetHashCode();
-                if (fontSize != null)
-                    hashCode += 1000000167 * fontSize.GetHashCode();
-            }
-            return hashCode;
+				if (background != null)
+					hashCode += 1000000087 * background.GetHashCode();
+				if (fontFamily != null)
+					hashCode += 1000000123 * fontFamily.GetHashCode();
+				if (fontSize != null)
+					hashCode += 1000000167 * fontSize.GetHashCode();
+			}
+			return hashCode;
 		}
-		
+
 		/// <summary>
 		/// Overwrites the properties in this HighlightingColor with those from the given color;
 		/// but maintains the current values where the properties of the given color return <c>null</c>.
@@ -374,21 +397,23 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 				this.foreground = color.foreground;
 			if (color.background != null)
 				this.background = color.background;
-            if (color.underline != null)
-                this.underline = color.underline;
-            if (color.strikethrough != null)
-	            this.strikethrough = color.strikethrough;
+			if (color.underline != null)
+				this.underline = color.underline;
+			if (color.strikethrough != null)
+				this.strikethrough = color.strikethrough;
 			if (color.fontFamily != null)
-                this.fontFamily = color.fontFamily;
-            if (color.fontSize != null)
-                this.fontSize = color.fontSize;
-        }
+				this.fontFamily = color.fontFamily;
+			if (color.fontSize != null)
+				this.fontSize = color.fontSize;
+		}
 
-        internal bool IsEmptyForMerge {
-			get {
-				return fontWeight == null && fontStyle == null && underline == null 
-				       && strikethrough == null && foreground == null && background == null 
-				       && fontFamily == null && fontSize == null;
+		internal bool IsEmptyForMerge
+		{
+			get
+			{
+				return fontWeight == null && fontStyle == null && underline == null
+					   && strikethrough == null && foreground == null && background == null
+					   && fontFamily == null && fontSize == null;
 			}
 		}
 	}

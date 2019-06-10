@@ -35,26 +35,29 @@ namespace ICSharpCode.AvalonEdit.Highlighting.Xshd
 	static class V2Loader
 	{
 		public const string Namespace = "http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008";
-		
+
 		static XmlSchemaSet schemaSet;
-		
-		static XmlSchemaSet SchemaSet {
-			get {
-				if (schemaSet == null) {
+
+		static XmlSchemaSet SchemaSet
+		{
+			get
+			{
+				if (schemaSet == null)
+				{
 					schemaSet = HighlightingLoader.LoadSchemaSet(new XmlTextReader(
 						Resources.OpenStream("ModeV2.xsd")));
 				}
 				return schemaSet;
 			}
 		}
-		
+
 		public static XshdSyntaxDefinition LoadDefinition(XmlReader reader, bool skipValidation)
 		{
 			reader = HighlightingLoader.GetValidatingReader(reader, true, skipValidation ? null : SchemaSet);
 			reader.Read();
 			return ParseDefinition(reader);
 		}
-		
+
 		static XshdSyntaxDefinition ParseDefinition(XmlReader reader)
 		{
 			Debug.Assert(reader.LocalName == "SyntaxDefinition");
@@ -68,19 +71,22 @@ namespace ICSharpCode.AvalonEdit.Highlighting.Xshd
 			Debug.Assert(reader.LocalName == "SyntaxDefinition");
 			return def;
 		}
-		
+
 		static void ParseElements(ICollection<XshdElement> c, XmlReader reader)
 		{
 			if (reader.IsEmptyElement)
 				return;
-			while (reader.Read() && reader.NodeType != XmlNodeType.EndElement) {
+			while (reader.Read() && reader.NodeType != XmlNodeType.EndElement)
+			{
 				Debug.Assert(reader.NodeType == XmlNodeType.Element);
-				if (reader.NamespaceURI != Namespace) {
+				if (reader.NamespaceURI != Namespace)
+				{
 					if (!reader.IsEmptyElement)
 						reader.Skip();
 					continue;
 				}
-				switch (reader.Name) {
+				switch (reader.Name)
+				{
 					case "RuleSet":
 						c.Add(ParseRuleSet(reader));
 						break;
@@ -107,7 +113,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting.Xshd
 				}
 			}
 		}
-		
+
 		static XshdElement ParseProperty(XmlReader reader)
 		{
 			XshdProperty property = new XshdProperty();
@@ -116,47 +122,50 @@ namespace ICSharpCode.AvalonEdit.Highlighting.Xshd
 			property.Value = reader.GetAttribute("value");
 			return property;
 		}
-		
+
 		static XshdRuleSet ParseRuleSet(XmlReader reader)
 		{
 			XshdRuleSet ruleSet = new XshdRuleSet();
 			SetPosition(ruleSet, reader);
 			ruleSet.Name = reader.GetAttribute("name");
 			ruleSet.IgnoreCase = reader.GetBoolAttribute("ignoreCase");
-			
+
 			CheckElementName(reader, ruleSet.Name);
 			ParseElements(ruleSet.Elements, reader);
 			return ruleSet;
 		}
-		
+
 		static XshdRule ParseRule(XmlReader reader)
 		{
 			XshdRule rule = new XshdRule();
 			SetPosition(rule, reader);
 			rule.ColorReference = ParseColorReference(reader);
-			if (!reader.IsEmptyElement) {
+			if (!reader.IsEmptyElement)
+			{
 				reader.Read();
-				if (reader.NodeType == XmlNodeType.Text) {
+				if (reader.NodeType == XmlNodeType.Text)
+				{
 					rule.Regex = reader.ReadContentAsString();
 					rule.RegexType = XshdRegexType.IgnorePatternWhitespace;
 				}
 			}
 			return rule;
 		}
-		
+
 		static XshdKeywords ParseKeywords(XmlReader reader)
 		{
 			XshdKeywords keywords = new XshdKeywords();
 			SetPosition(keywords, reader);
 			keywords.ColorReference = ParseColorReference(reader);
 			reader.Read();
-			while (reader.NodeType != XmlNodeType.EndElement) {
+			while (reader.NodeType != XmlNodeType.EndElement)
+			{
 				Debug.Assert(reader.NodeType == XmlNodeType.Element);
 				keywords.Words.Add(reader.ReadElementString());
 			}
 			return keywords;
 		}
-		
+
 		static XshdImport ParseImport(XmlReader reader)
 		{
 			XshdImport import = new XshdImport();
@@ -166,7 +175,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting.Xshd
 				reader.Skip();
 			return import;
 		}
-		
+
 		static XshdSpan ParseSpan(XmlReader reader)
 		{
 			XshdSpan span = new XshdSpan();
@@ -176,11 +185,14 @@ namespace ICSharpCode.AvalonEdit.Highlighting.Xshd
 			span.Multiline = reader.GetBoolAttribute("multiline") ?? false;
 			span.SpanColorReference = ParseColorReference(reader);
 			span.RuleSetReference = ParseRuleSetReference(reader);
-			if (!reader.IsEmptyElement) {
+			if (!reader.IsEmptyElement)
+			{
 				reader.Read();
-				while (reader.NodeType != XmlNodeType.EndElement) {
+				while (reader.NodeType != XmlNodeType.EndElement)
+				{
 					Debug.Assert(reader.NodeType == XmlNodeType.Element);
-					switch (reader.Name) {
+					switch (reader.Name)
+					{
 						case "Begin":
 							if (span.BeginRegex != null)
 								throw Error(reader, "Duplicate Begin regex");
@@ -208,12 +220,12 @@ namespace ICSharpCode.AvalonEdit.Highlighting.Xshd
 			}
 			return span;
 		}
-		
+
 		static Exception Error(XmlReader reader, string message)
 		{
 			return Error(reader as IXmlLineInfo, message);
 		}
-		
+
 		static Exception Error(IXmlLineInfo lineInfo, string message)
 		{
 			if (lineInfo != null)
@@ -221,45 +233,53 @@ namespace ICSharpCode.AvalonEdit.Highlighting.Xshd
 			else
 				return new HighlightingDefinitionInvalidException(message);
 		}
-		
+
 		/// <summary>
 		/// Sets the element's position to the XmlReader's position.
 		/// </summary>
 		static void SetPosition(XshdElement element, XmlReader reader)
 		{
 			IXmlLineInfo lineInfo = reader as IXmlLineInfo;
-			if (lineInfo != null) {
+			if (lineInfo != null)
+			{
 				element.LineNumber = lineInfo.LineNumber;
 				element.ColumnNumber = lineInfo.LinePosition;
 			}
 		}
-		
+
 		static XshdReference<XshdRuleSet> ParseRuleSetReference(XmlReader reader)
 		{
 			string ruleSet = reader.GetAttribute("ruleSet");
-			if (ruleSet != null) {
+			if (ruleSet != null)
+			{
 				// '/' is valid in highlighting definition names, so we need the last occurence
 				int pos = ruleSet.LastIndexOf('/');
-				if (pos >= 0) {
+				if (pos >= 0)
+				{
 					return new XshdReference<XshdRuleSet>(ruleSet.Substring(0, pos), ruleSet.Substring(pos + 1));
-				} else {
+				}
+				else
+				{
 					return new XshdReference<XshdRuleSet>(null, ruleSet);
 				}
-			} else {
+			}
+			else
+			{
 				return new XshdReference<XshdRuleSet>();
 			}
 		}
-		
+
 		static void CheckElementName(XmlReader reader, string name)
 		{
-			if (name != null) {
+			if (name != null)
+			{
 				if (name.Length == 0)
 					throw Error(reader, "The empty string is not a valid name.");
 				if (name.IndexOf('/') >= 0)
 					throw Error(reader, "Element names must not contain a slash.");
 			}
 		}
-		
+
 		#region ParseColor
 		static XshdColor ParseNamedColor(XmlReader reader)
 		{
@@ -272,22 +292,28 @@ namespace ICSharpCode.AvalonEdit.Highlighting.Xshd
 			color.ExampleText = reader.GetAttribute("exampleText");
 			return color;
 		}
-		
+
 		static XshdReference<XshdColor> ParseColorReference(XmlReader reader)
 		{
 			string color = reader.GetAttribute("color");
-			if (color != null) {
+			if (color != null)
+			{
 				int pos = color.LastIndexOf('/');
-				if (pos >= 0) {
+				if (pos >= 0)
+				{
 					return new XshdReference<XshdColor>(color.Substring(0, pos), color.Substring(pos + 1));
-				} else {
+				}
+				else
+				{
 					return new XshdReference<XshdColor>(null, color);
 				}
-			} else {
+			}
+			else
+			{
 				return new XshdReference<XshdColor>(ParseColorAttributes(reader));
 			}
 		}
-		
+
 		static XshdColor ParseColorAttributes(XmlReader reader)
 		{
 			XshdColor color = new XshdColor();
@@ -300,45 +326,45 @@ namespace ICSharpCode.AvalonEdit.Highlighting.Xshd
 			color.Underline = reader.GetBoolAttribute("underline");
 			color.Strikethrough = reader.GetBoolAttribute("strikethrough");
 			color.FontFamily = ParseFontFamily(position, reader.GetAttribute("fontFamily"));
-            color.FontSize = ParseFontSize(position, reader.GetAttribute("fontSize"));
-            return color;
+			color.FontSize = ParseFontSize(position, reader.GetAttribute("fontSize"));
+			return color;
 		}
-		
+
 		internal readonly static ColorConverter ColorConverter = new ColorConverter();
 		internal readonly static FontWeightConverter FontWeightConverter = new FontWeightConverter();
 		internal readonly static FontStyleConverter FontStyleConverter = new FontStyleConverter();
 
-        static HighlightingBrush ParseColor(IXmlLineInfo lineInfo, string color)
-        {
-            if (string.IsNullOrEmpty(color))
-                return null;
-            if (color.StartsWith("SystemColors.", StringComparison.Ordinal))
-                return GetSystemColorBrush(lineInfo, color);
-            else
-                return FixedColorHighlightingBrush((Color?)ColorConverter.ConvertFromInvariantString(color));
-        }
+		static HighlightingBrush ParseColor(IXmlLineInfo lineInfo, string color)
+		{
+			if (string.IsNullOrEmpty(color))
+				return null;
+			if (color.StartsWith("SystemColors.", StringComparison.Ordinal))
+				return GetSystemColorBrush(lineInfo, color);
+			else
+				return FixedColorHighlightingBrush((Color?)ColorConverter.ConvertFromInvariantString(color));
+		}
 
-        static int? ParseFontSize(IXmlLineInfo lineInfo, string size)
-        {
-            int value;
-            return int.TryParse(size, out value)
-                ? value
-                : (int?)null;
-        }
+		static int? ParseFontSize(IXmlLineInfo lineInfo, string size)
+		{
+			int value;
+			return int.TryParse(size, out value)
+				? value
+				: (int?)null;
+		}
 
-        static FontFamily ParseFontFamily(IXmlLineInfo lineInfo, string family)
-        {
-            if (!string.IsNullOrEmpty(family))
-            {
-                return new FontFamily(family);
-            }
-            else
-            {
-                return null;
-            }
-        }
+		static FontFamily ParseFontFamily(IXmlLineInfo lineInfo, string family)
+		{
+			if (!string.IsNullOrEmpty(family))
+			{
+				return new FontFamily(family);
+			}
+			else
+			{
+				return null;
+			}
+		}
 
-        internal static SystemColorHighlightingBrush GetSystemColorBrush(IXmlLineInfo lineInfo, string name)
+		internal static SystemColorHighlightingBrush GetSystemColorBrush(IXmlLineInfo lineInfo, string name)
 		{
 			Debug.Assert(name.StartsWith("SystemColors.", StringComparison.Ordinal));
 			string shortName = name.Substring(13);
@@ -347,21 +373,21 @@ namespace ICSharpCode.AvalonEdit.Highlighting.Xshd
 				throw Error(lineInfo, "Cannot find '" + name + "'.");
 			return new SystemColorHighlightingBrush(property);
 		}
-		
+
 		static HighlightingBrush FixedColorHighlightingBrush(Color? color)
 		{
 			if (color == null)
 				return null;
 			return new SimpleHighlightingBrush(color.Value);
 		}
-		
+
 		static FontWeight? ParseFontWeight(string fontWeight)
 		{
 			if (string.IsNullOrEmpty(fontWeight))
 				return null;
 			return (FontWeight?)FontWeightConverter.ConvertFromInvariantString(fontWeight);
 		}
-		
+
 		static FontStyle? ParseFontStyle(string fontStyle)
 		{
 			if (string.IsNullOrEmpty(fontStyle))
