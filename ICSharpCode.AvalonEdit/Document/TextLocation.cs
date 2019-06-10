@@ -22,7 +22,6 @@ using System.Globalization;
 
 namespace ICSharpCode.AvalonEdit.Document
 {
-	#if !NREFACTORY
 	/// <summary>
 	/// A line/column position.
 	/// Text editor lines/columns are counted started from one.
@@ -267,5 +266,4 @@ namespace ICSharpCode.AvalonEdit.Document
 			return segment != null && thisSegment.Offset <= segment.Offset && segment.EndOffset <= thisSegment.EndOffset;
 		}
 	}
-	#endif
 }

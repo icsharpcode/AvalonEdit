@@ -22,7 +22,6 @@ using System.Globalization;
 using System.Text;
 using System.Windows;
 using ICSharpCode.AvalonEdit.Document;
-using ICSharpCode.NRefactory.Editor;
 
 namespace ICSharpCode.AvalonEdit.Highlighting
 {

@@ -18,9 +18,6 @@
 
 using System;
 using System.Diagnostics;
-#if NREFACTORY
-using ICSharpCode.NRefactory.Editor;
-#endif
 
 namespace ICSharpCode.AvalonEdit.Document
 {

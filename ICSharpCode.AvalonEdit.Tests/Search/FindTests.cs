@@ -19,9 +19,6 @@
 using System;
 using System.Linq;
 using ICSharpCode.AvalonEdit.Document;
-#if NREFACTORY
-using ICSharpCode.NRefactory.Editor;
-#endif
 using NUnit.Framework;
 
 namespace ICSharpCode.AvalonEdit.Search

@@ -25,8 +25,6 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Threading;
 using ICSharpCode.AvalonEdit.Utils;
-using ICSharpCode.NRefactory;
-using ICSharpCode.NRefactory.Editor;
 
 namespace ICSharpCode.AvalonEdit.Document
 {
@@ -131,11 +129,6 @@ namespace ICSharpCode.AvalonEdit.Document
 		{
 			if (textSource == null)
 				throw new ArgumentNullException("textSource");
-			
-			#if NREFACTORY
-			if (textSource is ReadOnlyDocument)
-				textSource = textSource.CreateSnapshot(); // retrieve underlying text source, which might be a RopeTextSource
-			#endif
 			
 			RopeTextSource rts = textSource as RopeTextSource;
 			if (rts != null)
@@ -357,15 +350,7 @@ namespace ICSharpCode.AvalonEdit.Document
 				return new RopeTextSource(rope.GetRange(offset, length));
 			}
 		}
-		
-		#if NREFACTORY
-		/// <inheritdoc/>
-		public IDocument CreateDocumentSnapshot()
-		{
-			return new ReadOnlyDocument(this, fileName);
-		}
-		#endif
-		
+	
 		/// <inheritdoc/>
 		public ITextSourceVersion Version {
 			get { return versionProvider.CurrentVersion; }

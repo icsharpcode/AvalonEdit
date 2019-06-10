@@ -58,5 +58,3 @@ using System.Windows.Markup;
 
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2243:AttributeStringLiteralsShouldParseCorrectly",
 	Justification = "AssemblyInformationalVersion does not need to be a parsable version")]
-
-namespace ICSharpCode.NRefactory.Editor {}
