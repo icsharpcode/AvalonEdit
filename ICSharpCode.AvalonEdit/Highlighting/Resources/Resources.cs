@@ -60,7 +60,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 			                                 ".xft;.map;.wsdl;.disco;.ps1xml;.nuspec").Split(';'),
 			                         "XML-Mode.xshd");
 			hlm.RegisterHighlighting("MarkDown", new[] { ".md" }, "MarkDown-Mode.xshd");
-			hlm.RegisterHighlighting("MarkDownWithFontSize", new[] { ".md" }, "MarkDown-with-FontSizeMode.xshd");
+			hlm.RegisterHighlighting("MarkDownWithFontSize", new[] { ".md" }, "MarkDownWithFontSize-Mode.xshd");
 			hlm.RegisterHighlighting("Json", new[] { ".json" }, "Json.xshd");
 		}
 	}
