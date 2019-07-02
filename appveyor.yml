@@ -11,7 +11,7 @@ configuration:
 - Debug
 - Release
 
-image: Visual Studio 2019 Preview
+image: Visual Studio 2019
 
 install:
   - cmd: choco install dotnetcore-sdk --pre
