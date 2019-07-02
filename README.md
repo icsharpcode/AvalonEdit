@@ -26,6 +26,15 @@ v2019.4.14.0)
 
 The build of the Documentation can take very long, please be patient.
 
+Usefull Projects
+-------
+https://github.com/siegfriedpammer/AvalonEditSamples
+
+    Avalon Edit Samples on how to use Advanced Text Markers
+	
+https://github.com/Dirkster99/AvalonEditHighlightingThemes
+
+    Implements a sample implementation for using Highlightings with different (Light/Dark) WPF themes
 
 License
 -------
