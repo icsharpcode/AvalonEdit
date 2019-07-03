@@ -21,23 +21,22 @@ on your machine. Visual Studio 2019 is required for working with the solution (g
 
 Documentation
 -------
+
+Check out the [official documentation](http://avalonedit.net/documentation/) and the [samples and articles wiki page](https://github.com/icsharpcode/AvalonEdit/wiki/Samples-and-Articles)
+
 To build the Documentation you need to install Sandcastle from https://github.com/EWSoftware/SHFB/releases (currently validated tooling is
 v2019.4.14.0)
 
 The build of the Documentation can take very long, please be patient.
-
-Usefull Projects
--------
-https://github.com/siegfriedpammer/AvalonEditSamples
-
-    Avalon Edit Samples on how to use Advanced Text Markers
-	
-https://github.com/Dirkster99/AvalonEditHighlightingThemes
-
-    Implements a sample implementation for using Highlightings with different (Light/Dark) WPF themes
 
 License
 -------
 
 AvalonEdit is distributed under the [MIT License](http://opensource.org/licenses/MIT).
 
+Projects using AvalonEdit
+-------
+
+* https://github.com/icsharpcode/ILSpy/: .NET decompiler
+
+Note: if your project is not listed here, let us know! :)
