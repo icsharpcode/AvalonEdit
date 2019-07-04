@@ -18,20 +18,9 @@
 
 using System;
 using System.ComponentModel;
-using System.Diagnostics;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
-using System.Security;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Interop;
-using System.Windows.Media;
-using System.Windows.Media.TextFormatting;
-using ICSharpCode.AvalonEdit;
-using ICSharpCode.AvalonEdit.Document;
-using ICSharpCode.AvalonEdit.Rendering;
 
 namespace ICSharpCode.AvalonEdit.Editing
 {
@@ -44,7 +33,7 @@ namespace ICSharpCode.AvalonEdit.Editing
 		HwndSource hwndSource;
 		EventHandler requerySuggestedHandler; // we need to keep the event handler instance alive because CommandManager.RequerySuggested uses weak references
 		bool isReadOnly;
-		
+
 		public ImeSupport(TextArea textArea)
 		{
 			if (textArea == null)
@@ -63,7 +52,7 @@ namespace ICSharpCode.AvalonEdit.Editing
 		{
 			UpdateImeEnabled();
 		}
-		
+
 		void TextAreaOptionChanged(object sender, PropertyChangedEventArgs e)
 		{
 			if (e.PropertyName == "EnableImeSupport") {
@@ -71,19 +60,19 @@ namespace ICSharpCode.AvalonEdit.Editing
 				UpdateImeEnabled();
 			}
 		}
-		
+
 		public void OnGotKeyboardFocus(KeyboardFocusChangedEventArgs e)
 		{
 			UpdateImeEnabled();
 		}
-		
+
 		public void OnLostKeyboardFocus(KeyboardFocusChangedEventArgs e)
 		{
 			if (e.OldFocus == textArea && currentContext != IntPtr.Zero)
 				ImeNativeWrapper.NotifyIme(currentContext);
 			ClearContext();
 		}
-		
+
 		void UpdateImeEnabled()
 		{
 			if (textArea.Options.EnableImeSupport && textArea.IsKeyboardFocused) {
@@ -97,7 +86,7 @@ namespace ICSharpCode.AvalonEdit.Editing
 				ClearContext();
 			}
 		}
-		
+
 		void ClearContext()
 		{
 			if (hwndSource != null) {
@@ -109,7 +98,7 @@ namespace ICSharpCode.AvalonEdit.Editing
 				hwndSource = null;
 			}
 		}
-		
+
 		void CreateContext()
 		{
 			hwndSource = (HwndSource)PresentationSource.FromVisual(this.textArea);
@@ -124,7 +113,7 @@ namespace ICSharpCode.AvalonEdit.Editing
 				previousContext = ImeNativeWrapper.ImmAssociateContext(hwndSource.Handle, currentContext);
 				hwndSource.AddHook(WndProc);
 				// UpdateCompositionWindow() will be called by the caret becoming visible
-				
+
 				var threadMgr = ImeNativeWrapper.GetTextFrameworkThreadManager();
 				if (threadMgr != null) {
 					// Even though the docu says passing null is invalid, this seems to help
@@ -133,14 +122,14 @@ namespace ICSharpCode.AvalonEdit.Editing
 				}
 			}
 		}
-		
+
 		IntPtr WndProc(IntPtr hWnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
 		{
 			switch (msg) {
 				case ImeNativeWrapper.WM_INPUTLANGCHANGE:
 					// Don't mark the message as handled; other windows
 					// might want to handle it as well.
-					
+
 					// If we have a context, recreate it
 					if (hwndSource != null) {
 						ClearContext();
@@ -153,7 +142,7 @@ namespace ICSharpCode.AvalonEdit.Editing
 			}
 			return IntPtr.Zero;
 		}
-		
+
 		public void UpdateCompositionWindow()
 		{
 			if (currentContext != IntPtr.Zero) {

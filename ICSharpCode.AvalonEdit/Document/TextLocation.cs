@@ -38,7 +38,7 @@ namespace ICSharpCode.AvalonEdit.Document
 		/// Represents no text location (0, 0).
 		/// </summary>
 		public static readonly TextLocation Empty = new TextLocation(0, 0);
-		
+
 		/// <summary>
 		/// Creates a TextLocation instance.
 		/// </summary>
@@ -47,23 +47,23 @@ namespace ICSharpCode.AvalonEdit.Document
 			this.line = line;
 			this.column = column;
 		}
-		
+
 		readonly int column, line;
-		
+
 		/// <summary>
 		/// Gets the line number.
 		/// </summary>
 		public int Line {
 			get { return line; }
 		}
-		
+
 		/// <summary>
 		/// Gets the column number.
 		/// </summary>
 		public int Column {
 			get { return column; }
 		}
-		
+
 		/// <summary>
 		/// Gets whether the TextLocation instance is empty.
 		/// </summary>
@@ -72,7 +72,7 @@ namespace ICSharpCode.AvalonEdit.Document
 				return column <= 0 && line <= 0;
 			}
 		}
-		
+
 		/// <summary>
 		/// Gets a string representation for debugging purposes.
 		/// </summary>
@@ -80,15 +80,15 @@ namespace ICSharpCode.AvalonEdit.Document
 		{
 			return string.Format(CultureInfo.InvariantCulture, "(Line {1}, Col {0})", this.column, this.line);
 		}
-		
+
 		/// <summary>
 		/// Gets a hash code.
 		/// </summary>
 		public override int GetHashCode()
 		{
-			return unchecked (191 * column.GetHashCode() ^ line.GetHashCode());
+			return unchecked(191 * column.GetHashCode() ^ line.GetHashCode());
 		}
-		
+
 		/// <summary>
 		/// Equality test.
 		/// </summary>
@@ -97,7 +97,7 @@ namespace ICSharpCode.AvalonEdit.Document
 			if (!(obj is TextLocation)) return false;
 			return (TextLocation)obj == this;
 		}
-		
+
 		/// <summary>
 		/// Equality test.
 		/// </summary>
@@ -105,7 +105,7 @@ namespace ICSharpCode.AvalonEdit.Document
 		{
 			return this == other;
 		}
-		
+
 		/// <summary>
 		/// Equality test.
 		/// </summary>
@@ -113,7 +113,7 @@ namespace ICSharpCode.AvalonEdit.Document
 		{
 			return left.column == right.column && left.line == right.line;
 		}
-		
+
 		/// <summary>
 		/// Inequality test.
 		/// </summary>
@@ -121,7 +121,7 @@ namespace ICSharpCode.AvalonEdit.Document
 		{
 			return left.column != right.column || left.line != right.line;
 		}
-		
+
 		/// <summary>
 		/// Compares two text locations.
 		/// </summary>
@@ -134,7 +134,7 @@ namespace ICSharpCode.AvalonEdit.Document
 			else
 				return false;
 		}
-		
+
 		/// <summary>
 		/// Compares two text locations.
 		/// </summary>
@@ -147,7 +147,7 @@ namespace ICSharpCode.AvalonEdit.Document
 			else
 				return false;
 		}
-		
+
 		/// <summary>
 		/// Compares two text locations.
 		/// </summary>
@@ -155,7 +155,7 @@ namespace ICSharpCode.AvalonEdit.Document
 		{
 			return !(left > right);
 		}
-		
+
 		/// <summary>
 		/// Compares two text locations.
 		/// </summary>
@@ -163,7 +163,7 @@ namespace ICSharpCode.AvalonEdit.Document
 		{
 			return !(left < right);
 		}
-		
+
 		/// <summary>
 		/// Compares two text locations.
 		/// </summary>
@@ -177,7 +177,7 @@ namespace ICSharpCode.AvalonEdit.Document
 				return 1;
 		}
 	}
-	
+
 	/// <summary>
 	/// Converts strings of the form '0+[;,]0+' to a <see cref="TextLocation"/>.
 	/// </summary>
@@ -188,13 +188,13 @@ namespace ICSharpCode.AvalonEdit.Document
 		{
 			return sourceType == typeof(string) || base.CanConvertFrom(context, sourceType);
 		}
-		
+
 		/// <inheritdoc/>
 		public override bool CanConvertTo(ITypeDescriptorContext context, Type destinationType)
 		{
 			return destinationType == typeof(TextLocation) || base.CanConvertTo(context, destinationType);
 		}
-		
+
 		/// <inheritdoc/>
 		public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
 		{
@@ -206,7 +206,7 @@ namespace ICSharpCode.AvalonEdit.Document
 			}
 			return base.ConvertFrom(context, culture, value);
 		}
-		
+
 		/// <inheritdoc/>
 		public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destinationType)
 		{
@@ -217,7 +217,7 @@ namespace ICSharpCode.AvalonEdit.Document
 			return base.ConvertTo(context, culture, value, destinationType);
 		}
 	}
-	
+
 	/// <summary>
 	/// An (Offset,Length)-pair.
 	/// </summary>
@@ -227,20 +227,20 @@ namespace ICSharpCode.AvalonEdit.Document
 		/// Gets the start offset of the segment.
 		/// </summary>
 		int Offset { get; }
-		
+
 		/// <summary>
 		/// Gets the length of the segment.
 		/// </summary>
 		/// <remarks>For line segments (IDocumentLine), the length does not include the line delimeter.</remarks>
 		int Length { get; }
-		
+
 		/// <summary>
 		/// Gets the end offset of the segment.
 		/// </summary>
 		/// <remarks>EndOffset = Offset + Length;</remarks>
 		int EndOffset { get; }
 	}
-	
+
 	/// <summary>
 	/// Extension methods for <see cref="ISegment"/>.
 	/// </summary>
@@ -253,15 +253,15 @@ namespace ICSharpCode.AvalonEdit.Document
 		/// Use <c>segment.Contains(offset, 0)</c> to detect whether a segment (end inclusive) contains offset;
 		/// use <c>segment.Contains(offset, 1)</c> to detect whether a segment (end exclusive) contains offset.
 		/// </remarks>
-		public static bool Contains (this ISegment segment, int offset, int length)
+		public static bool Contains(this ISegment segment, int offset, int length)
 		{
 			return segment.Offset <= offset && offset + length <= segment.EndOffset;
 		}
-		
+
 		/// <summary>
 		/// Gets whether <paramref name="thisSegment"/> fully contains the specified segment.
 		/// </summary>
-		public static bool Contains (this ISegment thisSegment, ISegment segment)
+		public static bool Contains(this ISegment thisSegment, ISegment segment)
 		{
 			return segment != null && thisSegment.Offset <= segment.Offset && segment.EndOffset <= thisSegment.EndOffset;
 		}

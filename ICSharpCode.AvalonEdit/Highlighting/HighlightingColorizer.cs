@@ -20,6 +20,7 @@ using System;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Media;
+
 using ICSharpCode.AvalonEdit.Document;
 using ICSharpCode.AvalonEdit.Rendering;
 
@@ -81,10 +82,8 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 		/// </summary>
 		protected virtual void DeregisterServices(TextView textView)
 		{
-			if (highlighter != null)
-			{
-				if (isInHighlightingGroup)
-				{
+			if (highlighter != null) {
+				if (isInHighlightingGroup) {
 					highlighter.EndHighlighting();
 					isInHighlightingGroup = false;
 				}
@@ -92,8 +91,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 				// remove highlighter if it is registered
 				if (textView.Services.GetService(typeof(IHighlighter)) == highlighter)
 					textView.Services.RemoveService(typeof(IHighlighter));
-				if (!isFixedHighlighter)
-				{
+				if (!isFixedHighlighter) {
 					if (highlighter != null)
 						highlighter.Dispose();
 					highlighter = null;
@@ -107,15 +105,12 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 		/// </summary>
 		protected virtual void RegisterServices(TextView textView)
 		{
-			if (textView.Document != null)
-			{
+			if (textView.Document != null) {
 				if (!isFixedHighlighter)
 					highlighter = textView.Document != null ? CreateHighlighter(textView, textView.Document) : null;
-				if (highlighter != null && highlighter.Document == textView.Document)
-				{
+				if (highlighter != null && highlighter.Document == textView.Document) {
 					// add service only if it doesn't already exist
-					if (textView.Services.GetService(typeof(IHighlighter)) == null)
-					{
+					if (textView.Services.GetService(typeof(IHighlighter)) == null) {
 						textView.Services.AddService(typeof(IHighlighter), highlighter);
 					}
 					highlighter.HighlightingStateChanged += OnHighlightStateChanged;
@@ -137,8 +132,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 		/// <inheritdoc/>
 		protected override void OnAddToTextView(TextView textView)
 		{
-			if (this.textView != null)
-			{
+			if (this.textView != null) {
 				throw new InvalidOperationException("Cannot use a HighlightingColorizer instance in multiple text views. Please create a separate instance for each text view.");
 			}
 			base.OnAddToTextView(textView);
@@ -164,15 +158,13 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 
 		void textView_VisualLineConstructionStarting(object sender, VisualLineConstructionStartEventArgs e)
 		{
-			if (highlighter != null)
-			{
+			if (highlighter != null) {
 				// Force update of highlighting state up to the position where we start generating visual lines.
 				// This is necessary in case the document gets modified above the FirstLineInView so that the highlighting state changes.
 				// We need to detect this case and issue a redraw (through OnHighlightStateChanged)
 				// before the visual line construction reuses existing lines that were built using the invalid highlighting state.
 				lineNumberBeingColorized = e.FirstLineInView.LineNumber - 1;
-				if (!isInHighlightingGroup)
-				{
+				if (!isInHighlightingGroup) {
 					// avoid opening group twice if there was an exception during the previous visual line construction
 					// (not ideal, but better than throwing InvalidOperationException "group already open"
 					// without any way of recovering)
@@ -186,8 +178,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 
 		void textView_VisualLinesChanged(object sender, EventArgs e)
 		{
-			if (highlighter != null && isInHighlightingGroup)
-			{
+			if (highlighter != null && isInHighlightingGroup) {
 				highlighter.EndHighlighting();
 				isInHighlightingGroup = false;
 			}
@@ -200,10 +191,8 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 		{
 			this.lastColorizedLine = null;
 			base.Colorize(context);
-			if (this.lastColorizedLine != context.VisualLine.LastDocumentLine)
-			{
-				if (highlighter != null)
-				{
+			if (this.lastColorizedLine != context.VisualLine.LastDocumentLine) {
+				if (highlighter != null) {
 					// In some cases, it is possible that we didn't highlight the last document line within the visual line
 					// (e.g. when the line ends with a fold marker).
 					// But even if we didn't highlight it, we'll have to update the highlighting state for it so that the
@@ -221,13 +210,11 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 		/// <inheritdoc/>
 		protected override void ColorizeLine(DocumentLine line)
 		{
-			if (highlighter != null)
-			{
+			if (highlighter != null) {
 				lineNumberBeingColorized = line.LineNumber;
 				HighlightedLine hl = highlighter.HighlightLine(lineNumberBeingColorized);
 				lineNumberBeingColorized = 0;
-				foreach (HighlightedSection section in hl.Sections)
-				{
+				foreach (HighlightedSection section in hl.Sections) {
 					if (IsEmptyColor(section.Color))
 						continue;
 					ChangeLinePart(section.Offset, section.Offset + section.Length,
@@ -260,20 +247,17 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 
 		internal static void ApplyColorToElement(VisualLineElement element, HighlightingColor color, ITextRunConstructionContext context)
 		{
-			if (color.Foreground != null)
-			{
+			if (color.Foreground != null) {
 				Brush b = color.Foreground.GetBrush(context);
 				if (b != null)
 					element.TextRunProperties.SetForegroundBrush(b);
 			}
-			if (color.Background != null)
-			{
+			if (color.Background != null) {
 				Brush b = color.Background.GetBrush(context);
 				if (b != null)
 					element.BackgroundBrush = b;
 			}
-			if (color.FontStyle != null || color.FontWeight != null || color.FontFamily != null)
-			{
+			if (color.FontStyle != null || color.FontWeight != null || color.FontFamily != null) {
 				Typeface tf = element.TextRunProperties.Typeface;
 				element.TextRunProperties.SetTypeface(new Typeface(
 				   color.FontFamily ?? tf.FontFamily,
@@ -300,13 +284,11 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 		/// </remarks>
 		void OnHighlightStateChanged(int fromLineNumber, int toLineNumber)
 		{
-			if (lineNumberBeingColorized != 0)
-			{
+			if (lineNumberBeingColorized != 0) {
 				// Ignore notifications for any line except the one we're interested in.
 				// This improves the performance as Redraw() can take quite some time when called repeatedly
 				// while scanning the document (above the visible area) for highlighting changes.
-				if (toLineNumber <= lineNumberBeingColorized)
-				{
+				if (toLineNumber <= lineNumberBeingColorized) {
 					return;
 				}
 			}
@@ -357,12 +339,9 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 			// so it will always invalidate the next visual line when a folded line is constructed
 			// and the highlighting stack has changed.
 
-			if (fromLineNumber == toLineNumber)
-			{
+			if (fromLineNumber == toLineNumber) {
 				textView.Redraw(textView.Document.GetLineByNumber(fromLineNumber));
-			}
-			else
-			{
+			} else {
 				// If there are multiple lines marked as changed; only the first one really matters
 				// for the highlighting during rendering.
 				// However this callback is also called outside of the rendering process, e.g. when a highlighter

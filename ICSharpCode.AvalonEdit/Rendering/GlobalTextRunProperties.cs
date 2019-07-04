@@ -16,7 +16,6 @@
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
 
-using System;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.TextFormatting;
@@ -30,7 +29,7 @@ namespace ICSharpCode.AvalonEdit.Rendering
 		internal Brush foregroundBrush;
 		internal Brush backgroundBrush;
 		internal System.Globalization.CultureInfo cultureInfo;
-		
+
 		public override Typeface Typeface { get { return typeface; } }
 		public override double FontRenderingEmSize { get { return fontRenderingEmSize; } }
 		public override double FontHintingEmSize { get { return fontRenderingEmSize; } }

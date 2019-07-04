@@ -16,7 +16,6 @@
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
 
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -31,28 +30,28 @@ namespace ICSharpCode.AvalonEdit.Document
 		#region Constructor
 		readonly TextDocument document;
 		readonly DocumentLineTree documentLineTree;
-		
+
 		/// <summary>
 		/// A copy of the line trackers. We need a copy so that line trackers may remove themselves
 		/// while being notified (used e.g. by WeakLineTracker)
 		/// </summary>
 		ILineTracker[] lineTrackers;
-		
+
 		internal void UpdateListOfLineTrackers()
 		{
 			this.lineTrackers = document.LineTrackers.ToArray();
 		}
-		
+
 		public LineManager(DocumentLineTree documentLineTree, TextDocument document)
 		{
 			this.document = document;
 			this.documentLineTree = documentLineTree;
 			UpdateListOfLineTrackers();
-			
+
 			Rebuild();
 		}
 		#endregion
-		
+
 		#region Change events
 		/*
 		HashSet<DocumentLine> deletedLines = new HashSet<DocumentLine>();
@@ -97,7 +96,7 @@ namespace ICSharpCode.AvalonEdit.Document
 		}
 		 */
 		#endregion
-		
+
 		#region Rebuild
 		public void Rebuild()
 		{
@@ -118,7 +117,7 @@ namespace ICSharpCode.AvalonEdit.Document
 				ls.DelimiterLength = ds.Length;
 				lastDelimiterEnd = ds.Offset + ds.Length;
 				lines.Add(ls);
-				
+
 				ls = new DocumentLine(document);
 				ds = NewLineFinder.NextNewLine(document, lastDelimiterEnd);
 			}
@@ -129,7 +128,7 @@ namespace ICSharpCode.AvalonEdit.Document
 				lineTracker.RebuildDocument();
 		}
 		#endregion
-		
+
 		#region Remove
 		public void Remove(int offset, int length)
 		{
@@ -137,19 +136,19 @@ namespace ICSharpCode.AvalonEdit.Document
 			if (length == 0) return;
 			DocumentLine startLine = documentLineTree.GetByOffset(offset);
 			int startLineOffset = startLine.Offset;
-			
+
 			Debug.Assert(offset < startLineOffset + startLine.TotalLength);
 			if (offset > startLineOffset + startLine.Length) {
 				Debug.Assert(startLine.DelimiterLength == 2);
 				// we are deleting starting in the middle of a delimiter
-				
+
 				// remove last delimiter part
 				SetLineLength(startLine, startLine.TotalLength - 1);
 				// remove remaining text
 				Remove(offset, length - 1);
 				return;
 			}
-			
+
 			if (offset + length < startLineOffset + startLine.TotalLength) {
 				// just removing a part of this line
 				//startLine.RemovedLinePart(ref deferredEventList, offset - startLineOffset, length);
@@ -161,8 +160,8 @@ namespace ICSharpCode.AvalonEdit.Document
 			int charactersRemovedInStartLine = startLineOffset + startLine.TotalLength - offset;
 			Debug.Assert(charactersRemovedInStartLine > 0);
 			//startLine.RemovedLinePart(ref deferredEventList, offset - startLineOffset, charactersRemovedInStartLine);
-			
-			
+
+
 			DocumentLine endLine = documentLineTree.GetByOffset(offset + length);
 			if (endLine == startLine) {
 				// special case: we are removing a part of the last line up to the
@@ -174,7 +173,7 @@ namespace ICSharpCode.AvalonEdit.Document
 			int charactersLeftInEndLine = endLineOffset + endLine.TotalLength - (offset + length);
 			//endLine.RemovedLinePart(ref deferredEventList, 0, endLine.TotalLength - charactersLeftInEndLine);
 			//startLine.MergedWith(endLine, offset - startLineOffset);
-			
+
 			// remove all lines between startLine (excl.) and endLine (incl.)
 			DocumentLine tmp = startLine.NextLine;
 			DocumentLine lineToRemove;
@@ -183,7 +182,7 @@ namespace ICSharpCode.AvalonEdit.Document
 				tmp = tmp.NextLine;
 				RemoveLine(lineToRemove);
 			} while (lineToRemove != endLine);
-			
+
 			SetLineLength(startLine, startLine.TotalLength - charactersRemovedInStartLine + charactersLeftInEndLine);
 		}
 
@@ -192,32 +191,32 @@ namespace ICSharpCode.AvalonEdit.Document
 			foreach (ILineTracker lt in lineTrackers)
 				lt.BeforeRemoveLine(lineToRemove);
 			documentLineTree.RemoveLine(lineToRemove);
-//			foreach (ILineTracker lt in lineTracker)
-//				lt.AfterRemoveLine(lineToRemove);
-//			deletedLines.Add(lineToRemove);
-//			deletedOrChangedLines.Add(lineToRemove);
+			//			foreach (ILineTracker lt in lineTracker)
+			//				lt.AfterRemoveLine(lineToRemove);
+			//			deletedLines.Add(lineToRemove);
+			//			deletedOrChangedLines.Add(lineToRemove);
 		}
 
 		#endregion
-		
+
 		#region Insert
 		public void Insert(int offset, ITextSource text)
 		{
 			DocumentLine line = documentLineTree.GetByOffset(offset);
 			int lineOffset = line.Offset;
-			
+
 			Debug.Assert(offset <= lineOffset + line.TotalLength);
 			if (offset > lineOffset + line.Length) {
 				Debug.Assert(line.DelimiterLength == 2);
 				// we are inserting in the middle of a delimiter
-				
+
 				// shorten line
 				SetLineLength(line, line.TotalLength - 1);
 				// add new line
 				line = InsertLineAfter(line, 1);
 				line = SetLineLength(line, 1);
 			}
-			
+
 			SimpleSegment ds = NewLineFinder.NextNewLine(text, 0);
 			if (ds == SimpleSegment.Invalid) {
 				// no newline is being inserted, all text is inserted in a single line
@@ -236,10 +235,10 @@ namespace ICSharpCode.AvalonEdit.Document
 				line = SetLineLength(line, lineBreakOffset - lineOffset);
 				DocumentLine newLine = InsertLineAfter(line, lengthAfterInsertionPos);
 				newLine = SetLineLength(newLine, lengthAfterInsertionPos);
-				
+
 				line = newLine;
 				lastDelimiterEnd = ds.Offset + ds.Length;
-				
+
 				ds = NewLineFinder.NextNewLine(text, lastDelimiterEnd);
 			}
 			//firstLine.SplitTo(line);
@@ -249,7 +248,7 @@ namespace ICSharpCode.AvalonEdit.Document
 				SetLineLength(line, line.TotalLength + text.TextLength - lastDelimiterEnd);
 			}
 		}
-		
+
 		DocumentLine InsertLineAfter(DocumentLine line, int length)
 		{
 			DocumentLine newLine = documentLineTree.InsertLineAfter(line, length);
@@ -258,7 +257,7 @@ namespace ICSharpCode.AvalonEdit.Document
 			return newLine;
 		}
 		#endregion
-		
+
 		#region SetLineLength
 		/// <summary>
 		/// Sets the total line length and checks the delimiter.
@@ -269,8 +268,8 @@ namespace ICSharpCode.AvalonEdit.Document
 		/// the "\r\n" merge, returns the previous line.</returns>
 		DocumentLine SetLineLength(DocumentLine line, int newTotalLength)
 		{
-//			changedLines.Add(line);
-//			deletedOrChangedLines.Add(line);
+			//			changedLines.Add(line);
+			//			deletedOrChangedLines.Add(line);
 			int delta = newTotalLength - line.TotalLength;
 			if (delta != 0) {
 				foreach (ILineTracker lt in lineTrackers)
@@ -304,7 +303,7 @@ namespace ICSharpCode.AvalonEdit.Document
 			return line;
 		}
 		#endregion
-		
+
 		#region ChangeComplete
 		public void ChangeComplete(DocumentChangeEventArgs e)
 		{

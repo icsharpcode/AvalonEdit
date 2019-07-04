@@ -18,6 +18,7 @@
 
 using System;
 using System.Collections.Generic;
+
 using ICSharpCode.AvalonEdit.Document;
 using ICSharpCode.AvalonEdit.Utils;
 
@@ -30,7 +31,7 @@ namespace ICSharpCode.AvalonEdit.Editing
 	{
 		readonly TextViewPosition start, end;
 		readonly int startOffset, endOffset;
-		
+
 		/// <summary>
 		/// Creates a new SimpleSelection instance.
 		/// </summary>
@@ -42,21 +43,21 @@ namespace ICSharpCode.AvalonEdit.Editing
 			this.startOffset = textArea.Document.GetOffset(start.Location);
 			this.endOffset = textArea.Document.GetOffset(end.Location);
 		}
-		
+
 		/// <inheritdoc/>
 		public override IEnumerable<SelectionSegment> Segments {
 			get {
 				return ExtensionMethods.Sequence<SelectionSegment>(new SelectionSegment(startOffset, start.VisualColumn, endOffset, end.VisualColumn));
 			}
 		}
-		
+
 		/// <inheritdoc/>
 		public override ISegment SurroundingSegment {
 			get {
 				return new SelectionSegment(startOffset, endOffset);
 			}
 		}
-		
+
 		/// <inheritdoc/>
 		public override void ReplaceSelectionWithText(string newText)
 		{
@@ -89,15 +90,15 @@ namespace ICSharpCode.AvalonEdit.Editing
 				}
 			}
 		}
-		
+
 		public override TextViewPosition StartPosition {
 			get { return start; }
 		}
-		
+
 		public override TextViewPosition EndPosition {
 			get { return end; }
 		}
-		
+
 		/// <inheritdoc/>
 		public override Selection UpdateOnDocumentChange(DocumentChangeEventArgs e)
 		{
@@ -117,25 +118,25 @@ namespace ICSharpCode.AvalonEdit.Editing
 				new TextViewPosition(textArea.Document.GetLocation(newEndOffset), end.VisualColumn)
 			);
 		}
-		
+
 		/// <inheritdoc/>
 		public override bool IsEmpty {
 			get { return startOffset == endOffset && start.VisualColumn == end.VisualColumn; }
 		}
-		
+
 		/// <inheritdoc/>
 		public override int Length {
 			get {
 				return Math.Abs(endOffset - startOffset);
 			}
 		}
-		
+
 		/// <inheritdoc/>
 		public override Selection SetEndpoint(TextViewPosition endPosition)
 		{
 			return Create(textArea, start, endPosition);
 		}
-		
+
 		public override Selection StartSelectionOrSetEndpoint(TextViewPosition startPosition, TextViewPosition endPosition)
 		{
 			var document = textArea.Document;
@@ -143,7 +144,7 @@ namespace ICSharpCode.AvalonEdit.Editing
 				throw ThrowUtil.NoDocumentAssigned();
 			return Create(textArea, start, endPosition);
 		}
-		
+
 		/// <inheritdoc/>
 		public override int GetHashCode()
 		{
@@ -151,7 +152,7 @@ namespace ICSharpCode.AvalonEdit.Editing
 				return startOffset * 27811 + endOffset + textArea.GetHashCode();
 			}
 		}
-		
+
 		/// <inheritdoc/>
 		public override bool Equals(object obj)
 		{
@@ -161,7 +162,7 @@ namespace ICSharpCode.AvalonEdit.Editing
 				&& this.startOffset == other.startOffset && this.endOffset == other.endOffset
 				&& this.textArea == other.textArea;
 		}
-		
+
 		/// <inheritdoc/>
 		public override string ToString()
 		{

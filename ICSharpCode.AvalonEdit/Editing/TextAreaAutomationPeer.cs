@@ -17,12 +17,13 @@
 // DEALINGS IN THE SOFTWARE.
 
 using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows.Automation;
 using System.Windows.Automation.Peers;
 using System.Windows.Automation.Provider;
+
 using ICSharpCode.AvalonEdit.Document;
-using System.Diagnostics;
 
 namespace ICSharpCode.AvalonEdit.Editing
 {
@@ -48,8 +49,7 @@ namespace ICSharpCode.AvalonEdit.Editing
 			return AutomationControlType.Document;
 		}
 
-		internal IRawElementProviderSimple Provider
-		{
+		internal IRawElementProviderSimple Provider {
 			get { return ProviderFromPeer(this); }
 		}
 
@@ -79,7 +79,7 @@ namespace ICSharpCode.AvalonEdit.Editing
 			if (TextArea.Selection.IsEmpty) {
 				var anchor = TextArea.Document.CreateAnchor(TextArea.Caret.Offset);
 				anchor.SurviveDeletion = true;
-				return new ITextRangeProvider[] { new TextRangeProvider(TextArea, TextArea.Document, new AnchorSegment(anchor, anchor))};
+				return new ITextRangeProvider[] { new TextRangeProvider(TextArea, TextArea.Document, new AnchorSegment(anchor, anchor)) };
 			}
 			return TextArea.Selection.Segments.Select(s => new TextRangeProvider(TextArea, TextArea.Document, s)).ToArray();
 		}
@@ -102,8 +102,7 @@ namespace ICSharpCode.AvalonEdit.Editing
 			throw new NotImplementedException();
 		}
 
-		public SupportedTextSelection SupportedTextSelection
-		{
+		public SupportedTextSelection SupportedTextSelection {
 			get { return SupportedTextSelection.Single; }
 		}
 
@@ -116,7 +115,7 @@ namespace ICSharpCode.AvalonEdit.Editing
 			if (patternInterface == PatternInterface.Scroll) {
 				TextEditor editor = TextArea.GetService(typeof(TextEditor)) as TextEditor;
 				if (editor != null)
-					return FromElement(editor).GetPattern(patternInterface); 
+					return FromElement(editor).GetPattern(patternInterface);
 			}
 			return base.GetPattern(patternInterface);
 		}

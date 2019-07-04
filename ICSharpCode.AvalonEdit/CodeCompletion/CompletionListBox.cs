@@ -17,8 +17,8 @@
 // DEALINGS IN THE SOFTWARE.
 
 using System;
-using System.Windows;
 using System.Windows.Controls;
+
 using ICSharpCode.AvalonEdit.Utils;
 
 namespace ICSharpCode.AvalonEdit.CodeCompletion
@@ -29,12 +29,12 @@ namespace ICSharpCode.AvalonEdit.CodeCompletion
 	public class CompletionListBox : ListBox
 	{
 		internal ScrollViewer scrollViewer;
-		
+
 		/// <inheritdoc/>
 		public override void OnApplyTemplate()
 		{
 			base.OnApplyTemplate();
-			
+
 			// Find the scroll viewer:
 			scrollViewer = null;
 			if (this.VisualChildrenCount > 0) {
@@ -43,7 +43,7 @@ namespace ICSharpCode.AvalonEdit.CodeCompletion
 					scrollViewer = border.Child as ScrollViewer;
 			}
 		}
-		
+
 		/// <summary>
 		/// Gets the number of the first visible item.
 		/// </summary>
@@ -62,7 +62,7 @@ namespace ICSharpCode.AvalonEdit.CodeCompletion
 				}
 			}
 		}
-		
+
 		/// <summary>
 		/// Gets the number of visible items.
 		/// </summary>
@@ -74,11 +74,11 @@ namespace ICSharpCode.AvalonEdit.CodeCompletion
 					return Math.Max(
 						3,
 						(int)Math.Ceiling(this.Items.Count * scrollViewer.ViewportHeight
-						                  / scrollViewer.ExtentHeight));
+										  / scrollViewer.ExtentHeight));
 				}
 			}
 		}
-		
+
 		/// <summary>
 		/// Removes the selection.
 		/// </summary>
@@ -86,7 +86,7 @@ namespace ICSharpCode.AvalonEdit.CodeCompletion
 		{
 			this.SelectedIndex = -1;
 		}
-		
+
 		/// <summary>
 		/// Selects the item with the specified index and scrolls it into view.
 		/// </summary>
@@ -99,7 +99,7 @@ namespace ICSharpCode.AvalonEdit.CodeCompletion
 			this.SelectedIndex = index;
 			this.ScrollIntoView(this.SelectedItem);
 		}
-		
+
 		/// <summary>
 		/// Centers the view on the item with the specified index.
 		/// </summary>

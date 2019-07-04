@@ -16,8 +16,6 @@
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
 
-using System;
-
 namespace ICSharpCode.AvalonEdit.Rendering
 {
 	/// <summary>
@@ -30,7 +28,7 @@ namespace ICSharpCode.AvalonEdit.Rendering
 		/// Called when added to a text view.
 		/// </summary>
 		void AddToTextView(TextView textView);
-		
+
 		/// <summary>
 		/// Called when removed from a text view.
 		/// </summary>

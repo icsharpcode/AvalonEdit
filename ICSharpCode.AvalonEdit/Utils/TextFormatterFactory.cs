@@ -18,7 +18,6 @@
 
 using System;
 using System.Globalization;
-using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -40,7 +39,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 				throw new ArgumentNullException("owner");
 			return TextFormatter.Create(TextOptions.GetTextFormattingMode(owner));
 		}
-		
+
 		/// <summary>
 		/// Returns whether the specified dependency property affects the text formatter creation.
 		/// Controls should re-create their text formatter for such property changes.
@@ -49,7 +48,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 		{
 			return dp == TextOptions.TextFormattingModeProperty;
 		}
-		
+
 		/// <summary>
 		/// Creates formatted text.
 		/// </summary>

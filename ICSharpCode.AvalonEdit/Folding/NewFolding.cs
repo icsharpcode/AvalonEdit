@@ -17,6 +17,7 @@
 // DEALINGS IN THE SOFTWARE.
 
 using System;
+
 using ICSharpCode.AvalonEdit.Document;
 
 namespace ICSharpCode.AvalonEdit.Folding
@@ -30,35 +31,35 @@ namespace ICSharpCode.AvalonEdit.Folding
 		/// Gets/Sets the start offset.
 		/// </summary>
 		public int StartOffset { get; set; }
-		
+
 		/// <summary>
 		/// Gets/Sets the end offset.
 		/// </summary>
 		public int EndOffset { get; set; }
-		
+
 		/// <summary>
 		/// Gets/Sets the name displayed for the folding.
 		/// </summary>
 		public string Name { get; set; }
-		
+
 		/// <summary>
 		/// Gets/Sets whether the folding is closed by default.
 		/// </summary>
 		public bool DefaultClosed { get; set; }
-		
+
 		/// <summary>
 		/// Gets/Sets whether the folding is considered to be a definition.
 		/// This has an effect on the 'Show Definitions only' command.
 		/// </summary>
 		public bool IsDefinition { get; set; }
-		
+
 		/// <summary>
 		/// Creates a new NewFolding instance.
 		/// </summary>
 		public NewFolding()
 		{
 		}
-		
+
 		/// <summary>
 		/// Creates a new NewFolding instance.
 		/// </summary>
@@ -71,11 +72,11 @@ namespace ICSharpCode.AvalonEdit.Folding
 			this.Name = null;
 			this.DefaultClosed = false;
 		}
-		
+
 		int ISegment.Offset {
 			get { return this.StartOffset; }
 		}
-		
+
 		int ISegment.Length {
 			get { return this.EndOffset - this.StartOffset; }
 		}

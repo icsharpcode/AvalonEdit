@@ -16,7 +16,6 @@
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
 
-using System;
 using System.Windows;
 using System.Windows.Media.TextFormatting;
 
@@ -29,11 +28,11 @@ namespace ICSharpCode.AvalonEdit.Rendering
 		internal double tabSize;
 		internal double indent;
 		internal bool firstLineInParagraph;
-		
+
 		public override double DefaultIncrementalTab {
 			get { return tabSize; }
 		}
-		
+
 		public override FlowDirection FlowDirection { get { return FlowDirection.LeftToRight; } }
 		public override TextAlignment TextAlignment { get { return TextAlignment.Left; } }
 		public override double LineHeight { get { return double.NaN; } }

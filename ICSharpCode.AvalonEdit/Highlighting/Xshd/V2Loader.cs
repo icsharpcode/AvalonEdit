@@ -38,12 +38,9 @@ namespace ICSharpCode.AvalonEdit.Highlighting.Xshd
 
 		static XmlSchemaSet schemaSet;
 
-		static XmlSchemaSet SchemaSet
-		{
-			get
-			{
-				if (schemaSet == null)
-				{
+		static XmlSchemaSet SchemaSet {
+			get {
+				if (schemaSet == null) {
 					schemaSet = HighlightingLoader.LoadSchemaSet(new XmlTextReader(
 						Resources.OpenStream("ModeV2.xsd")));
 				}
@@ -76,17 +73,14 @@ namespace ICSharpCode.AvalonEdit.Highlighting.Xshd
 		{
 			if (reader.IsEmptyElement)
 				return;
-			while (reader.Read() && reader.NodeType != XmlNodeType.EndElement)
-			{
+			while (reader.Read() && reader.NodeType != XmlNodeType.EndElement) {
 				Debug.Assert(reader.NodeType == XmlNodeType.Element);
-				if (reader.NamespaceURI != Namespace)
-				{
+				if (reader.NamespaceURI != Namespace) {
 					if (!reader.IsEmptyElement)
 						reader.Skip();
 					continue;
 				}
-				switch (reader.Name)
-				{
+				switch (reader.Name) {
 					case "RuleSet":
 						c.Add(ParseRuleSet(reader));
 						break;
@@ -140,11 +134,9 @@ namespace ICSharpCode.AvalonEdit.Highlighting.Xshd
 			XshdRule rule = new XshdRule();
 			SetPosition(rule, reader);
 			rule.ColorReference = ParseColorReference(reader);
-			if (!reader.IsEmptyElement)
-			{
+			if (!reader.IsEmptyElement) {
 				reader.Read();
-				if (reader.NodeType == XmlNodeType.Text)
-				{
+				if (reader.NodeType == XmlNodeType.Text) {
 					rule.Regex = reader.ReadContentAsString();
 					rule.RegexType = XshdRegexType.IgnorePatternWhitespace;
 				}
@@ -158,8 +150,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting.Xshd
 			SetPosition(keywords, reader);
 			keywords.ColorReference = ParseColorReference(reader);
 			reader.Read();
-			while (reader.NodeType != XmlNodeType.EndElement)
-			{
+			while (reader.NodeType != XmlNodeType.EndElement) {
 				Debug.Assert(reader.NodeType == XmlNodeType.Element);
 				keywords.Words.Add(reader.ReadElementString());
 			}
@@ -185,14 +176,11 @@ namespace ICSharpCode.AvalonEdit.Highlighting.Xshd
 			span.Multiline = reader.GetBoolAttribute("multiline") ?? false;
 			span.SpanColorReference = ParseColorReference(reader);
 			span.RuleSetReference = ParseRuleSetReference(reader);
-			if (!reader.IsEmptyElement)
-			{
+			if (!reader.IsEmptyElement) {
 				reader.Read();
-				while (reader.NodeType != XmlNodeType.EndElement)
-				{
+				while (reader.NodeType != XmlNodeType.EndElement) {
 					Debug.Assert(reader.NodeType == XmlNodeType.Element);
-					switch (reader.Name)
-					{
+					switch (reader.Name) {
 						case "Begin":
 							if (span.BeginRegex != null)
 								throw Error(reader, "Duplicate Begin regex");
@@ -240,8 +228,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting.Xshd
 		static void SetPosition(XshdElement element, XmlReader reader)
 		{
 			IXmlLineInfo lineInfo = reader as IXmlLineInfo;
-			if (lineInfo != null)
-			{
+			if (lineInfo != null) {
 				element.LineNumber = lineInfo.LineNumber;
 				element.ColumnNumber = lineInfo.LinePosition;
 			}
@@ -250,29 +237,22 @@ namespace ICSharpCode.AvalonEdit.Highlighting.Xshd
 		static XshdReference<XshdRuleSet> ParseRuleSetReference(XmlReader reader)
 		{
 			string ruleSet = reader.GetAttribute("ruleSet");
-			if (ruleSet != null)
-			{
+			if (ruleSet != null) {
 				// '/' is valid in highlighting definition names, so we need the last occurence
 				int pos = ruleSet.LastIndexOf('/');
-				if (pos >= 0)
-				{
+				if (pos >= 0) {
 					return new XshdReference<XshdRuleSet>(ruleSet.Substring(0, pos), ruleSet.Substring(pos + 1));
-				}
-				else
-				{
+				} else {
 					return new XshdReference<XshdRuleSet>(null, ruleSet);
 				}
-			}
-			else
-			{
+			} else {
 				return new XshdReference<XshdRuleSet>();
 			}
 		}
 
 		static void CheckElementName(XmlReader reader, string name)
 		{
-			if (name != null)
-			{
+			if (name != null) {
 				if (name.Length == 0)
 					throw Error(reader, "The empty string is not a valid name.");
 				if (name.IndexOf('/') >= 0)
@@ -296,20 +276,14 @@ namespace ICSharpCode.AvalonEdit.Highlighting.Xshd
 		static XshdReference<XshdColor> ParseColorReference(XmlReader reader)
 		{
 			string color = reader.GetAttribute("color");
-			if (color != null)
-			{
+			if (color != null) {
 				int pos = color.LastIndexOf('/');
-				if (pos >= 0)
-				{
+				if (pos >= 0) {
 					return new XshdReference<XshdColor>(color.Substring(0, pos), color.Substring(pos + 1));
-				}
-				else
-				{
+				} else {
 					return new XshdReference<XshdColor>(null, color);
 				}
-			}
-			else
-			{
+			} else {
 				return new XshdReference<XshdColor>(ParseColorAttributes(reader));
 			}
 		}
@@ -354,12 +328,9 @@ namespace ICSharpCode.AvalonEdit.Highlighting.Xshd
 
 		static FontFamily ParseFontFamily(IXmlLineInfo lineInfo, string family)
 		{
-			if (!string.IsNullOrEmpty(family))
-			{
+			if (!string.IsNullOrEmpty(family)) {
 				return new FontFamily(family);
-			}
-			else
-			{
+			} else {
 				return null;
 			}
 		}

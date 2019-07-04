@@ -21,6 +21,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Text;
 using System.Windows;
+
 using ICSharpCode.AvalonEdit.Document;
 
 namespace ICSharpCode.AvalonEdit.Highlighting
@@ -43,7 +44,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 			b.AppendLine("EndFragment:" + endFragment.ToString("d8", CultureInfo.InvariantCulture));
 			return b.ToString();
 		}
-		
+
 		/// <summary>
 		/// Sets the TextDataFormat.Html on the data object to the specified html fragment.
 		/// This helper methods takes care of creating the necessary CF_HTML header.
@@ -54,7 +55,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 				throw new ArgumentNullException("dataObject");
 			if (htmlFragment == null)
 				throw new ArgumentNullException("htmlFragment");
-			
+
 			string htmlStart = @"<!DOCTYPE HTML PUBLIC ""-//W3C//DTD HTML 4.0 Transitional//EN"">" + Environment.NewLine
 				+ "<HTML>" + Environment.NewLine
 				+ "<BODY>" + Environment.NewLine
@@ -70,7 +71,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 			Debug.WriteLine(cf_html);
 			dataObject.SetText(cf_html, TextDataFormat.Html);
 		}
-		
+
 		/// <summary>
 		/// Creates a HTML fragment from a part of a document.
 		/// </summary>
@@ -89,7 +90,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 				throw new ArgumentException("Highlighter does not belong to the specified document.");
 			if (segment == null)
 				segment = new SimpleSegment(0, document.TextLength);
-			
+
 			StringBuilder html = new StringBuilder();
 			int segmentEndOffset = segment.EndOffset;
 			IDocumentLine line = document.GetLineByOffset(segment.Offset);

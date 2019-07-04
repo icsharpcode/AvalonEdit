@@ -19,6 +19,7 @@
 using System;
 using System.Windows;
 using System.Windows.Controls;
+
 using ICSharpCode.AvalonEdit.Editing;
 using ICSharpCode.AvalonEdit.Utils;
 
@@ -32,11 +33,11 @@ namespace ICSharpCode.AvalonEdit.CodeCompletion
 		static InsightWindow()
 		{
 			DefaultStyleKeyProperty.OverrideMetadata(typeof(InsightWindow),
-			                                         new FrameworkPropertyMetadata(typeof(InsightWindow)));
+													 new FrameworkPropertyMetadata(typeof(InsightWindow)));
 			AllowsTransparencyProperty.OverrideMetadata(typeof(InsightWindow),
-			                                            new FrameworkPropertyMetadata(Boxes.True));
+														new FrameworkPropertyMetadata(Boxes.True));
 		}
-		
+
 		/// <summary>
 		/// Creates a new InsightWindow.
 		/// </summary>
@@ -45,43 +46,43 @@ namespace ICSharpCode.AvalonEdit.CodeCompletion
 			this.CloseAutomatically = true;
 			AttachEvents();
 		}
-		
+
 		/// <inheritdoc/>
 		protected override void OnSourceInitialized(EventArgs e)
 		{
 			Rect caret = this.TextArea.Caret.CalculateCaretRectangle();
 			Point pointOnScreen = this.TextArea.TextView.PointToScreen(caret.Location - this.TextArea.TextView.ScrollOffset);
 			Rect workingArea = System.Windows.Forms.Screen.FromPoint(pointOnScreen.ToSystemDrawing()).WorkingArea.ToWpf().TransformFromDevice(this);
-			
+
 			MaxHeight = workingArea.Height;
 			MaxWidth = Math.Min(workingArea.Width, Math.Max(1000, workingArea.Width * 0.6));
-			
+
 			base.OnSourceInitialized(e);
 		}
-		
+
 		/// <summary>
 		/// Gets/Sets whether the insight window should close automatically.
 		/// The default value is true.
 		/// </summary>
 		public bool CloseAutomatically { get; set; }
-		
+
 		/// <inheritdoc/>
 		protected override bool CloseOnFocusLost {
 			get { return this.CloseAutomatically; }
 		}
-		
+
 		void AttachEvents()
 		{
 			this.TextArea.Caret.PositionChanged += CaretPositionChanged;
 		}
-		
+
 		/// <inheritdoc/>
 		protected override void DetachEvents()
 		{
 			this.TextArea.Caret.PositionChanged -= CaretPositionChanged;
 			base.DetachEvents();
 		}
-		
+
 		void CaretPositionChanged(object sender, EventArgs e)
 		{
 			if (this.CloseAutomatically) {
@@ -92,7 +93,7 @@ namespace ICSharpCode.AvalonEdit.CodeCompletion
 			}
 		}
 	}
-	
+
 	/// <summary>
 	/// TemplateSelector for InsightWindow to replace plain string content by a TextBlock with TextWrapping.
 	/// </summary>
@@ -102,7 +103,7 @@ namespace ICSharpCode.AvalonEdit.CodeCompletion
 		{
 			if (item is string)
 				return (DataTemplate)((FrameworkElement)container).FindResource("TextBlockTemplate");
-			
+
 			return null;
 		}
 	}

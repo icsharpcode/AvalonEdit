@@ -29,7 +29,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 	sealed class ObserveAddRemoveCollection<T> : Collection<T>
 	{
 		readonly Action<T> onAdd, onRemove;
-		
+
 		/// <summary>
 		/// Creates a new ObserveAddRemoveCollection using the specified callbacks.
 		/// </summary>
@@ -42,7 +42,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 			this.onAdd = onAdd;
 			this.onRemove = onRemove;
 		}
-		
+
 		/// <inheritdoc/>
 		protected override void ClearItems()
 		{
@@ -52,7 +52,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 			}
 			base.ClearItems();
 		}
-		
+
 		/// <inheritdoc/>
 		protected override void InsertItem(int index, T item)
 		{
@@ -60,7 +60,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 				onAdd(item);
 			base.InsertItem(index, item);
 		}
-		
+
 		/// <inheritdoc/>
 		protected override void RemoveItem(int index)
 		{
@@ -68,7 +68,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 				onRemove(this[index]);
 			base.RemoveItem(index);
 		}
-		
+
 		/// <inheritdoc/>
 		protected override void SetItem(int index, T item)
 		{

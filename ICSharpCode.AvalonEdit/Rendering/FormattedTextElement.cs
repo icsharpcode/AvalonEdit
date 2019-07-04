@@ -20,6 +20,7 @@ using System;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.TextFormatting;
+
 using ICSharpCode.AvalonEdit.Utils;
 
 namespace ICSharpCode.AvalonEdit.Rendering
@@ -34,7 +35,7 @@ namespace ICSharpCode.AvalonEdit.Rendering
 		internal readonly FormattedText formattedText;
 		internal string text;
 		internal TextLine textLine;
-		
+
 		/// <summary>
 		/// Creates a new FormattedTextElement that displays the specified text
 		/// and occupies the specified length in the document.
@@ -47,7 +48,7 @@ namespace ICSharpCode.AvalonEdit.Rendering
 			this.BreakBefore = LineBreakCondition.BreakPossible;
 			this.BreakAfter = LineBreakCondition.BreakPossible;
 		}
-		
+
 		/// <summary>
 		/// Creates a new FormattedTextElement that displays the specified text
 		/// and occupies the specified length in the document.
@@ -60,7 +61,7 @@ namespace ICSharpCode.AvalonEdit.Rendering
 			this.BreakBefore = LineBreakCondition.BreakPossible;
 			this.BreakAfter = LineBreakCondition.BreakPossible;
 		}
-		
+
 		/// <summary>
 		/// Creates a new FormattedTextElement that displays the specified text
 		/// and occupies the specified length in the document.
@@ -73,19 +74,19 @@ namespace ICSharpCode.AvalonEdit.Rendering
 			this.BreakBefore = LineBreakCondition.BreakPossible;
 			this.BreakAfter = LineBreakCondition.BreakPossible;
 		}
-		
+
 		/// <summary>
 		/// Gets/sets the line break condition before the element.
 		/// The default is 'BreakPossible'.
 		/// </summary>
 		public LineBreakCondition BreakBefore { get; set; }
-		
+
 		/// <summary>
 		/// Gets/sets the line break condition after the element.
 		/// The default is 'BreakPossible'.
 		/// </summary>
 		public LineBreakCondition BreakAfter { get; set; }
-		
+
 		/// <inheritdoc/>
 		public override TextRun CreateTextRun(int startVisualColumn, ITextRunConstructionContext context)
 		{
@@ -96,7 +97,7 @@ namespace ICSharpCode.AvalonEdit.Rendering
 			}
 			return new FormattedTextRun(this, this.TextRunProperties);
 		}
-		
+
 		/// <summary>
 		/// Constructs a TextLine from a simple text.
 		/// </summary>
@@ -120,7 +121,7 @@ namespace ICSharpCode.AvalonEdit.Rendering
 				null);
 		}
 	}
-	
+
 	/// <summary>
 	/// This is the TextRun implementation used by the <see cref="FormattedTextElement"/> class.
 	/// </summary>
@@ -128,7 +129,7 @@ namespace ICSharpCode.AvalonEdit.Rendering
 	{
 		readonly FormattedTextElement element;
 		TextRunProperties properties;
-		
+
 		/// <summary>
 		/// Creates a new FormattedTextRun.
 		/// </summary>
@@ -141,60 +142,60 @@ namespace ICSharpCode.AvalonEdit.Rendering
 			this.properties = properties;
 			this.element = element;
 		}
-		
+
 		/// <summary>
 		/// Gets the element for which the FormattedTextRun was created.
 		/// </summary>
 		public FormattedTextElement Element {
 			get { return element; }
 		}
-		
+
 		/// <inheritdoc/>
 		public override LineBreakCondition BreakBefore {
 			get { return element.BreakBefore; }
 		}
-		
+
 		/// <inheritdoc/>
 		public override LineBreakCondition BreakAfter {
 			get { return element.BreakAfter; }
 		}
-		
+
 		/// <inheritdoc/>
 		public override bool HasFixedSize {
 			get { return true; }
 		}
-		
+
 		/// <inheritdoc/>
 		public override CharacterBufferReference CharacterBufferReference {
 			get { return new CharacterBufferReference(); }
 		}
-		
+
 		/// <inheritdoc/>
 		public override int Length {
 			get { return element.VisualLength; }
 		}
-		
+
 		/// <inheritdoc/>
 		public override TextRunProperties Properties {
 			get { return properties; }
 		}
-		
+
 		/// <inheritdoc/>
 		public override TextEmbeddedObjectMetrics Format(double remainingParagraphWidth)
 		{
 			var formattedText = element.formattedText;
 			if (formattedText != null) {
 				return new TextEmbeddedObjectMetrics(formattedText.WidthIncludingTrailingWhitespace,
-				                                     formattedText.Height,
-				                                     formattedText.Baseline);
+													 formattedText.Height,
+													 formattedText.Baseline);
 			} else {
 				var text = element.textLine;
 				return new TextEmbeddedObjectMetrics(text.WidthIncludingTrailingWhitespace,
-				                                     text.Height,
-				                                     text.Baseline);
+													 text.Height,
+													 text.Baseline);
 			}
 		}
-		
+
 		/// <inheritdoc/>
 		public override Rect ComputeBoundingBox(bool rightToLeft, bool sideways)
 		{
@@ -206,7 +207,7 @@ namespace ICSharpCode.AvalonEdit.Rendering
 				return new Rect(0, 0, text.WidthIncludingTrailingWhitespace, text.Height);
 			}
 		}
-		
+
 		/// <inheritdoc/>
 		public override void Draw(DrawingContext drawingContext, Point origin, bool rightToLeft, bool sideways)
 		{

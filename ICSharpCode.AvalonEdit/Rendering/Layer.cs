@@ -16,7 +16,6 @@
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
 
-using System;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Media;
@@ -30,7 +29,7 @@ namespace ICSharpCode.AvalonEdit.Rendering
 	{
 		protected readonly TextView textView;
 		protected readonly KnownLayer knownLayer;
-		
+
 		public Layer(TextView textView, KnownLayer knownLayer)
 		{
 			Debug.Assert(textView != null);
@@ -38,17 +37,17 @@ namespace ICSharpCode.AvalonEdit.Rendering
 			this.knownLayer = knownLayer;
 			this.Focusable = false;
 		}
-		
+
 		protected override GeometryHitTestResult HitTestCore(GeometryHitTestParameters hitTestParameters)
 		{
 			return null;
 		}
-		
+
 		protected override HitTestResult HitTestCore(PointHitTestParameters hitTestParameters)
 		{
 			return null;
 		}
-		
+
 		protected override void OnRender(DrawingContext drawingContext)
 		{
 			base.OnRender(drawingContext);

@@ -18,6 +18,7 @@
 
 using System;
 using System.Collections.Generic;
+
 using ICSharpCode.AvalonEdit.Utils;
 
 namespace ICSharpCode.AvalonEdit.Highlighting.Xshd
@@ -32,21 +33,21 @@ namespace ICSharpCode.AvalonEdit.Highlighting.Xshd
 		/// Gets/Sets the name of the rule set.
 		/// </summary>
 		public string Name { get; set; }
-		
+
 		/// <summary>
 		/// Gets/sets whether the case is ignored in expressions inside this rule set.
 		/// </summary>
 		public bool? IgnoreCase { get; set; }
-		
+
 		readonly NullSafeCollection<XshdElement> elements = new NullSafeCollection<XshdElement>();
-		
+
 		/// <summary>
 		/// Gets the collection of elements.
 		/// </summary>
 		public IList<XshdElement> Elements {
 			get { return elements; }
 		}
-		
+
 		/// <summary>
 		/// Applies the visitor to all elements.
 		/// </summary>
@@ -56,7 +57,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting.Xshd
 				element.AcceptVisitor(visitor);
 			}
 		}
-		
+
 		/// <inheritdoc/>
 		public override object AcceptVisitor(IXshdVisitor visitor)
 		{

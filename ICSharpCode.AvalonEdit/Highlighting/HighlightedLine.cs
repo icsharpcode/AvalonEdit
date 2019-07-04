@@ -21,6 +21,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+
 using ICSharpCode.AvalonEdit.Document;
 using ICSharpCode.AvalonEdit.Utils;
 
@@ -44,17 +45,17 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 			this.DocumentLine = documentLine;
 			this.Sections = new NullSafeCollection<HighlightedSection>();
 		}
-		
+
 		/// <summary>
 		/// Gets the document associated with this HighlightedLine.
 		/// </summary>
 		public IDocument Document { get; private set; }
-		
+
 		/// <summary>
 		/// Gets the document line associated with this HighlightedLine.
 		/// </summary>
 		public IDocumentLine DocumentLine { get; private set; }
-		
+
 		/// <summary>
 		/// Gets the highlighted sections.
 		/// The sections are not overlapping, but they may be nested.
@@ -62,7 +63,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 		/// The sections are sorted by start offset.
 		/// </summary>
 		public IList<HighlightedSection> Sections { get; private set; }
-		
+
 		/// <summary>
 		/// Validates that the sections are sorted correctly, and that they are not overlapping.
 		/// </summary>
@@ -88,7 +89,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 				}
 			}
 		}
-		
+
 		#region Merge
 		/// <summary>
 		/// Merges the additional line into this line.
@@ -97,11 +98,11 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 		{
 			if (additionalLine == null)
 				return;
-			#if DEBUG
+#if DEBUG
 			ValidateInvariants();
 			additionalLine.ValidateInvariants();
-			#endif
-			
+#endif
+
 			int pos = 0;
 			Stack<int> activeSectionEndOffsets = new Stack<int>();
 			int lineEndOffset = this.DocumentLine.EndOffset;
@@ -133,7 +134,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 						break;
 					// Insert a segment in front of s:
 					Insert(ref i, ref newSectionStart, s.Offset, newSection.Color, insertionStack);
-					
+
 					while (s.Offset > insertionStack.Peek()) {
 						insertionStack.Pop();
 					}
@@ -141,19 +142,19 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 				}
 				Insert(ref i, ref newSectionStart, newSection.Offset + newSection.Length, newSection.Color, insertionStack);
 			}
-			
-			#if DEBUG
+
+#if DEBUG
 			ValidateInvariants();
-			#endif
+#endif
 		}
-		
+
 		void Insert(ref int pos, ref int newSectionStart, int insertionEndPos, HighlightingColor color, Stack<int> insertionStack)
 		{
 			if (newSectionStart >= insertionEndPos) {
 				// nothing to insert here
 				return;
 			}
-			
+
 			while (insertionStack.Peek() <= newSectionStart) {
 				insertionStack.Pop();
 			}
@@ -162,24 +163,24 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 				// insert the portion from newSectionStart to end
 				if (end > newSectionStart) {
 					this.Sections.Insert(pos++, new HighlightedSection {
-					                     	Offset = newSectionStart,
-					                     	Length = end - newSectionStart,
-					                     	Color = color
-					                     });
+						Offset = newSectionStart,
+						Length = end - newSectionStart,
+						Color = color
+					});
 					newSectionStart = end;
 				}
 			}
 			if (insertionEndPos > newSectionStart) {
 				this.Sections.Insert(pos++, new HighlightedSection {
-				                     	Offset = newSectionStart,
-				                     	Length = insertionEndPos - newSectionStart,
-				                     	Color = color
-				                     });
+					Offset = newSectionStart,
+					Length = insertionEndPos - newSectionStart,
+					Color = color
+				});
 				newSectionStart = insertionEndPos;
 			}
 		}
 		#endregion
-		
+
 		#region WriteTo / ToHtml
 		sealed class HtmlElement : IComparable<HtmlElement>
 		{
@@ -187,7 +188,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 			internal readonly int Nesting;
 			internal readonly bool IsEnd;
 			internal readonly HighlightingColor Color;
-			
+
 			public HtmlElement(int offset, int nesting, bool isEnd, HighlightingColor color)
 			{
 				this.Offset = offset;
@@ -195,7 +196,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 				this.IsEnd = isEnd;
 				this.Color = color;
 			}
-			
+
 			public int CompareTo(HtmlElement other)
 			{
 				int r = Offset.CompareTo(other.Offset);
@@ -214,7 +215,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 				}
 			}
 		}
-		
+
 		/// <summary>
 		/// Writes the highlighted line to the RichTextWriter.
 		/// </summary>
@@ -223,7 +224,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 			int startOffset = this.DocumentLine.Offset;
 			WriteTo(writer, startOffset, startOffset + this.DocumentLine.Length);
 		}
-		
+
 		/// <summary>
 		/// Writes a part of the highlighted line to the RichTextWriter.
 		/// </summary>
@@ -238,7 +239,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 			if (endOffset < startOffset || endOffset > documentLineEndOffset)
 				throw new ArgumentOutOfRangeException("endOffset", endOffset, "Value must be between startOffset and " + documentLineEndOffset);
 			ISegment requestedSegment = new SimpleSegment(startOffset, endOffset - startOffset);
-			
+
 			List<HtmlElement> elements = new List<HtmlElement>();
 			for (int i = 0; i < this.Sections.Count; i++) {
 				HighlightedSection s = this.Sections[i];
@@ -248,7 +249,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 				}
 			}
 			elements.Sort();
-			
+
 			IDocument document = this.Document;
 			int textOffset = startOffset;
 			foreach (HtmlElement e in elements) {
@@ -264,7 +265,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 			}
 			document.WriteTextTo(writer, textOffset, endOffset - textOffset);
 		}
-		
+
 		/// <summary>
 		/// Produces HTML code for the line, with &lt;span class="colorName"&gt; tags.
 		/// </summary>
@@ -276,7 +277,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 			}
 			return stringWriter.ToString();
 		}
-		
+
 		/// <summary>
 		/// Produces HTML code for a section of the line, with &lt;span class="colorName"&gt; tags.
 		/// </summary>
@@ -288,14 +289,14 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 			}
 			return stringWriter.ToString();
 		}
-		
+
 		/// <inheritdoc/>
 		public override string ToString()
 		{
 			return "[" + GetType().Name + " " + ToHtml() + "]";
 		}
 		#endregion
-		
+
 		/// <summary>
 		/// Creates a <see cref="HighlightedInlineBuilder"/> that stores the text and highlighting of this line.
 		/// </summary>
@@ -309,7 +310,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 			}
 			return builder;
 		}
-		
+
 		/// <summary>
 		/// Creates a <see cref="RichTextModel"/> that stores the highlighting of this line.
 		/// </summary>
@@ -322,7 +323,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 			}
 			return builder;
 		}
-		
+
 		/// <summary>
 		/// Creates a <see cref="RichText"/> that stores the text and highlighting of this line.
 		/// </summary>

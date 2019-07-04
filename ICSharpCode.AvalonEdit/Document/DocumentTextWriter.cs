@@ -29,7 +29,7 @@ namespace ICSharpCode.AvalonEdit.Document
 	{
 		readonly IDocument document;
 		int insertionOffset;
-		
+
 		/// <summary>
 		/// Creates a new DocumentTextWriter that inserts into document, starting at insertionOffset.
 		/// </summary>
@@ -45,7 +45,7 @@ namespace ICSharpCode.AvalonEdit.Document
 			if (line != null)
 				this.NewLine = document.GetText(line.EndOffset, line.DelimiterLength);
 		}
-		
+
 		/// <summary>
 		/// Gets/Sets the current insertion offset.
 		/// </summary>
@@ -53,28 +53,28 @@ namespace ICSharpCode.AvalonEdit.Document
 			get { return insertionOffset; }
 			set { insertionOffset = value; }
 		}
-		
+
 		/// <inheritdoc/>
 		public override void Write(char value)
 		{
 			document.Insert(insertionOffset, value.ToString());
 			insertionOffset++;
 		}
-		
+
 		/// <inheritdoc/>
 		public override void Write(char[] buffer, int index, int count)
 		{
 			document.Insert(insertionOffset, new string(buffer, index, count));
 			insertionOffset += count;
 		}
-		
+
 		/// <inheritdoc/>
 		public override void Write(string value)
 		{
 			document.Insert(insertionOffset, value);
 			insertionOffset += value.Length;
 		}
-		
+
 		/// <inheritdoc/>
 		public override Encoding Encoding {
 			get { return Encoding.UTF8; }

@@ -20,13 +20,14 @@ using System;
 using System.IO;
 using System.Windows;
 using System.Windows.Media;
+
 using ICSharpCode.AvalonEdit.Highlighting;
 
 namespace ICSharpCode.AvalonEdit.Utils
 {
 	// TODO: This class (and derived classes) is currently unused; decide whether to keep it.
 	// (until this is decided, keep the class internal)
-	
+
 	/// <summary>
 	/// A text writer that supports creating spans of highlighted text.
 	/// </summary>
@@ -37,7 +38,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 		/// that is not overwritten gets called.
 		/// </summary>
 		protected abstract void BeginUnhandledSpan();
-		
+
 		/// <summary>
 		/// Writes the RichText instance.
 		/// </summary>
@@ -45,7 +46,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 		{
 			Write(richText, 0, richText.Length);
 		}
-		
+
 		/// <summary>
 		/// Writes the RichText instance.
 		/// </summary>
@@ -57,7 +58,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 				EndSpan();
 			}
 		}
-		
+
 		/// <summary>
 		/// Begin a colored span.
 		/// </summary>
@@ -65,7 +66,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 		{
 			BeginUnhandledSpan();
 		}
-		
+
 		/// <summary>
 		/// Begin a span with modified font weight.
 		/// </summary>
@@ -73,7 +74,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 		{
 			BeginUnhandledSpan();
 		}
-		
+
 		/// <summary>
 		/// Begin a span with modified font style.
 		/// </summary>
@@ -81,7 +82,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 		{
 			BeginUnhandledSpan();
 		}
-		
+
 		/// <summary>
 		/// Begin a span with modified font family.
 		/// </summary>
@@ -89,7 +90,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 		{
 			BeginUnhandledSpan();
 		}
-		
+
 		/// <summary>
 		/// Begin a highlighted span.
 		/// </summary>
@@ -97,7 +98,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 		{
 			BeginUnhandledSpan();
 		}
-		
+
 		/// <summary>
 		/// Begin a span that links to the specified URI.
 		/// </summary>
@@ -105,17 +106,17 @@ namespace ICSharpCode.AvalonEdit.Utils
 		{
 			BeginUnhandledSpan();
 		}
-		
+
 		/// <summary>
 		/// Marks the end of the current span.
 		/// </summary>
 		public abstract void EndSpan();
-		
+
 		/// <summary>
 		/// Increases the indentation level.
 		/// </summary>
 		public abstract void Indent();
-		
+
 		/// <summary>
 		/// Decreases the indentation level.
 		/// </summary>

@@ -1,11 +1,10 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	xmlns:local="clr-namespace:ICSharpCode.AvalonEdit.Search"
->
+					xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+					xmlns:local="clr-namespace:ICSharpCode.AvalonEdit.Search">
 	<!-- Colors for DropDownButton and SplitButton -->
 	<SolidColorBrush x:Key="{ComponentResourceKey {x:Type local:DropDownButton}, ActiveBorder}" Color="#FF0A246A"/>
 	<SolidColorBrush x:Key="{ComponentResourceKey {x:Type local:DropDownButton}, ActiveBackground}" Color="#FFB6BDD2"/>
-	
+
 	<!-- Style and Template for DropDownButton -->
 	<Style TargetType="{x:Type local:DropDownButton}">
 		<Setter Property="TextElement.Foreground" Value = "{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" />

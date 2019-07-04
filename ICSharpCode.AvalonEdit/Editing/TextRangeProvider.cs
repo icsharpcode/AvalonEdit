@@ -17,15 +17,15 @@
 // DEALINGS IN THE SOFTWARE.
 
 using System;
-using System.Windows.Automation.Provider;
-using System.Windows.Documents;
-using ICSharpCode.AvalonEdit.Document;
-using System.Windows.Automation.Text;
-using System.Diagnostics;
-using ICSharpCode.AvalonEdit.Rendering;
 using System.Collections.Generic;
-using ICSharpCode.AvalonEdit.Utils;
+using System.Diagnostics;
 using System.Windows;
+using System.Windows.Automation.Provider;
+using System.Windows.Automation.Text;
+using System.Windows.Documents;
+
+using ICSharpCode.AvalonEdit.Document;
+using ICSharpCode.AvalonEdit.Rendering;
 
 namespace ICSharpCode.AvalonEdit.Editing
 {
@@ -75,7 +75,7 @@ namespace ICSharpCode.AvalonEdit.Editing
 
 		public bool Compare(ITextRangeProvider range)
 		{
-			TextRangeProvider other = (TextRangeProvider) range;
+			TextRangeProvider other = (TextRangeProvider)range;
 			bool result = doc == other.doc
 				&& segment.Offset == other.segment.Offset
 				&& segment.EndOffset == other.segment.EndOffset;
@@ -97,7 +97,7 @@ namespace ICSharpCode.AvalonEdit.Editing
 
 		public int CompareEndpoints(TextPatternRangeEndpoint endpoint, ITextRangeProvider targetRange, TextPatternRangeEndpoint targetEndpoint)
 		{
-			TextRangeProvider other = (TextRangeProvider) targetRange;
+			TextRangeProvider other = (TextRangeProvider)targetRange;
 			int result = GetEndpoint(endpoint).CompareTo(other.GetEndpoint(targetEndpoint));
 			Log("{0}.CompareEndpoints({1}, {2}, {3}) = {4}", ID, endpoint, other.ID, targetEndpoint, result);
 			return result;

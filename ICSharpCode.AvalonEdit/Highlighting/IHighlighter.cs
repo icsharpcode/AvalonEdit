@@ -18,6 +18,7 @@
 
 using System;
 using System.Collections.Generic;
+
 using ICSharpCode.AvalonEdit.Document;
 
 namespace ICSharpCode.AvalonEdit.Highlighting
@@ -32,7 +33,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 		/// Gets the underlying text document.
 		/// </summary>
 		IDocument Document { get; }
-		
+
 		/// <summary>
 		/// Gets the stack of active colors (the colors associated with the active spans) at the end of the specified line.
 		/// -> GetColorStack(1) returns the colors at the start of the second line.
@@ -42,23 +43,23 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 		/// The elements are returned in inside-out order (first element of result enumerable is the color of the innermost span).
 		/// </remarks>
 		IEnumerable<HighlightingColor> GetColorStack(int lineNumber);
-		
+
 		// Starting with SD 5.0, this interface exports GetColorStack() instead of GetSpanStack().
 		// This was done because custom highlighter implementations might not use the HighlightingSpan class (AST-based highlighting).
-		
+
 		/// <summary>
 		/// Highlights the specified document line.
 		/// </summary>
 		/// <param name="lineNumber">The line to highlight.</param>
 		/// <returns>A <see cref="HighlightedLine"/> line object that represents the highlighted sections.</returns>
 		HighlightedLine HighlightLine(int lineNumber);
-		
+
 		/// <summary>
 		/// Enforces a highlighting state update (triggering the HighlightingStateChanged event if necessary)
 		/// for all lines up to (and inclusive) the specified line number.
 		/// </summary>
 		void UpdateHighlightingState(int lineNumber);
-		
+
 		/// <summary>
 		/// Notification when the highlighter detects that the highlighting state at the
 		/// <b>beginning</b> of the specified lines has changed.
@@ -85,7 +86,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 		/// Outside of the highlighting process, this event can be raised without such restrictions.
 		/// </remarks>
 		event HighlightingStateChangedEventHandler HighlightingStateChanged;
-		
+
 		/// <summary>
 		/// Opens a group of <see cref="HighlightLine"/> calls.
 		/// It is not necessary to call this method before calling <see cref="HighlightLine"/>,
@@ -97,24 +98,24 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 		/// Nested groups are not allowed.
 		/// </remarks>
 		void BeginHighlighting();
-		
+
 		/// <summary>
 		/// Closes the currently opened group of <see cref="HighlightLine"/> calls.
 		/// </summary>
 		/// <seealso cref="BeginHighlighting"/>.
 		void EndHighlighting();
-		
+
 		/// <summary>
 		/// Retrieves the HighlightingColor with the specified name. Returns null if no color matching the name is found.
 		/// </summary>
 		HighlightingColor GetNamedColor(string name);
-		
+
 		/// <summary>
 		/// Gets the default text color.
 		/// </summary>
 		HighlightingColor DefaultTextColor { get; }
 	}
-	
+
 	/// <summary>
 	/// Event handler for <see cref="IHighlighter.HighlightingStateChanged"/>
 	/// </summary>

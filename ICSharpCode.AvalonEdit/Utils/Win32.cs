@@ -36,7 +36,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 		public static TimeSpan CaretBlinkTime {
 			get { return TimeSpan.FromMilliseconds(SafeNativeMethods.GetCaretBlinkTime()); }
 		}
-		
+
 		/// <summary>
 		/// Creates an invisible Win32 caret for the specified Visual with the specified size (coordinates local to the owner visual).
 		/// </summary>
@@ -52,7 +52,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 				return false;
 			}
 		}
-		
+
 		/// <summary>
 		/// Sets the position of the caret previously created using <see cref="CreateCaret"/>. position is relative to the owner visual.
 		/// </summary>
@@ -69,7 +69,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 				return false;
 			}
 		}
-		
+
 		/// <summary>
 		/// Destroys the caret previously created using <see cref="CreateCaret"/>.
 		/// </summary>
@@ -77,21 +77,21 @@ namespace ICSharpCode.AvalonEdit.Utils
 		{
 			return SafeNativeMethods.DestroyCaret();
 		}
-		
+
 		[SuppressUnmanagedCodeSecurity]
 		static class SafeNativeMethods
 		{
 			[DllImport("user32.dll")]
 			public static extern int GetCaretBlinkTime();
-			
+
 			[DllImport("user32.dll")]
 			[return: MarshalAs(UnmanagedType.Bool)]
 			public static extern bool CreateCaret(IntPtr hWnd, IntPtr hBitmap, int nWidth, int nHeight);
-			
+
 			[DllImport("user32.dll")]
 			[return: MarshalAs(UnmanagedType.Bool)]
 			public static extern bool SetCaretPos(int x, int y);
-			
+
 			[DllImport("user32.dll")]
 			[return: MarshalAs(UnmanagedType.Bool)]
 			public static extern bool DestroyCaret();

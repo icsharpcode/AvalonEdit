@@ -16,8 +16,8 @@
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
 
-using System;
 using System.Collections.Generic;
+
 using ICSharpCode.AvalonEdit.Document;
 
 namespace ICSharpCode.AvalonEdit.Editing
@@ -31,7 +31,7 @@ namespace ICSharpCode.AvalonEdit.Editing
 		/// Gets whether insertion is possible at the specified offset.
 		/// </summary>
 		bool CanInsert(int offset);
-		
+
 		/// <summary>
 		/// Gets the deletable segments inside the given segment.
 		/// </summary>

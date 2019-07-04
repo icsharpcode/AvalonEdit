@@ -17,7 +17,6 @@
 // DEALINGS IN THE SOFTWARE.
 
 using ICSharpCode.AvalonEdit.Utils;
-using System;
 
 namespace ICSharpCode.AvalonEdit
 {
@@ -37,14 +36,14 @@ namespace ICSharpCode.AvalonEdit
 			{
 				source.DocumentChanged += DeliverEvent;
 			}
-			
+
 			/// <inheritdoc/>
 			protected override void StopListening(ITextEditorComponent source)
 			{
 				source.DocumentChanged -= DeliverEvent;
 			}
 		}
-		
+
 		/// <summary>
 		/// Weak event manager for the <see cref="ITextEditorComponent.OptionChanged"/> event.
 		/// </summary>
@@ -56,7 +55,7 @@ namespace ICSharpCode.AvalonEdit
 			{
 				source.OptionChanged += DeliverEvent;
 			}
-			
+
 			/// <inheritdoc/>
 			protected override void StopListening(ITextEditorComponent source)
 			{

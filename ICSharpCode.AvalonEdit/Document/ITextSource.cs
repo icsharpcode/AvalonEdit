@@ -16,8 +16,8 @@
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
 
-using System.Collections.Generic;
 using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace ICSharpCode.AvalonEdit.Document
@@ -33,29 +33,29 @@ namespace ICSharpCode.AvalonEdit.Document
 		/// Returns null for unversioned text sources.
 		/// </summary>
 		ITextSourceVersion Version { get; }
-		
+
 		/// <summary>
 		/// Creates an immutable snapshot of this text source.
 		/// Unlike all other methods in this interface, this method is thread-safe.
 		/// </summary>
 		ITextSource CreateSnapshot();
-		
+
 		/// <summary>
 		/// Creates an immutable snapshot of a part of this text source.
 		/// Unlike all other methods in this interface, this method is thread-safe.
 		/// </summary>
 		ITextSource CreateSnapshot(int offset, int length);
-		
+
 		/// <summary>
 		/// Creates a new TextReader to read from this text source.
 		/// </summary>
 		TextReader CreateReader();
-		
+
 		/// <summary>
 		/// Creates a new TextReader to read from this text source.
 		/// </summary>
 		TextReader CreateReader(int offset, int length);
-		
+
 		/// <summary>
 		/// Gets the total text length.
 		/// </summary>
@@ -63,13 +63,13 @@ namespace ICSharpCode.AvalonEdit.Document
 		/// <remarks>This is the same as Text.Length, but is more efficient because
 		///  it doesn't require creating a String object.</remarks>
 		int TextLength { get; }
-		
+
 		/// <summary>
 		/// Gets the whole text as string.
 		/// </summary>
 		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1721:PropertyNamesShouldNotMatchGetMethods")]
 		string Text { get; }
-		
+
 		/// <summary>
 		/// Gets a character at the specified position in the document.
 		/// </summary>
@@ -79,7 +79,7 @@ namespace ICSharpCode.AvalonEdit.Document
 		/// <remarks>This is the same as Text[offset], but is more efficient because
 		///  it doesn't require creating a String object.</remarks>
 		char GetCharAt(int offset);
-		
+
 		/// <summary>
 		/// Retrieves the text for a portion of the document.
 		/// </summary>
@@ -87,23 +87,23 @@ namespace ICSharpCode.AvalonEdit.Document
 		/// <remarks>This is the same as Text.Substring, but is more efficient because
 		///  it doesn't require creating a String object for the whole document.</remarks>
 		string GetText(int offset, int length);
-		
+
 		/// <summary>
 		/// Retrieves the text for a portion of the document.
 		/// </summary>
 		/// <exception cref="ArgumentOutOfRangeException">offset or length is outside the valid range.</exception>
 		string GetText(ISegment segment);
-		
+
 		/// <summary>
 		/// Writes the text from this document into the TextWriter.
 		/// </summary>
 		void WriteTextTo(TextWriter writer);
-		
+
 		/// <summary>
 		/// Writes the text from this document into the TextWriter.
 		/// </summary>
 		void WriteTextTo(TextWriter writer, int offset, int length);
-		
+
 		/// <summary>
 		/// Gets the index of the first occurrence of the character in the specified array.
 		/// </summary>
@@ -112,7 +112,7 @@ namespace ICSharpCode.AvalonEdit.Document
 		/// <param name="count">Length of the area to search.</param>
 		/// <returns>The first index where the character was found; or -1 if no occurrence was found.</returns>
 		int IndexOf(char c, int startIndex, int count);
-		
+
 		/// <summary>
 		/// Gets the index of the first occurrence of any character in the specified array.
 		/// </summary>
@@ -121,7 +121,7 @@ namespace ICSharpCode.AvalonEdit.Document
 		/// <param name="count">Length of the area to search.</param>
 		/// <returns>The first index where any character was found; or -1 if no occurrence was found.</returns>
 		int IndexOfAny(char[] anyOf, int startIndex, int count);
-		
+
 		/// <summary>
 		/// Gets the index of the first occurrence of the specified search text in this text source.
 		/// </summary>
@@ -131,7 +131,7 @@ namespace ICSharpCode.AvalonEdit.Document
 		/// <param name="comparisonType">String comparison to use.</param>
 		/// <returns>The first index where the search term was found; or -1 if no occurrence was found.</returns>
 		int IndexOf(string searchText, int startIndex, int count, StringComparison comparisonType);
-		
+
 		/// <summary>
 		/// Gets the index of the last occurrence of the specified character in this text source.
 		/// </summary>
@@ -142,7 +142,7 @@ namespace ICSharpCode.AvalonEdit.Document
 		/// <remarks>The search proceeds backwards from (startIndex+count) to startIndex.
 		/// This is different than the meaning of the parameters on string.LastIndexOf!</remarks>
 		int LastIndexOf(char c, int startIndex, int count);
-		
+
 		/// <summary>
 		/// Gets the index of the last occurrence of the specified search text in this text source.
 		/// </summary>
@@ -154,7 +154,7 @@ namespace ICSharpCode.AvalonEdit.Document
 		/// <remarks>The search proceeds backwards from (startIndex+count) to startIndex.
 		/// This is different than the meaning of the parameters on string.LastIndexOf!</remarks>
 		int LastIndexOf(string searchText, int startIndex, int count, StringComparison comparisonType);
-		
+
 		/* What about:
 		void Insert (int offset, string value);
 		void Remove (int offset, int count);
@@ -171,7 +171,7 @@ namespace ICSharpCode.AvalonEdit.Document
 		IEnumerable<int> SearchBackwardIgnoreCase (string pattern, int startIndex);
 		*/
 	}
-	
+
 	/// <summary>
 	/// Represents a version identifier for a text source.
 	/// </summary>
@@ -190,7 +190,7 @@ namespace ICSharpCode.AvalonEdit.Document
 		/// Returns false when given <c>null</c>.
 		/// </remarks>
 		bool BelongsToSameDocumentAs(ITextSourceVersion other);
-		
+
 		/// <summary>
 		/// Compares the age of this checkpoint to the other checkpoint.
 		/// </summary>
@@ -200,7 +200,7 @@ namespace ICSharpCode.AvalonEdit.Document
 		/// 0 if <c>this</c> version instance represents the same version as <paramref name="other"/>.
 		/// 1 if this version is newer than <paramref name="other"/>.</returns>
 		int CompareAge(ITextSourceVersion other);
-		
+
 		/// <summary>
 		/// Gets the changes from this checkpoint to the other checkpoint.
 		/// If 'other' is older than this checkpoint, reverse changes are calculated.
@@ -208,14 +208,14 @@ namespace ICSharpCode.AvalonEdit.Document
 		/// <remarks>This method is thread-safe.</remarks>
 		/// <exception cref="ArgumentException">Raised if 'other' belongs to a different document than this checkpoint.</exception>
 		IEnumerable<TextChangeEventArgs> GetChangesTo(ITextSourceVersion other);
-		
+
 		/// <summary>
 		/// Calculates where the offset has moved in the other buffer version.
 		/// </summary>
 		/// <exception cref="ArgumentException">Raised if 'other' belongs to a different document than this checkpoint.</exception>
 		int MoveOffsetTo(ITextSourceVersion other, int oldOffset, AnchorMovementType movement = AnchorMovementType.Default);
 	}
-	
+
 	/// <summary>
 	/// Implements the ITextSource interface using a string.
 	/// </summary>
@@ -226,10 +226,10 @@ namespace ICSharpCode.AvalonEdit.Document
 		/// Gets a text source containing the empty string.
 		/// </summary>
 		public static readonly StringTextSource Empty = new StringTextSource(string.Empty);
-		
+
 		readonly string text;
 		readonly ITextSourceVersion version;
-		
+
 		/// <summary>
 		/// Creates a new StringTextSource with the given text.
 		/// </summary>
@@ -239,7 +239,7 @@ namespace ICSharpCode.AvalonEdit.Document
 				throw new ArgumentNullException("text");
 			this.text = text;
 		}
-		
+
 		/// <summary>
 		/// Creates a new StringTextSource with the given text.
 		/// </summary>
@@ -250,70 +250,70 @@ namespace ICSharpCode.AvalonEdit.Document
 			this.text = text;
 			this.version = version;
 		}
-		
+
 		/// <inheritdoc/>
 		public ITextSourceVersion Version {
 			get { return version; }
 		}
-		
+
 		/// <inheritdoc/>
 		public int TextLength {
 			get { return text.Length; }
 		}
-		
+
 		/// <inheritdoc/>
 		public string Text {
 			get { return text; }
 		}
-		
+
 		/// <inheritdoc/>
 		public ITextSource CreateSnapshot()
 		{
 			return this; // StringTextSource is immutable
 		}
-		
+
 		/// <inheritdoc/>
 		public ITextSource CreateSnapshot(int offset, int length)
 		{
 			return new StringTextSource(text.Substring(offset, length));
 		}
-		
+
 		/// <inheritdoc/>
 		public TextReader CreateReader()
 		{
 			return new StringReader(text);
 		}
-		
+
 		/// <inheritdoc/>
 		public TextReader CreateReader(int offset, int length)
 		{
 			return new StringReader(text.Substring(offset, length));
 		}
-		
+
 		/// <inheritdoc/>
 		public void WriteTextTo(TextWriter writer)
 		{
 			writer.Write(text);
 		}
-		
+
 		/// <inheritdoc/>
 		public void WriteTextTo(TextWriter writer, int offset, int length)
 		{
 			writer.Write(text.Substring(offset, length));
 		}
-		
+
 		/// <inheritdoc/>
 		public char GetCharAt(int offset)
 		{
 			return text[offset];
 		}
-		
+
 		/// <inheritdoc/>
 		public string GetText(int offset, int length)
 		{
 			return text.Substring(offset, length);
 		}
-		
+
 		/// <inheritdoc/>
 		public string GetText(ISegment segment)
 		{
@@ -321,31 +321,31 @@ namespace ICSharpCode.AvalonEdit.Document
 				throw new ArgumentNullException("segment");
 			return text.Substring(segment.Offset, segment.Length);
 		}
-		
+
 		/// <inheritdoc/>
 		public int IndexOf(char c, int startIndex, int count)
 		{
 			return text.IndexOf(c, startIndex, count);
 		}
-		
+
 		/// <inheritdoc/>
 		public int IndexOfAny(char[] anyOf, int startIndex, int count)
 		{
 			return text.IndexOfAny(anyOf, startIndex, count);
 		}
-		
+
 		/// <inheritdoc/>
 		public int IndexOf(string searchText, int startIndex, int count, StringComparison comparisonType)
 		{
 			return text.IndexOf(searchText, startIndex, count, comparisonType);
 		}
-		
+
 		/// <inheritdoc/>
 		public int LastIndexOf(char c, int startIndex, int count)
 		{
 			return text.LastIndexOf(c, startIndex + count - 1, count);
 		}
-		
+
 		/// <inheritdoc/>
 		public int LastIndexOf(string searchText, int startIndex, int count, StringComparison comparisonType)
 		{

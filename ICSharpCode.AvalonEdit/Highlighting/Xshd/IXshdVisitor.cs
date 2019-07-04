@@ -16,8 +16,6 @@
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
 
-using System;
-
 namespace ICSharpCode.AvalonEdit.Highlighting.Xshd
 {
 	/// <summary>
@@ -27,19 +25,19 @@ namespace ICSharpCode.AvalonEdit.Highlighting.Xshd
 	{
 		/// <summary>Visit method for XshdRuleSet</summary>
 		object VisitRuleSet(XshdRuleSet ruleSet);
-		
+
 		/// <summary>Visit method for XshdColor</summary>
 		object VisitColor(XshdColor color);
-		
+
 		/// <summary>Visit method for XshdKeywords</summary>
 		object VisitKeywords(XshdKeywords keywords);
-		
+
 		/// <summary>Visit method for XshdSpan</summary>
 		object VisitSpan(XshdSpan span);
-		
+
 		/// <summary>Visit method for XshdImport</summary>
 		object VisitImport(XshdImport import);
-		
+
 		/// <summary>Visit method for XshdRule</summary>
 		object VisitRule(XshdRule rule);
 	}

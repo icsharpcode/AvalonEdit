@@ -31,7 +31,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 		Stack<RopeNode<char>> stack = new Stack<RopeNode<char>>();
 		RopeNode<char> currentNode;
 		int indexInsideNode;
-		
+
 		/// <summary>
 		/// Creates a new RopeTextReader.
 		/// Internally, this method creates a Clone of the rope; so the text reader will always read through the old
@@ -41,11 +41,11 @@ namespace ICSharpCode.AvalonEdit.Utils
 		{
 			if (rope == null)
 				throw new ArgumentNullException("rope");
-			
+
 			// We force the user to iterate through a clone of the rope to keep the API contract of RopeTextReader simple
 			// (what happens when a rope is modified while iterating through it?)
 			rope.root.Publish();
-			
+
 			// special case for the empty rope:
 			// leave currentNode initialized to null (RopeTextReader doesn't support empty nodes)
 			if (rope.Length != 0) {
@@ -53,7 +53,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 				GoToLeftMostLeaf();
 			}
 		}
-		
+
 		void GoToLeftMostLeaf()
 		{
 			while (currentNode.contents == null) {
@@ -68,7 +68,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 			}
 			Debug.Assert(currentNode.height == 0);
 		}
-		
+
 		/// <inheritdoc/>
 		public override int Peek()
 		{
@@ -76,7 +76,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 				return -1;
 			return currentNode.contents[indexInsideNode];
 		}
-		
+
 		/// <inheritdoc/>
 		public override int Read()
 		{
@@ -87,7 +87,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 				GoToNextNode();
 			return result;
 		}
-		
+
 		void GoToNextNode()
 		{
 			if (stack.Count == 0) {
@@ -98,7 +98,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 				GoToLeftMostLeaf();
 			}
 		}
-		
+
 		/// <inheritdoc/>
 		public override int Read(char[] buffer, int index, int count)
 		{

@@ -16,7 +16,6 @@
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
 
-using System;
 using ICSharpCode.AvalonEdit.Utils;
 
 namespace ICSharpCode.AvalonEdit.Rendering
@@ -37,14 +36,14 @@ namespace ICSharpCode.AvalonEdit.Rendering
 			{
 				source.DocumentChanged += DeliverEvent;
 			}
-			
+
 			/// <inheritdoc/>
 			protected override void StopListening(TextView source)
 			{
 				source.DocumentChanged -= DeliverEvent;
 			}
 		}
-		
+
 		/// <summary>
 		/// Weak event manager for the <see cref="TextView.VisualLinesChanged"/> event.
 		/// </summary>
@@ -56,14 +55,14 @@ namespace ICSharpCode.AvalonEdit.Rendering
 			{
 				source.VisualLinesChanged += DeliverEvent;
 			}
-			
+
 			/// <inheritdoc/>
 			protected override void StopListening(TextView source)
 			{
 				source.VisualLinesChanged -= DeliverEvent;
 			}
 		}
-		
+
 		/// <summary>
 		/// Weak event manager for the <see cref="TextView.ScrollOffsetChanged"/> event.
 		/// </summary>
@@ -75,7 +74,7 @@ namespace ICSharpCode.AvalonEdit.Rendering
 			{
 				source.ScrollOffsetChanged += DeliverEvent;
 			}
-			
+
 			/// <inheritdoc/>
 			protected override void StopListening(TextView source)
 			{
