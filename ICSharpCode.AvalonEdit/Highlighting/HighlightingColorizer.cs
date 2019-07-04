@@ -260,10 +260,10 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 			if (color.FontStyle != null || color.FontWeight != null || color.FontFamily != null) {
 				Typeface tf = element.TextRunProperties.Typeface;
 				element.TextRunProperties.SetTypeface(new Typeface(
-				   color.FontFamily ?? tf.FontFamily,
-				   color.FontStyle ?? tf.Style,
-				   color.FontWeight ?? tf.Weight,
-				   tf.Stretch
+					color.FontFamily ?? tf.FontFamily,
+					color.FontStyle ?? tf.Style,
+					color.FontWeight ?? tf.Weight,
+					tf.Stretch
 			   ));
 			}
 			if (color.Underline ?? false)
