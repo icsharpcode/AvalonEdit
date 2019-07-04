@@ -264,7 +264,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 					color.FontStyle ?? tf.Style,
 					color.FontWeight ?? tf.Weight,
 					tf.Stretch
-			   ));
+			    ));
 			}
 			if (color.Underline ?? false)
 				element.TextRunProperties.SetTextDecorations(TextDecorations.Underline);
