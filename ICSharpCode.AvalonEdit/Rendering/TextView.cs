@@ -1235,6 +1235,7 @@ namespace ICSharpCode.AvalonEdit.Rendering
 			InvalidateLayer(renderer.Layer);
 		}
 
+		/// <inheritdoc/>
 		protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo)
 		{
 			base.OnRenderSizeChanged(sizeInfo);
