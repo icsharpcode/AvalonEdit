@@ -28,4 +28,4 @@ build:
   use_snupkg_format: true
   
 after_test:
-  - python ICSharpCode.AvalonEdit.Tests\tidy.py
+  - python BuildTools\tidy.py

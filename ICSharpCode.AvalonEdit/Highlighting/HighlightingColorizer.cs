@@ -234,7 +234,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 				return true;
 			return color.Background == null && color.Foreground == null
 				&& color.FontStyle == null && color.FontWeight == null
-				&& color.Underline == null;
+				&& color.Underline == null && color.Strikethrough == null;
 		}
 
 		/// <summary>
@@ -257,10 +257,10 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 				if (b != null)
 					element.BackgroundBrush = b;
 			}
-			if (color.FontStyle != null || color.FontWeight != null) {
+			if (color.FontStyle != null || color.FontWeight != null || color.FontFamily != null) {
 				Typeface tf = element.TextRunProperties.Typeface;
 				element.TextRunProperties.SetTypeface(new Typeface(
-					tf.FontFamily,
+					color.FontFamily ?? tf.FontFamily,
 					color.FontStyle ?? tf.Style,
 					color.FontWeight ?? tf.Weight,
 					tf.Stretch
@@ -268,6 +268,10 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 			}
 			if (color.Underline ?? false)
 				element.TextRunProperties.SetTextDecorations(TextDecorations.Underline);
+			if (color.Strikethrough ?? false)
+				element.TextRunProperties.SetTextDecorations(TextDecorations.Strikethrough);
+			if (color.FontSize.HasValue)
+				element.TextRunProperties.SetFontRenderingEmSize(color.FontSize.Value);
 		}
 
 		/// <summary>

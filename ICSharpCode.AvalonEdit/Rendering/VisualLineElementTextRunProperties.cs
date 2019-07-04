@@ -18,6 +18,7 @@
 
 using System;
 using System.Globalization;
+using System.Linq;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.TextFormatting;
@@ -201,7 +202,10 @@ namespace ICSharpCode.AvalonEdit.Rendering
 		public void SetTextDecorations(TextDecorationCollection value)
 		{
 			ExtensionMethods.CheckIsFrozen(value);
-			textDecorations = value;
+			if (textDecorations == null)
+				textDecorations = value;
+			else
+				textDecorations = new TextDecorationCollection(textDecorations.Union(value));
 		}
 
 		/// <summary>

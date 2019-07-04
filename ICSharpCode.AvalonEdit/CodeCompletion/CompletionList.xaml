@@ -1,6 +1,6 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:cc="clr-namespace:ICSharpCode.AvalonEdit.CodeCompletion">
+					xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+					xmlns:cc="clr-namespace:ICSharpCode.AvalonEdit.CodeCompletion">
 	<Style TargetType="{x:Type ListBoxItem}" x:Key="CompletionListBoxItem">
 		<Setter Property="Template">
 			<Setter.Value>

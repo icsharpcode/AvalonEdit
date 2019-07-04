@@ -298,6 +298,9 @@ namespace ICSharpCode.AvalonEdit.Highlighting.Xshd
 			color.FontWeight = ParseFontWeight(reader.GetAttribute("fontWeight"));
 			color.FontStyle = ParseFontStyle(reader.GetAttribute("fontStyle"));
 			color.Underline = reader.GetBoolAttribute("underline");
+			color.Strikethrough = reader.GetBoolAttribute("strikethrough");
+			color.FontFamily = ParseFontFamily(position, reader.GetAttribute("fontFamily"));
+			color.FontSize = ParseFontSize(position, reader.GetAttribute("fontSize"));
 			return color;
 		}
 
@@ -313,6 +316,23 @@ namespace ICSharpCode.AvalonEdit.Highlighting.Xshd
 				return GetSystemColorBrush(lineInfo, color);
 			else
 				return FixedColorHighlightingBrush((Color?)ColorConverter.ConvertFromInvariantString(color));
+		}
+
+		static int? ParseFontSize(IXmlLineInfo lineInfo, string size)
+		{
+			int value;
+			return int.TryParse(size, out value)
+				? value
+				: (int?)null;
+		}
+
+		static FontFamily ParseFontFamily(IXmlLineInfo lineInfo, string family)
+		{
+			if (!string.IsNullOrEmpty(family)) {
+				return new FontFamily(family);
+			} else {
+				return null;
+			}
 		}
 
 		internal static SystemColorHighlightingBrush GetSystemColorBrush(IXmlLineInfo lineInfo, string name)
