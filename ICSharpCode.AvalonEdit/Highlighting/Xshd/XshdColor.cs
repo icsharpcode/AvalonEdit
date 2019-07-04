@@ -18,7 +18,6 @@
 
 using System;
 using System.Runtime.Serialization;
-using System.Security.Permissions;
 using System.Windows;
 
 namespace ICSharpCode.AvalonEdit.Highlighting.Xshd
@@ -33,44 +32,44 @@ namespace ICSharpCode.AvalonEdit.Highlighting.Xshd
 		/// Gets/sets the name.
 		/// </summary>
 		public string Name { get; set; }
-		
+
 		/// <summary>
 		/// Gets/sets the foreground brush.
 		/// </summary>
 		public HighlightingBrush Foreground { get; set; }
-		
+
 		/// <summary>
 		/// Gets/sets the background brush.
 		/// </summary>
 		public HighlightingBrush Background { get; set; }
-		
+
 		/// <summary>
 		/// Gets/sets the font weight.
 		/// </summary>
 		public FontWeight? FontWeight { get; set; }
-		
+
 		/// <summary>
 		/// Gets/sets the underline flag
 		/// </summary>
 		public bool? Underline { get; set; }
-		
+
 		/// <summary>
 		/// Gets/sets the font style.
 		/// </summary>
 		public FontStyle? FontStyle { get; set; }
-		
+
 		/// <summary>
 		/// Gets/Sets the example text that demonstrates where the color is used.
 		/// </summary>
 		public string ExampleText { get; set; }
-		
+
 		/// <summary>
 		/// Creates a new XshdColor instance.
 		/// </summary>
 		public XshdColor()
 		{
 		}
-		
+
 		/// <summary>
 		/// Deserializes an XshdColor.
 		/// </summary>
@@ -89,7 +88,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting.Xshd
 			if (info.GetBoolean("HasUnderline"))
 				this.Underline = info.GetBoolean("Underline");
 		}
-		
+
 		/// <summary>
 		/// Serializes this XshdColor instance.
 		/// </summary>
@@ -112,7 +111,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting.Xshd
 				info.AddValue("Style", this.FontStyle.Value.ToString());
 			info.AddValue("ExampleText", this.ExampleText);
 		}
-		
+
 		/// <inheritdoc/>
 		public override object AcceptVisitor(IXshdVisitor visitor)
 		{

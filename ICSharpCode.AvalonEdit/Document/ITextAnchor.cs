@@ -50,13 +50,13 @@ namespace ICSharpCode.AvalonEdit.Document
 		/// </summary>
 		/// <exception cref="InvalidOperationException">Thrown when trying to get the Offset from a deleted anchor.</exception>
 		TextLocation Location { get; }
-		
+
 		/// <summary>
 		/// Gets the offset of the text anchor.
 		/// </summary>
 		/// <exception cref="InvalidOperationException">Thrown when trying to get the Offset from a deleted anchor.</exception>
 		int Offset { get; }
-		
+
 		/// <summary>
 		/// Controls how the anchor moves.
 		/// </summary>
@@ -65,7 +65,7 @@ namespace ICSharpCode.AvalonEdit.Document
 		/// The property <see cref="MovementType"/> will be used to determine which of these two options the anchor will choose.
 		/// The default value is <see cref="AnchorMovementType.Default"/>.</remarks>
 		AnchorMovementType MovementType { get; set; }
-		
+
 		/// <summary>
 		/// <para>
 		/// Specifies whether the anchor survives deletion of the text containing it.
@@ -76,7 +76,7 @@ namespace ICSharpCode.AvalonEdit.Document
 		/// </summary>
 		/// <remarks><inheritdoc cref="IsDeleted" /></remarks>
 		bool SurviveDeletion { get; set; }
-		
+
 		/// <summary>
 		/// Gets whether the anchor was deleted.
 		/// </summary>
@@ -89,7 +89,7 @@ namespace ICSharpCode.AvalonEdit.Document
 		/// but in other cases you want to still be able to use the anchor. For those cases, set <c><see cref="SurviveDeletion"/> = true</c>.</para>
 		/// </remarks>
 		bool IsDeleted { get; }
-		
+
 		/// <summary>
 		/// Occurs after the anchor was deleted.
 		/// </summary>
@@ -100,20 +100,20 @@ namespace ICSharpCode.AvalonEdit.Document
 		/// </para>
 		/// </remarks>
 		event EventHandler Deleted;
-		
+
 		/// <summary>
 		/// Gets the line number of the anchor.
 		/// </summary>
 		/// <exception cref="InvalidOperationException">Thrown when trying to get the Offset from a deleted anchor.</exception>
 		int Line { get; }
-		
+
 		/// <summary>
 		/// Gets the column number of this anchor.
 		/// </summary>
 		/// <exception cref="InvalidOperationException">Thrown when trying to get the Offset from a deleted anchor.</exception>
 		int Column { get; }
 	}
-	
+
 	/// <summary>
 	/// Defines how a text anchor moves.
 	/// </summary>

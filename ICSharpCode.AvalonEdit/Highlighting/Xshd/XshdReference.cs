@@ -29,28 +29,28 @@ namespace ICSharpCode.AvalonEdit.Highlighting.Xshd
 		string referencedDefinition;
 		string referencedElement;
 		T inlineElement;
-		
+
 		/// <summary>
 		/// Gets the reference.
 		/// </summary>
 		public string ReferencedDefinition {
 			get { return referencedDefinition; }
 		}
-		
+
 		/// <summary>
 		/// Gets the reference.
 		/// </summary>
 		public string ReferencedElement {
 			get { return referencedElement; }
 		}
-		
+
 		/// <summary>
 		/// Gets the inline element.
 		/// </summary>
 		public T InlineElement {
 			get { return inlineElement; }
 		}
-		
+
 		/// <summary>
 		/// Creates a new XshdReference instance.
 		/// </summary>
@@ -62,7 +62,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting.Xshd
 			this.referencedElement = referencedElement;
 			this.inlineElement = null;
 		}
-		
+
 		/// <summary>
 		/// Creates a new XshdReference instance.
 		/// </summary>
@@ -74,7 +74,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting.Xshd
 			this.referencedElement = null;
 			this.inlineElement = inlineElement;
 		}
-		
+
 		/// <summary>
 		/// Applies the visitor to the inline element, if there is any.
 		/// </summary>
@@ -85,11 +85,11 @@ namespace ICSharpCode.AvalonEdit.Highlighting.Xshd
 			else
 				return null;
 		}
-		
+
 		#region Equals and GetHashCode implementation
 		// The code in this region is useful if you want to use this structure in collections.
 		// If you don't need it, you can just remove the region and the ": IEquatable<XshdColorReference>" declaration.
-		
+
 		/// <inheritdoc/>
 		public override bool Equals(object obj)
 		{
@@ -98,7 +98,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting.Xshd
 			else
 				return false;
 		}
-		
+
 		/// <summary>
 		/// Equality operator.
 		/// </summary>
@@ -109,19 +109,19 @@ namespace ICSharpCode.AvalonEdit.Highlighting.Xshd
 				&& this.referencedElement == other.referencedElement
 				&& this.inlineElement == other.inlineElement;
 		}
-		
+
 		/// <inheritdoc/>
 		public override int GetHashCode()
 		{
 			// combine the hash codes of all members here (e.g. with XOR operator ^)
 			return GetHashCode(referencedDefinition) ^ GetHashCode(referencedElement) ^ GetHashCode(inlineElement);
 		}
-		
+
 		static int GetHashCode(object o)
 		{
 			return o != null ? o.GetHashCode() : 0;
 		}
-		
+
 		/// <summary>
 		/// Equality operator.
 		/// </summary>
@@ -129,7 +129,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting.Xshd
 		{
 			return left.Equals(right);
 		}
-		
+
 		/// <summary>
 		/// Inequality operator.
 		/// </summary>

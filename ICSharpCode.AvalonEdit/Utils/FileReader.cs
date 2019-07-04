@@ -50,13 +50,13 @@ namespace ICSharpCode.AvalonEdit.Utils
 					return false;
 			}
 		}
-		
+
 		static bool IsASCIICompatible(Encoding encoding)
 		{
 			byte[] bytes = encoding.GetBytes("Az");
 			return bytes.Length == 2 && bytes[0] == 'A' && bytes[1] == 'z';
 		}
-		
+
 		static Encoding RemoveBOM(Encoding encoding)
 		{
 			switch (encoding.CodePage) {
@@ -66,7 +66,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 					return encoding;
 			}
 		}
-		
+
 		/// <summary>
 		/// Reads the content of the given stream.
 		/// </summary>
@@ -80,7 +80,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 				return reader.ReadToEnd();
 			}
 		}
-		
+
 		/// <summary>
 		/// Reads the content of the file.
 		/// </summary>
@@ -93,7 +93,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 				return ReadFileContent(fs, defaultEncoding);
 			}
 		}
-		
+
 		/// <summary>
 		/// Opens the specified file for reading.
 		/// </summary>
@@ -114,7 +114,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 				throw;
 			}
 		}
-		
+
 		/// <summary>
 		/// Opens the specified stream for reading.
 		/// </summary>
@@ -130,7 +130,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 				throw new ArgumentException("stream is not positioned at beginning.", "stream");
 			if (defaultEncoding == null)
 				throw new ArgumentNullException("defaultEncoding");
-			
+
 			if (stream.Length >= 2) {
 				// the autodetection of StreamReader is not capable of detecting the difference
 				// between ISO-8859-1 and UTF-8 without BOM.
@@ -155,15 +155,15 @@ namespace ICSharpCode.AvalonEdit.Utils
 				}
 			}
 		}
-		
+
 		static readonly Encoding UTF8NoBOM = new UTF8Encoding(false);
-		
+
 		static StreamReader AutoDetect(Stream fs, byte firstByte, byte secondByte, Encoding defaultEncoding)
 		{
 			int max = (int)Math.Min(fs.Length, 500000); // look at max. 500 KB
 			const int ASCII = 0;
 			const int Error = 1;
-			const int UTF8  = 2;
+			const int UTF8 = 2;
 			const int UTF8Sequence = 3;
 			int state = ASCII;
 			int sequenceLength = 0;
@@ -228,7 +228,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 					if (IsUnicode(defaultEncoding)) {
 						// the file is not Unicode, so don't read it using Unicode even if the
 						// user has choosen Unicode as the default encoding.
-						
+
 						defaultEncoding = Encoding.Default; // use system encoding instead
 					}
 					return new StreamReader(fs, RemoveBOM(defaultEncoding));

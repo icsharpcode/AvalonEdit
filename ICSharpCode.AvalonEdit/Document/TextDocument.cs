@@ -24,6 +24,7 @@ using System.ComponentModel.Design;
 using System.Diagnostics;
 using System.Globalization;
 using System.Threading;
+
 using ICSharpCode.AvalonEdit.Utils;
 
 namespace ICSharpCode.AvalonEdit.Document
@@ -41,7 +42,7 @@ namespace ICSharpCode.AvalonEdit.Document
 		#region Thread ownership
 		readonly object lockObject = new object();
 		Thread owner = Thread.CurrentThread;
-		
+
 		/// <summary>
 		/// Verifies that the current thread is the documents owner thread.
 		/// Throws an <see cref="InvalidOperationException"/> if the wrong thread accesses the TextDocument.
@@ -56,7 +57,7 @@ namespace ICSharpCode.AvalonEdit.Document
 			if (Thread.CurrentThread != owner)
 				throw new InvalidOperationException("TextDocument can be accessed only from the thread that owns it.");
 		}
-		
+
 		/// <summary>
 		/// Transfers ownership of the document to another thread. This method can be used to load
 		/// a file into a TextDocument on a background thread and then transfer ownership to the UI thread
@@ -81,14 +82,14 @@ namespace ICSharpCode.AvalonEdit.Document
 			}
 		}
 		#endregion
-		
+
 		#region Fields + Constructor
 		readonly Rope<char> rope;
 		readonly DocumentLineTree lineTree;
 		readonly LineManager lineManager;
 		readonly TextAnchorTree anchorTree;
 		readonly TextSourceVersionProvider versionProvider = new TextSourceVersionProvider();
-		
+
 		/// <summary>
 		/// Create an empty text document.
 		/// </summary>
@@ -96,7 +97,7 @@ namespace ICSharpCode.AvalonEdit.Document
 			: this(string.Empty)
 		{
 		}
-		
+
 		/// <summary>
 		/// Create a new text document with the specified initial text.
 		/// </summary>
@@ -110,12 +111,12 @@ namespace ICSharpCode.AvalonEdit.Document
 			lineTrackers.CollectionChanged += delegate {
 				lineManager.UpdateListOfLineTrackers();
 			};
-			
+
 			anchorTree = new TextAnchorTree(this);
 			undoStack = new UndoStack();
 			FireChangeEvents();
 		}
-		
+
 		/// <summary>
 		/// Create a new text document with the specified initial text.
 		/// </summary>
@@ -123,25 +124,25 @@ namespace ICSharpCode.AvalonEdit.Document
 			: this(GetTextFromTextSource(initialText))
 		{
 		}
-		
+
 		// gets the text from a text source, directly retrieving the underlying rope where possible
 		static IEnumerable<char> GetTextFromTextSource(ITextSource textSource)
 		{
 			if (textSource == null)
 				throw new ArgumentNullException("textSource");
-			
+
 			RopeTextSource rts = textSource as RopeTextSource;
 			if (rts != null)
 				return rts.GetRope();
-			
+
 			TextDocument doc = textSource as TextDocument;
 			if (doc != null)
 				return doc.rope;
-			
+
 			return textSource.Text;
 		}
 		#endregion
-		
+
 		#region Text
 		void ThrowIfRangeInvalid(int offset, int length)
 		{
@@ -152,14 +153,14 @@ namespace ICSharpCode.AvalonEdit.Document
 				throw new ArgumentOutOfRangeException("length", length, "0 <= length, offset(" + offset + ")+length <= " + rope.Length.ToString(CultureInfo.InvariantCulture));
 			}
 		}
-		
+
 		/// <inheritdoc/>
 		public string GetText(int offset, int length)
 		{
 			VerifyAccess();
 			return rope.ToString(offset, length);
 		}
-		
+
 		/// <summary>
 		/// Retrieves the text for a portion of the document.
 		/// </summary>
@@ -169,51 +170,51 @@ namespace ICSharpCode.AvalonEdit.Document
 				throw new ArgumentNullException("segment");
 			return GetText(segment.Offset, segment.Length);
 		}
-		
+
 		/// <inheritdoc/>
 		public int IndexOf(char c, int startIndex, int count)
 		{
 			DebugVerifyAccess();
 			return rope.IndexOf(c, startIndex, count);
 		}
-		
+
 		/// <inheritdoc/>
 		public int LastIndexOf(char c, int startIndex, int count)
 		{
 			DebugVerifyAccess();
 			return rope.LastIndexOf(c, startIndex, count);
 		}
-		
+
 		/// <inheritdoc/>
 		public int IndexOfAny(char[] anyOf, int startIndex, int count)
 		{
 			DebugVerifyAccess(); // frequently called (NewLineFinder), so must be fast in release builds
 			return rope.IndexOfAny(anyOf, startIndex, count);
 		}
-		
+
 		/// <inheritdoc/>
 		public int IndexOf(string searchText, int startIndex, int count, StringComparison comparisonType)
 		{
 			DebugVerifyAccess();
 			return rope.IndexOf(searchText, startIndex, count, comparisonType);
 		}
-		
+
 		/// <inheritdoc/>
 		public int LastIndexOf(string searchText, int startIndex, int count, StringComparison comparisonType)
 		{
 			DebugVerifyAccess();
 			return rope.LastIndexOf(searchText, startIndex, count, comparisonType);
 		}
-		
+
 		/// <inheritdoc/>
 		public char GetCharAt(int offset)
 		{
 			DebugVerifyAccess(); // frequently called, so must be fast in release builds
 			return rope[offset];
 		}
-		
+
 		WeakReference cachedText;
-		
+
 		/// <summary>
 		/// Gets/Sets the text of the whole document.
 		/// </summary>
@@ -234,18 +235,18 @@ namespace ICSharpCode.AvalonEdit.Document
 				Replace(0, rope.Length, value);
 			}
 		}
-		
+
 		/// <summary>
 		/// This event is called after a group of changes is completed.
 		/// </summary>
 		/// <remarks><inheritdoc cref="Changing"/></remarks>
 		public event EventHandler TextChanged;
-		
+
 		event EventHandler IDocument.ChangeCompleted {
 			add { this.TextChanged += value; }
 			remove { this.TextChanged -= value; }
 		}
-		
+
 		/// <inheritdoc/>
 		public int TextLength {
 			get {
@@ -260,7 +261,7 @@ namespace ICSharpCode.AvalonEdit.Document
 		/// </summary>
 		/// <remarks><inheritdoc cref="Changing"/></remarks>
 		public event PropertyChangedEventHandler PropertyChanged;
-		
+
 		/// <summary>
 		/// Is raised before the document changes.
 		/// </summary>
@@ -299,28 +300,28 @@ namespace ICSharpCode.AvalonEdit.Document
 		/// </para>
 		/// </remarks>
 		public event EventHandler<DocumentChangeEventArgs> Changing;
-		
+
 		// Unfortunately EventHandler<T> is invariant, so we have to use two separate events
 		private event EventHandler<TextChangeEventArgs> textChanging;
-		
+
 		event EventHandler<TextChangeEventArgs> IDocument.TextChanging {
 			add { textChanging += value; }
 			remove { textChanging -= value; }
 		}
-		
+
 		/// <summary>
 		/// Is raised after the document has changed.
 		/// </summary>
 		/// <remarks><inheritdoc cref="Changing"/></remarks>
 		public event EventHandler<DocumentChangeEventArgs> Changed;
-		
+
 		private event EventHandler<TextChangeEventArgs> textChanged;
-		
+
 		event EventHandler<TextChangeEventArgs> IDocument.TextChanged {
 			add { textChanged += value; }
 			remove { textChanged -= value; }
 		}
-		
+
 		/// <summary>
 		/// Creates a snapshot of the current text.
 		/// </summary>
@@ -339,7 +340,7 @@ namespace ICSharpCode.AvalonEdit.Document
 				return new RopeTextSource(rope, versionProvider.CurrentVersion);
 			}
 		}
-		
+
 		/// <summary>
 		/// Creates a snapshot of a part of the current text.
 		/// </summary>
@@ -350,12 +351,12 @@ namespace ICSharpCode.AvalonEdit.Document
 				return new RopeTextSource(rope.GetRange(offset, length));
 			}
 		}
-	
+
 		/// <inheritdoc/>
 		public ITextSourceVersion Version {
 			get { return versionProvider.CurrentVersion; }
 		}
-		
+
 		/// <inheritdoc/>
 		public System.IO.TextReader CreateReader()
 		{
@@ -363,7 +364,7 @@ namespace ICSharpCode.AvalonEdit.Document
 				return new RopeTextReader(rope);
 			}
 		}
-		
+
 		/// <inheritdoc/>
 		public System.IO.TextReader CreateReader(int offset, int length)
 		{
@@ -371,14 +372,14 @@ namespace ICSharpCode.AvalonEdit.Document
 				return new RopeTextReader(rope.GetRange(offset, length));
 			}
 		}
-		
+
 		/// <inheritdoc/>
 		public void WriteTextTo(System.IO.TextWriter writer)
 		{
 			VerifyAccess();
 			rope.WriteTo(writer, 0, rope.Length);
 		}
-		
+
 		/// <inheritdoc/>
 		public void WriteTextTo(System.IO.TextWriter writer, int offset, int length)
 		{
@@ -386,10 +387,10 @@ namespace ICSharpCode.AvalonEdit.Document
 			rope.WriteTo(writer, offset, length);
 		}
 		#endregion
-		
+
 		#region BeginUpdate / EndUpdate
 		int beginUpdateCount;
-		
+
 		/// <summary>
 		/// Gets if an update is running.
 		/// </summary>
@@ -400,7 +401,7 @@ namespace ICSharpCode.AvalonEdit.Document
 				return beginUpdateCount > 0;
 			}
 		}
-		
+
 		/// <summary>
 		/// Immediately calls <see cref="BeginUpdate()"/>,
 		/// and returns an IDisposable that calls <see cref="EndUpdate()"/>.
@@ -411,7 +412,7 @@ namespace ICSharpCode.AvalonEdit.Document
 			BeginUpdate();
 			return new CallbackOnDispose(EndUpdate);
 		}
-		
+
 		/// <summary>
 		/// <para>Begins a group of document changes.</para>
 		/// <para>Some events are suspended until EndUpdate is called, and the <see cref="UndoStack"/> will
@@ -432,7 +433,7 @@ namespace ICSharpCode.AvalonEdit.Document
 					UpdateStarted(this, EventArgs.Empty);
 			}
 		}
-		
+
 		/// <summary>
 		/// Ends a group of document changes.
 		/// </summary>
@@ -456,40 +457,40 @@ namespace ICSharpCode.AvalonEdit.Document
 				beginUpdateCount -= 1;
 			}
 		}
-		
+
 		/// <summary>
 		/// Occurs when a document change starts.
 		/// </summary>
 		/// <remarks><inheritdoc cref="Changing"/></remarks>
 		public event EventHandler UpdateStarted;
-		
+
 		/// <summary>
 		/// Occurs when a document change is finished.
 		/// </summary>
 		/// <remarks><inheritdoc cref="Changing"/></remarks>
 		public event EventHandler UpdateFinished;
-		
+
 		void IDocument.StartUndoableAction()
 		{
 			BeginUpdate();
 		}
-		
+
 		void IDocument.EndUndoableAction()
 		{
 			EndUpdate();
 		}
-		
+
 		IDisposable IDocument.OpenUndoGroup()
 		{
 			return RunUpdate();
 		}
 		#endregion
-		
+
 		#region Fire events after update
 		int oldTextLength;
 		int oldLineCount;
 		bool fireTextChanged;
-		
+
 		/// <summary>
 		/// Fires TextChanged, TextLengthChanged, LineCountChanged if required.
 		/// </summary>
@@ -502,7 +503,7 @@ namespace ICSharpCode.AvalonEdit.Document
 				if (TextChanged != null)
 					TextChanged(this, EventArgs.Empty);
 				OnPropertyChanged("Text");
-				
+
 				int textLength = rope.Length;
 				if (textLength != oldTextLength) {
 					oldTextLength = textLength;
@@ -515,14 +516,14 @@ namespace ICSharpCode.AvalonEdit.Document
 				}
 			}
 		}
-		
+
 		void OnPropertyChanged(string propertyName)
 		{
 			if (PropertyChanged != null)
 				PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 		}
 		#endregion
-		
+
 		#region Insert / Remove  / Replace
 		/// <summary>
 		/// Inserts text.
@@ -538,7 +539,7 @@ namespace ICSharpCode.AvalonEdit.Document
 		{
 			Replace(offset, 0, new StringTextSource(text), null);
 		}
-		
+
 		/// <summary>
 		/// Inserts text.
 		/// </summary>
@@ -553,7 +554,7 @@ namespace ICSharpCode.AvalonEdit.Document
 		{
 			Replace(offset, 0, text, null);
 		}
-		
+
 		/// <summary>
 		/// Inserts text.
 		/// </summary>
@@ -572,7 +573,7 @@ namespace ICSharpCode.AvalonEdit.Document
 				Replace(offset, 0, new StringTextSource(text), null);
 			}
 		}
-		
+
 		/// <summary>
 		/// Inserts text.
 		/// </summary>
@@ -591,7 +592,7 @@ namespace ICSharpCode.AvalonEdit.Document
 				Replace(offset, 0, text, null);
 			}
 		}
-		
+
 		/// <summary>
 		/// Removes text.
 		/// </summary>
@@ -599,7 +600,7 @@ namespace ICSharpCode.AvalonEdit.Document
 		{
 			Replace(segment, string.Empty);
 		}
-		
+
 		/// <summary>
 		/// Removes text.
 		/// </summary>
@@ -609,9 +610,9 @@ namespace ICSharpCode.AvalonEdit.Document
 		{
 			Replace(offset, length, StringTextSource.Empty);
 		}
-		
+
 		internal bool inDocumentChanging;
-		
+
 		/// <summary>
 		/// Replaces text.
 		/// </summary>
@@ -621,7 +622,7 @@ namespace ICSharpCode.AvalonEdit.Document
 				throw new ArgumentNullException("segment");
 			Replace(segment.Offset, segment.Length, new StringTextSource(text), null);
 		}
-		
+
 		/// <summary>
 		/// Replaces text.
 		/// </summary>
@@ -631,7 +632,7 @@ namespace ICSharpCode.AvalonEdit.Document
 				throw new ArgumentNullException("segment");
 			Replace(segment.Offset, segment.Length, text, null);
 		}
-		
+
 		/// <summary>
 		/// Replaces text.
 		/// </summary>
@@ -642,7 +643,7 @@ namespace ICSharpCode.AvalonEdit.Document
 		{
 			Replace(offset, length, new StringTextSource(text), null);
 		}
-		
+
 		/// <summary>
 		/// Replaces text.
 		/// </summary>
@@ -653,7 +654,7 @@ namespace ICSharpCode.AvalonEdit.Document
 		{
 			Replace(offset, length, text, null);
 		}
-		
+
 		/// <summary>
 		/// Replaces text.
 		/// </summary>
@@ -666,7 +667,7 @@ namespace ICSharpCode.AvalonEdit.Document
 		{
 			Replace(offset, length, new StringTextSource(text), offsetChangeMappingType);
 		}
-		
+
 		/// <summary>
 		/// Replaces text.
 		/// </summary>
@@ -722,7 +723,7 @@ namespace ICSharpCode.AvalonEdit.Document
 					throw new ArgumentOutOfRangeException("offsetChangeMappingType", offsetChangeMappingType, "Invalid enum value");
 			}
 		}
-		
+
 		/// <summary>
 		/// Replaces text.
 		/// </summary>
@@ -742,7 +743,7 @@ namespace ICSharpCode.AvalonEdit.Document
 		{
 			Replace(offset, length, new StringTextSource(text), offsetChangeMap);
 		}
-		
+
 		/// <summary>
 		/// Replaces text.
 		/// </summary>
@@ -765,7 +766,7 @@ namespace ICSharpCode.AvalonEdit.Document
 			text = text.CreateSnapshot();
 			if (offsetChangeMap != null)
 				offsetChangeMap.Freeze();
-			
+
 			// Ensure that all changes take place inside an update group.
 			// Will also take care of throwing an exception if inDocumentChanging is set.
 			BeginUpdate();
@@ -776,7 +777,7 @@ namespace ICSharpCode.AvalonEdit.Document
 					// The range verification must wait until after the BeginUpdate() call because the document
 					// might be modified inside the UpdateStarted event.
 					ThrowIfRangeInvalid(offset, length);
-					
+
 					DoReplace(offset, length, text, offsetChangeMap);
 				} finally {
 					inDocumentChanging = false;
@@ -785,18 +786,18 @@ namespace ICSharpCode.AvalonEdit.Document
 				EndUpdate();
 			}
 		}
-		
+
 		void DoReplace(int offset, int length, ITextSource newText, OffsetChangeMap offsetChangeMap)
 		{
 			if (length == 0 && newText.TextLength == 0)
 				return;
-			
+
 			// trying to replace a single character in 'Normal' mode?
 			// for single characters, 'CharacterReplace' mode is equivalent, but more performant
 			// (we don't have to touch the anchorTree at all in 'CharacterReplace' mode)
 			if (length == 1 && newText.TextLength == 1 && offsetChangeMap == null)
 				offsetChangeMap = OffsetChangeMap.Empty;
-			
+
 			ITextSource removedText;
 			if (length == 0) {
 				removedText = StringTextSource.Empty;
@@ -807,23 +808,23 @@ namespace ICSharpCode.AvalonEdit.Document
 				removedText = new RopeTextSource(rope.GetRange(offset, length));
 			}
 			DocumentChangeEventArgs args = new DocumentChangeEventArgs(offset, removedText, newText, offsetChangeMap);
-			
+
 			// fire DocumentChanging event
 			if (Changing != null)
 				Changing(this, args);
 			if (textChanging != null)
 				textChanging(this, args);
-			
+
 			undoStack.Push(this, args);
-			
+
 			cachedText = null; // reset cache of complete document text
 			fireTextChanged = true;
 			DelayedEvents delayedEvents = new DelayedEvents();
-			
+
 			lock (lockObject) {
 				// create linked list of checkpoints
 				versionProvider.AppendChange(args);
-				
+
 				// now update the textBuffer and lineTree
 				if (offset == 0 && length == rope.Length) {
 					// optimize replacing the whole document
@@ -837,21 +838,21 @@ namespace ICSharpCode.AvalonEdit.Document
 				} else {
 					rope.RemoveRange(offset, length);
 					lineManager.Remove(offset, length);
-					#if DEBUG
+#if DEBUG
 					lineTree.CheckProperties();
-					#endif
+#endif
 					var newRopeTextSource = newText as RopeTextSource;
 					if (newRopeTextSource != null)
 						rope.InsertRange(offset, newRopeTextSource.GetRope());
 					else
 						rope.InsertText(offset, newText.Text);
 					lineManager.Insert(offset, newText);
-					#if DEBUG
+#if DEBUG
 					lineTree.CheckProperties();
-					#endif
+#endif
 				}
 			}
-			
+
 			// update text anchors
 			if (offsetChangeMap == null) {
 				anchorTree.HandleTextChange(args.CreateSingleChangeMapEntry(), delayedEvents);
@@ -860,12 +861,12 @@ namespace ICSharpCode.AvalonEdit.Document
 					anchorTree.HandleTextChange(entry, delayedEvents);
 				}
 			}
-			
+
 			lineManager.ChangeComplete(args);
-			
+
 			// raise delayed events after our data structures are consistent again
 			delayedEvents.RaiseEvents();
-			
+
 			// fire DocumentChanged event
 			if (Changed != null)
 				Changed(this, args);
@@ -873,7 +874,7 @@ namespace ICSharpCode.AvalonEdit.Document
 				textChanged(this, args);
 		}
 		#endregion
-		
+
 		#region GetLineBy...
 		/// <summary>
 		/// Gets a read-only list of lines.
@@ -882,7 +883,7 @@ namespace ICSharpCode.AvalonEdit.Document
 		public IList<DocumentLine> Lines {
 			get { return lineTree; }
 		}
-		
+
 		/// <summary>
 		/// Gets a line by the line number: O(log n)
 		/// </summary>
@@ -893,12 +894,12 @@ namespace ICSharpCode.AvalonEdit.Document
 				throw new ArgumentOutOfRangeException("number", number, "Value must be between 1 and " + lineTree.LineCount);
 			return lineTree.GetByNumber(number);
 		}
-		
+
 		IDocumentLine IDocument.GetLineByNumber(int lineNumber)
 		{
 			return GetLineByNumber(lineNumber);
 		}
-		
+
 		/// <summary>
 		/// Gets a document lines by offset.
 		/// Runtime: O(log n)
@@ -912,13 +913,13 @@ namespace ICSharpCode.AvalonEdit.Document
 			}
 			return lineTree.GetByOffset(offset);
 		}
-		
+
 		IDocumentLine IDocument.GetLineByOffset(int offset)
 		{
 			return GetLineByOffset(offset);
 		}
 		#endregion
-		
+
 		#region GetOffset / GetLocation
 		/// <summary>
 		/// Gets the offset from a text location.
@@ -928,7 +929,7 @@ namespace ICSharpCode.AvalonEdit.Document
 		{
 			return GetOffset(location.Line, location.Column);
 		}
-		
+
 		/// <summary>
 		/// Gets the offset from a text location.
 		/// </summary>
@@ -942,7 +943,7 @@ namespace ICSharpCode.AvalonEdit.Document
 				return docLine.EndOffset;
 			return docLine.Offset + column - 1;
 		}
-		
+
 		/// <summary>
 		/// Gets the location from an offset.
 		/// </summary>
@@ -953,10 +954,10 @@ namespace ICSharpCode.AvalonEdit.Document
 			return new TextLocation(line.LineNumber, offset - line.Offset + 1);
 		}
 		#endregion
-		
+
 		#region Line Trackers
 		readonly ObservableCollection<ILineTracker> lineTrackers = new ObservableCollection<ILineTracker>();
-		
+
 		/// <summary>
 		/// Gets the list of <see cref="ILineTracker"/>s attached to this document.
 		/// You can add custom line trackers to this list.
@@ -968,10 +969,10 @@ namespace ICSharpCode.AvalonEdit.Document
 			}
 		}
 		#endregion
-		
+
 		#region UndoStack
 		UndoStack undoStack;
-		
+
 		/// <summary>
 		/// Gets the <see cref="UndoStack"/> of the document.
 		/// </summary>
@@ -983,14 +984,14 @@ namespace ICSharpCode.AvalonEdit.Document
 					throw new ArgumentNullException();
 				if (value != undoStack) {
 					undoStack.ClearAll(); // first clear old undo stack, so that it can't be used to perform unexpected changes on this document
-					// ClearAll() will also throw an exception when it's not safe to replace the undo stack (e.g. update is currently in progress)
+										  // ClearAll() will also throw an exception when it's not safe to replace the undo stack (e.g. update is currently in progress)
 					undoStack = value;
 					OnPropertyChanged("UndoStack");
 				}
 			}
 		}
 		#endregion
-		
+
 		#region CreateAnchor
 		/// <summary>
 		/// Creates a new <see cref="TextAnchor"/> at the specified offset.
@@ -1004,13 +1005,13 @@ namespace ICSharpCode.AvalonEdit.Document
 			}
 			return anchorTree.CreateAnchor(offset);
 		}
-		
+
 		ITextAnchor IDocument.CreateAnchor(int offset)
 		{
 			return CreateAnchor(offset);
 		}
 		#endregion
-		
+
 		#region LineCount
 		/// <summary>
 		/// Gets the total number of lines in the document.
@@ -1022,16 +1023,16 @@ namespace ICSharpCode.AvalonEdit.Document
 				return lineTree.LineCount;
 			}
 		}
-		
+
 		#endregion
-		
+
 		#region Debugging
 		[Conditional("DEBUG")]
 		internal void DebugVerifyAccess()
 		{
 			VerifyAccess();
 		}
-		
+
 		/// <summary>
 		/// Gets the document lines tree in string form.
 		/// </summary>
@@ -1039,13 +1040,13 @@ namespace ICSharpCode.AvalonEdit.Document
 		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
 		internal string GetLineTreeAsString()
 		{
-			#if DEBUG
+#if DEBUG
 			return lineTree.GetTreeAsString();
-			#else
+#else
 			return "Not available in release build.";
-			#endif
+#endif
 		}
-		
+
 		/// <summary>
 		/// Gets the text anchor tree in string form.
 		/// </summary>
@@ -1053,17 +1054,17 @@ namespace ICSharpCode.AvalonEdit.Document
 		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
 		internal string GetTextAnchorTreeAsString()
 		{
-			#if DEBUG
+#if DEBUG
 			return anchorTree.GetTreeAsString();
-			#else
+#else
 			return "Not available in release build.";
-			#endif
+#endif
 		}
 		#endregion
-		
+
 		#region Service Provider
 		IServiceProvider serviceProvider;
-		
+
 		/// <summary>
 		/// Gets/Sets the service provider associated with this document.
 		/// By default, every TextDocument has its own ServiceContainer; and has the document itself
@@ -1087,26 +1088,26 @@ namespace ICSharpCode.AvalonEdit.Document
 				serviceProvider = value;
 			}
 		}
-		
+
 		object IServiceProvider.GetService(Type serviceType)
 		{
 			return this.ServiceProvider.GetService(serviceType);
 		}
 		#endregion
-		
+
 		#region FileName
 		string fileName;
-		
+
 		/// <inheritdoc/>
 		public event EventHandler FileNameChanged;
-		
+
 		void OnFileNameChanged(EventArgs e)
 		{
 			EventHandler handler = this.FileNameChanged;
 			if (handler != null)
 				handler(this, e);
 		}
-		
+
 		/// <inheritdoc/>
 		public string FileName {
 			get { return fileName; }

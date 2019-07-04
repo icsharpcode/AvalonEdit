@@ -17,7 +17,6 @@
 // DEALINGS IN THE SOFTWARE.
 
 using ICSharpCode.AvalonEdit.Document;
-using System;
 
 namespace ICSharpCode.AvalonEdit.Indentation
 {
@@ -31,7 +30,7 @@ namespace ICSharpCode.AvalonEdit.Indentation
 		/// Usually this is constructed from the indentation of the previous line.
 		/// </summary>
 		void IndentLine(TextDocument document, DocumentLine line);
-		
+
 		/// <summary>
 		/// Reindents a set of lines.
 		/// </summary>

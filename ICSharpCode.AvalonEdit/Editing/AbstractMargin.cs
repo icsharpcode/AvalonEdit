@@ -39,8 +39,8 @@ namespace ICSharpCode.AvalonEdit.Editing
 		/// </summary>
 		public static readonly DependencyProperty TextViewProperty =
 			DependencyProperty.Register("TextView", typeof(TextView), typeof(AbstractMargin),
-			                            new FrameworkPropertyMetadata(OnTextViewChanged));
-		
+										new FrameworkPropertyMetadata(OnTextViewChanged));
+
 		/// <summary>
 		/// Gets/sets the text view for which line numbers are displayed.
 		/// </summary>
@@ -49,17 +49,17 @@ namespace ICSharpCode.AvalonEdit.Editing
 			get { return (TextView)GetValue(TextViewProperty); }
 			set { SetValue(TextViewProperty, value); }
 		}
-		
+
 		static void OnTextViewChanged(DependencyObject dp, DependencyPropertyChangedEventArgs e)
 		{
 			AbstractMargin margin = (AbstractMargin)dp;
 			margin.wasAutoAddedToTextView = false;
 			margin.OnTextViewChanged((TextView)e.OldValue, (TextView)e.NewValue);
 		}
-		
+
 		// automatically set/unset TextView property using ITextViewConnect
 		bool wasAutoAddedToTextView;
-		
+
 		void ITextViewConnect.AddToTextView(TextView textView)
 		{
 			if (this.TextView == null) {
@@ -69,7 +69,7 @@ namespace ICSharpCode.AvalonEdit.Editing
 				throw new InvalidOperationException("This margin belongs to a different TextView.");
 			}
 		}
-		
+
 		void ITextViewConnect.RemoveFromTextView(TextView textView)
 		{
 			if (wasAutoAddedToTextView && this.TextView == textView) {
@@ -77,16 +77,16 @@ namespace ICSharpCode.AvalonEdit.Editing
 				Debug.Assert(!wasAutoAddedToTextView); // setting this.TextView should have unset this flag
 			}
 		}
-		
+
 		TextDocument document;
-		
+
 		/// <summary>
 		/// Gets the document associated with the margin.
 		/// </summary>
 		public TextDocument Document {
 			get { return document; }
 		}
-		
+
 		/// <summary>
 		/// Called when the <see cref="TextView"/> is changing.
 		/// </summary>
@@ -100,12 +100,12 @@ namespace ICSharpCode.AvalonEdit.Editing
 			}
 			TextViewDocumentChanged(null, null);
 		}
-		
+
 		void TextViewDocumentChanged(object sender, EventArgs e)
 		{
 			OnDocumentChanged(document, TextView != null ? TextView.Document : null);
 		}
-		
+
 		/// <summary>
 		/// Called when the <see cref="Document"/> is changing.
 		/// </summary>

@@ -18,7 +18,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Text;
 
 namespace ICSharpCode.AvalonEdit.Utils
@@ -39,20 +38,20 @@ namespace ICSharpCode.AvalonEdit.Utils
 		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "ImmutableStack is immutable")]
 		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1000:DoNotDeclareStaticMembersOnGenericTypes")]
 		public static readonly ImmutableStack<T> Empty = new ImmutableStack<T>();
-		
+
 		readonly T value;
 		readonly ImmutableStack<T> next;
-		
+
 		private ImmutableStack()
 		{
 		}
-		
+
 		private ImmutableStack(T value, ImmutableStack<T> next)
 		{
 			this.value = value;
 			this.next = next;
 		}
-		
+
 		/// <summary>
 		/// Pushes an item on the stack. This does not modify the stack itself, but returns a new
 		/// one with the value pushed.
@@ -61,7 +60,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 		{
 			return new ImmutableStack<T>(item, this);
 		}
-		
+
 		/// <summary>
 		/// Gets the item on the top of the stack.
 		/// </summary>
@@ -72,7 +71,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 				throw new InvalidOperationException("Operation not valid on empty stack.");
 			return value;
 		}
-		
+
 		/// <summary>
 		/// Gets the item on the top of the stack.
 		/// Returns <c>default(T)</c> if the stack is empty.
@@ -81,7 +80,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 		{
 			return value;
 		}
-		
+
 		/// <summary>
 		/// Gets the stack with the top item removed.
 		/// </summary>
@@ -92,14 +91,14 @@ namespace ICSharpCode.AvalonEdit.Utils
 				throw new InvalidOperationException("Operation not valid on empty stack.");
 			return next;
 		}
-		
+
 		/// <summary>
 		/// Gets if this stack is empty.
 		/// </summary>
 		public bool IsEmpty {
 			get { return next == null; }
 		}
-		
+
 		/// <summary>
 		/// Gets an enumerator that iterates through the stack top-to-bottom.
 		/// </summary>
@@ -111,12 +110,12 @@ namespace ICSharpCode.AvalonEdit.Utils
 				t = t.next;
 			}
 		}
-		
+
 		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
 		{
 			return this.GetEnumerator();
 		}
-		
+
 		/// <inheritdoc/>
 		public override string ToString()
 		{

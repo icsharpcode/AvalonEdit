@@ -20,6 +20,7 @@ using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Documents;
+
 using ICSharpCode.AvalonEdit.Document;
 using ICSharpCode.AvalonEdit.Highlighting;
 
@@ -52,7 +53,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 			}
 			return p;
 		}
-		
+
 		/// <summary>
 		/// Converts an IDocument to a RichText and applies the provided highlighter.
 		/// </summary>
@@ -74,7 +75,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 			}
 			return RichText.Concat(texts.ToArray());
 		}
-		
+
 		/// <summary>
 		/// Creates a flow document from the editor's contents.
 		/// </summary>

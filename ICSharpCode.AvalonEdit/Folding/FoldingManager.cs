@@ -35,11 +35,11 @@ namespace ICSharpCode.AvalonEdit.Folding
 	public class FoldingManager : IWeakEventListener
 	{
 		internal readonly TextDocument document;
-		
+
 		internal readonly List<TextView> textViews = new List<TextView>();
 		readonly TextSegmentCollection<FoldingSection> foldings;
 		bool isFirstUpdate = true;
-		
+
 		#region Constructor
 		/// <summary>
 		/// Creates a new FoldingManager instance.
@@ -54,7 +54,7 @@ namespace ICSharpCode.AvalonEdit.Folding
 			TextDocumentWeakEventManager.Changed.AddListener(document, this);
 		}
 		#endregion
-		
+
 		#region ReceiveWeakEvent
 		/// <inheritdoc cref="IWeakEventListener.ReceiveWeakEvent"/>
 		protected virtual bool ReceiveWeakEvent(Type managerType, object sender, EventArgs e)
@@ -65,12 +65,12 @@ namespace ICSharpCode.AvalonEdit.Folding
 			}
 			return false;
 		}
-		
+
 		bool IWeakEventListener.ReceiveWeakEvent(Type managerType, object sender, EventArgs e)
 		{
 			return ReceiveWeakEvent(managerType, sender, e);
 		}
-		
+
 		void OnDocumentChanged(DocumentChangeEventArgs e)
 		{
 			foldings.UpdateOffsets(e);
@@ -87,7 +87,7 @@ namespace ICSharpCode.AvalonEdit.Folding
 			}
 		}
 		#endregion
-		
+
 		#region Manage TextViews
 		internal void AddToTextView(TextView textView)
 		{
@@ -101,7 +101,7 @@ namespace ICSharpCode.AvalonEdit.Folding
 				}
 			}
 		}
-		
+
 		internal void RemoveFromTextView(TextView textView)
 		{
 			int pos = textViews.IndexOf(textView);
@@ -118,20 +118,20 @@ namespace ICSharpCode.AvalonEdit.Folding
 				}
 			}
 		}
-		
+
 		internal void Redraw()
 		{
 			foreach (TextView textView in textViews)
 				textView.Redraw();
 		}
-		
+
 		internal void Redraw(FoldingSection fs)
 		{
 			foreach (TextView textView in textViews)
 				textView.Redraw(fs);
 		}
 		#endregion
-		
+
 		#region Create / Remove / Clear
 		/// <summary>
 		/// Creates a folding for the specified text section.
@@ -147,7 +147,7 @@ namespace ICSharpCode.AvalonEdit.Folding
 			Redraw(fs);
 			return fs;
 		}
-		
+
 		/// <summary>
 		/// Removes a folding section from this manager.
 		/// </summary>
@@ -159,7 +159,7 @@ namespace ICSharpCode.AvalonEdit.Folding
 			foldings.Remove(fs);
 			Redraw(fs);
 		}
-		
+
 		/// <summary>
 		/// Removes all folding sections.
 		/// </summary>
@@ -172,7 +172,7 @@ namespace ICSharpCode.AvalonEdit.Folding
 			Redraw();
 		}
 		#endregion
-		
+
 		#region Get...Folding
 		/// <summary>
 		/// Gets all foldings in this manager.
@@ -182,7 +182,7 @@ namespace ICSharpCode.AvalonEdit.Folding
 		public IEnumerable<FoldingSection> AllFoldings {
 			get { return foldings; }
 		}
-		
+
 		/// <summary>
 		/// Gets the first offset greater or equal to <paramref name="startOffset"/> where a folded folding starts.
 		/// Returns -1 if there are no foldings after <paramref name="startOffset"/>.
@@ -194,7 +194,7 @@ namespace ICSharpCode.AvalonEdit.Folding
 				fs = foldings.GetNextSegment(fs);
 			return fs != null ? fs.StartOffset : -1;
 		}
-		
+
 		/// <summary>
 		/// Gets the first folding with a <see cref="TextSegment.StartOffset"/> greater or equal to
 		/// <paramref name="startOffset"/>.
@@ -205,7 +205,7 @@ namespace ICSharpCode.AvalonEdit.Folding
 			// TODO: returns the longest folding instead of any folding at the first position after startOffset
 			return foldings.FindFirstSegmentWithStartAfter(startOffset);
 		}
-		
+
 		/// <summary>
 		/// Gets all foldings that start exactly at <paramref name="startOffset"/>.
 		/// </summary>
@@ -219,7 +219,7 @@ namespace ICSharpCode.AvalonEdit.Folding
 			}
 			return result.AsReadOnly();
 		}
-		
+
 		/// <summary>
 		/// Gets all foldings that contain <paramref name="offset" />.
 		/// </summary>
@@ -228,7 +228,7 @@ namespace ICSharpCode.AvalonEdit.Folding
 			return foldings.FindSegmentsContaining(offset);
 		}
 		#endregion
-		
+
 		#region UpdateFoldings
 		/// <summary>
 		/// Updates the foldings in this <see cref="FoldingManager"/> using the given new foldings.
@@ -243,10 +243,10 @@ namespace ICSharpCode.AvalonEdit.Folding
 		{
 			if (newFoldings == null)
 				throw new ArgumentNullException("newFoldings");
-			
+
 			if (firstErrorOffset < 0)
 				firstErrorOffset = int.MaxValue;
-			
+
 			var oldFoldings = this.AllFoldings.ToArray();
 			int oldFoldingIndex = 0;
 			int previousStartOffset = 0;
@@ -257,13 +257,13 @@ namespace ICSharpCode.AvalonEdit.Folding
 				if (newFolding.StartOffset < previousStartOffset)
 					throw new ArgumentException("newFoldings must be sorted by start offset");
 				previousStartOffset = newFolding.StartOffset;
-				
+
 				int startOffset = newFolding.StartOffset.CoerceValue(0, document.TextLength);
 				int endOffset = newFolding.EndOffset.CoerceValue(0, document.TextLength);
-				
+
 				if (newFolding.StartOffset == newFolding.EndOffset)
 					continue; // ignore zero-length foldings
-				
+
 				// remove old foldings that were skipped
 				while (oldFoldingIndex < oldFoldings.Length && newFolding.StartOffset > oldFoldings[oldFoldingIndex].StartOffset) {
 					this.RemoveFolding(oldFoldings[oldFoldingIndex++]);
@@ -294,7 +294,7 @@ namespace ICSharpCode.AvalonEdit.Folding
 			}
 		}
 		#endregion
-		
+
 		#region Install
 		/// <summary>
 		/// Adds Folding support to the specified text area.
@@ -308,7 +308,7 @@ namespace ICSharpCode.AvalonEdit.Folding
 				throw new ArgumentNullException("textArea");
 			return new FoldingManagerInstallation(textArea);
 		}
-		
+
 		/// <summary>
 		/// Uninstalls the folding manager.
 		/// </summary>
@@ -324,13 +324,13 @@ namespace ICSharpCode.AvalonEdit.Folding
 				throw new ArgumentException("FoldingManager was not created using FoldingManager.Install");
 			}
 		}
-		
+
 		sealed class FoldingManagerInstallation : FoldingManager
 		{
 			TextArea textArea;
 			FoldingMargin margin;
 			FoldingElementGenerator generator;
-			
+
 			public FoldingManagerInstallation(TextArea textArea) : base(textArea.Document)
 			{
 				this.textArea = textArea;
@@ -342,7 +342,7 @@ namespace ICSharpCode.AvalonEdit.Folding
 				textArea.TextView.ElementGenerators.Insert(0, generator);
 				textArea.Caret.PositionChanged += textArea_Caret_PositionChanged;
 			}
-			
+
 			/*
 			void DemoMode()
 			{
@@ -366,7 +366,7 @@ namespace ICSharpCode.AvalonEdit.Folding
 					         textEditor.TextArea.TextView.ActualHeight));
 			}
 			 */
-			
+
 			public void Uninstall()
 			{
 				Clear();
@@ -380,7 +380,7 @@ namespace ICSharpCode.AvalonEdit.Folding
 					textArea = null;
 				}
 			}
-			
+
 			void textArea_Caret_PositionChanged(object sender, EventArgs e)
 			{
 				// Expand Foldings when Caret is moved into them.

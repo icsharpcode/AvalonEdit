@@ -8,7 +8,7 @@
 		<ResourceDictionary Source="/ICSharpCode.AvalonEdit;component/CodeCompletion/CompletionList.xaml" />
 		<ResourceDictionary Source="/ICSharpCode.AvalonEdit;component/CodeCompletion/InsightWindow.xaml" />
 	</ResourceDictionary.MergedDictionaries>
-	
+
 	<Style TargetType="{x:Type editing:LineNumberMargin}">
 		<Setter Property="Control.Cursor" Value="/ICSharpCode.AvalonEdit;component/themes/RightArrow.cur"/>
 	</Style>

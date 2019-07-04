@@ -16,7 +16,6 @@
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
 
-using System;
 using System.Diagnostics;
 using System.Windows.Automation;
 using System.Windows.Automation.Peers;
@@ -39,20 +38,20 @@ namespace ICSharpCode.AvalonEdit
 		{
 			Debug.WriteLine("TextEditorAutomationPeer was created");
 		}
-		
+
 		private TextEditor TextEditor {
 			get { return (TextEditor)base.Owner; }
 		}
-		
+
 		void IValueProvider.SetValue(string value)
 		{
 			this.TextEditor.Text = value;
 		}
-		
+
 		string IValueProvider.Value {
 			get { return this.TextEditor.Text; }
 		}
-		
+
 		bool IValueProvider.IsReadOnly {
 			get { return this.TextEditor.IsReadOnly; }
 		}
@@ -81,7 +80,7 @@ namespace ICSharpCode.AvalonEdit
 
 			return base.GetPattern(patternInterface);
 		}
-		
+
 		internal void RaiseIsReadOnlyChanged(bool oldValue, bool newValue)
 		{
 			RaisePropertyChangedEvent(ValuePatternIdentifiers.IsReadOnlyProperty, Boxes.Box(oldValue), Boxes.Box(newValue));

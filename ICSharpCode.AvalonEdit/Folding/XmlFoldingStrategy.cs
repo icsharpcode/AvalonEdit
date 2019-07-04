@@ -33,7 +33,7 @@ namespace ICSharpCode.AvalonEdit.Folding
 	{
 		internal int StartLine;
 	}
-	
+
 	/// <summary>
 	/// Determines folds for an xml string in the editor.
 	/// </summary>
@@ -44,7 +44,7 @@ namespace ICSharpCode.AvalonEdit.Folding
 		/// elements.
 		/// </summary>
 		public bool ShowAttributesWhenFolded { get; set; }
-		
+
 		/// <summary>
 		/// Create <see cref="NewFolding"/>s for the specified document and updates the folding manager with them.
 		/// </summary>
@@ -54,7 +54,7 @@ namespace ICSharpCode.AvalonEdit.Folding
 			IEnumerable<NewFolding> foldings = CreateNewFoldings(document, out firstErrorOffset);
 			manager.UpdateFoldings(foldings, firstErrorOffset);
 		}
-		
+
 		/// <summary>
 		/// Create <see cref="NewFolding"/>s for the specified document.
 		/// </summary>
@@ -69,7 +69,7 @@ namespace ICSharpCode.AvalonEdit.Folding
 				return Enumerable.Empty<NewFolding>();
 			}
 		}
-		
+
 		/// <summary>
 		/// Create <see cref="NewFolding"/>s for the specified document.
 		/// </summary>
@@ -86,12 +86,12 @@ namespace ICSharpCode.AvalonEdit.Folding
 								stack.Push(newFoldStart);
 							}
 							break;
-							
+
 						case XmlNodeType.EndElement:
 							XmlFoldStart foldStart = stack.Pop();
 							CreateElementFold(document, foldMarkers, reader, foldStart);
 							break;
-							
+
 						case XmlNodeType.Comment:
 							CreateCommentFold(document, foldMarkers, reader);
 							break;
@@ -105,10 +105,10 @@ namespace ICSharpCode.AvalonEdit.Folding
 				else
 					firstErrorOffset = 0;
 			}
-			foldMarkers.Sort((a,b) => a.StartOffset.CompareTo(b.StartOffset));
+			foldMarkers.Sort((a, b) => a.StartOffset.CompareTo(b.StartOffset));
 			return foldMarkers;
 		}
-		
+
 		static int GetOffset(TextDocument document, XmlReader reader)
 		{
 			IXmlLineInfo info = reader as IXmlLineInfo;
@@ -118,7 +118,7 @@ namespace ICSharpCode.AvalonEdit.Folding
 				throw new ArgumentException("XmlReader does not have positioning information.");
 			}
 		}
-		
+
 		/// <summary>
 		/// Creates a comment fold if the comment spans more than one line.
 		/// </summary>
@@ -130,19 +130,19 @@ namespace ICSharpCode.AvalonEdit.Folding
 			if (comment != null) {
 				int firstNewLine = comment.IndexOf('\n');
 				if (firstNewLine >= 0) {
-					
+
 					// Take off 4 chars to get the actual comment start (takes
 					// into account the <!-- chars.
-					
+
 					int startOffset = GetOffset(document, reader) - 4;
 					int endOffset = startOffset + comment.Length + 7;
-					
-					string foldText = String.Concat("<!--", comment.Substring(0, firstNewLine).TrimEnd('\r') , "-->");
-					foldMarkers.Add(new NewFolding(startOffset, endOffset) { Name = foldText } );
+
+					string foldText = String.Concat("<!--", comment.Substring(0, firstNewLine).TrimEnd('\r'), "-->");
+					foldMarkers.Add(new NewFolding(startOffset, endOffset) { Name = foldText });
 				}
 			}
 		}
-		
+
 		/// <summary>
 		/// Creates an XmlFoldStart for the start tag of an element.
 		/// </summary>
@@ -154,20 +154,20 @@ namespace ICSharpCode.AvalonEdit.Folding
 			// tag.
 			//XmlFoldStart newFoldStart = new XmlFoldStart(reader.Prefix, reader.LocalName, reader.LineNumber - 1, reader.LinePosition - 2);
 			XmlFoldStart newFoldStart = new XmlFoldStart();
-			
+
 			IXmlLineInfo lineInfo = (IXmlLineInfo)reader;
 			newFoldStart.StartLine = lineInfo.LineNumber;
 			newFoldStart.StartOffset = document.GetOffset(newFoldStart.StartLine, lineInfo.LinePosition - 1);
-			
+
 			if (this.ShowAttributesWhenFolded && reader.HasAttributes) {
 				newFoldStart.Name = String.Concat("<", reader.Name, " ", GetAttributeFoldText(reader), ">");
 			} else {
 				newFoldStart.Name = String.Concat("<", reader.Name, ">");
 			}
-			
+
 			return newFoldStart;
 		}
-		
+
 		/// <summary>
 		/// Create an element fold if the start and end tag are on
 		/// different lines.
@@ -182,7 +182,7 @@ namespace ICSharpCode.AvalonEdit.Folding
 				foldMarkers.Add(foldStart);
 			}
 		}
-		
+
 		/// <summary>
 		/// Gets the element's attributes as a string on one line that will
 		/// be displayed when the element is folded.
@@ -195,26 +195,26 @@ namespace ICSharpCode.AvalonEdit.Folding
 		static string GetAttributeFoldText(XmlReader reader)
 		{
 			StringBuilder text = new StringBuilder();
-			
+
 			for (int i = 0; i < reader.AttributeCount; ++i) {
 				reader.MoveToAttribute(i);
-				
+
 				text.Append(reader.Name);
 				text.Append("=");
 				text.Append(reader.QuoteChar.ToString());
 				text.Append(XmlEncodeAttributeValue(reader.Value, reader.QuoteChar));
 				text.Append(reader.QuoteChar.ToString());
-				
+
 				// Append a space if this is not the
 				// last attribute.
 				if (i < reader.AttributeCount - 1) {
 					text.Append(" ");
 				}
 			}
-			
+
 			return text.ToString();
 		}
-		
+
 		/// <summary>
 		/// Xml encode the attribute string since the string returned from
 		/// the XmlTextReader is the plain unencoded string and .NET
@@ -223,17 +223,17 @@ namespace ICSharpCode.AvalonEdit.Folding
 		static string XmlEncodeAttributeValue(string attributeValue, char quoteChar)
 		{
 			StringBuilder encodedValue = new StringBuilder(attributeValue);
-			
+
 			encodedValue.Replace("&", "&amp;");
 			encodedValue.Replace("<", "&lt;");
 			encodedValue.Replace(">", "&gt;");
-			
+
 			if (quoteChar == '"') {
 				encodedValue.Replace("\"", "&quot;");
 			} else {
 				encodedValue.Replace("'", "&apos;");
 			}
-			
+
 			return encodedValue.ToString();
 		}
 	}

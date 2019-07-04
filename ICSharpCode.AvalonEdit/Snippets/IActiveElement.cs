@@ -16,7 +16,6 @@
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
 
-using System;
 using ICSharpCode.AvalonEdit.Document;
 
 namespace ICSharpCode.AvalonEdit.Snippets
@@ -30,17 +29,17 @@ namespace ICSharpCode.AvalonEdit.Snippets
 		/// Called when the all snippet elements have been inserted.
 		/// </summary>
 		void OnInsertionCompleted();
-		
+
 		/// <summary>
 		/// Called when the interactive mode is deactivated.
 		/// </summary>
 		void Deactivate(SnippetEventArgs e);
-		
+
 		/// <summary>
 		/// Gets whether this element is editable (the user will be able to select it with Tab).
 		/// </summary>
 		bool IsEditable { get; }
-		
+
 		/// <summary>
 		/// Gets the segment associated with this element. May be null.
 		/// </summary>

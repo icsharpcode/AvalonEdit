@@ -29,12 +29,12 @@ namespace ICSharpCode.AvalonEdit.Rendering
 	public class MouseHoverLogic : IDisposable
 	{
 		UIElement target;
-		
+
 		DispatcherTimer mouseHoverTimer;
 		Point mouseHoverStartPoint;
 		MouseEventArgs mouseHoverLastEventArgs;
 		bool mouseHovering;
-		
+
 		/// <summary>
 		/// Creates a new instance and attaches itself to the <paramref name="target" /> UIElement.
 		/// </summary>
@@ -47,24 +47,23 @@ namespace ICSharpCode.AvalonEdit.Rendering
 			this.target.MouseMove += MouseHoverLogicMouseMove;
 			this.target.MouseEnter += MouseHoverLogicMouseEnter;
 		}
-		
+
 		void MouseHoverLogicMouseMove(object sender, MouseEventArgs e)
 		{
 			Vector mouseMovement = mouseHoverStartPoint - e.GetPosition(this.target);
 			if (Math.Abs(mouseMovement.X) > SystemParameters.MouseHoverWidth
-			    || Math.Abs(mouseMovement.Y) > SystemParameters.MouseHoverHeight)
-			{
+				|| Math.Abs(mouseMovement.Y) > SystemParameters.MouseHoverHeight) {
 				StartHovering(e);
 			}
 			// do not set e.Handled - allow others to also handle MouseMove
 		}
-		
+
 		void MouseHoverLogicMouseEnter(object sender, MouseEventArgs e)
 		{
 			StartHovering(e);
 			// do not set e.Handled - allow others to also handle MouseEnter
 		}
-		
+
 		void StartHovering(MouseEventArgs e)
 		{
 			StopHovering();
@@ -73,13 +72,13 @@ namespace ICSharpCode.AvalonEdit.Rendering
 			mouseHoverTimer = new DispatcherTimer(SystemParameters.MouseHoverTime, DispatcherPriority.Background, OnMouseHoverTimerElapsed, this.target.Dispatcher);
 			mouseHoverTimer.Start();
 		}
-		
+
 		void MouseHoverLogicMouseLeave(object sender, MouseEventArgs e)
 		{
 			StopHovering();
 			// do not set e.Handled - allow others to also handle MouseLeave
 		}
-		
+
 		void StopHovering()
 		{
 			if (mouseHoverTimer != null) {
@@ -91,21 +90,21 @@ namespace ICSharpCode.AvalonEdit.Rendering
 				OnMouseHoverStopped(mouseHoverLastEventArgs);
 			}
 		}
-		
+
 		void OnMouseHoverTimerElapsed(object sender, EventArgs e)
 		{
 			mouseHoverTimer.Stop();
 			mouseHoverTimer = null;
-			
+
 			mouseHovering = true;
 			OnMouseHover(mouseHoverLastEventArgs);
 		}
-		
+
 		/// <summary>
 		/// Occurs when the mouse starts hovering over a certain location.
 		/// </summary>
 		public event EventHandler<MouseEventArgs> MouseHover;
-		
+
 		/// <summary>
 		/// Raises the <see cref="MouseHover"/> event.
 		/// </summary>
@@ -115,12 +114,12 @@ namespace ICSharpCode.AvalonEdit.Rendering
 				MouseHover(this, e);
 			}
 		}
-		
+
 		/// <summary>
 		/// Occurs when the mouse stops hovering over a certain location.
 		/// </summary>
 		public event EventHandler<MouseEventArgs> MouseHoverStopped;
-		
+
 		/// <summary>
 		/// Raises the <see cref="MouseHoverStopped"/> event.
 		/// </summary>
@@ -130,9 +129,9 @@ namespace ICSharpCode.AvalonEdit.Rendering
 				MouseHoverStopped(this, e);
 			}
 		}
-		
+
 		bool disposed;
-		
+
 		/// <summary>
 		/// Removes the MouseHover support from the target UIElement.
 		/// </summary>

@@ -18,6 +18,7 @@
 
 using System;
 using System.Globalization;
+
 using ICSharpCode.AvalonEdit.Document;
 
 namespace ICSharpCode.AvalonEdit
@@ -29,7 +30,7 @@ namespace ICSharpCode.AvalonEdit
 	{
 		int line, column, visualColumn;
 		bool isAtEndOfLine;
-		
+
 		/// <summary>
 		/// Gets/Sets Location.
 		/// </summary>
@@ -42,7 +43,7 @@ namespace ICSharpCode.AvalonEdit
 				column = value.Column;
 			}
 		}
-		
+
 		/// <summary>
 		/// Gets/Sets the line number.
 		/// </summary>
@@ -50,7 +51,7 @@ namespace ICSharpCode.AvalonEdit
 			get { return line; }
 			set { line = value; }
 		}
-		
+
 		/// <summary>
 		/// Gets/Sets the (text) column number.
 		/// </summary>
@@ -58,7 +59,7 @@ namespace ICSharpCode.AvalonEdit
 			get { return column; }
 			set { column = value; }
 		}
-		
+
 		/// <summary>
 		/// Gets/Sets the visual column number.
 		/// Can be -1 (meaning unknown visual column).
@@ -67,7 +68,7 @@ namespace ICSharpCode.AvalonEdit
 			get { return visualColumn; }
 			set { visualColumn = value; }
 		}
-		
+
 		/// <summary>
 		/// When word-wrap is enabled and a line is wrapped at a position where there is no space character;
 		/// then both the end of the first TextLine and the beginning of the second TextLine
@@ -82,7 +83,7 @@ namespace ICSharpCode.AvalonEdit
 			get { return isAtEndOfLine; }
 			set { isAtEndOfLine = value; }
 		}
-		
+
 		/// <summary>
 		/// Creates a new TextViewPosition instance.
 		/// </summary>
@@ -93,7 +94,7 @@ namespace ICSharpCode.AvalonEdit
 			this.visualColumn = visualColumn;
 			this.isAtEndOfLine = false;
 		}
-		
+
 		/// <summary>
 		/// Creates a new TextViewPosition instance.
 		/// </summary>
@@ -101,7 +102,7 @@ namespace ICSharpCode.AvalonEdit
 			: this(line, column, -1)
 		{
 		}
-		
+
 		/// <summary>
 		/// Creates a new TextViewPosition instance.
 		/// </summary>
@@ -112,7 +113,7 @@ namespace ICSharpCode.AvalonEdit
 			this.visualColumn = visualColumn;
 			this.isAtEndOfLine = false;
 		}
-		
+
 		/// <summary>
 		/// Creates a new TextViewPosition instance.
 		/// </summary>
@@ -120,19 +121,19 @@ namespace ICSharpCode.AvalonEdit
 			: this(location, -1)
 		{
 		}
-		
+
 		/// <inheritdoc/>
 		public override string ToString()
 		{
 			return string.Format(CultureInfo.InvariantCulture,
-			                     "[TextViewPosition Line={0} Column={1} VisualColumn={2} IsAtEndOfLine={3}]",
-			                     this.line, this.column, this.visualColumn, this.isAtEndOfLine);
+								 "[TextViewPosition Line={0} Column={1} VisualColumn={2} IsAtEndOfLine={3}]",
+								 this.line, this.column, this.visualColumn, this.isAtEndOfLine);
 		}
-		
+
 		#region Equals and GetHashCode implementation
 		// The code in this region is useful if you want to use this structure in collections.
 		// If you don't need it, you can just remove the region and the ": IEquatable<Struct1>" declaration.
-		
+
 		/// <inheritdoc/>
 		public override bool Equals(object obj)
 		{
@@ -141,7 +142,7 @@ namespace ICSharpCode.AvalonEdit
 			else
 				return false;
 		}
-		
+
 		/// <inheritdoc/>
 		public override int GetHashCode()
 		{
@@ -153,7 +154,7 @@ namespace ICSharpCode.AvalonEdit
 			}
 			return hashCode;
 		}
-		
+
 		/// <summary>
 		/// Equality test.
 		/// </summary>
@@ -161,7 +162,7 @@ namespace ICSharpCode.AvalonEdit
 		{
 			return this.Line == other.Line && this.Column == other.Column && this.VisualColumn == other.VisualColumn && this.IsAtEndOfLine == other.IsAtEndOfLine;
 		}
-		
+
 		/// <summary>
 		/// Equality test.
 		/// </summary>
@@ -169,7 +170,7 @@ namespace ICSharpCode.AvalonEdit
 		{
 			return left.Equals(right);
 		}
-		
+
 		/// <summary>
 		/// Inequality test.
 		/// </summary>
@@ -178,7 +179,7 @@ namespace ICSharpCode.AvalonEdit
 			return !(left.Equals(right)); // use operator == and negate result
 		}
 		#endregion
-		
+
 		/// <inheritdoc/>
 		public int CompareTo(TextViewPosition other)
 		{

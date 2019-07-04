@@ -17,7 +17,6 @@
 // DEALINGS IN THE SOFTWARE.
 
 using ICSharpCode.AvalonEdit.Utils;
-using System;
 
 namespace ICSharpCode.AvalonEdit.Editing
 {
@@ -37,7 +36,7 @@ namespace ICSharpCode.AvalonEdit.Editing
 			{
 				source.PositionChanged += DeliverEvent;
 			}
-			
+
 			/// <inheritdoc/>
 			protected override void StopListening(Caret source)
 			{

@@ -40,31 +40,31 @@ namespace ICSharpCode.AvalonEdit.Document
 	public sealed partial class DocumentLine : IDocumentLine
 	{
 		#region Constructor
-		#if DEBUG
+#if DEBUG
 		// Required for thread safety check which is done only in debug builds.
 		// To save space, we don't store the document reference in release builds as we don't need it there.
 		readonly TextDocument document;
-		#endif
-		
+#endif
+
 		internal bool isDeleted;
-		
+
 		internal DocumentLine(TextDocument document)
 		{
-			#if DEBUG
+#if DEBUG
 			Debug.Assert(document != null);
 			this.document = document;
-			#endif
+#endif
 		}
-		
+
 		[Conditional("DEBUG")]
 		void DebugVerifyAccess()
 		{
-			#if DEBUG
+#if DEBUG
 			document.DebugVerifyAccess();
-			#endif
+#endif
 		}
 		#endregion
-		
+
 		#region Events
 //		/// <summary>
 //		/// Is raised when the line is deleted.
@@ -90,7 +90,7 @@ namespace ICSharpCode.AvalonEdit.Document
 //			}
 //		}
 		#endregion
-		
+
 		#region Properties stored in tree
 		/// <summary>
 		/// Gets if this line was deleted from the document.
@@ -101,7 +101,7 @@ namespace ICSharpCode.AvalonEdit.Document
 				return isDeleted;
 			}
 		}
-		
+
 		/// <summary>
 		/// Gets the number of this line.
 		/// Runtime: O(log n)
@@ -114,7 +114,7 @@ namespace ICSharpCode.AvalonEdit.Document
 				return DocumentLineTree.GetIndexFromNode(this) + 1;
 			}
 		}
-		
+
 		/// <summary>
 		/// Gets the starting offset of the line in the document's text.
 		/// Runtime: O(log n)
@@ -127,7 +127,7 @@ namespace ICSharpCode.AvalonEdit.Document
 				return DocumentLineTree.GetOffsetFromNode(this);
 			}
 		}
-		
+
 		/// <summary>
 		/// Gets the end offset of the line in the document's text (the offset before the line delimiter).
 		/// Runtime: O(log n)
@@ -138,11 +138,11 @@ namespace ICSharpCode.AvalonEdit.Document
 			get { return this.Offset + this.Length; }
 		}
 		#endregion
-		
+
 		#region Length
 		int totalLength;
 		byte delimiterLength;
-		
+
 		/// <summary>
 		/// Gets the length of this line. The length does not include the line delimiter. O(1)
 		/// </summary>
@@ -154,7 +154,7 @@ namespace ICSharpCode.AvalonEdit.Document
 				return totalLength - delimiterLength;
 			}
 		}
-		
+
 		/// <summary>
 		/// Gets the length of this line, including the line delimiter. O(1)
 		/// </summary>
@@ -170,7 +170,7 @@ namespace ICSharpCode.AvalonEdit.Document
 				totalLength = value;
 			}
 		}
-		
+
 		/// <summary>
 		/// <para>Gets the length of the line delimiter.</para>
 		/// <para>The value is 1 for single <c>"\r"</c> or <c>"\n"</c>, 2 for the <c>"\r\n"</c> sequence;
@@ -189,7 +189,7 @@ namespace ICSharpCode.AvalonEdit.Document
 			}
 		}
 		#endregion
-		
+
 		#region Previous / Next Line
 		/// <summary>
 		/// Gets the next line in the document.
@@ -198,7 +198,7 @@ namespace ICSharpCode.AvalonEdit.Document
 		public DocumentLine NextLine {
 			get {
 				DebugVerifyAccess();
-				
+
 				if (right != null) {
 					return right.LeftMost;
 				} else {
@@ -213,7 +213,7 @@ namespace ICSharpCode.AvalonEdit.Document
 				}
 			}
 		}
-		
+
 		/// <summary>
 		/// Gets the previous line in the document.
 		/// </summary>
@@ -221,7 +221,7 @@ namespace ICSharpCode.AvalonEdit.Document
 		public DocumentLine PreviousLine {
 			get {
 				DebugVerifyAccess();
-				
+
 				if (left != null) {
 					return left.RightMost;
 				} else {
@@ -236,16 +236,16 @@ namespace ICSharpCode.AvalonEdit.Document
 				}
 			}
 		}
-		
+
 		IDocumentLine IDocumentLine.NextLine {
 			get { return this.NextLine; }
 		}
-		
+
 		IDocumentLine IDocumentLine.PreviousLine {
 			get { return this.PreviousLine; }
 		}
 		#endregion
-		
+
 		#region ToString
 		/// <summary>
 		/// Gets a string with debug output showing the line number and offset.

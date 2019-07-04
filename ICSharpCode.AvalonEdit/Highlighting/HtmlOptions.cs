@@ -34,7 +34,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 		{
 			this.TabSize = 4;
 		}
-		
+
 		/// <summary>
 		/// Creates a new HtmlOptions instance that copies applicable options from the <see cref="TextEditorOptions"/>.
 		/// </summary>
@@ -44,12 +44,12 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 				throw new ArgumentNullException("options");
 			this.TabSize = options.IndentationSize;
 		}
-		
+
 		/// <summary>
 		/// The amount of spaces a tab gets converted to.
 		/// </summary>
 		public int TabSize { get; set; }
-		
+
 		/// <summary>
 		/// Writes the HTML attribute for the style to the text writer.
 		/// </summary>
@@ -63,7 +63,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 			WebUtility.HtmlEncode(color.ToCss(), writer);
 			writer.Write('"');
 		}
-		
+
 		/// <summary>
 		/// Gets whether the color needs to be written out to HTML.
 		/// </summary>

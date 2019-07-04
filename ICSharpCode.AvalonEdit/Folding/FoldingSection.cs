@@ -16,9 +16,8 @@
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
 
-using System;
 using System.Diagnostics;
-using System.Text;
+
 using ICSharpCode.AvalonEdit.Document;
 using ICSharpCode.AvalonEdit.Rendering;
 using ICSharpCode.AvalonEdit.Utils;
@@ -34,7 +33,7 @@ namespace ICSharpCode.AvalonEdit.Folding
 		bool isFolded;
 		internal CollapsedLineSection[] collapsedSections;
 		string title;
-		
+
 		/// <summary>
 		/// Gets/sets if the section is folded.
 		/// </summary>
@@ -44,11 +43,11 @@ namespace ICSharpCode.AvalonEdit.Folding
 				if (isFolded != value) {
 					isFolded = value;
 					ValidateCollapsedLineSections(); // create/destroy CollapsedLineSection
-						manager.Redraw(this);
+					manager.Redraw(this);
 				}
 			}
 		}
-		
+
 		internal void ValidateCollapsedLineSections()
 		{
 			if (!isFolded) {
@@ -79,7 +78,7 @@ namespace ICSharpCode.AvalonEdit.Folding
 				}
 			}
 		}
-		
+
 		/// <inheritdoc/>
 		protected override void OnSegmentChanged()
 		{
@@ -89,7 +88,7 @@ namespace ICSharpCode.AvalonEdit.Folding
 			if (IsConnectedToCollection)
 				manager.Redraw(this);
 		}
-		
+
 		/// <summary>
 		/// Gets/Sets the text used to display the collapsed version of the folding section.
 		/// </summary>
@@ -105,7 +104,7 @@ namespace ICSharpCode.AvalonEdit.Folding
 				}
 			}
 		}
-		
+
 		/// <summary>
 		/// Gets the content of the collapsed lines as text.
 		/// </summary>
@@ -119,7 +118,7 @@ namespace ICSharpCode.AvalonEdit.Folding
 		/// Gets/Sets an additional object associated with this folding section.
 		/// </summary>
 		public object Tag { get; set; }
-		
+
 		internal FoldingSection(FoldingManager manager, int startOffset, int endOffset)
 		{
 			Debug.Assert(manager != null);
@@ -127,7 +126,7 @@ namespace ICSharpCode.AvalonEdit.Folding
 			this.StartOffset = startOffset;
 			this.Length = endOffset - startOffset;
 		}
-		
+
 		void RemoveCollapsedLineSection()
 		{
 			if (collapsedSections != null) {

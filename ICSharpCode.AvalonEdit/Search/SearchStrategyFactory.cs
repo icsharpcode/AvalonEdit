@@ -19,8 +19,6 @@
 using System;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Windows.Controls;
-using ICSharpCode.AvalonEdit.Document;
 
 namespace ICSharpCode.AvalonEdit.Search
 {
@@ -39,7 +37,7 @@ namespace ICSharpCode.AvalonEdit.Search
 			RegexOptions options = RegexOptions.Compiled | RegexOptions.Multiline;
 			if (ignoreCase)
 				options |= RegexOptions.IgnoreCase;
-			
+
 			switch (mode) {
 				case SearchMode.Normal:
 					searchPattern = Regex.Escape(searchPattern);
@@ -55,14 +53,14 @@ namespace ICSharpCode.AvalonEdit.Search
 				throw new SearchPatternException(ex.Message, ex);
 			}
 		}
-		
+
 		static string ConvertWildcardsToRegex(string searchPattern)
 		{
 			if (string.IsNullOrEmpty(searchPattern))
 				return "";
-			
+
 			StringBuilder builder = new StringBuilder();
-			
+
 			foreach (char ch in searchPattern) {
 				switch (ch) {
 					case '?':
@@ -76,7 +74,7 @@ namespace ICSharpCode.AvalonEdit.Search
 						break;
 				}
 			}
-			
+
 			return builder.ToString();
 		}
 	}
