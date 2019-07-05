@@ -3,9 +3,6 @@
 
 AvalonEdit is the name of the WPF-based text editor in SharpDevelop 4.x "Mirador" and beyond. It is also being used in ILSpy and many other projects.
 
-[avalonedit.net](http://avalonedit.net/)
-
-
 Downloads
 -------
 
