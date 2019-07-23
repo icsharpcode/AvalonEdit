@@ -17,6 +17,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
+    <PackageId>AvalonEdit</PackageId>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
