@@ -10,7 +10,7 @@
     <DocumentationFile>ICSharpCode.AvalonEdit.xml</DocumentationFile>
     <Company>ic#code</Company>
     <Copyright>2000-2019 AlphaSierraPapa for the SharpDevelop Team</Copyright>
-    <Description>AvalonEdit is the WPF-based text editor used in SharpDevelop. There are four builds of AvalonEdit included in this package. .NET 3.5, 4.0, 4.5 and .NET Core 3.0.</Description>
+    <Description>AvalonEdit is the WPF-based text editor used in SharpDevelop. There are three builds of AvalonEdit included in this package: .NET 4.0, 4.5 and .NET Core 3.0.</Description>
     <Version>6.0</Version>
     <AssemblyVersion>6.0.0.0</AssemblyVersion>
     <FileVersion>6.0.0.0</FileVersion>
@@ -28,6 +28,7 @@
     <PackageProjectUrl>http://www.avalonedit.net</PackageProjectUrl>
     <PackageIconUrl>http://community.sharpdevelop.net/blogs/mattward/SharpDevelop.png</PackageIconUrl>
     <PackageTags>WPF Text Editor SharpDevelop AvalonEdit</PackageTags>
+    <PackageReleaseNotes>Changes are detailed at https://github.com/icsharpcode/AvalonEdit/blob/master/ChangeLog.md</PackageReleaseNotes>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp3.0' ">
