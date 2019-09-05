@@ -106,7 +106,7 @@ namespace ICSharpCode.AvalonEdit.Rendering
 				}
 				if (!args.Handled) {
 					try {
-						Process.Start(this.NavigateUri.ToString());
+						Process.Start(new ProcessStartInfo { FileName = this.NavigateUri.ToString(), UseShellExecute = true });
 					} catch {
 						// ignore all kinds of errors during web browser start
 					}
