@@ -3,7 +3,7 @@ version: '6.0.{build}'
 dotnet_csproj:
   patch: true
   file: '**\*.csproj'
-  version: '6.0-rc1'
+  version: '6.0'
   assembly_version: '{version}'
   file_version: '{version}'
 
@@ -14,7 +14,7 @@ configuration:
 image: Visual Studio 2019
 
 install:
-  - cmd: choco install dotnetcore-sdk --pre
+  - cmd: choco install dotnetcore-sdk
 
 before_build:
   - nuget restore ICSharpCode.AvalonEdit.sln
