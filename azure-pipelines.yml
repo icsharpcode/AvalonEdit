@@ -63,9 +63,9 @@ steps:
   inputs:
     contents: |
       **\*.nupkg
-    targetFolder: $(Build.ArtifactStagingDirectory)\$(BuildConfiguration)
+    targetFolder: $(Build.ArtifactStagingDirectory)
 
 - task: PublishPipelineArtifact@0
   displayName: Publish $(BuildConfiguration)
   inputs:
-    targetPath: $(Build.ArtifactStagingDirectory)\$(BuildConfiguration)
+    targetPath: $(Build.ArtifactStagingDirectory)
