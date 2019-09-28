@@ -70,3 +70,4 @@ steps:
   displayName: Publish $(BuildConfiguration)
   inputs:
     targetPath: $(Build.ArtifactStagingDirectory)
+  condition: and(succeeded(), eq(variables['BuildConfiguration'], 'Release'))
