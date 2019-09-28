@@ -64,6 +64,7 @@ steps:
     contents: |
       **\*.nupkg
     targetFolder: $(Build.ArtifactStagingDirectory)
+  condition: and(succeeded(), eq(variables['BuildConfiguration'], 'Release'))
 
 - task: PublishPipelineArtifact@0
   displayName: Publish $(BuildConfiguration)
