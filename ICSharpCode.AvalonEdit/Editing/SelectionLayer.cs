@@ -59,7 +59,19 @@ namespace ICSharpCode.AvalonEdit.Editing
 			geoBuilder.ExtendToFullWidthAtLineEnd = textArea.Selection.EnableVirtualSpace;
 			geoBuilder.CornerRadius = textArea.SelectionCornerRadius;
 			foreach (var segment in textArea.Selection.Segments) {
-				geoBuilder.AddSegment(textView, segment);
+				var lastLine = textView.Document.GetLineByOffset(segment.EndOffset);
+				if (lastLine.Offset == segment.EndOffset) {
+					// The segment ends at the the beginning a line. Avoid adding the narrow rect that 
+					// would paint at the start of the line, before the first letter, which is visually
+					// confusing. This is consistent with VS and other editors.
+
+					// The obvious thing here would be to subtract lastLine.DelimiterLength, but when the
+					// caret is at the end of the document, that will be 0. Subtracting 1 works in all cases.
+					geoBuilder.AddSegment(textArea.TextView, new SelectionSegment(segment.StartOffset, segment.EndOffset - 1));
+				} 
+				else { 
+					geoBuilder.AddSegment(textView, segment);
+				}
 			}
 			Geometry geometry = geoBuilder.CreateGeometry();
 			if (geometry != null) {
