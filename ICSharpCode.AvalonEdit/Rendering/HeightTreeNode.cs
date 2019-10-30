@@ -16,7 +16,6 @@
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
 
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 
@@ -31,14 +30,14 @@ namespace ICSharpCode.AvalonEdit.Rendering
 	{
 		internal readonly DocumentLine documentLine;
 		internal HeightTreeLineNode lineNode;
-		
+
 		internal HeightTreeNode left, right, parent;
 		internal bool color;
-		
+
 		internal HeightTreeNode()
 		{
 		}
-		
+
 		internal HeightTreeNode(DocumentLine documentLine, double height)
 		{
 			this.documentLine = documentLine;
@@ -46,7 +45,7 @@ namespace ICSharpCode.AvalonEdit.Rendering
 			this.lineNode = new HeightTreeLineNode(height);
 			this.totalHeight = height;
 		}
-		
+
 		internal HeightTreeNode LeftMost {
 			get {
 				HeightTreeNode node = this;
@@ -55,7 +54,7 @@ namespace ICSharpCode.AvalonEdit.Rendering
 				return node;
 			}
 		}
-		
+
 		internal HeightTreeNode RightMost {
 			get {
 				HeightTreeNode node = this;
@@ -64,7 +63,7 @@ namespace ICSharpCode.AvalonEdit.Rendering
 				return node;
 			}
 		}
-		
+
 		/// <summary>
 		/// Gets the inorder successor of the node.
 		/// </summary>
@@ -84,14 +83,14 @@ namespace ICSharpCode.AvalonEdit.Rendering
 				}
 			}
 		}
-		
+
 		/// <summary>
 		/// The number of lines in this node and its child nodes.
 		/// Invariant:
 		///   totalCount = 1 + left.totalCount + right.totalCount
 		/// </summary>
 		internal int totalCount;
-		
+
 		/// <summary>
 		/// The total height of this node and its child nodes, excluding directly collapsed nodes.
 		/// Invariant:
@@ -100,7 +99,7 @@ namespace ICSharpCode.AvalonEdit.Rendering
 		///               + right.IsDirectlyCollapsed ? 0 : right.totalHeight
 		/// </summary>
 		internal double totalHeight;
-		
+
 		/// <summary>
 		/// List of the sections that hold this node collapsed.
 		/// Invariant 1:
@@ -113,13 +112,13 @@ namespace ICSharpCode.AvalonEdit.Rendering
 		///   documentLine (middle node).
 		/// </summary>
 		internal List<CollapsedLineSection> collapsedSections;
-		
+
 		internal bool IsDirectlyCollapsed {
 			get {
 				return collapsedSections != null;
 			}
 		}
-		
+
 		internal void AddDirectlyCollapsed(CollapsedLineSection section)
 		{
 			if (collapsedSections == null) {
@@ -129,8 +128,8 @@ namespace ICSharpCode.AvalonEdit.Rendering
 			Debug.Assert(!collapsedSections.Contains(section));
 			collapsedSections.Add(section);
 		}
-		
-		
+
+
 		internal void RemoveDirectlyCollapsed(CollapsedLineSection section)
 		{
 			Debug.Assert(collapsedSections.Contains(section));
@@ -144,8 +143,8 @@ namespace ICSharpCode.AvalonEdit.Rendering
 					totalHeight += right.totalHeight;
 			}
 		}
-		
-		#if DEBUG
+
+#if DEBUG
 		public override string ToString()
 		{
 			return "[HeightTreeNode "
@@ -155,16 +154,16 @@ namespace ICSharpCode.AvalonEdit.Rendering
 				+ " TotalHeight=" + totalHeight
 				+ "]";
 		}
-		
+
 		static string GetCollapsedSections(List<CollapsedLineSection> list)
 		{
 			if (list == null)
 				return "{}";
 			return "{" +
 				string.Join(",",
-				            list.ConvertAll(cs=>cs.ID).ToArray())
+							list.ConvertAll(cs => cs.ID).ToArray())
 				+ "}";
 		}
-		#endif
+#endif
 	}
 }

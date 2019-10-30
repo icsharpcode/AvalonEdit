@@ -18,8 +18,8 @@
 
 using System;
 using System.Collections.Generic;
-using System.Windows.Media;
 using System.Windows.Media.TextFormatting;
+
 using ICSharpCode.AvalonEdit.Utils;
 
 namespace ICSharpCode.AvalonEdit.Rendering
@@ -28,7 +28,7 @@ namespace ICSharpCode.AvalonEdit.Rendering
 	{
 		TextFormatter formatter;
 		Dictionary<string, TextLine> nonPrintableCharacterTexts;
-		
+
 		public TextLine GetTextForNonPrintableCharacter(string text, ITextRunConstructionContext context)
 		{
 			if (nonPrintableCharacterTexts == null)
@@ -44,7 +44,7 @@ namespace ICSharpCode.AvalonEdit.Rendering
 			}
 			return textLine;
 		}
-		
+
 		public void Dispose()
 		{
 			if (nonPrintableCharacterTexts != null) {

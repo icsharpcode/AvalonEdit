@@ -20,16 +20,16 @@
 		<Span color="Comment">
 			<Begin>\#</Begin>
 		</Span>
-		
+
 		<Span color="Comment">
 			<Begin>//</Begin>
 		</Span>
-		
+
 		<Span color="Comment" multiline="true">
 			<Begin>/\*</Begin>
 			<End>\*/</End>
 		</Span>
-		
+
 		<!-- Digits -->
 		<Rule color="NumberLiteral">
 			\b0[xX][0-9a-fA-F]+  # hex number
@@ -41,18 +41,18 @@
 			)
 			([eE][+-]?[0-9]+)? # optional exponent
 		</Rule>
-		
+
 		<Rule color="Punctuation">
 			[?,.:;()\[\]{}+\-/%*&lt;&gt;&amp;^!|~@]+
 		</Rule>
-		
+
 		<!-- Mark previous rule-->
 		<Rule color="FunctionCall">
 		\b
 		[\d\w_]+  # an identifier
 		(?=\s*\() # followed by (
 		</Rule>
-		
+
 		<Span color="String" multiline="true">
 			<Begin>'</Begin>
 			<End>'</End>
@@ -61,7 +61,7 @@
 				<Span begin="\\" end="."/>
 			</RuleSet>
 		</Span>
-		
+
 		<Span color="String" multiline="true">
 			<Begin>"</Begin>
 			<End>"</End>
@@ -70,25 +70,25 @@
 				<Span begin="\\" end="."/>
 			</RuleSet>
 		</Span>
-		
+
 		<!-- heredoc syntax -->
 		<Span color="String" multiline="true">
 			<Begin>&lt;&lt;&lt;\"?[\d\w_]+\"?$</Begin>
 		 	<End>^[\d\w_]+;</End>
 		</Span>
-	
+
 		<!-- nowdoc syntax -->
 		<Span color="String" multiline="true">
 			<Begin>&lt;&lt;&lt;\'[\d\w_]+\'$</Begin>
 			<End>^[\d\w_]+;</End>
 		</Span>
-	
+
 		<Keywords color="AccessKeywords">
 			<Word>global</Word>
 			<Word>my</Word>
 			<Word>var</Word>
 		</Keywords>
-		
+
 		<Keywords color="OperatorKeywords">
 			<Word>and</Word>
 			<Word>or</Word>
@@ -99,7 +99,7 @@
 			<Word>true</Word>
 			<Word>false</Word>
 		</Keywords>
-	
+
 		<Keywords color="SelectionStatements">
 			<Word>else</Word>
 			<Word>else</Word>
@@ -108,7 +108,7 @@
 			<Word>endif</Word>
 			<Word>elseif</Word>
 		</Keywords>
-	
+
 		<Keywords color="IterationStatements">
 			<Word>do</Word>
 			<Word>for</Word>
@@ -117,7 +117,7 @@
 			<Word>endwhile</Word>
 			<Word>exit</Word>
 		</Keywords>
-	
+
 		<Keywords color="JumpStatements">
 			<Word>break</Word>
 			<Word>continue</Word>
@@ -125,7 +125,7 @@
 			<Word>goto</Word>
 			<Word>return</Word>
 		</Keywords>
-	
+
 		<Keywords color="ControlStatements">
 			<Word>require</Word>
 			<Word>include</Word>
@@ -133,7 +133,7 @@
 			<Word>include</Word>
 			<Word>function</Word>
 		</Keywords>
-	
+
 		<Keywords color="ValueTypes">
 			<Word>int</Word>
 			<Word>integer</Word>
@@ -144,12 +144,12 @@
 			<Word>array</Word>
 			<Word>object</Word>
 		</Keywords>
-	
+
 		<Keywords color="OtherTypes">
 			<Word>class</Word>
 			<Word>void</Word>
 		</Keywords>
-	
+
 		<Keywords color="AccessModifiers">
 			<Word>public</Word>
 			<Word>private</Word>

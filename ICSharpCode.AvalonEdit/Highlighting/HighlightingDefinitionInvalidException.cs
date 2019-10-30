@@ -33,21 +33,21 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 		public HighlightingDefinitionInvalidException() : base()
 		{
 		}
-		
+
 		/// <summary>
 		/// Creates a new HighlightingDefinitionInvalidException instance.
 		/// </summary>
 		public HighlightingDefinitionInvalidException(string message) : base(message)
 		{
 		}
-		
+
 		/// <summary>
 		/// Creates a new HighlightingDefinitionInvalidException instance.
 		/// </summary>
 		public HighlightingDefinitionInvalidException(string message, Exception innerException) : base(message, innerException)
 		{
 		}
-		
+
 		/// <summary>
 		/// Creates a new HighlightingDefinitionInvalidException instance.
 		/// </summary>

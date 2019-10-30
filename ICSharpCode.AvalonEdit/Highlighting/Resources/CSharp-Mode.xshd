@@ -3,6 +3,7 @@
 	<!-- The named colors 'Comment' and 'String' are used in SharpDevelop to detect if a line is inside a multiline string/comment -->
 	<Color name="Comment" foreground="Green" exampleText="// comment" />
 	<Color name="String" foreground="Blue" exampleText="string text = &quot;Hello, World!&quot;"/>
+	<Color name="StringInterpolation" foreground="Black" exampleText="string text = $&quot;Hello, {name}!&quot;"/>
 	<Color name="Char" foreground="Magenta" exampleText="char linefeed = '\n';"/>
 	<Color name="Preprocessor" foreground="Green" exampleText="#region Title" />
 	<Color name="Punctuation" exampleText="a(b.c);" />
@@ -26,7 +27,8 @@
 	<Color name="GetSetAddRemove" foreground="SaddleBrown" exampleText="int Prop { get; set; }"/>
 	<Color name="TrueFalse" fontWeight="bold" foreground="DarkCyan" exampleText="b = false; a = true;" />
 	<Color name="TypeKeywords" fontWeight="bold" foreground="DarkCyan" exampleText="if (x is int) { a = x as int; type = typeof(int); size = sizeof(int); c = new object(); }"/>
-	
+	<Color name="SemanticKeywords" fontWeight="bold" foreground="DarkCyan" exampleText="if (args == null) throw new ArgumentNullException(nameof(args));" />
+
 	<Property name="DocCommentMarker" value="///" />
 	
 	<RuleSet name="CommentMarkerSet">
@@ -104,6 +106,18 @@
 			<RuleSet>
 				<!-- span for escape sequences -->
 				<Span begin='""' end=""/>
+			</RuleSet>
+		</Span>
+		
+		<Span color="String">
+			<Begin>\$"</Begin>
+			<End>"</End>
+			<RuleSet>
+				<!-- span for escape sequences -->
+				<Span begin="\\" end="."/>
+				<Span begin="\{\{" end=""/>
+				<!-- string interpolation -->
+				<Span begin="{" end="}" color="StringInterpolation" ruleSet=""/>
 			</RuleSet>
 		</Span>
 		
@@ -267,7 +281,11 @@
 			<Word>null</Word>
 			<Word>value</Word>
 		</Keywords>
-		
+
+		<Keywords color="SemanticKeywords">
+			<Word>nameof</Word>
+		</Keywords>
+
 		<!-- Mark previous rule-->
 		<Rule color="MethodCall">
 		\b

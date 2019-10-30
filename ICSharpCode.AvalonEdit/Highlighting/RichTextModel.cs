@@ -22,8 +22,8 @@ using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using System.Windows.Documents;
+
 using ICSharpCode.AvalonEdit.Document;
-using ICSharpCode.NRefactory.Editor;
 
 namespace ICSharpCode.AvalonEdit.Highlighting
 {
@@ -34,7 +34,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 	{
 		List<int> stateChangeOffsets = new List<int>();
 		List<HighlightingColor> stateChanges = new List<HighlightingColor>();
-		
+
 		int GetIndexForOffset(int offset)
 		{
 			if (offset < 0)
@@ -49,7 +49,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 			}
 			return index;
 		}
-		
+
 		int GetIndexForOffsetUseExistingSegment(int offset)
 		{
 			if (offset < 0)
@@ -62,7 +62,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 			}
 			return index;
 		}
-		
+
 		int GetEnd(int index)
 		{
 			// Gets the end of the color segment no. index.
@@ -71,7 +71,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 			else
 				return int.MaxValue;
 		}
-		
+
 		/// <summary>
 		/// Creates a new RichTextModel.
 		/// </summary>
@@ -80,7 +80,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 			stateChangeOffsets.Add(0);
 			stateChanges.Add(new HighlightingColor());
 		}
-		
+
 		/// <summary>
 		/// Creates a RichTextModel from a CONTIGUOUS list of HighlightedSections.
 		/// </summary>
@@ -90,7 +90,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 			this.stateChangeOffsets.AddRange(stateChangeOffsets);
 			this.stateChanges.AddRange(stateChanges);
 		}
-		
+
 		#region UpdateOffsets
 		/// <summary>
 		/// Updates the start and end offsets of all segments stored in this collection.
@@ -102,7 +102,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 				throw new ArgumentNullException("e");
 			UpdateOffsets(e.GetNewOffset);
 		}
-		
+
 		/// <summary>
 		/// Updates the start and end offsets of all segments stored in this collection.
 		/// </summary>
@@ -113,7 +113,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 				throw new ArgumentNullException("change");
 			UpdateOffsets(change.GetNewOffset);
 		}
-		
+
 		/// <summary>
 		/// Updates the start and end offsets of all segments stored in this collection.
 		/// </summary>
@@ -122,7 +122,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 		{
 			UpdateOffsets(change.GetNewOffset);
 		}
-		
+
 		void UpdateOffsets(Func<int, AnchorMovementType, int> updateOffset)
 		{
 			int readPos = 1;
@@ -146,7 +146,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 			stateChanges.RemoveRange(writePos, stateChanges.Count - writePos);
 		}
 		#endregion
-		
+
 		/// <summary>
 		/// Appends another RichTextModel after this one.
 		/// </summary>
@@ -165,7 +165,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 				stateChanges.Add(newColors[i]);
 			}
 		}
-		
+
 		/// <summary>
 		/// Gets a copy of the HighlightingColor for the specified offset.
 		/// </summary>
@@ -173,7 +173,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 		{
 			return stateChanges[GetIndexForOffsetUseExistingSegment(offset)].Clone();
 		}
-		
+
 		/// <summary>
 		/// Applies the HighlightingColor to the specified range of text.
 		/// If the color specifies <c>null</c> for some properties, existing highlighting is preserved.
@@ -192,7 +192,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 				stateChanges[i].MergeWith(color);
 			}
 		}
-		
+
 		/// <summary>
 		/// Sets the HighlightingColor for the specified range of text,
 		/// completely replacing the existing highlighting in that area.
@@ -207,7 +207,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 			stateChanges.RemoveRange(startIndex + 1, endIndex - (startIndex + 1));
 			stateChangeOffsets.RemoveRange(startIndex + 1, endIndex - (startIndex + 1));
 		}
-		
+
 		/// <summary>
 		/// Sets the foreground brush on the specified text segment.
 		/// </summary>
@@ -219,7 +219,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 				stateChanges[i].Foreground = brush;
 			}
 		}
-		
+
 		/// <summary>
 		/// Sets the background brush on the specified text segment.
 		/// </summary>
@@ -231,7 +231,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 				stateChanges[i].Background = brush;
 			}
 		}
-		
+
 		/// <summary>
 		/// Sets the font weight on the specified text segment.
 		/// </summary>
@@ -243,7 +243,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 				stateChanges[i].FontWeight = weight;
 			}
 		}
-		
+
 		/// <summary>
 		/// Sets the font style on the specified text segment.
 		/// </summary>
@@ -255,7 +255,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 				stateChanges[i].FontStyle = style;
 			}
 		}
-		
+
 		/// <summary>
 		/// Retrieves the highlighted sections in the specified range.
 		/// The highlighted sections will be sorted by offset, and there will not be any nested or overlapping sections.
@@ -276,7 +276,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 				index++;
 			}
 		}
-		
+
 		/// <summary>
 		/// Creates WPF Run instances that can be used for TextBlock.Inlines.
 		/// </summary>

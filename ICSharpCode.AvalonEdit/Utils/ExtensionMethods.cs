@@ -38,7 +38,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 		/// http://community.sharpdevelop.net/forums/t/16048.aspx
 		/// </summary>
 		public const double Epsilon = 0.01;
-		
+
 		/// <summary>
 		/// Returns true if the doubles are close (difference smaller than 0.01).
 		/// </summary>
@@ -48,7 +48,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 				return true;
 			return Math.Abs(d1 - d2) < Epsilon;
 		}
-		
+
 		/// <summary>
 		/// Returns true if the doubles are close (difference smaller than 0.01).
 		/// </summary>
@@ -56,7 +56,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 		{
 			return IsClose(d1.Width, d2.Width) && IsClose(d1.Height, d2.Height);
 		}
-		
+
 		/// <summary>
 		/// Returns true if the doubles are close (difference smaller than 0.01).
 		/// </summary>
@@ -64,7 +64,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 		{
 			return IsClose(d1.X, d2.X) && IsClose(d1.Y, d2.Y);
 		}
-		
+
 		/// <summary>
 		/// Forces the value to stay between mininum and maximum.
 		/// </summary>
@@ -75,7 +75,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 		{
 			return Math.Max(Math.Min(value, maximum), minimum);
 		}
-		
+
 		/// <summary>
 		/// Forces the value to stay between mininum and maximum.
 		/// </summary>
@@ -87,7 +87,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 			return Math.Max(Math.Min(value, maximum), minimum);
 		}
 		#endregion
-		
+
 		#region CreateTypeface
 		/// <summary>
 		/// Creates typeface from the framework element.
@@ -95,19 +95,19 @@ namespace ICSharpCode.AvalonEdit.Utils
 		public static Typeface CreateTypeface(this FrameworkElement fe)
 		{
 			return new Typeface((FontFamily)fe.GetValue(TextBlock.FontFamilyProperty),
-			                    (FontStyle)fe.GetValue(TextBlock.FontStyleProperty),
-			                    (FontWeight)fe.GetValue(TextBlock.FontWeightProperty),
-			                    (FontStretch)fe.GetValue(TextBlock.FontStretchProperty));
+								(FontStyle)fe.GetValue(TextBlock.FontStyleProperty),
+								(FontWeight)fe.GetValue(TextBlock.FontWeightProperty),
+								(FontStretch)fe.GetValue(TextBlock.FontStretchProperty));
 		}
 		#endregion
-		
+
 		#region AddRange / Sequence
 		public static void AddRange<T>(this ICollection<T> collection, IEnumerable<T> elements)
 		{
 			foreach (T e in elements)
 				collection.Add(e);
 		}
-		
+
 		/// <summary>
 		/// Creates an IEnumerable with a single value.
 		/// </summary>
@@ -116,7 +116,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 			yield return value;
 		}
 		#endregion
-		
+
 		#region XML reading
 		/// <summary>
 		/// Gets the value of the attribute, or null if the attribute does not exist.
@@ -126,7 +126,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 			XmlAttribute attr = element.GetAttributeNode(attributeName);
 			return attr != null ? attr.Value : null;
 		}
-		
+
 		/// <summary>
 		/// Gets the value of the attribute as boolean, or null if the attribute does not exist.
 		/// </summary>
@@ -135,7 +135,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 			XmlAttribute attr = element.GetAttributeNode(attributeName);
 			return attr != null ? (bool?)XmlConvert.ToBoolean(attr.Value) : null;
 		}
-		
+
 		/// <summary>
 		/// Gets the value of the attribute as boolean, or null if the attribute does not exist.
 		/// </summary>
@@ -148,82 +148,90 @@ namespace ICSharpCode.AvalonEdit.Utils
 				return XmlConvert.ToBoolean(attributeValue);
 		}
 		#endregion
-		
+
 		#region DPI independence
 		public static Rect TransformToDevice(this Rect rect, Visual visual)
 		{
 			Matrix matrix = PresentationSource.FromVisual(visual).CompositionTarget.TransformToDevice;
 			return Rect.Transform(rect, matrix);
 		}
-		
+
 		public static Rect TransformFromDevice(this Rect rect, Visual visual)
 		{
 			Matrix matrix = PresentationSource.FromVisual(visual).CompositionTarget.TransformFromDevice;
 			return Rect.Transform(rect, matrix);
 		}
-		
+
 		public static Size TransformToDevice(this Size size, Visual visual)
 		{
 			Matrix matrix = PresentationSource.FromVisual(visual).CompositionTarget.TransformToDevice;
 			return new Size(size.Width * matrix.M11, size.Height * matrix.M22);
 		}
-		
+
 		public static Size TransformFromDevice(this Size size, Visual visual)
 		{
 			Matrix matrix = PresentationSource.FromVisual(visual).CompositionTarget.TransformFromDevice;
 			return new Size(size.Width * matrix.M11, size.Height * matrix.M22);
 		}
-		
+
 		public static Point TransformToDevice(this Point point, Visual visual)
 		{
 			Matrix matrix = PresentationSource.FromVisual(visual).CompositionTarget.TransformToDevice;
 			return new Point(point.X * matrix.M11, point.Y * matrix.M22);
 		}
-		
+
 		public static Point TransformFromDevice(this Point point, Visual visual)
 		{
 			Matrix matrix = PresentationSource.FromVisual(visual).CompositionTarget.TransformFromDevice;
 			return new Point(point.X * matrix.M11, point.Y * matrix.M22);
 		}
 		#endregion
-		
+
 		#region System.Drawing <-> WPF conversions
 		public static System.Drawing.Point ToSystemDrawing(this Point p)
 		{
 			return new System.Drawing.Point((int)p.X, (int)p.Y);
 		}
-		
+
 		public static Point ToWpf(this System.Drawing.Point p)
 		{
 			return new Point(p.X, p.Y);
 		}
-		
+
 		public static Size ToWpf(this System.Drawing.Size s)
 		{
 			return new Size(s.Width, s.Height);
 		}
-		
+
 		public static Rect ToWpf(this System.Drawing.Rectangle rect)
 		{
 			return new Rect(rect.Location.ToWpf(), rect.Size.ToWpf());
 		}
 		#endregion
-		
+
 		public static IEnumerable<DependencyObject> VisualAncestorsAndSelf(this DependencyObject obj)
 		{
 			while (obj != null) {
 				yield return obj;
-				obj = VisualTreeHelper.GetParent(obj);
+				if (obj is Visual || obj is System.Windows.Media.Media3D.Visual3D) {
+					obj = VisualTreeHelper.GetParent(obj);
+				} else if (obj is FrameworkContentElement) {
+					// When called with a non-visual such as a TextElement, walk up the
+					// logical tree instead.
+					obj = ((FrameworkContentElement)obj).Parent;
+				} else {
+					break;
+				}
 			}
 		}
-		
+
 		[Conditional("DEBUG")]
 		public static void CheckIsFrozen(Freezable f)
 		{
 			if (f != null && !f.IsFrozen)
 				Debug.WriteLine("Performance warning: Not frozen: " + f.ToString());
 		}
-		
+
 		[Conditional("DEBUG")]
 		public static void Log(bool condition, string format, params object[] args)
 		{

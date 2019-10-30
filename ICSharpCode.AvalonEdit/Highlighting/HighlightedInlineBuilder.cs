@@ -18,12 +18,11 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Text;
 using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Media;
+
 using ICSharpCode.AvalonEdit.Utils;
 
 namespace ICSharpCode.AvalonEdit.Highlighting
@@ -48,11 +47,11 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 			else
 				return null;
 		}
-		
+
 		readonly string text;
 		List<int> stateChangeOffsets = new List<int>();
 		List<HighlightingColor> stateChanges = new List<HighlightingColor>();
-		
+
 		int GetIndexForOffset(int offset)
 		{
 			if (offset < 0 || offset > text.Length)
@@ -67,7 +66,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 			}
 			return index;
 		}
-		
+
 		/// <summary>
 		/// Creates a new HighlightedInlineBuilder instance.
 		/// </summary>
@@ -79,7 +78,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 			stateChangeOffsets.Add(0);
 			stateChanges.Add(new HighlightingColor());
 		}
-		
+
 		/// <summary>
 		/// Creates a new HighlightedInlineBuilder instance.
 		/// </summary>
@@ -91,21 +90,21 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 			stateChangeOffsets.AddRange(text.stateChangeOffsets);
 			stateChanges.AddRange(text.stateChanges);
 		}
-		
+
 		HighlightedInlineBuilder(string text, List<int> offsets, List<HighlightingColor> states)
 		{
 			this.text = text;
 			stateChangeOffsets = offsets;
 			stateChanges = states;
 		}
-		
+
 		/// <summary>
 		/// Gets the text.
 		/// </summary>
 		public string Text {
 			get { return text; }
 		}
-		
+
 		/// <summary>
 		/// Applies the properties from the HighlightingColor to the specified text segment.
 		/// </summary>
@@ -125,7 +124,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 				stateChanges[i].MergeWith(color);
 			}
 		}
-		
+
 		/// <summary>
 		/// Sets the foreground brush on the specified text segment.
 		/// </summary>
@@ -138,7 +137,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 				stateChanges[i].Foreground = hbrush;
 			}
 		}
-		
+
 		/// <summary>
 		/// Sets the background brush on the specified text segment.
 		/// </summary>
@@ -151,7 +150,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 				stateChanges[i].Background = hbrush;
 			}
 		}
-		
+
 		/// <summary>
 		/// Sets the font weight on the specified text segment.
 		/// </summary>
@@ -163,7 +162,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 				stateChanges[i].FontWeight = weight;
 			}
 		}
-		
+
 		/// <summary>
 		/// Sets the font style on the specified text segment.
 		/// </summary>
@@ -175,7 +174,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 				stateChanges[i].FontStyle = style;
 			}
 		}
-		
+
 		/// <summary>
 		/// Creates WPF Run instances that can be used for TextBlock.Inlines.
 		/// </summary>
@@ -183,7 +182,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 		{
 			return ToRichText().CreateRuns();
 		}
-		
+
 		/// <summary>
 		/// Creates a RichText instance.
 		/// </summary>
@@ -191,15 +190,15 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 		{
 			return new RichText(text, stateChangeOffsets.ToArray(), stateChanges.Select(FreezableHelper.GetFrozenClone).ToArray());
 		}
-		
+
 		/// <summary>
 		/// Clones this HighlightedInlineBuilder.
 		/// </summary>
 		public HighlightedInlineBuilder Clone()
 		{
 			return new HighlightedInlineBuilder(this.text,
-			                                    stateChangeOffsets.ToList(),
-			                                    stateChanges.Select(sc => sc.Clone()).ToList());
+												stateChangeOffsets.ToList(),
+												stateChanges.Select(sc => sc.Clone()).ToList());
 		}
 	}
 }

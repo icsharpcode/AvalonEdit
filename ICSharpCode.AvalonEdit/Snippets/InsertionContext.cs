@@ -19,7 +19,7 @@
 using System;
 using System.Collections.Generic;
 using System.Windows;
-using ICSharpCode.NRefactory.Editor;
+
 using ICSharpCode.AvalonEdit.Document;
 using ICSharpCode.AvalonEdit.Editing;
 
@@ -38,9 +38,9 @@ namespace ICSharpCode.AvalonEdit.Snippets
 			RaisingDeactivated,
 			Deactivated
 		}
-		
+
 		Status currentStatus = Status.Insertion;
-		
+
 		/// <summary>
 		/// Creates a new InsertionContext instance.
 		/// </summary>
@@ -53,54 +53,54 @@ namespace ICSharpCode.AvalonEdit.Snippets
 			this.SelectedText = textArea.Selection.GetText();
 			this.InsertionPosition = insertionPosition;
 			this.startPosition = insertionPosition;
-			
+
 			DocumentLine startLine = this.Document.GetLineByOffset(insertionPosition);
 			ISegment indentation = TextUtilities.GetWhitespaceAfter(this.Document, startLine.Offset);
 			this.Indentation = Document.GetText(indentation.Offset, Math.Min(indentation.EndOffset, insertionPosition) - indentation.Offset);
 			this.Tab = textArea.Options.IndentationString;
-			
+
 			this.LineTerminator = TextUtilities.GetNewLineFromDocument(this.Document, startLine.LineNumber);
 		}
-		
+
 		/// <summary>
 		/// Gets the text area.
 		/// </summary>
 		public TextArea TextArea { get; private set; }
-		
+
 		/// <summary>
 		/// Gets the text document.
 		/// </summary>
 		public ICSharpCode.AvalonEdit.Document.TextDocument Document { get; private set; }
-		
+
 		/// <summary>
 		/// Gets the text that was selected before the insertion of the snippet.
 		/// </summary>
 		public string SelectedText { get; private set; }
-		
+
 		/// <summary>
 		/// Gets the indentation at the insertion position.
 		/// </summary>
 		public string Indentation { get; private set; }
-		
+
 		/// <summary>
 		/// Gets the indentation string for a single indentation level.
 		/// </summary>
 		public string Tab { get; private set; }
-		
+
 		/// <summary>
 		/// Gets the line terminator at the insertion position.
 		/// </summary>
 		public string LineTerminator { get; private set; }
-		
+
 		/// <summary>
 		/// Gets/Sets the insertion position.
 		/// </summary>
 		public int InsertionPosition { get; set; }
-		
+
 		readonly int startPosition;
 		ICSharpCode.AvalonEdit.Document.AnchorSegment wholeSnippetAnchor;
 		bool deactivateIfSnippetEmpty;
-		
+
 		/// <summary>
 		/// Gets the start position of the snippet insertion.
 		/// </summary>
@@ -112,7 +112,7 @@ namespace ICSharpCode.AvalonEdit.Snippets
 					return startPosition;
 			}
 		}
-		
+
 		/// <summary>
 		/// Inserts text at the insertion position and advances the insertion position.
 		/// This method will add the current indentation to every line in <paramref name="text"/> and will
@@ -124,9 +124,9 @@ namespace ICSharpCode.AvalonEdit.Snippets
 				throw new ArgumentNullException("text");
 			if (currentStatus != Status.Insertion)
 				throw new InvalidOperationException();
-			
+
 			text = text.Replace("\t", this.Tab);
-			
+
 			using (this.Document.RunUpdate()) {
 				int textOffset = 0;
 				SimpleSegment segment;
@@ -142,10 +142,10 @@ namespace ICSharpCode.AvalonEdit.Snippets
 				this.InsertionPosition += remainingInsertString.Length;
 			}
 		}
-		
+
 		Dictionary<SnippetElement, IActiveElement> elementMap = new Dictionary<SnippetElement, IActiveElement>();
 		List<IActiveElement> registeredElements = new List<IActiveElement>();
-		
+
 		/// <summary>
 		/// Registers an active element. Elements should be registered during insertion and will be called back
 		/// when insertion has completed.
@@ -163,7 +163,7 @@ namespace ICSharpCode.AvalonEdit.Snippets
 			elementMap.Add(owner, element);
 			registeredElements.Add(element);
 		}
-		
+
 		/// <summary>
 		/// Returns the active element belonging to the specified snippet element, or null if no such active element is found.
 		/// </summary>
@@ -177,34 +177,34 @@ namespace ICSharpCode.AvalonEdit.Snippets
 			else
 				return null;
 		}
-		
+
 		/// <summary>
 		/// Gets the list of active elements.
 		/// </summary>
 		public IEnumerable<IActiveElement> ActiveElements {
 			get { return registeredElements; }
 		}
-		
+
 		/// <summary>
 		/// Calls the <see cref="IActiveElement.OnInsertionCompleted"/> method on all registered active elements
 		/// and raises the <see cref="InsertionCompleted"/> event.
 		/// </summary>
 		/// <param name="e">The EventArgs to use</param>
 		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate",
-		                                                 Justification="There is an event and this method is raising it.")]
+														 Justification = "There is an event and this method is raising it.")]
 		public void RaiseInsertionCompleted(EventArgs e)
 		{
 			if (currentStatus != Status.Insertion)
 				throw new InvalidOperationException();
 			if (e == null)
 				e = EventArgs.Empty;
-			
+
 			currentStatus = Status.RaisingInsertionCompleted;
 			int endPosition = this.InsertionPosition;
 			this.wholeSnippetAnchor = new AnchorSegment(Document, startPosition, endPosition - startPosition);
 			TextDocumentWeakEventManager.UpdateFinished.AddListener(Document, this);
 			deactivateIfSnippetEmpty = (endPosition != startPosition);
-			
+
 			foreach (IActiveElement element in registeredElements) {
 				element.OnInsertionCompleted();
 			}
@@ -224,14 +224,14 @@ namespace ICSharpCode.AvalonEdit.Snippets
 				TextArea.PushStackedInputHandler(myInputHandler);
 			}
 		}
-		
+
 		SnippetInputHandler myInputHandler;
-		
+
 		/// <summary>
 		/// Occurs when the all snippet elements have been inserted.
 		/// </summary>
 		public event EventHandler InsertionCompleted;
-		
+
 		/// <summary>
 		/// Calls the <see cref="IActiveElement.Deactivate"/> method on all registered active elements.
 		/// </summary>
@@ -244,7 +244,7 @@ namespace ICSharpCode.AvalonEdit.Snippets
 				throw new InvalidOperationException("Cannot call Deactivate() until RaiseInsertionCompleted() has finished.");
 			if (e == null)
 				e = new SnippetEventArgs(DeactivateReason.Unknown);
-			
+
 			TextDocumentWeakEventManager.UpdateFinished.RemoveListener(Document, this);
 			currentStatus = Status.RaisingDeactivated;
 			TextArea.PopStackedInputHandler(myInputHandler);
@@ -255,17 +255,17 @@ namespace ICSharpCode.AvalonEdit.Snippets
 				Deactivated(this, e);
 			currentStatus = Status.Deactivated;
 		}
-		
+
 		/// <summary>
 		/// Occurs when the interactive mode is deactivated.
 		/// </summary>
 		public event EventHandler<SnippetEventArgs> Deactivated;
-		
+
 		bool IWeakEventListener.ReceiveWeakEvent(Type managerType, object sender, EventArgs e)
 		{
 			return ReceiveWeakEvent(managerType, sender, e);
 		}
-		
+
 		/// <inheritdoc cref="IWeakEventListener.ReceiveWeakEvent"/>
 		protected virtual bool ReceiveWeakEvent(Type managerType, object sender, EventArgs e)
 		{
@@ -278,7 +278,7 @@ namespace ICSharpCode.AvalonEdit.Snippets
 			}
 			return false;
 		}
-		
+
 		/// <summary>
 		/// Adds existing segments as snippet elements.
 		/// </summary>
@@ -294,7 +294,7 @@ namespace ICSharpCode.AvalonEdit.Snippets
 				var end = Document.CreateAnchor(boundElement.EndOffset);
 				end.MovementType = AnchorMovementType.BeforeInsertion;
 				end.SurviveDeletion = true;
-				
+
 				RegisterActiveElement(bound, new BoundActiveElement(this, main, bound, new AnchorSegment(start, end)));
 			}
 		}

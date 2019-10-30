@@ -22,6 +22,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Xml;
+
 using ICSharpCode.AvalonEdit.Utils;
 
 namespace ICSharpCode.AvalonEdit.Highlighting
@@ -41,13 +42,13 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 			Func<IHighlightingDefinition> lazyLoadingFunction;
 			IHighlightingDefinition definition;
 			Exception storedException;
-			
+
 			public DelayLoadedHighlightingDefinition(string name, Func<IHighlightingDefinition> lazyLoadingFunction)
 			{
 				this.name = name;
 				this.lazyLoadingFunction = lazyLoadingFunction;
 			}
-			
+
 			public string Name {
 				get {
 					if (name != null)
@@ -56,9 +57,9 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 						return GetDefinition().Name;
 				}
 			}
-			
+
 			[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes",
-			                                                 Justification = "The exception will be rethrown")]
+															 Justification = "The exception will be rethrown")]
 			IHighlightingDefinition GetDefinition()
 			{
 				Func<IHighlightingDefinition> func;
@@ -91,46 +92,46 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 					return this.definition;
 				}
 			}
-			
+
 			public HighlightingRuleSet MainRuleSet {
 				get {
 					return GetDefinition().MainRuleSet;
 				}
 			}
-			
+
 			public HighlightingRuleSet GetNamedRuleSet(string name)
 			{
 				return GetDefinition().GetNamedRuleSet(name);
 			}
-			
+
 			public HighlightingColor GetNamedColor(string name)
 			{
 				return GetDefinition().GetNamedColor(name);
 			}
-			
+
 			public IEnumerable<HighlightingColor> NamedHighlightingColors {
 				get {
 					return GetDefinition().NamedHighlightingColors;
 				}
 			}
-			
+
 			public override string ToString()
 			{
 				return this.Name;
 			}
-			
+
 			public IDictionary<string, string> Properties {
 				get {
 					return GetDefinition().Properties;
 				}
 			}
 		}
-		
+
 		readonly object lockObj = new object();
 		Dictionary<string, IHighlightingDefinition> highlightingsByName = new Dictionary<string, IHighlightingDefinition>();
 		Dictionary<string, IHighlightingDefinition> highlightingsByExtension = new Dictionary<string, IHighlightingDefinition>(StringComparer.OrdinalIgnoreCase);
 		List<IHighlightingDefinition> allHighlightings = new List<IHighlightingDefinition>();
-		
+
 		/// <summary>
 		/// Gets a highlighting definition by name.
 		/// Returns null if the definition is not found.
@@ -145,7 +146,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 					return null;
 			}
 		}
-		
+
 		/// <summary>
 		/// Gets a copy of all highlightings.
 		/// </summary>
@@ -156,7 +157,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 				}
 			}
 		}
-		
+
 		/// <summary>
 		/// Gets a highlighting definition by extension.
 		/// Returns null if the definition is not found.
@@ -171,7 +172,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 					return null;
 			}
 		}
-		
+
 		/// <summary>
 		/// Registers a highlighting definition.
 		/// </summary>
@@ -182,7 +183,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 		{
 			if (highlighting == null)
 				throw new ArgumentNullException("highlighting");
-			
+
 			lock (lockObj) {
 				allHighlightings.Add(highlighting);
 				if (name != null) {
@@ -195,7 +196,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 				}
 			}
 		}
-		
+
 		/// <summary>
 		/// Registers a highlighting definition.
 		/// </summary>
@@ -208,7 +209,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 				throw new ArgumentNullException("lazyLoadedHighlighting");
 			RegisterHighlighting(name, extensions, new DelayLoadedHighlightingDefinition(name, lazyLoadedHighlighting));
 		}
-		
+
 		/// <summary>
 		/// Gets the default HighlightingManager instance.
 		/// The default HighlightingManager comes with built-in highlightings.
@@ -218,21 +219,21 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 				return DefaultHighlightingManager.Instance;
 			}
 		}
-		
+
 		internal sealed class DefaultHighlightingManager : HighlightingManager
 		{
 			public new static readonly DefaultHighlightingManager Instance = new DefaultHighlightingManager();
-			
+
 			public DefaultHighlightingManager()
 			{
 				Resources.RegisterBuiltInHighlightings(this);
 			}
-			
+
 			// Registering a built-in highlighting
 			internal void RegisterHighlighting(string name, string[] extensions, string resourceName)
 			{
 				try {
-					#if DEBUG
+#if DEBUG
 					// don't use lazy-loading in debug builds, show errors immediately
 					Xshd.XshdSyntaxDefinition xshd;
 					using (Stream s = Resources.OpenStream(resourceName)) {
@@ -245,31 +246,31 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 						Debug.Assert(System.Linq.Enumerable.SequenceEqual(extensions, xshd.Extensions));
 					else
 						Debug.Assert(xshd.Extensions.Count == 0);
-					
+
 					// round-trip xshd:
-//					string resourceFileName = Path.Combine(Path.GetTempPath(), resourceName);
-//					using (XmlTextWriter writer = new XmlTextWriter(resourceFileName, System.Text.Encoding.UTF8)) {
-//						writer.Formatting = Formatting.Indented;
-//						new Xshd.SaveXshdVisitor(writer).WriteDefinition(xshd);
-//					}
-//					using (FileStream fs = File.Create(resourceFileName + ".bin")) {
-//						new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter().Serialize(fs, xshd);
-//					}
-//					using (FileStream fs = File.Create(resourceFileName + ".compiled")) {
-//						new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter().Serialize(fs, Xshd.HighlightingLoader.Load(xshd, this));
-//					}
-					
+					//					string resourceFileName = Path.Combine(Path.GetTempPath(), resourceName);
+					//					using (XmlTextWriter writer = new XmlTextWriter(resourceFileName, System.Text.Encoding.UTF8)) {
+					//						writer.Formatting = Formatting.Indented;
+					//						new Xshd.SaveXshdVisitor(writer).WriteDefinition(xshd);
+					//					}
+					//					using (FileStream fs = File.Create(resourceFileName + ".bin")) {
+					//						new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter().Serialize(fs, xshd);
+					//					}
+					//					using (FileStream fs = File.Create(resourceFileName + ".compiled")) {
+					//						new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter().Serialize(fs, Xshd.HighlightingLoader.Load(xshd, this));
+					//					}
+
 					RegisterHighlighting(name, extensions, Xshd.HighlightingLoader.Load(xshd, this));
-					#else
+#else
 					RegisterHighlighting(name, extensions, LoadHighlighting(resourceName));
-					#endif
+#endif
 				} catch (HighlightingDefinitionInvalidException ex) {
 					throw new InvalidOperationException("The built-in highlighting '" + name + "' is invalid.", ex);
 				}
 			}
-			
+
 			[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
-			                                                 Justification = "LoadHighlighting is used only in release builds")]
+															 Justification = "LoadHighlighting is used only in release builds")]
 			Func<IHighlightingDefinition> LoadHighlighting(string resourceName)
 			{
 				Func<IHighlightingDefinition> func = delegate {

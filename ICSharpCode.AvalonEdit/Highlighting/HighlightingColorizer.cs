@@ -20,6 +20,7 @@ using System;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Media;
+
 using ICSharpCode.AvalonEdit.Document;
 using ICSharpCode.AvalonEdit.Rendering;
 
@@ -34,7 +35,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 		TextView textView;
 		IHighlighter highlighter;
 		bool isFixedHighlighter;
-		
+
 		/// <summary>
 		/// Creates a new HighlightingColorizer instance.
 		/// </summary>
@@ -45,7 +46,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 				throw new ArgumentNullException("definition");
 			this.definition = definition;
 		}
-		
+
 		/// <summary>
 		/// Creates a new HighlightingColorizer instance that uses a fixed highlighter instance.
 		/// The colorizer can only be used with text views that show the document for which
@@ -59,7 +60,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 			this.highlighter = highlighter;
 			this.isFixedHighlighter = true;
 		}
-		
+
 		/// <summary>
 		/// Creates a new HighlightingColorizer instance.
 		/// Derived classes using this constructor must override the <see cref="CreateHighlighter"/> method.
@@ -67,14 +68,14 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 		protected HighlightingColorizer()
 		{
 		}
-		
+
 		void textView_DocumentChanged(object sender, EventArgs e)
 		{
 			TextView textView = (TextView)sender;
 			DeregisterServices(textView);
 			RegisterServices(textView);
 		}
-		
+
 		/// <summary>
 		/// This method is called when a text view is removed from this HighlightingColorizer,
 		/// and also when the TextDocument on any associated text view changes.
@@ -97,7 +98,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 				}
 			}
 		}
-		
+
 		/// <summary>
 		/// This method is called when a new text view is added to this HighlightingColorizer,
 		/// and also when the TextDocument on any associated text view changes.
@@ -116,7 +117,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 				}
 			}
 		}
-		
+
 		/// <summary>
 		/// Creates the IHighlighter instance for the specified text document.
 		/// </summary>
@@ -127,7 +128,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 			else
 				throw new NotSupportedException("Cannot create a highlighter because no IHighlightingDefinition was specified, and the CreateHighlighter() method was not overridden.");
 		}
-		
+
 		/// <inheritdoc/>
 		protected override void OnAddToTextView(TextView textView)
 		{
@@ -141,7 +142,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 			textView.VisualLinesChanged += textView_VisualLinesChanged;
 			RegisterServices(textView);
 		}
-		
+
 		/// <inheritdoc/>
 		protected override void OnRemoveFromTextView(TextView textView)
 		{
@@ -152,9 +153,9 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 			base.OnRemoveFromTextView(textView);
 			this.textView = null;
 		}
-		
+
 		bool isInHighlightingGroup;
-		
+
 		void textView_VisualLineConstructionStarting(object sender, VisualLineConstructionStartEventArgs e)
 		{
 			if (highlighter != null) {
@@ -174,7 +175,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 				lineNumberBeingColorized = 0;
 			}
 		}
-		
+
 		void textView_VisualLinesChanged(object sender, EventArgs e)
 		{
 			if (highlighter != null && isInHighlightingGroup) {
@@ -182,9 +183,9 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 				isInHighlightingGroup = false;
 			}
 		}
-		
+
 		DocumentLine lastColorizedLine;
-		
+
 		/// <inheritdoc/>
 		protected override void Colorize(ITextRunConstructionContext context)
 		{
@@ -203,9 +204,9 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 			}
 			this.lastColorizedLine = null;
 		}
-		
+
 		int lineNumberBeingColorized;
-		
+
 		/// <inheritdoc/>
 		protected override void ColorizeLine(DocumentLine line)
 		{
@@ -217,12 +218,12 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 					if (IsEmptyColor(section.Color))
 						continue;
 					ChangeLinePart(section.Offset, section.Offset + section.Length,
-					               visualLineElement => ApplyColorToElement(visualLineElement, section.Color));
+								   visualLineElement => ApplyColorToElement(visualLineElement, section.Color));
 				}
 			}
 			this.lastColorizedLine = line;
 		}
-		
+
 		/// <summary>
 		/// Gets whether the color is empty (has no effect on a VisualLineTextElement).
 		/// For example, the C# "Punctuation" is an empty color.
@@ -233,9 +234,9 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 				return true;
 			return color.Background == null && color.Foreground == null
 				&& color.FontStyle == null && color.FontWeight == null
-				&& color.Underline == null;
+				&& color.Underline == null && color.Strikethrough == null;
 		}
-		
+
 		/// <summary>
 		/// Applies a highlighting color to a visual line element.
 		/// </summary>
@@ -243,7 +244,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 		{
 			ApplyColorToElement(element, color, CurrentContext);
 		}
-		
+
 		internal static void ApplyColorToElement(VisualLineElement element, HighlightingColor color, ITextRunConstructionContext context)
 		{
 			if (color.Foreground != null) {
@@ -256,19 +257,23 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 				if (b != null)
 					element.BackgroundBrush = b;
 			}
-			if (color.FontStyle != null || color.FontWeight != null) {
+			if (color.FontStyle != null || color.FontWeight != null || color.FontFamily != null) {
 				Typeface tf = element.TextRunProperties.Typeface;
 				element.TextRunProperties.SetTypeface(new Typeface(
-					tf.FontFamily,
+					color.FontFamily ?? tf.FontFamily,
 					color.FontStyle ?? tf.Style,
 					color.FontWeight ?? tf.Weight,
 					tf.Stretch
 				));
 			}
-			if(color.Underline ?? false)
+			if (color.Underline ?? false)
 				element.TextRunProperties.SetTextDecorations(TextDecorations.Underline);
+			if (color.Strikethrough ?? false)
+				element.TextRunProperties.SetTextDecorations(TextDecorations.Strikethrough);
+			if (color.FontSize.HasValue)
+				element.TextRunProperties.SetFontRenderingEmSize(color.FontSize.Value);
 		}
-		
+
 		/// <summary>
 		/// This method is responsible for telling the TextView to redraw lines when the highlighting state has changed.
 		/// </summary>
@@ -287,39 +292,39 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 					return;
 				}
 			}
-			
+
 			// The user may have inserted "/*" into the current line, and so far only that line got redrawn.
 			// So when the highlighting state is changed, we issue a redraw for the line immediately below.
 			// If the highlighting state change applies to the lines below, too, the construction of each line
 			// will invalidate the next line, and the construction pass will regenerate all lines.
-			
+
 			Debug.WriteLine(string.Format("OnHighlightStateChanged forces redraw of lines {0} to {1}", fromLineNumber, toLineNumber));
-			
+
 			// If the VisualLine construction is in progress, we have to avoid sending redraw commands for
 			// anything above the line currently being constructed.
 			// It takes some explanation to see why this cannot happen.
 			// VisualLines always get constructed from top to bottom.
 			// Each VisualLine construction calls into the highlighter and thus forces an update of the
 			// highlighting state for all lines up to the one being constructed.
-			
+
 			// To guarantee that we don't redraw lines we just constructed, we need to show that when
 			// a VisualLine is being reused, the highlighting state at that location is still up-to-date.
-			
+
 			// This isn't exactly trivial and the initial implementation was incorrect in the presence of external document changes
 			// (e.g. split view).
-			
+
 			// For the first line in the view, the TextView.VisualLineConstructionStarting event is used to check that the
 			// highlighting state is up-to-date. If it isn't, this method will be executed, and it'll mark the first line
 			// in the view as requiring a redraw. This is safely possible because that event occurs before any lines are reused.
-			
+
 			// Once we take care of the first visual line, we won't get in trouble with other lines due to the top-to-bottom
 			// construction process.
-			
+
 			// We'll prove that: if line N is being reused, then the highlighting state is up-to-date until (end of) line N-1.
-			
+
 			// Start of induction: the first line in view is reused only if the highlighting state was up-to-date
 			// until line N-1 (no change detected in VisualLineConstructionStarting event).
-			
+
 			// Induction step:
 			// If another line N+1 is being reused, then either
 			//     a) the previous line (the visual line containing document line N) was newly constructed
@@ -328,12 +333,12 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 			// In case b, the highlighting state at N-1 was up-to-date, and the text of line N was not changed.
 			//   (if the text was changed, the line could not have been reused).
 			// From this follows that the highlighting state at N is still up-to-date.
-			
+
 			// The above proof holds even in the presence of folding: folding only ever hides text in the middle of a visual line.
 			// Our Colorize-override ensures that the highlighting state is always updated for the LastDocumentLine,
 			// so it will always invalidate the next visual line when a folded line is constructed
 			// and the highlighting stack has changed.
-			
+
 			if (fromLineNumber == toLineNumber) {
 				textView.Redraw(textView.Document.GetLineByNumber(fromLineNumber));
 			} else {
@@ -346,7 +351,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 				int startOffset = fromLine.Offset;
 				textView.Redraw(startOffset, toLine.EndOffset - startOffset);
 			}
-			
+
 			/*
 			 * Meta-comment: "why does this have to be so complicated?"
 			 * 

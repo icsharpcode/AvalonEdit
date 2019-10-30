@@ -18,18 +18,15 @@
 
 using System;
 using System.Text;
-#if NREFACTORY
-using ICSharpCode.NRefactory.Editor;
-#endif
 
 namespace ICSharpCode.AvalonEdit.Document
 {
 	static class NewLineFinder
 	{
 		static readonly char[] newline = { '\r', '\n' };
-		
+
 		internal static readonly string[] NewlineStrings = { "\r\n", "\r", "\n" };
-		
+
 		/// <summary>
 		/// Gets the location of the next new line character, or SimpleSegment.Invalid
 		/// if none is found.
@@ -46,7 +43,7 @@ namespace ICSharpCode.AvalonEdit.Document
 			}
 			return SimpleSegment.Invalid;
 		}
-		
+
 		/// <summary>
 		/// Gets the location of the next new line character, or SimpleSegment.Invalid
 		/// if none is found.
@@ -65,7 +62,7 @@ namespace ICSharpCode.AvalonEdit.Document
 			return SimpleSegment.Invalid;
 		}
 	}
-	
+
 	partial class TextUtilities
 	{
 		/// <summary>
@@ -97,7 +94,7 @@ namespace ICSharpCode.AvalonEdit.Document
 				return s.Offset;
 			}
 		}
-		
+
 		/// <summary>
 		/// Gets whether the specified string is a newline sequence.
 		/// </summary>
@@ -105,7 +102,7 @@ namespace ICSharpCode.AvalonEdit.Document
 		{
 			return newLine == "\r\n" || newLine == "\n" || newLine == "\r";
 		}
-		
+
 		/// <summary>
 		/// Normalizes all new lines in <paramref name="input"/> to be <paramref name="newLine"/>.
 		/// </summary>
@@ -130,7 +127,7 @@ namespace ICSharpCode.AvalonEdit.Document
 			b.Append(input, lastEndOffset, input.Length - lastEndOffset);
 			return b.ToString();
 		}
-		
+
 		/// <summary>
 		/// Gets the newline sequence used in the document at the specified line.
 		/// </summary>

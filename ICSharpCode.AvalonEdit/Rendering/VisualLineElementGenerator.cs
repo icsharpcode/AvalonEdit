@@ -29,7 +29,7 @@ namespace ICSharpCode.AvalonEdit.Rendering
 		/// Gets the text run construction context.
 		/// </summary>
 		protected ITextRunConstructionContext CurrentContext { get; private set; }
-		
+
 		/// <summary>
 		/// Initializes the generator for the <see cref="ITextRunConstructionContext"/>
 		/// </summary>
@@ -39,7 +39,7 @@ namespace ICSharpCode.AvalonEdit.Rendering
 				throw new ArgumentNullException("context");
 			this.CurrentContext = context;
 		}
-		
+
 		/// <summary>
 		/// De-initializes the generator.
 		/// </summary>
@@ -47,18 +47,18 @@ namespace ICSharpCode.AvalonEdit.Rendering
 		{
 			this.CurrentContext = null;
 		}
-		
+
 		/// <summary>
 		/// Should only be used by VisualLine.ConstructVisualElements.
 		/// </summary>
 		internal int cachedInterest;
-		
+
 		/// <summary>
 		/// Gets the first offset >= startOffset where the generator wants to construct an element.
 		/// Return -1 to signal no interest.
 		/// </summary>
 		public abstract int GetFirstInterestedOffset(int startOffset);
-		
+
 		/// <summary>
 		/// Constructs an element at the specified offset.
 		/// May return null if no element should be constructed.
@@ -70,7 +70,7 @@ namespace ICSharpCode.AvalonEdit.Rendering
 		/// </remarks>
 		public abstract VisualLineElement ConstructElement(int offset);
 	}
-	
+
 	internal interface IBuiltinElementGenerator
 	{
 		void FetchOptions(TextEditorOptions options);

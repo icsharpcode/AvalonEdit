@@ -1,5 +1,14 @@
 Note: this changelog only lists major changes and fixes for major bugs. For a complete list of changes, see the git log.
 
+2019/09/24: AvalonEdit 6.0
+* Add support for .NET Core 3.0
+* Remove support for .NET 3.5
+* Add proper .editorconfig and fix formatting
+* Remove DOTNET4 and NREFACTORY symbols
+* Create snukpg and use SourceLink
+
+*Note: Versions 5.0.2, ..3 and ..4 are not contained in this change log*
+
 2014/06/28: AvalonEdit 5.0.1-pre
 * License changed from LGPL to MIT
 * New Feature: Hide mouse cursor while typing (enabled by default)

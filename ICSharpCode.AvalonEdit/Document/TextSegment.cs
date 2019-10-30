@@ -18,9 +18,6 @@
 
 using System;
 using System.Diagnostics;
-#if NREFACTORY
-using ICSharpCode.NRefactory.Editor;
-#endif
 
 namespace ICSharpCode.AvalonEdit.Document
 {
@@ -56,38 +53,38 @@ namespace ICSharpCode.AvalonEdit.Document
 	{
 		internal ISegmentTree ownerTree;
 		internal TextSegment left, right, parent;
-		
+
 		/// <summary>
 		/// The color of the segment in the red/black tree.
 		/// </summary>
 		internal bool color;
-		
+
 		/// <summary>
 		/// The "length" of the node (distance to previous node)
 		/// </summary>
 		internal int nodeLength;
-		
+
 		/// <summary>
 		/// The total "length" of this subtree.
 		/// </summary>
 		internal int totalNodeLength; // totalNodeLength = nodeLength + left.totalNodeLength + right.totalNodeLength
-		
+
 		/// <summary>
 		/// The length of the segment (do not confuse with nodeLength).
 		/// </summary>
 		internal int segmentLength;
-		
+
 		/// <summary>
 		/// distanceToMaxEnd = Max(segmentLength,
 		///                        left.distanceToMaxEnd + left.Offset - Offset,
 		///                        left.distanceToMaxEnd + right.Offset - Offset)
 		/// </summary>
 		internal int distanceToMaxEnd;
-		
+
 		int ISegment.Offset {
 			get { return StartOffset; }
 		}
-		
+
 		/// <summary>
 		/// Gets whether this segment is connected to a TextSegmentCollection and will automatically
 		/// update its offsets.
@@ -97,7 +94,7 @@ namespace ICSharpCode.AvalonEdit.Document
 				return ownerTree != null;
 			}
 		}
-		
+
 		/// <summary>
 		/// Gets/Sets the start offset of the segment.
 		/// </summary>
@@ -110,7 +107,7 @@ namespace ICSharpCode.AvalonEdit.Document
 				// Otherwise, "nodeLength" contains the distance to the start offset of the previous node
 				Debug.Assert(!(ownerTree == null && parent != null));
 				Debug.Assert(!(ownerTree == null && left != null));
-				
+
 				TextSegment n = this;
 				int offset = n.nodeLength;
 				if (n.left != null)
@@ -142,7 +139,7 @@ namespace ICSharpCode.AvalonEdit.Document
 				}
 			}
 		}
-		
+
 		/// <summary>
 		/// Gets/Sets the end offset of the segment.
 		/// </summary>
@@ -160,7 +157,7 @@ namespace ICSharpCode.AvalonEdit.Document
 				Length = newLength;
 			}
 		}
-		
+
 		/// <summary>
 		/// Gets/Sets the length of the segment.
 		/// </summary>
@@ -182,7 +179,7 @@ namespace ICSharpCode.AvalonEdit.Document
 				}
 			}
 		}
-		
+
 		/// <summary>
 		/// This method gets called when the StartOffset/Length/EndOffset properties are set.
 		/// It is not called when StartOffset/Length/EndOffset change due to document changes
@@ -190,7 +187,7 @@ namespace ICSharpCode.AvalonEdit.Document
 		protected virtual void OnSegmentChanged()
 		{
 		}
-		
+
 		internal TextSegment LeftMost {
 			get {
 				TextSegment node = this;
@@ -199,7 +196,7 @@ namespace ICSharpCode.AvalonEdit.Document
 				return node;
 			}
 		}
-		
+
 		internal TextSegment RightMost {
 			get {
 				TextSegment node = this;
@@ -208,7 +205,7 @@ namespace ICSharpCode.AvalonEdit.Document
 				return node;
 			}
 		}
-		
+
 		/// <summary>
 		/// Gets the inorder successor of the node.
 		/// </summary>
@@ -228,7 +225,7 @@ namespace ICSharpCode.AvalonEdit.Document
 				}
 			}
 		}
-		
+
 		/// <summary>
 		/// Gets the inorder predecessor of the node.
 		/// </summary>
@@ -248,15 +245,15 @@ namespace ICSharpCode.AvalonEdit.Document
 				}
 			}
 		}
-		
-		#if DEBUG
+
+#if DEBUG
 		internal string ToDebugString()
 		{
 			return "[nodeLength=" + nodeLength + " totalNodeLength=" + totalNodeLength
 				+ " distanceToMaxEnd=" + distanceToMaxEnd + " MaxEndOffset=" + (StartOffset + distanceToMaxEnd) + "]";
 		}
-		#endif
-		
+#endif
+
 		/// <inheritdoc/>
 		public override string ToString()
 		{

@@ -20,7 +20,7 @@ using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Media;
-using ICSharpCode.NRefactory.Editor;
+
 using ICSharpCode.AvalonEdit.Document;
 using ICSharpCode.AvalonEdit.Utils;
 
@@ -36,7 +36,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 		readonly Stack<HighlightingColor> colorStack = new Stack<HighlightingColor>();
 		HighlightingColor currentColor;
 		int currentColorBegin = -1;
-		
+
 		/// <summary>
 		/// Creates a new RichTextModelWriter that inserts into document, starting at insertionOffset.
 		/// </summary>
@@ -49,7 +49,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 			this.documentTextWriter = (DocumentTextWriter)base.textWriter;
 			currentColor = richTextModel.GetHighlightingAt(Math.Max(0, insertionOffset - 1));
 		}
-		
+
 		/// <summary>
 		/// Gets/Sets the current insertion offset.
 		/// </summary>
@@ -57,14 +57,14 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 			get { return documentTextWriter.InsertionOffset; }
 			set { documentTextWriter.InsertionOffset = value; }
 		}
-		
-		
+
+
 		/// <inheritdoc/>
 		protected override void BeginUnhandledSpan()
 		{
 			colorStack.Push(currentColor);
 		}
-		
+
 		void BeginColorSpan()
 		{
 			WriteIndentationIfNecessary();
@@ -72,21 +72,21 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 			currentColor = currentColor.Clone();
 			currentColorBegin = documentTextWriter.InsertionOffset;
 		}
-		
+
 		/// <inheritdoc/>
 		public override void EndSpan()
 		{
 			currentColor = colorStack.Pop();
 			currentColorBegin = documentTextWriter.InsertionOffset;
 		}
-		
+
 		/// <inheritdoc/>
 		protected override void AfterWrite()
 		{
 			base.AfterWrite();
 			richTextModel.SetHighlighting(currentColorBegin, documentTextWriter.InsertionOffset - currentColorBegin, currentColor);
 		}
-		
+
 		/// <inheritdoc/>
 		public override void BeginSpan(Color foregroundColor)
 		{
@@ -94,13 +94,13 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 			currentColor.Foreground = new SimpleHighlightingBrush(foregroundColor);
 			currentColor.Freeze();
 		}
-		
+
 		/// <inheritdoc/>
 		public override void BeginSpan(FontFamily fontFamily)
 		{
 			BeginUnhandledSpan(); // TODO
 		}
-		
+
 		/// <inheritdoc/>
 		public override void BeginSpan(FontStyle fontStyle)
 		{
@@ -108,7 +108,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 			currentColor.FontStyle = fontStyle;
 			currentColor.Freeze();
 		}
-		
+
 		/// <inheritdoc/>
 		public override void BeginSpan(FontWeight fontWeight)
 		{
@@ -116,7 +116,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 			currentColor.FontWeight = fontWeight;
 			currentColor.Freeze();
 		}
-		
+
 		/// <inheritdoc/>
 		public override void BeginSpan(HighlightingColor highlightingColor)
 		{

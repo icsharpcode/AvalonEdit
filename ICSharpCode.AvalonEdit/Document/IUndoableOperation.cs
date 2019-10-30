@@ -16,8 +16,6 @@
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
 
-using System;
-
 namespace ICSharpCode.AvalonEdit.Document
 {
 	/// <summary>
@@ -30,13 +28,13 @@ namespace ICSharpCode.AvalonEdit.Document
 		/// Undo the last operation
 		/// </summary>
 		void Undo();
-		
+
 		/// <summary>
 		/// Redo the last operation
 		/// </summary>
 		void Redo();
 	}
-	
+
 	interface IUndoableOperationWithContext : IUndoableOperation
 	{
 		void Undo(UndoStack stack);

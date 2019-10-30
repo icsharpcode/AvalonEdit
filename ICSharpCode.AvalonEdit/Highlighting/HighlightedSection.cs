@@ -16,12 +16,7 @@
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
 
-using System;
-#if NREFACTORY
-using ICSharpCode.NRefactory.Editor;
-#else
 using ICSharpCode.AvalonEdit.Document;
-#endif
 
 namespace ICSharpCode.AvalonEdit.Highlighting
 {
@@ -34,21 +29,21 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 		/// Gets/sets the document offset of the section.
 		/// </summary>
 		public int Offset { get; set; }
-		
+
 		/// <summary>
 		/// Gets/sets the length of the section.
 		/// </summary>
 		public int Length { get; set; }
-		
+
 		int ISegment.EndOffset {
 			get { return this.Offset + this.Length; }
 		}
-		
+
 		/// <summary>
 		/// Gets the highlighting color associated with the highlighted section.
 		/// </summary>
 		public HighlightingColor Color { get; set; }
-		
+
 		/// <inheritdoc/>
 		public override string ToString()
 		{

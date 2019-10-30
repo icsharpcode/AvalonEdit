@@ -16,9 +16,7 @@
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
 
-using System;
 using ICSharpCode.AvalonEdit.Document;
-using ICSharpCode.NRefactory.Editor;
 
 namespace ICSharpCode.AvalonEdit.Snippets
 {
@@ -31,7 +29,7 @@ namespace ICSharpCode.AvalonEdit.Snippets
 		/// Gets or sets the name of the anchor.
 		/// </summary>
 		public string Name { get; private set; }
-		
+
 		/// <summary>
 		/// Creates a SnippetAnchorElement with the supplied name.
 		/// </summary>
@@ -39,7 +37,7 @@ namespace ICSharpCode.AvalonEdit.Snippets
 		{
 			this.Name = name;
 		}
-		
+
 		/// <inheritdoc />
 		public override void Insert(InsertionContext context)
 		{
@@ -50,7 +48,7 @@ namespace ICSharpCode.AvalonEdit.Snippets
 			context.RegisterActiveElement(this, new AnchorElement(segment, Name, context));
 		}
 	}
-	
+
 	/// <summary>
 	/// AnchorElement created by SnippetAnchorElement.
 	/// </summary>
@@ -60,15 +58,15 @@ namespace ICSharpCode.AvalonEdit.Snippets
 		public bool IsEditable {
 			get { return false; }
 		}
-		
+
 		AnchorSegment segment;
 		InsertionContext context;
-		
+
 		/// <inheritdoc />
 		public ISegment Segment {
 			get { return segment; }
 		}
-		
+
 		/// <summary>
 		/// Creates a new AnchorElement.
 		/// </summary>
@@ -78,7 +76,7 @@ namespace ICSharpCode.AvalonEdit.Snippets
 			this.context = context;
 			this.Name = name;
 		}
-		
+
 		/// <summary>
 		/// Gets or sets the text at the anchor.
 		/// </summary>
@@ -94,17 +92,17 @@ namespace ICSharpCode.AvalonEdit.Snippets
 				}
 			}
 		}
-		
+
 		/// <summary>
 		/// Gets or sets the name of the anchor.
 		/// </summary>
 		public string Name { get; private set; }
-		
+
 		/// <inheritdoc />
 		public void OnInsertionCompleted()
 		{
 		}
-		
+
 		/// <inheritdoc />
 		public void Deactivate(SnippetEventArgs e)
 		{

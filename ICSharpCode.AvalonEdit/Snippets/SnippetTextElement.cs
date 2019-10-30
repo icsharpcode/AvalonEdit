@@ -28,7 +28,7 @@ namespace ICSharpCode.AvalonEdit.Snippets
 	public class SnippetTextElement : SnippetElement
 	{
 		string text;
-		
+
 		/// <summary>
 		/// The text to be inserted.
 		/// </summary>
@@ -36,14 +36,14 @@ namespace ICSharpCode.AvalonEdit.Snippets
 			get { return text; }
 			set { text = value; }
 		}
-		
+
 		/// <inheritdoc/>
 		public override void Insert(InsertionContext context)
 		{
 			if (text != null)
 				context.InsertText(text);
 		}
-		
+
 		/// <inheritdoc/>
 		public override Inline ToTextRun()
 		{

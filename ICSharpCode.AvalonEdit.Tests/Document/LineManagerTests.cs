@@ -124,16 +124,16 @@ namespace ICSharpCode.AvalonEdit.Document
 			Assert.AreEqual(document.TextLength, 0);
 		}
 		
-		[Test, ExpectedException(typeof(ArgumentNullException))]
+		[Test]
 		public void InsertNull()
 		{
-			document.Insert(0, (string)null);
+			Assert.Throws<ArgumentNullException>(() => document.Insert(0, (string) null));
 		}
 		
-		[Test, ExpectedException(typeof(ArgumentNullException))]
+		[Test]
 		public void SetTextNull()
 		{
-			document.Text = null;
+			Assert.Throws<ArgumentNullException>(() => document.Text = null);
 		}
 		
 		[Test]
@@ -144,81 +144,111 @@ namespace ICSharpCode.AvalonEdit.Document
 			Assert.AreEqual(document.TextLength, 0);
 		}
 		
-		[Test, ExpectedException(typeof(ArgumentOutOfRangeException))]
+		[Test]
 		public void GetCharAt0EmptyDocument()
 		{
-			document.GetCharAt(0);
+			Assert.Throws<ArgumentOutOfRangeException>(() => document.GetCharAt(0));
 		}
 		
-		[Test, ExpectedException(typeof(ArgumentOutOfRangeException))]
+		[Test]
 		public void GetCharAtNegativeOffset()
 		{
-			document.Text = "a\nb";
-			document.GetCharAt(-1);
+			Assert.Throws<ArgumentOutOfRangeException>(() =>
+			{
+				document.Text = "a\nb";
+				document.GetCharAt(-1);
+			});
 		}
 		
-		[Test, ExpectedException(typeof(ArgumentOutOfRangeException))]
+		[Test]
 		public void GetCharAtEndOffset()
 		{
-			document.Text = "a\nb";
-			document.GetCharAt(document.TextLength);
+			Assert.Throws<ArgumentOutOfRangeException>(() =>
+			{
+				document.Text = "a\nb";
+				document.GetCharAt(document.TextLength);
+			});
 		}
 		
-		[Test, ExpectedException(typeof(ArgumentOutOfRangeException))]
+		[Test]
 		public void InsertAtNegativeOffset()
 		{
-			document.Text = "a\nb";
-			document.Insert(-1, "text");
+			Assert.Throws<ArgumentOutOfRangeException>(() =>
+			{
+				document.Text = "a\nb";
+				document.Insert(-1, "text");
+			});
 		}
 		
-		[Test, ExpectedException(typeof(ArgumentOutOfRangeException))]
+		[Test]
 		public void InsertAfterEndOffset()
 		{
-			document.Text = "a\nb";
-			document.Insert(4, "text");
+			Assert.Throws<ArgumentOutOfRangeException>(() =>
+			{
+				document.Text = "a\nb";
+				document.Insert(4, "text");
+			});
 		}
 		
-		[Test, ExpectedException(typeof(ArgumentOutOfRangeException))]
+		[Test]
 		public void RemoveNegativeAmount()
 		{
-			document.Text = "abcd";
-			document.Remove(2, -1);
+			Assert.Throws<ArgumentOutOfRangeException>(() =>
+			{
+				document.Text = "abcd";
+				document.Remove(2, -1);
+			});
 		}
 		
-		[Test, ExpectedException(typeof(ArgumentOutOfRangeException))]
+		[Test]
 		public void RemoveTooMuch()
 		{
-			document.Text = "abcd";
-			document.Remove(2, 10);
+			Assert.Throws<ArgumentOutOfRangeException>(() =>
+			{
+				document.Text = "abcd";
+				document.Remove(2, 10);
+			});
 		}
 		
-		[Test, ExpectedException(typeof(ArgumentOutOfRangeException))]
+		[Test]
 		public void GetLineByNumberNegative()
 		{
-			document.Text = "a\nb";
-			document.GetLineByNumber(-1);
+			Assert.Throws<ArgumentOutOfRangeException>(() =>
+			{
+				document.Text = "a\nb";
+				document.GetLineByNumber(-1);
+			});
 		}
 		
-		[Test, ExpectedException(typeof(ArgumentOutOfRangeException))]
+		[Test]
 		public void GetLineByNumberTooHigh()
 		{
-			document.Text = "a\nb";
-			document.GetLineByNumber(3);
+			Assert.Throws<ArgumentOutOfRangeException>(() =>
+			{
+				document.Text = "a\nb";
+				document.GetLineByNumber(3);
+			});
 		}
 		
-		[Test, ExpectedException(typeof(ArgumentOutOfRangeException))]
+		[Test]
 		public void GetLineByOffsetNegative()
 		{
-			document.Text = "a\nb";
-			document.GetLineByOffset(-1);
+			Assert.Throws<ArgumentOutOfRangeException>(() =>
+			{
+				document.Text = "a\nb";
+				document.GetLineByOffset(-1);
+			});
 		}
 		
 		
-		[Test, ExpectedException(typeof(ArgumentOutOfRangeException))]
+		[Test]
 		public void GetLineByOffsetToHigh()
 		{
-			document.Text = "a\nb";
-			document.GetLineByOffset(10);
+			Assert.Throws<ArgumentOutOfRangeException>(() =>
+			{
+				document.Text = "a\nb";
+				document.GetLineByOffset(10);
+			});
 		}
 		
 		[Test]

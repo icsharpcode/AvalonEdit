@@ -16,7 +16,6 @@
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
 
-using System;
 using System.Windows.Media;
 
 namespace ICSharpCode.AvalonEdit.Rendering
@@ -32,7 +31,7 @@ namespace ICSharpCode.AvalonEdit.Rendering
 		/// Gets the layer on which this background renderer should draw.
 		/// </summary>
 		KnownLayer Layer { get; }
-		
+
 		/// <summary>
 		/// Causes the background renderer to draw.
 		/// </summary>

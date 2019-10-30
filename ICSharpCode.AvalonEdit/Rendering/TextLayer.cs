@@ -16,10 +16,8 @@
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
 
-using System;
 using System.Collections.Generic;
 using System.Windows;
-using System.Windows.Input;
 using System.Windows.Media;
 
 namespace ICSharpCode.AvalonEdit.Rendering
@@ -43,13 +41,13 @@ namespace ICSharpCode.AvalonEdit.Rendering
 		/// the index of the text layer in the layers collection
 		/// </summary>
 		internal int index;
-		
+
 		public TextLayer(TextView textView) : base(textView, KnownLayer.Text)
 		{
 		}
-		
+
 		List<VisualLineDrawingVisual> visuals = new List<VisualLineDrawingVisual>();
-		
+
 		internal void SetVisualLines(ICollection<VisualLine> visualLines)
 		{
 			foreach (VisualLineDrawingVisual v in visuals) {
@@ -67,16 +65,16 @@ namespace ICSharpCode.AvalonEdit.Rendering
 			}
 			InvalidateArrange();
 		}
-		
+
 		protected override int VisualChildrenCount {
 			get { return visuals.Count; }
 		}
-		
+
 		protected override Visual GetVisualChild(int index)
 		{
 			return visuals[index];
 		}
-		
+
 		protected override void ArrangeCore(Rect finalRect)
 		{
 			textView.ArrangeTextLayer(visuals);

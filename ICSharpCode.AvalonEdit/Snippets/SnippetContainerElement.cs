@@ -31,14 +31,14 @@ namespace ICSharpCode.AvalonEdit.Snippets
 	public class SnippetContainerElement : SnippetElement
 	{
 		NullSafeCollection<SnippetElement> elements = new NullSafeCollection<SnippetElement>();
-		
+
 		/// <summary>
 		/// Gets the list of child elements.
 		/// </summary>
 		public IList<SnippetElement> Elements {
 			get { return elements; }
 		}
-		
+
 		/// <inheritdoc/>
 		public override void Insert(InsertionContext context)
 		{
@@ -46,7 +46,7 @@ namespace ICSharpCode.AvalonEdit.Snippets
 				e.Insert(context);
 			}
 		}
-		
+
 		/// <inheritdoc/>
 		public override Inline ToTextRun()
 		{

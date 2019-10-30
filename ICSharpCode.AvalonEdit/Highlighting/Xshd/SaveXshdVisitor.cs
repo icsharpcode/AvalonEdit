@@ -31,9 +31,9 @@ namespace ICSharpCode.AvalonEdit.Highlighting.Xshd
 		/// XML namespace for XSHD.
 		/// </summary>
 		public const string Namespace = V2Loader.Namespace;
-		
+
 		XmlWriter writer;
-		
+
 		/// <summary>
 		/// Creates a new SaveXshdVisitor instance.
 		/// </summary>
@@ -43,7 +43,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting.Xshd
 				throw new ArgumentNullException("writer");
 			this.writer = writer;
 		}
-		
+
 		/// <summary>
 		/// Writes the specified syntax definition.
 		/// </summary>
@@ -56,33 +56,33 @@ namespace ICSharpCode.AvalonEdit.Highlighting.Xshd
 				writer.WriteAttributeString("name", definition.Name);
 			if (definition.Extensions != null)
 				writer.WriteAttributeString("extensions", string.Join(";", definition.Extensions.ToArray()));
-			
+
 			definition.AcceptElements(this);
-			
+
 			writer.WriteEndElement();
 		}
-		
+
 		object IXshdVisitor.VisitRuleSet(XshdRuleSet ruleSet)
 		{
 			writer.WriteStartElement("RuleSet", Namespace);
-			
+
 			if (ruleSet.Name != null)
 				writer.WriteAttributeString("name", ruleSet.Name);
 			WriteBoolAttribute("ignoreCase", ruleSet.IgnoreCase);
-			
+
 			ruleSet.AcceptElements(this);
-			
+
 			writer.WriteEndElement();
 			return null;
 		}
-		
+
 		void WriteBoolAttribute(string attributeName, bool? value)
 		{
 			if (value != null) {
 				writer.WriteAttributeString(attributeName, value.Value ? "true" : "false");
 			}
 		}
-		
+
 		void WriteRuleSetReference(XshdReference<XshdRuleSet> ruleSetReference)
 		{
 			if (ruleSetReference.ReferencedElement != null) {
@@ -92,7 +92,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting.Xshd
 					writer.WriteAttributeString("ruleSet", ruleSetReference.ReferencedElement);
 			}
 		}
-		
+
 		void WriteColorReference(XshdReference<XshdColor> color)
 		{
 			if (color.InlineElement != null) {
@@ -104,7 +104,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting.Xshd
 					writer.WriteAttributeString("color", color.ReferencedElement);
 			}
 		}
-		
+
 		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase", Justification = "The file format requires lowercase, and all possible values are English-only")]
 		void WriteColorAttributes(XshdColor color)
 		{
@@ -117,7 +117,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting.Xshd
 			if (color.FontStyle != null)
 				writer.WriteAttributeString("fontStyle", V2Loader.FontStyleConverter.ConvertToInvariantString(color.FontStyle.Value).ToLowerInvariant());
 		}
-		
+
 		object IXshdVisitor.VisitColor(XshdColor color)
 		{
 			writer.WriteStartElement("Color", Namespace);
@@ -129,7 +129,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting.Xshd
 			writer.WriteEndElement();
 			return null;
 		}
-		
+
 		object IXshdVisitor.VisitKeywords(XshdKeywords keywords)
 		{
 			writer.WriteStartElement("Keywords", Namespace);
@@ -140,7 +140,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting.Xshd
 			writer.WriteEndElement();
 			return null;
 		}
-		
+
 		object IXshdVisitor.VisitSpan(XshdSpan span)
 		{
 			writer.WriteStartElement("Span", Namespace);
@@ -152,19 +152,19 @@ namespace ICSharpCode.AvalonEdit.Highlighting.Xshd
 			WriteRuleSetReference(span.RuleSetReference);
 			if (span.Multiline)
 				writer.WriteAttributeString("multiline", "true");
-			
+
 			if (span.BeginRegexType == XshdRegexType.IgnorePatternWhitespace)
 				WriteBeginEndElement("Begin", span.BeginRegex, span.BeginColorReference);
 			if (span.EndRegexType == XshdRegexType.IgnorePatternWhitespace)
 				WriteBeginEndElement("End", span.EndRegex, span.EndColorReference);
-			
+
 			if (span.RuleSetReference.InlineElement != null)
 				span.RuleSetReference.InlineElement.AcceptVisitor(this);
-			
+
 			writer.WriteEndElement();
 			return null;
 		}
-		
+
 		void WriteBeginEndElement(string elementName, string regex, XshdReference<XshdColor> colorReference)
 		{
 			if (regex != null) {
@@ -174,7 +174,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting.Xshd
 				writer.WriteEndElement();
 			}
 		}
-		
+
 		object IXshdVisitor.VisitImport(XshdImport import)
 		{
 			writer.WriteStartElement("Import", Namespace);
@@ -182,14 +182,14 @@ namespace ICSharpCode.AvalonEdit.Highlighting.Xshd
 			writer.WriteEndElement();
 			return null;
 		}
-		
+
 		object IXshdVisitor.VisitRule(XshdRule rule)
 		{
 			writer.WriteStartElement("Rule", Namespace);
 			WriteColorReference(rule.ColorReference);
-			
+
 			writer.WriteString(rule.Regex);
-			
+
 			writer.WriteEndElement();
 			return null;
 		}

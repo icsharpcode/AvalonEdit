@@ -46,29 +46,29 @@ namespace ICSharpCode.AvalonEdit.Rendering
 			this.VisualLength = visualLength;
 			this.DocumentLength = documentLength;
 		}
-		
+
 		/// <summary>
 		/// Gets the length of this element in visual columns.
 		/// </summary>
 		public int VisualLength { get; private set; }
-		
+
 		/// <summary>
 		/// Gets the length of this element in the text document.
 		/// </summary>
 		public int DocumentLength { get; private set; }
-		
+
 		/// <summary>
 		/// Gets the visual column where this element starts.
 		/// </summary>
 		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1721:PropertyNamesShouldNotMatchGetMethods",
-		                                                 Justification = "This property holds the start visual column, use GetVisualColumn to get inner visual columns.")]
+														 Justification = "This property holds the start visual column, use GetVisualColumn to get inner visual columns.")]
 		public int VisualColumn { get; internal set; }
-		
+
 		/// <summary>
 		/// Gets the text offset where this element starts, relative to the start text offset of the visual line.
 		/// </summary>
 		public int RelativeTextOffset { get; internal set; }
-		
+
 		/// <summary>
 		/// Gets the text run properties.
 		/// A unique <see cref="VisualLineElementTextRunProperties"/> instance is used for each
@@ -77,17 +77,17 @@ namespace ICSharpCode.AvalonEdit.Rendering
 		/// <see cref="VisualLineElement"/>.
 		/// </summary>
 		public VisualLineElementTextRunProperties TextRunProperties { get; private set; }
-		
+
 		/// <summary>
 		/// Gets/sets the brush used for the background of this <see cref="VisualLineElement" />.
 		/// </summary>
 		public Brush BackgroundBrush { get; set; }
-		
+
 		internal void SetTextRunProperties(VisualLineElementTextRunProperties p)
 		{
 			this.TextRunProperties = p;
 		}
-		
+
 		/// <summary>
 		/// Creates the TextRun for this line element.
 		/// </summary>
@@ -100,7 +100,7 @@ namespace ICSharpCode.AvalonEdit.Rendering
 		/// Context object that contains information relevant for text run creation.
 		/// </param>
 		public abstract TextRun CreateTextRun(int startVisualColumn, ITextRunConstructionContext context);
-		
+
 		/// <summary>
 		/// Retrieves the text span immediately before the visual column.
 		/// </summary>
@@ -109,14 +109,14 @@ namespace ICSharpCode.AvalonEdit.Rendering
 		{
 			return null;
 		}
-		
+
 		/// <summary>
 		/// Gets if this VisualLineElement can be split.
 		/// </summary>
 		public virtual bool CanSplit {
 			get { return false; }
 		}
-		
+
 		/// <summary>
 		/// Splits the element.
 		/// </summary>
@@ -127,7 +127,7 @@ namespace ICSharpCode.AvalonEdit.Rendering
 		{
 			throw new NotSupportedException();
 		}
-		
+
 		/// <summary>
 		/// Helper method for splitting this line element into two, correctly updating the
 		/// <see cref="VisualLength"/>, <see cref="DocumentLength"/>, <see cref="VisualColumn"/>
@@ -145,7 +145,7 @@ namespace ICSharpCode.AvalonEdit.Rendering
 				throw new ArgumentNullException("secondPart");
 			int relativeSplitVisualColumn = splitVisualColumn - VisualColumn;
 			int relativeSplitRelativeTextOffset = splitRelativeTextOffset - RelativeTextOffset;
-			
+
 			if (relativeSplitVisualColumn <= 0 || relativeSplitVisualColumn >= VisualLength)
 				throw new ArgumentOutOfRangeException("splitVisualColumn", splitVisualColumn, "Value must be between " + (VisualColumn + 1) + " and " + (VisualColumn + VisualLength - 1));
 			if (relativeSplitRelativeTextOffset < 0 || relativeSplitRelativeTextOffset > DocumentLength)
@@ -166,8 +166,10 @@ namespace ICSharpCode.AvalonEdit.Rendering
 				firstPart.TextRunProperties = TextRunProperties.Clone();
 			if (secondPart.TextRunProperties == null)
 				secondPart.TextRunProperties = TextRunProperties.Clone();
+			firstPart.BackgroundBrush = BackgroundBrush;
+			secondPart.BackgroundBrush = BackgroundBrush;
 		}
-		
+
 		/// <summary>
 		/// Gets the visual column of a text location inside this element.
 		/// The text offset is given relative to the visual line start.
@@ -179,7 +181,7 @@ namespace ICSharpCode.AvalonEdit.Rendering
 			else
 				return VisualColumn;
 		}
-		
+
 		/// <summary>
 		/// Gets the text offset of a visual column inside this element.
 		/// </summary>
@@ -191,7 +193,7 @@ namespace ICSharpCode.AvalonEdit.Rendering
 			else
 				return RelativeTextOffset;
 		}
-		
+
 		/// <summary>
 		/// Gets the next caret position inside this element.
 		/// </summary>
@@ -220,7 +222,7 @@ namespace ICSharpCode.AvalonEdit.Rendering
 			}
 			return -1;
 		}
-		
+
 		/// <summary>
 		/// Gets whether the specified offset in this element is considered whitespace.
 		/// </summary>
@@ -228,7 +230,7 @@ namespace ICSharpCode.AvalonEdit.Rendering
 		{
 			return false;
 		}
-		
+
 		/// <summary>
 		/// Gets whether the <see cref="GetNextCaretPosition"/> implementation handles line borders.
 		/// If this property returns false, the caller of GetNextCaretPosition should handle the line
@@ -239,21 +241,21 @@ namespace ICSharpCode.AvalonEdit.Rendering
 		public virtual bool HandlesLineBorders {
 			get { return false; }
 		}
-		
+
 		/// <summary>
 		/// Queries the cursor over the visual line element.
 		/// </summary>
 		protected internal virtual void OnQueryCursor(QueryCursorEventArgs e)
 		{
 		}
-		
+
 		/// <summary>
 		/// Allows the visual line element to handle a mouse event.
 		/// </summary>
 		protected internal virtual void OnMouseDown(MouseButtonEventArgs e)
 		{
 		}
-		
+
 		/// <summary>
 		/// Allows the visual line element to handle a mouse event.
 		/// </summary>

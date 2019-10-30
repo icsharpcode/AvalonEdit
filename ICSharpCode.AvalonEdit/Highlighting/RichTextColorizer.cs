@@ -17,6 +17,7 @@
 // DEALINGS IN THE SOFTWARE.
 
 using System;
+
 using ICSharpCode.AvalonEdit.Document;
 using ICSharpCode.AvalonEdit.Rendering;
 
@@ -28,7 +29,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 	public class RichTextColorizer : DocumentColorizingTransformer
 	{
 		readonly RichTextModel richTextModel;
-		
+
 		/// <summary>
 		/// Creates a new RichTextColorizer instance.
 		/// </summary>
@@ -38,7 +39,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 				throw new ArgumentNullException("richTextModel");
 			this.richTextModel = richTextModel;
 		}
-		
+
 		/// <inheritdoc/>
 		protected override void ColorizeLine(DocumentLine line)
 		{
@@ -47,7 +48,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 				if (HighlightingColorizer.IsEmptyColor(section.Color))
 					continue;
 				ChangeLinePart(section.Offset, section.Offset + section.Length,
-				               visualLineElement => HighlightingColorizer.ApplyColorToElement(visualLineElement, section.Color, CurrentContext));
+							   visualLineElement => HighlightingColorizer.ApplyColorToElement(visualLineElement, section.Color, CurrentContext));
 			}
 		}
 	}

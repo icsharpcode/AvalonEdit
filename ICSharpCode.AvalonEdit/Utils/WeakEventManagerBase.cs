@@ -37,7 +37,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 		{
 			Debug.Assert(GetType() == typeof(TManager));
 		}
-		
+
 		/// <summary>
 		/// Adds a weak event listener.
 		/// </summary>
@@ -46,7 +46,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 		{
 			CurrentManager.ProtectedAddListener(source, listener);
 		}
-		
+
 		/// <summary>
 		/// Removes a weak event listener.
 		/// </summary>
@@ -55,7 +55,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 		{
 			CurrentManager.ProtectedRemoveListener(source, listener);
 		}
-		
+
 		/// <inheritdoc/>
 		protected sealed override void StartListening(object source)
 		{
@@ -63,7 +63,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 				throw new ArgumentNullException("source");
 			StartListening((TEventSource)source);
 		}
-		
+
 		/// <inheritdoc/>
 		protected sealed override void StopListening(object source)
 		{
@@ -71,17 +71,17 @@ namespace ICSharpCode.AvalonEdit.Utils
 				throw new ArgumentNullException("source");
 			StopListening((TEventSource)source);
 		}
-		
+
 		/// <summary>
 		/// Attaches the event handler.
 		/// </summary>
 		protected abstract void StartListening(TEventSource source);
-		
+
 		/// <summary>
 		/// Detaches the event handler.
 		/// </summary>
 		protected abstract void StopListening(TEventSource source);
-		
+
 		/// <summary>
 		/// Gets the current manager.
 		/// </summary>

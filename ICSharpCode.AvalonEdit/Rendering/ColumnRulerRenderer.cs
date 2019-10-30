@@ -20,7 +20,6 @@ using System;
 using System.Windows;
 using System.Windows.Media;
 
-using ICSharpCode.AvalonEdit.Rendering;
 using ICSharpCode.AvalonEdit.Utils;
 
 namespace ICSharpCode.AvalonEdit.Rendering
@@ -33,24 +32,24 @@ namespace ICSharpCode.AvalonEdit.Rendering
 		Pen pen;
 		int column;
 		TextView textView;
-		
+
 		public static readonly Color DefaultForeground = Colors.LightGray;
-		
+
 		public ColumnRulerRenderer(TextView textView)
 		{
 			if (textView == null)
 				throw new ArgumentNullException("textView");
-			
+
 			this.pen = new Pen(new SolidColorBrush(DefaultForeground), 1);
 			this.pen.Freeze();
 			this.textView = textView;
 			this.textView.BackgroundRenderers.Add(this);
 		}
-		
+
 		public KnownLayer Layer {
 			get { return KnownLayer.Background; }
 		}
-		
+
 		public void SetRuler(int column, Pen pen)
 		{
 			if (this.column != column) {
@@ -62,7 +61,7 @@ namespace ICSharpCode.AvalonEdit.Rendering
 				textView.InvalidateLayer(this.Layer);
 			}
 		}
-		
+
 		public void Draw(TextView textView, System.Windows.Media.DrawingContext drawingContext)
 		{
 			if (column < 1) return;
@@ -72,7 +71,7 @@ namespace ICSharpCode.AvalonEdit.Rendering
 			markerXPos -= textView.ScrollOffset.X;
 			Point start = new Point(markerXPos, 0);
 			Point end = new Point(markerXPos, Math.Max(textView.DocumentHeight, textView.ActualHeight));
-			
+
 			drawingContext.DrawLine(pen, start, end);
 		}
 	}

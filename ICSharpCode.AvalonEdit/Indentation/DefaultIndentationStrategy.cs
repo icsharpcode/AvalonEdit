@@ -17,7 +17,7 @@
 // DEALINGS IN THE SOFTWARE.
 
 using System;
-using ICSharpCode.NRefactory.Editor;
+
 using ICSharpCode.AvalonEdit.Document;
 
 namespace ICSharpCode.AvalonEdit.Indentation
@@ -41,10 +41,12 @@ namespace ICSharpCode.AvalonEdit.Indentation
 				string indentation = document.GetText(indentationSegment);
 				// copy indentation to line
 				indentationSegment = TextUtilities.GetWhitespaceAfter(document, line.Offset);
-				document.Replace(indentationSegment, indentation);
+				document.Replace(indentationSegment.Offset, indentationSegment.Length, indentation,
+								 OffsetChangeMappingType.RemoveAndInsert);
+				// OffsetChangeMappingType.RemoveAndInsert guarantees the caret moves behind the new indentation.
 			}
 		}
-		
+
 		/// <summary>
 		/// Does nothing: indenting multiple lines is useless without a smart indentation strategy.
 		/// </summary>

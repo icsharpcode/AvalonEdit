@@ -16,8 +16,6 @@
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
 
-using System;
-using System.ComponentModel;
 using ICSharpCode.AvalonEdit.Document;
 
 namespace ICSharpCode.AvalonEdit.Rendering
@@ -30,26 +28,26 @@ namespace ICSharpCode.AvalonEdit.Rendering
 	{
 		DocumentLine start, end;
 		HeightTree heightTree;
-		
-		#if DEBUG
+
+#if DEBUG
 		internal string ID;
 		static int nextId;
-		#else
+#else
 		const string ID = "";
-		#endif
-		
+#endif
+
 		internal CollapsedLineSection(HeightTree heightTree, DocumentLine start, DocumentLine end)
 		{
 			this.heightTree = heightTree;
 			this.start = start;
 			this.end = end;
-			#if DEBUG
+#if DEBUG
 			unchecked {
 				this.ID = " #" + (nextId++);
 			}
-			#endif
+#endif
 		}
-		
+
 		/// <summary>
 		/// Gets if the document line is collapsed.
 		/// This property initially is true and turns to false when uncollapsing the section.
@@ -57,7 +55,7 @@ namespace ICSharpCode.AvalonEdit.Rendering
 		public bool IsCollapsed {
 			get { return start != null; }
 		}
-		
+
 		/// <summary>
 		/// Gets the start line of the section.
 		/// When the section is uncollapsed or the text containing it is deleted,
@@ -67,7 +65,7 @@ namespace ICSharpCode.AvalonEdit.Rendering
 			get { return start; }
 			internal set { start = value; }
 		}
-		
+
 		/// <summary>
 		/// Gets the end line of the section.
 		/// When the section is uncollapsed or the text containing it is deleted,
@@ -77,7 +75,7 @@ namespace ICSharpCode.AvalonEdit.Rendering
 			get { return end; }
 			internal set { end = value; }
 		}
-		
+
 		/// <summary>
 		/// Uncollapses the section.
 		/// This causes the Start and End properties to be set to null!
@@ -87,16 +85,16 @@ namespace ICSharpCode.AvalonEdit.Rendering
 		{
 			if (start == null)
 				return;
-			
+
 			heightTree.Uncollapse(this);
-			#if DEBUG
+#if DEBUG
 			heightTree.CheckProperties();
-			#endif
-			
+#endif
+
 			start = null;
 			end = null;
 		}
-		
+
 		/// <summary>
 		/// Gets a string representation of the collapsed section.
 		/// </summary>
