@@ -86,10 +86,12 @@ namespace ICSharpCode.AvalonEdit.Rendering
 			if (start == null)
 				return;
 
-			heightTree.Uncollapse(this);
+			if (!heightTree.IsDisposed) {
+				heightTree.Uncollapse(this);
 #if DEBUG
-			heightTree.CheckProperties();
+				heightTree.CheckProperties();
 #endif
+			}
 
 			start = null;
 			end = null;

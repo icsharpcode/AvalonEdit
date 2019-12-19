@@ -73,6 +73,12 @@ namespace ICSharpCode.AvalonEdit.Rendering
 			this.weakLineTracker = null;
 		}
 
+		public bool IsDisposed {
+			get {
+				return root == null;
+			}
+		}
+
 		double defaultLineHeight;
 
 		public double DefaultLineHeight {
