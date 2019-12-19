@@ -76,6 +76,7 @@ namespace ICSharpCode.AvalonEdit.Editing
 			textArea.MouseMove += textArea_MouseMove;
 			textArea.MouseLeftButtonUp += textArea_MouseLeftButtonUp;
 			textArea.QueryCursor += textArea_QueryCursor;
+			textArea.DocumentChanged += textArea_DocumentChanged;
 			textArea.OptionChanged += textArea_OptionChanged;
 
 			enableTextDragDrop = textArea.Options.EnableTextDragDrop;
@@ -91,6 +92,7 @@ namespace ICSharpCode.AvalonEdit.Editing
 			textArea.MouseMove -= textArea_MouseMove;
 			textArea.MouseLeftButtonUp -= textArea_MouseLeftButtonUp;
 			textArea.QueryCursor -= textArea_QueryCursor;
+			textArea.DocumentChanged -= textArea_DocumentChanged;
 			textArea.OptionChanged -= textArea_OptionChanged;
 			if (enableTextDragDrop) {
 				DetachDragDrop();
@@ -131,6 +133,15 @@ namespace ICSharpCode.AvalonEdit.Editing
 				else
 					DetachDragDrop();
 			}
+		}
+
+		void textArea_DocumentChanged(object sender, EventArgs e)
+		{
+			if (mode != MouseSelectionMode.None) {
+				mode = MouseSelectionMode.None;
+				textArea.ReleaseMouseCapture();
+			}
+			startWord = null;
 		}
 		#endregion
 
@@ -379,6 +390,10 @@ namespace ICSharpCode.AvalonEdit.Editing
 		void textArea_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
 		{
 			mode = MouseSelectionMode.None;
+			if (textArea.Document == null) {
+				// Avoid entering any selection mode when there's no document attached.
+				return;
+			}
 			if (!e.Handled && e.ChangedButton == MouseButton.Left) {
 				ModifierKeys modifiers = Keyboard.Modifiers;
 				bool shift = (modifiers & ModifierKeys.Shift) == ModifierKeys.Shift;
