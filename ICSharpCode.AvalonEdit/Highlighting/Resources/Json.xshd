@@ -2,12 +2,12 @@
 <!-- syntaxdefinition for Json by alek kowalczyk -->
 <!-- update by zuijin in 2019.12.20 -->
 <SyntaxDefinition name="Json" extensions=".json" xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
-	<Color name="Bool" foreground="#f98280" exampleText="true | false" />
-	<Color name="Number" foreground="#cc0029" exampleText="3.14" />
-	<Color name="String" foreground="#3ab54a" exampleText="" />
-	<Color name="Null" foreground="#b3b3b3" exampleText="" />
-	<Color name="FieldName" foreground="#008fee" />
-	<Color name="Punctuation" foreground="#222222" />
+	<Color name="Bool" foreground="Blue" exampleText="true | false" />
+	<Color name="Number" foreground="Red" exampleText="3.14" />
+	<Color name="String" foreground="Green" exampleText="" />
+	<Color name="Null" foreground="Olive" exampleText="" />
+	<Color name="FieldName" foreground="DarkMagenta" />
+	<Color name="Punctuation" foreground="Black" />
 
 	<RuleSet name="String">
 		<Span begin="\\" end="."/>
