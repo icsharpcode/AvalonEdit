@@ -1,5 +1,8 @@
 Note: this changelog only lists major changes and fixes for major bugs. For a complete list of changes, see the git log.
 
+2019/12/30: AvalonEdit 6.0.1
+* Minor bug fixes
+
 2019/09/24: AvalonEdit 6.0
 * Add support for .NET Core 3.0
 * Remove support for .NET 3.5
