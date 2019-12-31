@@ -26,7 +26,7 @@
     <Authors>AvalonEdit Contributors</Authors>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>http://www.avalonedit.net</PackageProjectUrl>
-    <PackageIconUrl>http://community.sharpdevelop.net/blogs/mattward/SharpDevelop.png</PackageIconUrl>
+    <PackageIcon>images\AvalonEditNuGetPackageIcon.png</PackageIcon>
     <PackageTags>WPF Text Editor SharpDevelop AvalonEdit</PackageTags>
     <PackageReleaseNotes>Changes are detailed at https://github.com/icsharpcode/AvalonEdit/blob/master/ChangeLog.md</PackageReleaseNotes>
   </PropertyGroup>
@@ -50,6 +50,10 @@
     <None Remove="Search\next.png" />
     <None Remove="Search\prev.png" />
     <None Remove="themes\RightArrow.cur" />
+    <None Include="AvalonEditNuGetPackageIcon.png">
+      <Pack>True</Pack>
+      <PackagePath>images</PackagePath>
+    </None>
     <Resource Include="Search\next.png" />
     <Resource Include="Search\prev.png" />
     <Resource Include="themes\RightArrow.cur" />
