@@ -222,6 +222,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 			info.AddValue("HasUnderline", this.Underline.HasValue);
 			if (this.Underline.HasValue)
 				info.AddValue("Underline", this.Underline.Value);
+			info.AddValue("HasStrikethrough", this.Strikethrough.HasValue);
 			if (this.Strikethrough.HasValue)
 				info.AddValue("Strikethrough", this.Strikethrough.Value);
 			info.AddValue("Foreground", this.Foreground);
