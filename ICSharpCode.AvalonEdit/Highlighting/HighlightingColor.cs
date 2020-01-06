@@ -196,8 +196,8 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 				this.Underline = info.GetBoolean("Underline");
 			if (info.GetBoolean("HasStrikethrough"))
 				this.Strikethrough = info.GetBoolean("Strikethrough");
-			this.Foreground = (HighlightingBrush)info.GetValue("Foreground", typeof(HighlightingBrush));
-			this.Background = (HighlightingBrush)info.GetValue("Background", typeof(HighlightingBrush));
+			this.Foreground = (HighlightingBrush)info.GetValue("Foreground", typeof(SimpleHighlightingBrush));
+			this.Background = (HighlightingBrush)info.GetValue("Background", typeof(SimpleHighlightingBrush));
 			if (info.GetBoolean("HasFamily"))
 				this.FontFamily = new FontFamily(info.GetString("Family"));
 			if (info.GetBoolean("HasSize"))
