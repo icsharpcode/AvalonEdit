@@ -7,7 +7,8 @@ pr:
 variables:
   solution: '**/ICSharpCode.AvalonEdit.sln'
   buildPlatform: 'Any CPU'
-  buildVersion: '6.0.1.$(Build.BuildId)'
+  buildVersion: '6.1.0.$(Build.BuildId)'
+  nupkgVersion: '6.1.0-preview1'
 
 pool:
   vmImage: 'windows-2019'
