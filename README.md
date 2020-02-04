@@ -34,6 +34,11 @@ AvalonEdit is distributed under the [MIT License](http://opensource.org/licenses
 Projects using AvalonEdit
 -------
 
-* https://github.com/icsharpcode/ILSpy/: .NET decompiler
+A good place to start are the "top 10" listed under **GitHub Usage** for the [AvalonEdit package](https://www.nuget.org/packages/AvalonEdit) on NuGet.
+
+* https://github.com/icsharpcode/ILSpy/ ILSpy .NET decompiler
+* https://github.com/KirillOsenkov/MSBuildStructuredLog A logger for MSBuild 
+* https://github.com/aelij/RoslynPad RoslynPad
+* https://github.com/huangjia2107/XamlViewer LightWeight Xaml Editor
 
 Note: if your project is not listed here, let us know! :)
