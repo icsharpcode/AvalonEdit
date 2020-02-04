@@ -42,7 +42,7 @@ steps:
     WriteBOM: false
     VersionNumber: '$(buildVersion)'
     FileVersionNumber: '$(buildVersion)'
-    PackageVersion: '$(buildVersion)'
+    PackageVersion: '$(nupkgVersion)'
 
 - task: VSBuild@1
   inputs:
