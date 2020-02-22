@@ -272,10 +272,15 @@ namespace ICSharpCode.AvalonEdit.Search
 		{
 			if (searchTextBox == null)
 				return;
+
 			var be = searchTextBox.GetBindingExpression(TextBox.TextProperty);
+
 			try {
-				Validation.ClearInvalid(be);
+				if (be != null)
+					Validation.ClearInvalid(be);
+
 				UpdateSearch();
+
 			} catch (SearchPatternException ex) {
 				var ve = new ValidationError(be.ParentBinding.ValidationRules[0], be, ex.Message, ex);
 				Validation.MarkInvalid(be, ve);
