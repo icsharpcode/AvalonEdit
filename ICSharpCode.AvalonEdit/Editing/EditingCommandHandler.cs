@@ -258,9 +258,13 @@ namespace ICSharpCode.AvalonEdit.Editing
 						// thus we need to validate endPos before using it in the selection.
 						if (endPos.Line < 1 || endPos.Column < 1)
 							endPos = new TextViewPosition(Math.Max(endPos.Line, 1), Math.Max(endPos.Column, 1));
+						// Don't do anything if the number of lines of a rectangular selection would be changed by the deletion.
+						if (textArea.Selection is RectangleSelection && startPos.Line != endPos.Line)
+							return;
 						// Don't select the text to be deleted; just reuse the ReplaceSelectionWithText logic
-						var sel = new SimpleSelection(textArea, startPos, endPos);
-						sel.ReplaceSelectionWithText(string.Empty);
+						// Reuse the existing selection, so that we continue using the same logic
+						textArea.Selection.StartSelectionOrSetEndpoint(startPos, endPos)
+							.ReplaceSelectionWithText(string.Empty);
 					} else {
 						textArea.RemoveSelectedText();
 					}
