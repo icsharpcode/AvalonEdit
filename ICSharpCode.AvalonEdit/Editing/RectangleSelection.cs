@@ -56,7 +56,7 @@ namespace ICSharpCode.AvalonEdit.Editing
 		public static readonly RoutedUICommand BoxSelectLeftByWord = Command("BoxSelectLeftByWord");
 
 		/// <summary>
-		/// Expands the selection left by one word, creating a rectangular selection.
+		/// Expands the selection right by one word, creating a rectangular selection.
 		/// Key gesture: Ctrl+Alt+Shift+Right
 		/// </summary>
 		public static readonly RoutedUICommand BoxSelectRightByWord = Command("BoxSelectRightByWord");
@@ -68,7 +68,7 @@ namespace ICSharpCode.AvalonEdit.Editing
 		public static readonly RoutedUICommand BoxSelectUpByLine = Command("BoxSelectUpByLine");
 
 		/// <summary>
-		/// Expands the selection up by one line, creating a rectangular selection.
+		/// Expands the selection down by one line, creating a rectangular selection.
 		/// Key gesture: Alt+Shift+Down
 		/// </summary>
 		public static readonly RoutedUICommand BoxSelectDownByLine = Command("BoxSelectDownByLine");
