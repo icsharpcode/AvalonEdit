@@ -117,7 +117,7 @@ namespace ICSharpCode.AvalonEdit.Editing
 				if (editor != null) {
 					var fromElement = FromElement(editor);
 					if (fromElement != null)
-						fromElement.GetPattern(patternInterface);
+						return fromElement.GetPattern(patternInterface);
 				}
 			}
 			return base.GetPattern(patternInterface);
