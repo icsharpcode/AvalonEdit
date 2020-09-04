@@ -154,8 +154,8 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 		{
 			Debug.Assert(newOffsets.Length == newColors.Length);
 			Debug.Assert(newOffsets[0] == 0);
-			// remove everything before offset:
-			while (stateChangeOffsets.Count > 0 && stateChangeOffsets.Last() <= offset) {
+			// remove everything not before offset:
+			while (stateChangeOffsets.Count > 0 && stateChangeOffsets.Last() >= offset) {
 				stateChangeOffsets.RemoveAt(stateChangeOffsets.Count - 1);
 				stateChanges.RemoveAt(stateChanges.Count - 1);
 			}
