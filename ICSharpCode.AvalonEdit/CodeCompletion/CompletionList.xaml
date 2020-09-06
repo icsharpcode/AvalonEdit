@@ -37,7 +37,9 @@
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type cc:CompletionList}">
 					<cc:CompletionListBox x:Name="PART_ListBox"
-						ItemContainerStyle="{StaticResource CompletionListBoxItem}">
+						ItemContainerStyle="{StaticResource CompletionListBoxItem}"
+						Background="{TemplateBinding Background}"
+						TextBlock.Foreground="{TemplateBinding Foreground}">
 						<ItemsControl.ItemTemplate>
 							<DataTemplate>
 								<StackPanel Orientation="Horizontal">
