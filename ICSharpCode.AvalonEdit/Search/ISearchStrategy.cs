@@ -19,7 +19,7 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using ICSharpCode.NRefactory.Editor;
+
 using ICSharpCode.AvalonEdit.Document;
 
 namespace ICSharpCode.AvalonEdit.Search
@@ -38,14 +38,14 @@ namespace ICSharpCode.AvalonEdit.Search
 		/// (e.g. if two results are returned, EndOffset of first result must be less than or equal StartOffset of second result).
 		/// </remarks>
 		IEnumerable<ISearchResult> FindAll(ITextSource document, int offset, int length);
-		
+
 		/// <summary>
 		/// Finds the next match in the given ITextSource and the given range.
 		/// </summary>
 		/// <remarks>This method must be implemented thread-safe.</remarks>
 		ISearchResult FindNext(ITextSource document, int offset, int length);
 	}
-	
+
 	/// <summary>
 	/// Represents a search result.
 	/// </summary>
@@ -56,7 +56,7 @@ namespace ICSharpCode.AvalonEdit.Search
 		/// </summary>
 		string ReplaceWith(string replacement);
 	}
-	
+
 	/// <summary>
 	/// Defines supported search modes.
 	/// </summary>
@@ -75,7 +75,7 @@ namespace ICSharpCode.AvalonEdit.Search
 		/// </summary>
 		Wildcard
 	}
-	
+
 	/// <inheritdoc/>
 	public class SearchPatternException : Exception, ISerializable
 	{
@@ -83,12 +83,12 @@ namespace ICSharpCode.AvalonEdit.Search
 		public SearchPatternException()
 		{
 		}
-		
+
 		/// <inheritdoc/>
 		public SearchPatternException(string message) : base(message)
 		{
 		}
-		
+
 		/// <inheritdoc/>
 		public SearchPatternException(string message, Exception innerException) : base(message, innerException)
 		{

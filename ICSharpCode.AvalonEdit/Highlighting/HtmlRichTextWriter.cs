@@ -19,14 +19,11 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-#if DOTNET4
 using System.Net;
-#else
-using System.Web;
-#endif
 using System.Text;
 using System.Windows;
 using System.Windows.Media;
+
 using ICSharpCode.AvalonEdit.Utils;
 
 namespace ICSharpCode.AvalonEdit.Highlighting
@@ -43,7 +40,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 		bool hasSpace;
 		bool needIndentation = true;
 		int indentationLevel;
-		
+
 		/// <summary>
 		/// Creates a new HtmlRichTextWriter instance.
 		/// </summary>
@@ -60,19 +57,19 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 			this.htmlWriter = htmlWriter;
 			this.options = options ?? new HtmlOptions();
 		}
-		
+
 		/// <inheritdoc/>
 		public override Encoding Encoding {
 			get { return htmlWriter.Encoding; }
 		}
-		
+
 		/// <inheritdoc/>
 		public override void Flush()
 		{
 			FlushSpace(true); // next char potentially might be whitespace
 			htmlWriter.Flush();
 		}
-		
+
 		/// <inheritdoc/>
 		protected override void Dispose(bool disposing)
 		{
@@ -81,7 +78,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 			}
 			base.Dispose(disposing);
 		}
-		
+
 		void FlushSpace(bool nextIsWhitespace)
 		{
 			if (hasSpace) {
@@ -93,7 +90,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 				spaceNeedsEscaping = true;
 			}
 		}
-		
+
 		void WriteIndentation()
 		{
 			if (needIndentation) {
@@ -103,16 +100,16 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 				needIndentation = false;
 			}
 		}
-		
+
 		/// <inheritdoc/>
 		public override void Write(char value)
 		{
 			WriteIndentation();
 			WriteChar(value);
 		}
-		
+
 		static readonly char[] specialChars = { ' ', '\t', '\r', '\n' };
-		
+
 		void WriteChar(char c)
 		{
 			bool isWhitespace = char.IsWhiteSpace(c);
@@ -136,11 +133,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 					needIndentation = true;
 					break;
 				default:
-					#if DOTNET4
 					WebUtility.HtmlEncode(c.ToString(), htmlWriter);
-					#else
-					HttpUtility.HtmlEncode(c.ToString(), htmlWriter);
-					#endif
 					break;
 			}
 			// If we just handled a space by setting hasSpace = true,
@@ -152,7 +145,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 				spaceNeedsEscaping = isWhitespace;
 			}
 		}
-		
+
 		/// <inheritdoc/>
 		public override void Write(string value)
 		{
@@ -169,31 +162,27 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 				pos = endPos + 1;
 			} while (pos < value.Length);
 		}
-		
+
 		void WriteIndentationAndSpace()
 		{
 			WriteIndentation();
 			FlushSpace(false);
 		}
-		
+
 		void WriteSimpleString(string value)
 		{
 			if (value.Length == 0)
 				return;
 			WriteIndentationAndSpace();
-			#if DOTNET4
 			WebUtility.HtmlEncode(value, htmlWriter);
-			#else
-			HttpUtility.HtmlEncode(value, htmlWriter);
-			#endif
 		}
-		
+
 		/// <inheritdoc/>
 		public override void Indent()
 		{
 			indentationLevel++;
 		}
-		
+
 		/// <inheritdoc/>
 		public override void Unindent()
 		{
@@ -201,43 +190,43 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 				throw new NotSupportedException();
 			indentationLevel--;
 		}
-		
+
 		/// <inheritdoc/>
 		protected override void BeginUnhandledSpan()
 		{
 			endTagStack.Push(null);
 		}
-		
+
 		/// <inheritdoc/>
 		public override void EndSpan()
 		{
 			htmlWriter.Write(endTagStack.Pop());
 		}
-		
+
 		/// <inheritdoc/>
 		public override void BeginSpan(Color foregroundColor)
 		{
 			BeginSpan(new HighlightingColor { Foreground = new SimpleHighlightingBrush(foregroundColor) });
 		}
-		
+
 		/// <inheritdoc/>
 		public override void BeginSpan(FontFamily fontFamily)
 		{
 			BeginUnhandledSpan(); // TODO
 		}
-		
+
 		/// <inheritdoc/>
 		public override void BeginSpan(FontStyle fontStyle)
 		{
 			BeginSpan(new HighlightingColor { FontStyle = fontStyle });
 		}
-		
+
 		/// <inheritdoc/>
 		public override void BeginSpan(FontWeight fontWeight)
 		{
 			BeginSpan(new HighlightingColor { FontWeight = fontWeight });
 		}
-		
+
 		/// <inheritdoc/>
 		public override void BeginSpan(HighlightingColor highlightingColor)
 		{
@@ -251,16 +240,12 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 				endTagStack.Push(null);
 			}
 		}
-		
+
 		/// <inheritdoc/>
 		public override void BeginHyperlinkSpan(Uri uri)
 		{
 			WriteIndentationAndSpace();
-			#if DOTNET4
 			string link = WebUtility.HtmlEncode(uri.ToString());
-			#else
-			string link = HttpUtility.HtmlEncode(uri.ToString());
-			#endif
 			htmlWriter.Write("<a href=\"" + link + "\">");
 			endTagStack.Push("</a>");
 		}

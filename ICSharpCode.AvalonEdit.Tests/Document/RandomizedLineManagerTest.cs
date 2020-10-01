@@ -32,7 +32,7 @@ namespace ICSharpCode.AvalonEdit.Document
 		TextDocument document;
 		Random rnd;
 		
-		[TestFixtureSetUp]
+		[OneTimeSetUp]
 		public void FixtureSetup()
 		{
 			int seed = Environment.TickCount;

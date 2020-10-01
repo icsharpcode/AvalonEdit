@@ -32,14 +32,14 @@ namespace ICSharpCode.AvalonEdit.Rendering
 	public class VisualLineText : VisualLineElement
 	{
 		VisualLine parentVisualLine;
-		
+
 		/// <summary>
 		/// Gets the parent visual line.
 		/// </summary>
 		public VisualLine ParentVisualLine {
 			get { return parentVisualLine; }
 		}
-		
+
 		/// <summary>
 		/// Creates a visual line text element with the specified length.
 		/// It uses the <see cref="ITextRunConstructionContext.VisualLine"/> and its
@@ -51,7 +51,7 @@ namespace ICSharpCode.AvalonEdit.Rendering
 				throw new ArgumentNullException("parentVisualLine");
 			this.parentVisualLine = parentVisualLine;
 		}
-		
+
 		/// <summary>
 		/// Override this method to control the type of new VisualLineText instances when
 		/// the visual line is split due to syntax highlighting.
@@ -60,42 +60,42 @@ namespace ICSharpCode.AvalonEdit.Rendering
 		{
 			return new VisualLineText(parentVisualLine, length);
 		}
-		
+
 		/// <inheritdoc/>
 		public override TextRun CreateTextRun(int startVisualColumn, ITextRunConstructionContext context)
 		{
 			if (context == null)
 				throw new ArgumentNullException("context");
-			
+
 			int relativeOffset = startVisualColumn - VisualColumn;
 			StringSegment text = context.GetText(context.VisualLine.FirstDocumentLine.Offset + RelativeTextOffset + relativeOffset, DocumentLength - relativeOffset);
 			return new TextCharacters(text.Text, text.Offset, text.Count, this.TextRunProperties);
 		}
-		
+
 		/// <inheritdoc/>
 		public override bool IsWhitespace(int visualColumn)
 		{
 			int offset = visualColumn - this.VisualColumn + parentVisualLine.FirstDocumentLine.Offset + this.RelativeTextOffset;
 			return char.IsWhiteSpace(parentVisualLine.Document.GetCharAt(offset));
 		}
-		
+
 		/// <inheritdoc/>
 		public override TextSpan<CultureSpecificCharacterBufferRange> GetPrecedingText(int visualColumnLimit, ITextRunConstructionContext context)
 		{
 			if (context == null)
 				throw new ArgumentNullException("context");
-			
+
 			int relativeOffset = visualColumnLimit - VisualColumn;
 			StringSegment text = context.GetText(context.VisualLine.FirstDocumentLine.Offset + RelativeTextOffset, relativeOffset);
 			CharacterBufferRange range = new CharacterBufferRange(text.Text, text.Offset, text.Count);
 			return new TextSpan<CultureSpecificCharacterBufferRange>(range.Length, new CultureSpecificCharacterBufferRange(this.TextRunProperties.CultureInfo, range));
 		}
-		
+
 		/// <inheritdoc/>
 		public override bool CanSplit {
 			get { return true; }
 		}
-		
+
 		/// <inheritdoc/>
 		public override void Split(int splitVisualColumn, IList<VisualLineElement> elements, int elementIndex)
 		{
@@ -110,19 +110,19 @@ namespace ICSharpCode.AvalonEdit.Rendering
 			SplitHelper(this, splitPart, splitVisualColumn, relativeSplitPos + RelativeTextOffset);
 			elements.Insert(elementIndex + 1, splitPart);
 		}
-		
+
 		/// <inheritdoc/>
 		public override int GetRelativeOffset(int visualColumn)
 		{
 			return this.RelativeTextOffset + visualColumn - this.VisualColumn;
 		}
-		
+
 		/// <inheritdoc/>
 		public override int GetVisualColumn(int relativeTextOffset)
 		{
 			return this.VisualColumn + relativeTextOffset - this.RelativeTextOffset;
 		}
-		
+
 		/// <inheritdoc/>
 		public override int GetNextCaretPosition(int visualColumn, LogicalDirection direction, CaretPositioningMode mode)
 		{

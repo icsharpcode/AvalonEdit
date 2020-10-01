@@ -17,6 +17,7 @@
 // DEALINGS IN THE SOFTWARE.
 
 using System;
+
 using ICSharpCode.AvalonEdit.Document;
 
 namespace ICSharpCode.AvalonEdit.Rendering
@@ -30,7 +31,7 @@ namespace ICSharpCode.AvalonEdit.Rendering
 		/// Gets/Sets the first line that is visible in the TextView.
 		/// </summary>
 		public DocumentLine FirstLineInView { get; private set; }
-		
+
 		/// <summary>
 		/// Creates a new VisualLineConstructionStartEventArgs instance.
 		/// </summary>

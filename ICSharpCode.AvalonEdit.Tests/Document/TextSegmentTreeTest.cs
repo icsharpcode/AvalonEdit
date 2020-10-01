@@ -18,9 +18,6 @@
 
 using System;
 using System.Collections.Generic;
-#if NREFACTORY
-using ICSharpCode.NRefactory.Editor;
-#endif
 using NUnit.Framework;
 
 namespace ICSharpCode.AvalonEdit.Document
@@ -30,7 +27,7 @@ namespace ICSharpCode.AvalonEdit.Document
 	{
 		Random rnd;
 		
-		[TestFixtureSetUp]
+		[OneTimeSetUp]
 		public void FixtureSetup()
 		{
 			int seed = Environment.TickCount;

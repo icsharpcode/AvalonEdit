@@ -16,8 +16,6 @@
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
 
-using System;
-
 namespace ICSharpCode.AvalonEdit.Utils
 {
 	/// <summary>
@@ -27,7 +25,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 	{
 		public static readonly object True = true;
 		public static readonly object False = false;
-		
+
 		public static object Box(bool value)
 		{
 			return value ? True : False;

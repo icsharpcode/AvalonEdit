@@ -39,29 +39,29 @@ namespace ICSharpCode.AvalonEdit.Editing
 		static LineNumberMargin()
 		{
 			DefaultStyleKeyProperty.OverrideMetadata(typeof(LineNumberMargin),
-			                                         new FrameworkPropertyMetadata(typeof(LineNumberMargin)));
+													 new FrameworkPropertyMetadata(typeof(LineNumberMargin)));
 		}
-		
+
 		TextArea textArea;
-		
+
 		/// <summary>
 		/// The typeface used for rendering the line number margin.
 		/// This field is calculated in MeasureOverride() based on the FontFamily etc. properties.
 		/// </summary>
 		protected Typeface typeface;
-		
+
 		/// <summary>
 		/// The font size used for rendering the line number margin.
 		/// This field is calculated in MeasureOverride() based on the FontFamily etc. properties.
 		/// </summary>
 		protected double emSize;
-		
+
 		/// <inheritdoc/>
 		protected override Size MeasureOverride(Size availableSize)
 		{
 			typeface = this.CreateTypeface();
 			emSize = (double)GetValue(TextBlock.FontSizeProperty);
-			
+
 			FormattedText text = TextFormatterFactory.CreateFormattedText(
 				this,
 				new string('9', maxLineNumberLength),
@@ -71,7 +71,7 @@ namespace ICSharpCode.AvalonEdit.Editing
 			);
 			return new Size(text.Width, 0);
 		}
-		
+
 		/// <inheritdoc/>
 		protected override void OnRender(DrawingContext drawingContext)
 		{
@@ -91,7 +91,7 @@ namespace ICSharpCode.AvalonEdit.Editing
 				}
 			}
 		}
-		
+
 		/// <inheritdoc/>
 		protected override void OnTextViewChanged(TextView oldTextView, TextView newTextView)
 		{
@@ -101,7 +101,7 @@ namespace ICSharpCode.AvalonEdit.Editing
 			base.OnTextViewChanged(oldTextView, newTextView);
 			if (newTextView != null) {
 				newTextView.VisualLinesChanged += TextViewVisualLinesChanged;
-				
+
 				// find the text area belonging to the new text view
 				textArea = newTextView.GetService(typeof(TextArea)) as TextArea;
 			} else {
@@ -109,7 +109,7 @@ namespace ICSharpCode.AvalonEdit.Editing
 			}
 			InvalidateVisual();
 		}
-		
+
 		/// <inheritdoc/>
 		protected override void OnDocumentChanged(TextDocument oldDocument, TextDocument newDocument)
 		{
@@ -122,7 +122,7 @@ namespace ICSharpCode.AvalonEdit.Editing
 			}
 			OnDocumentLineCountChanged();
 		}
-		
+
 		/// <inheritdoc cref="IWeakEventListener.ReceiveWeakEvent"/>
 		protected virtual bool ReceiveWeakEvent(Type managerType, object sender, EventArgs e)
 		{
@@ -132,41 +132,41 @@ namespace ICSharpCode.AvalonEdit.Editing
 			}
 			return false;
 		}
-		
+
 		bool IWeakEventListener.ReceiveWeakEvent(Type managerType, object sender, EventArgs e)
 		{
 			return ReceiveWeakEvent(managerType, sender, e);
 		}
-		
+
 		/// <summary>
 		/// Maximum length of a line number, in characters
 		/// </summary>
 		protected int maxLineNumberLength = 1;
-		
+
 		void OnDocumentLineCountChanged()
 		{
 			int documentLineCount = Document != null ? Document.LineCount : 1;
 			int newLength = documentLineCount.ToString(CultureInfo.CurrentCulture).Length;
-			
+
 			// The margin looks too small when there is only one digit, so always reserve space for
 			// at least two digits
 			if (newLength < 2)
 				newLength = 2;
-			
+
 			if (newLength != maxLineNumberLength) {
 				maxLineNumberLength = newLength;
 				InvalidateMeasure();
 			}
 		}
-		
+
 		void TextViewVisualLinesChanged(object sender, EventArgs e)
 		{
 			InvalidateVisual();
 		}
-		
+
 		AnchorSegment selectionStart;
 		bool selecting;
-		
+
 		/// <inheritdoc/>
 		protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
 		{
@@ -174,7 +174,7 @@ namespace ICSharpCode.AvalonEdit.Editing
 			if (!e.Handled && TextView != null && textArea != null) {
 				e.Handled = true;
 				textArea.Focus();
-				
+
 				SimpleSegment currentSeg = GetTextLineSegment(e);
 				if (currentSeg == SimpleSegment.Invalid)
 					return;
@@ -195,7 +195,7 @@ namespace ICSharpCode.AvalonEdit.Editing
 				}
 			}
 		}
-		
+
 		SimpleSegment GetTextLineSegment(MouseEventArgs e)
 		{
 			Point pos = e.GetPosition(TextView);
@@ -215,7 +215,7 @@ namespace ICSharpCode.AvalonEdit.Editing
 				endOffset += vl.LastDocumentLine.DelimiterLength;
 			return new SimpleSegment(startOffset, endOffset - startOffset);
 		}
-		
+
 		void ExtendSelection(SimpleSegment currentSeg)
 		{
 			if (currentSeg.Offset < selectionStart.Offset) {
@@ -226,7 +226,7 @@ namespace ICSharpCode.AvalonEdit.Editing
 				textArea.Selection = Selection.Create(textArea, selectionStart.Offset, currentSeg.Offset + currentSeg.Length);
 			}
 		}
-		
+
 		/// <inheritdoc/>
 		protected override void OnMouseMove(MouseEventArgs e)
 		{
@@ -240,7 +240,7 @@ namespace ICSharpCode.AvalonEdit.Editing
 			}
 			base.OnMouseMove(e);
 		}
-		
+
 		/// <inheritdoc/>
 		protected override void OnMouseLeftButtonUp(MouseButtonEventArgs e)
 		{
@@ -252,7 +252,7 @@ namespace ICSharpCode.AvalonEdit.Editing
 			}
 			base.OnMouseLeftButtonUp(e);
 		}
-		
+
 		/// <inheritdoc/>
 		protected override HitTestResult HitTestCore(PointHitTestParameters hitTestParameters)
 		{

@@ -17,9 +17,7 @@
 // DEALINGS IN THE SOFTWARE.
 
 using System;
-using System.Globalization;
 using System.IO;
-using System.Text;
 
 namespace ICSharpCode.AvalonEdit.Utils
 {
@@ -37,7 +35,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 				throw new ArgumentNullException("text");
 			return new Rope<char>(InitFromString(text));
 		}
-		
+
 		/// <summary>
 		/// Retrieves the text for a portion of the rope.
 		/// Runs in O(lg N + M), where M=<paramref name="length"/>.
@@ -50,17 +48,17 @@ namespace ICSharpCode.AvalonEdit.Utils
 		{
 			if (rope == null)
 				throw new ArgumentNullException("rope");
-			#if DEBUG
+#if DEBUG
 			if (length < 0)
 				throw new ArgumentOutOfRangeException("length", length, "Value must be >= 0");
-			#endif
+#endif
 			if (length == 0)
 				return string.Empty;
 			char[] buffer = new char[length];
 			rope.CopyTo(startIndex, buffer, 0, length);
 			return new string(buffer);
 		}
-		
+
 		/// <summary>
 		/// Retrieves the text for a portion of the rope and writes it to the specified text writer.
 		/// Runs in O(lg N + M), where M=<paramref name="length"/>.
@@ -78,7 +76,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 			rope.VerifyRange(startIndex, length);
 			rope.root.WriteTo(startIndex, output, length);
 		}
-		
+
 		/// <summary>
 		/// Appends text to this rope.
 		/// Runs in O(lg N + M).
@@ -88,7 +86,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 		{
 			InsertText(rope, rope.Length, text);
 		}
-		
+
 		/// <summary>
 		/// Inserts text into this rope.
 		/// Runs in O(lg N + M).
@@ -110,7 +108,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 			rope.root = rope.root.Insert(index, text);
 			rope.OnChanged();*/
 		}
-		
+
 		internal static RopeNode<char> InitFromString(string text)
 		{
 			if (text.Length == 0) {
@@ -120,7 +118,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 			FillNode(node, text, 0);
 			return node;
 		}
-		
+
 		static void FillNode(RopeNode<char> node, string text, int start)
 		{
 			if (node.contents != null) {
@@ -130,7 +128,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 				FillNode(node.right, text, start + node.left.length);
 			}
 		}
-		
+
 		internal static void WriteTo(this RopeNode<char> node, int index, TextWriter output, int count)
 		{
 			if (node.height == 0) {
@@ -154,7 +152,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 				}
 			}
 		}
-		
+
 		/// <summary>
 		/// Gets the index of the first occurrence of any element in the specified array.
 		/// </summary>
@@ -170,7 +168,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 			if (anyOf == null)
 				throw new ArgumentNullException("anyOf");
 			rope.VerifyRange(startIndex, length);
-			
+
 			while (length > 0) {
 				var entry = rope.FindNodeUsingCache(startIndex).PeekOrDefault();
 				char[] contents = entry.node.contents;
@@ -188,7 +186,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 			}
 			return -1;
 		}
-		
+
 		/// <summary>
 		/// Gets the index of the first occurrence of the search text.
 		/// </summary>
@@ -205,7 +203,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 			else
 				return pos + startIndex;
 		}
-		
+
 		/// <summary>
 		/// Gets the index of the last occurrence of the search text.
 		/// </summary>

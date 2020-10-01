@@ -4,7 +4,7 @@
 	<Color name="DocComment" foreground="Gray" exampleText="${DocCommentMarker} &lt;exception cref=&quot;System.Exception&quot; /&gt;" />
 	<Color name="XmlPunctuation" fontWeight="bold" exampleText="${DocCommentMarker} &lt;exception cref=&quot;System.Exception&quot; /&gt;" />
 	<Color name="KnownDocTags" fontWeight="bold" exampleText="${DocCommentMarker} &lt;exception cref=&quot;System.Exception&quot; /&gt;" />
-	
+
 	<RuleSet name="DocCommentSet">
 		<Span color="DocComment">
 			<Begin>&lt;</Begin>
@@ -35,7 +35,7 @@
 					<Word>seealso</Word>
 					<Word>summary</Word>
 					<Word>value</Word>
-					
+
 					<Word>type</Word>
 					<Word>name</Word>
 					<Word>cref</Word>
@@ -49,7 +49,7 @@
 			</RuleSet>
 		</Span>
 	</RuleSet>
-	
+
 	<!-- root ruleset = DocCommentSet -->
 	<RuleSet>
 		<Import ruleSet="DocCommentSet" />

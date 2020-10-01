@@ -18,10 +18,8 @@
 
 using System;
 using System.Collections.Generic;
+
 using ICSharpCode.AvalonEdit.Document;
-#if NREFACTORY
-using ICSharpCode.NRefactory.Editor;
-#endif
 
 namespace ICSharpCode.AvalonEdit.Editing
 {
@@ -32,14 +30,14 @@ namespace ICSharpCode.AvalonEdit.Editing
 	public class TextSegmentReadOnlySectionProvider<T> : IReadOnlySectionProvider where T : TextSegment
 	{
 		readonly TextSegmentCollection<T> segments;
-		
+
 		/// <summary>
 		/// Gets the collection storing the read-only segments.
 		/// </summary>
 		public TextSegmentCollection<T> Segments {
 			get { return segments; }
 		}
-		
+
 		/// <summary>
 		/// Creates a new TextSegmentReadOnlySectionProvider instance for the specified document.
 		/// </summary>
@@ -47,7 +45,7 @@ namespace ICSharpCode.AvalonEdit.Editing
 		{
 			segments = new TextSegmentCollection<T>(textDocument);
 		}
-		
+
 		/// <summary>
 		/// Creates a new TextSegmentReadOnlySectionProvider instance using the specified TextSegmentCollection.
 		/// </summary>
@@ -57,7 +55,7 @@ namespace ICSharpCode.AvalonEdit.Editing
 				throw new ArgumentNullException("segments");
 			this.segments = segments;
 		}
-		
+
 		/// <summary>
 		/// Gets whether insertion is possible at the specified offset.
 		/// </summary>
@@ -69,7 +67,7 @@ namespace ICSharpCode.AvalonEdit.Editing
 			}
 			return true;
 		}
-		
+
 		/// <summary>
 		/// Gets the deletable segments inside the given segment.
 		/// </summary>
@@ -77,12 +75,12 @@ namespace ICSharpCode.AvalonEdit.Editing
 		{
 			if (segment == null)
 				throw new ArgumentNullException("segment");
-			
+
 			if (segment.Length == 0 && CanInsert(segment.Offset)) {
 				yield return segment;
 				yield break;
 			}
-			
+
 			int readonlyUntil = segment.Offset;
 			foreach (TextSegment ts in segments.FindOverlappingSegments(segment)) {
 				int start = ts.StartOffset;

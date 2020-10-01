@@ -18,15 +18,10 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Threading;
-using ICSharpCode.AvalonEdit.Document;
+
 using ICSharpCode.AvalonEdit.Editing;
-using ICSharpCode.AvalonEdit.Rendering;
 
 namespace ICSharpCode.AvalonEdit.Search
 {
@@ -58,7 +53,7 @@ namespace ICSharpCode.AvalonEdit.Search
 			"FindNext", typeof(SearchPanel),
 			new InputGestureCollection { new KeyGesture(Key.F3) }
 		);
-		
+
 		/// <summary>
 		/// Finds the previous occurrence in the file.
 		/// </summary>
@@ -66,7 +61,7 @@ namespace ICSharpCode.AvalonEdit.Search
 			"FindPrevious", typeof(SearchPanel),
 			new InputGestureCollection { new KeyGesture(Key.F3, ModifierKeys.Shift) }
 		);
-		
+
 		/// <summary>
 		/// Replaces the current occurrence and finds the next occurrence in the file.
 		/// </summary>
@@ -91,30 +86,19 @@ namespace ICSharpCode.AvalonEdit.Search
 			new InputGestureCollection { new KeyGesture(Key.Escape) }
 		);
 	}
-	
+
 	/// <summary>
 	/// TextAreaInputHandler that registers all search-related commands.
 	/// </summary>
 	public class SearchInputHandler : TextAreaInputHandler
 	{
-		/// <summary>
-		/// Creates a new SearchInputHandler and registers the search-related commands.
-		/// </summary>
-		[Obsolete("Use SearchPanel.Install instead")]
-		public SearchInputHandler(TextArea textArea)
-			: base(textArea)
-		{
-			RegisterCommands(this.CommandBindings);
-			panel = SearchPanel.Install(textArea);
-		}
-		
 		internal SearchInputHandler(TextArea textArea, SearchPanel panel)
 			: base(textArea)
 		{
 			RegisterCommands(this.CommandBindings);
 			this.panel = panel;
 		}
-		
+
 		internal void RegisterGlobalCommands(CommandBindingCollection commandBindings)
 		{
 			commandBindings.Add(new CommandBinding(ApplicationCommands.Find, ExecuteFind));
@@ -139,9 +123,9 @@ namespace ICSharpCode.AvalonEdit.Search
 			commandBindings.Add(new CommandBinding(SearchCommands.ReplaceAll, ExecuteReplaceAll, CanExecuteWithOpenSearchPanel));
 			commandBindings.Add(new CommandBinding(SearchCommands.CloseSearchPanel, ExecuteCloseSearchPanel, CanExecuteWithOpenSearchPanel));
 		}
-		
+
 		SearchPanel panel;
-		
+
 		void ExecuteFind(object sender, ExecutedRoutedEventArgs e)
 		{
 			panel.Open(false);
@@ -168,7 +152,7 @@ namespace ICSharpCode.AvalonEdit.Search
 				e.Handled = true;
 			}
 		}
-		
+
 		void ExecuteFindNext(object sender, ExecutedRoutedEventArgs e)
 		{
 			if (!panel.IsClosed) {
@@ -176,7 +160,7 @@ namespace ICSharpCode.AvalonEdit.Search
 				e.Handled = true;
 			}
 		}
-		
+
 		void ExecuteFindPrevious(object sender, ExecutedRoutedEventArgs e)
 		{
 			if (!panel.IsClosed) {
@@ -206,7 +190,7 @@ namespace ICSharpCode.AvalonEdit.Search
 				e.Handled = true;
 			}
 		}
-		
+
 		/// <summary>
 		/// Fired when SearchOptions are modified inside the SearchPanel.
 		/// </summary>

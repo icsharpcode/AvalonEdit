@@ -31,11 +31,11 @@ namespace ICSharpCode.AvalonEdit.Document
 		internal bool color;
 		internal int length;
 		internal int totalLength; // totalLength = length + left.totalLength + right.totalLength
-		
+
 		public TextAnchorNode(TextAnchor anchor) : base(anchor)
 		{
 		}
-		
+
 		internal TextAnchorNode LeftMost {
 			get {
 				TextAnchorNode node = this;
@@ -44,7 +44,7 @@ namespace ICSharpCode.AvalonEdit.Document
 				return node;
 			}
 		}
-		
+
 		internal TextAnchorNode RightMost {
 			get {
 				TextAnchorNode node = this;
@@ -53,7 +53,7 @@ namespace ICSharpCode.AvalonEdit.Document
 				return node;
 			}
 		}
-		
+
 		/// <summary>
 		/// Gets the inorder successor of the node.
 		/// </summary>
@@ -73,7 +73,7 @@ namespace ICSharpCode.AvalonEdit.Document
 				}
 			}
 		}
-		
+
 		/// <summary>
 		/// Gets the inorder predecessor of the node.
 		/// </summary>
@@ -93,7 +93,7 @@ namespace ICSharpCode.AvalonEdit.Document
 				}
 			}
 		}
-		
+
 		public override string ToString()
 		{
 			return "[TextAnchorNode Length=" + length + " TotalLength=" + totalLength + " Target=" + Target + "]";

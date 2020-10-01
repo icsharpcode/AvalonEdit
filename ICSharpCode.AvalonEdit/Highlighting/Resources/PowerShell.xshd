@@ -12,17 +12,17 @@
 	<Color name="ReferenceTypes" foreground="Red" />
 	<Color name="Command" fontWeight="bold" foreground="MidnightBlue" />
 	<Color name="Operators" foreground="#FF8515EA" exampleText="-eq"/>
-	
+
 	<RuleSet ignoreCase="true">
 		<Span color="Comment">
 			<Begin>\#</Begin>
 		</Span>
-		
+
 		<Span color="Comment" multiline="true">
 			<Begin>&lt;\#</Begin>
 			<End>\#&gt;</End>
 		</Span>
-		
+
 		<Span color="String">
 			<Begin>"</Begin>
 			<End>"</End>
@@ -31,7 +31,7 @@
 				<Span begin="\\" end="."/>
 			</RuleSet>
 		</Span>
-		
+
 		<Span color="Char">
 			<Begin>'</Begin>
 			<End>'</End>
@@ -40,7 +40,7 @@
 				<Span begin="\\" end="."/>
 			</RuleSet>
 		</Span>
-		
+
 		<Span color="String" multiline="true">
 			<Begin color="String">@"</Begin>
 			<End>"@</End>
@@ -49,7 +49,7 @@
 				<Span begin='""' end=""/>
 			</RuleSet>
 		</Span>
-				
+
 		<Keywords color="Keywords">
 			<Word>while</Word>
 			<Word>param</Word>
@@ -76,7 +76,7 @@
 			<Word>using</Word>
 			<Word>function</Word>
 		</Keywords>
-		
+
 		<Keywords color="ExceptionKeywords">
 			<Word>catch</Word>
 			<Word>finally</Word>
@@ -84,17 +84,17 @@
 			<Word>trap</Word>
 			<Word>try</Word>
 		</Keywords>
-		
+
 		<Keywords color="GotoKeywords">
 			<Word>break</Word>
 			<Word>continue</Word>
 			<Word>return</Word>
 		</Keywords>
-		
+
 		<Keywords color="ReferenceTypes">
 			<Word>class</Word>
 		</Keywords>
-		
+
 		<Keywords color="Operators">
 			<Word>-not</Word>
 			<Word>-band</Word>
@@ -120,25 +120,25 @@
 			<Word>-match</Word>
 			<Word>-notmatch</Word>
 		</Keywords>
-		
+
 		<Rule color="Variable">
 			\$[\d\w_]+
 		</Rule>
-		
+
 		<Rule color="Command">
 		[\w]+-[\w]+
 		</Rule>
-		
+
 		<!-- Digits -->
 		<Rule color="NumberLiteral">
 			\b0[xX][0-9a-fA-F]+  # hex number
-		|	
+		|
 			(	\b\d+(\.[0-9]+)?   #number with optional floating point
 			|	\.[0-9]+           #or just starting with floating point
 			)
 			([eE][+-]?[0-9]+)? # optional exponent
 		</Rule>
-		
+
 		<Rule color="Punctuation">
 			[?,.;()\[\]{}+\-/%*&lt;&gt;^+~!|&amp;]+
 		</Rule>

@@ -1,11 +1,28 @@
-version: 1.0.{build}
-configuration: Debug
-platform: Net40
+version: '6.1.0.{build}'
+
+dotnet_csproj:
+  patch: true
+  file: '**\*.csproj'
+  version: '6.1.0-preview2'
+  assembly_version: '{version}'
+  file_version: '{version}'
+
+configuration:
+- Debug
+- Release
+
+image: Visual Studio 2019
+
 before_build:
-- nuget restore ICSharpCode.AvalonEdit.sln
+  - nuget restore ICSharpCode.AvalonEdit.sln
+
 build:
   project: ICSharpCode.AvalonEdit.sln
   parallel: true
   verbosity: minimal
+  publish_nuget: true
+  publish_nuget_symbols: true 
+  use_snupkg_format: true
+  
 after_test:
-- python ICSharpCode.AvalonEdit.Tests\tidy.py
+  - python BuildTools\tidy.py

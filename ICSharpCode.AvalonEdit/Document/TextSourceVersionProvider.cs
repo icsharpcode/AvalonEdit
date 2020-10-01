@@ -20,18 +20,18 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+
 using ICSharpCode.AvalonEdit.Utils;
 
 namespace ICSharpCode.AvalonEdit.Document
 {
-	#if !NREFACTORY
 	/// <summary>
 	/// Provides ITextSourceVersion instances.
 	/// </summary>
 	public class TextSourceVersionProvider
 	{
 		Version currentVersion;
-		
+
 		/// <summary>
 		/// Creates a new TextSourceVersionProvider instance.
 		/// </summary>
@@ -39,14 +39,14 @@ namespace ICSharpCode.AvalonEdit.Document
 		{
 			this.currentVersion = new Version(this);
 		}
-		
+
 		/// <summary>
 		/// Gets the current version.
 		/// </summary>
 		public ITextSourceVersion CurrentVersion {
 			get { return currentVersion; }
 		}
-		
+
 		/// <summary>
 		/// Replaces the current version with a new version.
 		/// </summary>
@@ -59,7 +59,7 @@ namespace ICSharpCode.AvalonEdit.Document
 			currentVersion.next = new Version(currentVersion);
 			currentVersion = currentVersion.next;
 		}
-		
+
 		[DebuggerDisplay("Version #{id}")]
 		sealed class Version : ITextSourceVersion
 		{
@@ -68,28 +68,28 @@ namespace ICSharpCode.AvalonEdit.Document
 			readonly TextSourceVersionProvider provider;
 			// ID used for CompareAge()
 			readonly int id;
-			
+
 			// the change from this version to the next version
 			internal TextChangeEventArgs change;
 			internal Version next;
-			
+
 			internal Version(TextSourceVersionProvider provider)
 			{
 				this.provider = provider;
 			}
-			
+
 			internal Version(Version prev)
 			{
 				this.provider = prev.provider;
-				this.id = unchecked( prev.id + 1 );
+				this.id = unchecked(prev.id + 1);
 			}
-			
+
 			public bool BelongsToSameDocumentAs(ITextSourceVersion other)
 			{
 				Version o = other as Version;
 				return o != null && provider == o.provider;
 			}
-			
+
 			public int CompareAge(ITextSourceVersion other)
 			{
 				if (other == null)
@@ -99,9 +99,9 @@ namespace ICSharpCode.AvalonEdit.Document
 					throw new ArgumentException("Versions do not belong to the same document.");
 				// We will allow overflows, but assume that the maximum distance between checkpoints is 2^31-1.
 				// This is guaranteed on x86 because so many checkpoints don't fit into memory.
-				return Math.Sign(unchecked( this.id - o.id ));
+				return Math.Sign(unchecked(this.id - o.id));
 			}
-			
+
 			public IEnumerable<TextChangeEventArgs> GetChangesTo(ITextSourceVersion other)
 			{
 				int result = CompareAge(other);
@@ -113,7 +113,7 @@ namespace ICSharpCode.AvalonEdit.Document
 				else
 					return Empty<TextChangeEventArgs>.Array;
 			}
-			
+
 			IEnumerable<TextChangeEventArgs> GetForwardChanges(Version other)
 			{
 				// Return changes from this(inclusive) to other(exclusive).
@@ -121,7 +121,7 @@ namespace ICSharpCode.AvalonEdit.Document
 					yield return node.change;
 				}
 			}
-			
+
 			public int MoveOffsetTo(ITextSourceVersion other, int oldOffset, AnchorMovementType movement)
 			{
 				int offset = oldOffset;
@@ -132,5 +132,4 @@ namespace ICSharpCode.AvalonEdit.Document
 			}
 		}
 	}
-	#endif
 }

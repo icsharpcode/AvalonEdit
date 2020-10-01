@@ -30,7 +30,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting.Xshd
 		/// Gets/sets the referenced rule set.
 		/// </summary>
 		public XshdReference<XshdRuleSet> RuleSetReference { get; set; }
-		
+
 		/// <inheritdoc/>
 		public override object AcceptVisitor(IXshdVisitor visitor)
 		{

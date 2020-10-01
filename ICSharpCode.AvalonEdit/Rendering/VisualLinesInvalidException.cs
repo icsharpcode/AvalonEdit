@@ -26,7 +26,7 @@ namespace ICSharpCode.AvalonEdit.Rendering
 	/// of the <see cref="TextView"/> while the visual lines were invalid.
 	/// </summary>
 	[Serializable]
-	public class VisualLinesInvalidException  : Exception
+	public class VisualLinesInvalidException : Exception
 	{
 		/// <summary>
 		/// Creates a new VisualLinesInvalidException instance.
@@ -34,21 +34,21 @@ namespace ICSharpCode.AvalonEdit.Rendering
 		public VisualLinesInvalidException() : base()
 		{
 		}
-		
+
 		/// <summary>
 		/// Creates a new VisualLinesInvalidException instance.
 		/// </summary>
 		public VisualLinesInvalidException(string message) : base(message)
 		{
 		}
-		
+
 		/// <summary>
 		/// Creates a new VisualLinesInvalidException instance.
 		/// </summary>
 		public VisualLinesInvalidException(string message, Exception innerException) : base(message, innerException)
 		{
 		}
-		
+
 		/// <summary>
 		/// Creates a new VisualLinesInvalidException instance.
 		/// </summary>

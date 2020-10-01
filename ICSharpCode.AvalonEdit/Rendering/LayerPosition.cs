@@ -49,7 +49,7 @@ namespace ICSharpCode.AvalonEdit.Rendering
 		/// <remarks>This layer is above the Text layer.</remarks>
 		Caret
 	}
-	
+
 	/// <summary>
 	/// Specifies where a new layer is inserted, in relation to an old layer.
 	/// </summary>
@@ -69,31 +69,31 @@ namespace ICSharpCode.AvalonEdit.Rendering
 		/// </summary>
 		Above
 	}
-	
+
 	sealed class LayerPosition : IComparable<LayerPosition>
 	{
 		internal static readonly DependencyProperty LayerPositionProperty =
 			DependencyProperty.RegisterAttached("LayerPosition", typeof(LayerPosition), typeof(LayerPosition));
-		
+
 		public static void SetLayerPosition(UIElement layer, LayerPosition value)
 		{
 			layer.SetValue(LayerPositionProperty, value);
 		}
-		
+
 		public static LayerPosition GetLayerPosition(UIElement layer)
 		{
 			return (LayerPosition)layer.GetValue(LayerPositionProperty);
 		}
-		
+
 		internal readonly KnownLayer KnownLayer;
 		internal readonly LayerInsertionPosition Position;
-		
+
 		public LayerPosition(KnownLayer knownLayer, LayerInsertionPosition position)
 		{
 			this.KnownLayer = knownLayer;
 			this.Position = position;
 		}
-		
+
 		public int CompareTo(LayerPosition other)
 		{
 			int r = this.KnownLayer.CompareTo(other.KnownLayer);

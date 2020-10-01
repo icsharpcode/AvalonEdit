@@ -18,6 +18,7 @@
 
 using System;
 using System.Collections.Generic;
+
 using ICSharpCode.AvalonEdit.Utils;
 
 namespace ICSharpCode.AvalonEdit.Highlighting.Xshd
@@ -32,16 +33,16 @@ namespace ICSharpCode.AvalonEdit.Highlighting.Xshd
 		/// The color.
 		/// </summary>
 		public XshdReference<XshdColor> ColorReference { get; set; }
-		
+
 		readonly NullSafeCollection<string> words = new NullSafeCollection<string>();
-		
+
 		/// <summary>
 		/// Gets the list of key words.
 		/// </summary>
 		public IList<string> Words {
 			get { return words; }
 		}
-		
+
 		/// <inheritdoc/>
 		public override object AcceptVisitor(IXshdVisitor visitor)
 		{

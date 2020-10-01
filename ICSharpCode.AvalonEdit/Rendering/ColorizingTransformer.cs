@@ -32,7 +32,7 @@ namespace ICSharpCode.AvalonEdit.Rendering
 		/// Gets the list of elements currently being transformed.
 		/// </summary>
 		protected IList<VisualLineElement> CurrentElements { get; private set; }
-		
+
 		/// <summary>
 		/// <see cref="IVisualLineTransformer.Transform"/> implementation.
 		/// Sets <see cref="CurrentElements"/> and calls <see cref="Colorize"/>.
@@ -50,12 +50,12 @@ namespace ICSharpCode.AvalonEdit.Rendering
 				this.CurrentElements = null;
 			}
 		}
-		
+
 		/// <summary>
 		/// Performs the colorization.
 		/// </summary>
 		protected abstract void Colorize(ITextRunConstructionContext context);
-		
+
 		/// <summary>
 		/// Changes visual element properties.
 		/// This method accesses <see cref="CurrentElements"/>, so it must be called only during
@@ -95,26 +95,26 @@ namespace ICSharpCode.AvalonEdit.Rendering
 				}
 			}
 		}
-		
+
 		/// <summary>
 		/// Called when added to a text view.
 		/// </summary>
 		protected virtual void OnAddToTextView(TextView textView)
 		{
 		}
-		
+
 		/// <summary>
 		/// Called when removed from a text view.
 		/// </summary>
 		protected virtual void OnRemoveFromTextView(TextView textView)
 		{
 		}
-		
+
 		void ITextViewConnect.AddToTextView(TextView textView)
 		{
 			OnAddToTextView(textView);
 		}
-		
+
 		void ITextViewConnect.RemoveFromTextView(TextView textView)
 		{
 			OnRemoveFromTextView(textView);

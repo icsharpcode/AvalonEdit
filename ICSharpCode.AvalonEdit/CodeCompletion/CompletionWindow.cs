@@ -21,6 +21,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
+
 using ICSharpCode.AvalonEdit.Document;
 using ICSharpCode.AvalonEdit.Editing;
 
@@ -33,14 +34,14 @@ namespace ICSharpCode.AvalonEdit.CodeCompletion
 	{
 		readonly CompletionList completionList = new CompletionList();
 		ToolTip toolTip = new ToolTip();
-		
+
 		/// <summary>
 		/// Gets the completion list used in this completion window.
 		/// </summary>
 		public CompletionList CompletionList {
 			get { return completionList; }
 		}
-		
+
 		/// <summary>
 		/// Creates a new code completion window.
 		/// </summary>
@@ -55,14 +56,14 @@ namespace ICSharpCode.AvalonEdit.CodeCompletion
 			// prevent user from resizing window to 0x0
 			this.MinHeight = 15;
 			this.MinWidth = 30;
-			
+
 			toolTip.PlacementTarget = this;
 			toolTip.Placement = PlacementMode.Right;
 			toolTip.Closed += toolTip_Closed;
-			
+
 			AttachEvents();
 		}
-		
+
 		#region ToolTip handling
 		void toolTip_Closed(object sender, RoutedEventArgs e)
 		{
@@ -72,7 +73,7 @@ namespace ICSharpCode.AvalonEdit.CodeCompletion
 			if (toolTip != null)
 				toolTip.Content = null;
 		}
-		
+
 		void completionList_SelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
 			var item = completionList.SelectedItem;
@@ -82,7 +83,7 @@ namespace ICSharpCode.AvalonEdit.CodeCompletion
 			if (description != null) {
 				string descriptionText = description as string;
 				if (descriptionText != null) {
-					toolTip.Content = new TextBlock  {
+					toolTip.Content = new TextBlock {
 						Text = descriptionText,
 						TextWrapping = TextWrapping.Wrap
 					};
@@ -95,7 +96,7 @@ namespace ICSharpCode.AvalonEdit.CodeCompletion
 			}
 		}
 		#endregion
-		
+
 		void completionList_InsertionRequested(object sender, EventArgs e)
 		{
 			Close();
@@ -105,7 +106,7 @@ namespace ICSharpCode.AvalonEdit.CodeCompletion
 			if (item != null)
 				item.Complete(this.TextArea, new AnchorSegment(this.TextArea.Document, this.StartOffset, this.EndOffset - this.StartOffset), e);
 		}
-		
+
 		void AttachEvents()
 		{
 			this.completionList.InsertionRequested += completionList_InsertionRequested;
@@ -114,7 +115,7 @@ namespace ICSharpCode.AvalonEdit.CodeCompletion
 			this.TextArea.MouseWheel += textArea_MouseWheel;
 			this.TextArea.PreviewTextInput += textArea_PreviewTextInput;
 		}
-		
+
 		/// <inheritdoc/>
 		protected override void DetachEvents()
 		{
@@ -125,7 +126,7 @@ namespace ICSharpCode.AvalonEdit.CodeCompletion
 			this.TextArea.PreviewTextInput -= textArea_PreviewTextInput;
 			base.DetachEvents();
 		}
-		
+
 		/// <inheritdoc/>
 		protected override void OnClosed(EventArgs e)
 		{
@@ -135,7 +136,7 @@ namespace ICSharpCode.AvalonEdit.CodeCompletion
 				toolTip = null;
 			}
 		}
-		
+
 		/// <inheritdoc/>
 		protected override void OnKeyDown(KeyEventArgs e)
 		{
@@ -144,38 +145,38 @@ namespace ICSharpCode.AvalonEdit.CodeCompletion
 				completionList.HandleKey(e);
 			}
 		}
-		
+
 		void textArea_PreviewTextInput(object sender, TextCompositionEventArgs e)
 		{
 			e.Handled = RaiseEventPair(this, PreviewTextInputEvent, TextInputEvent,
-			                           new TextCompositionEventArgs(e.Device, e.TextComposition));
+									   new TextCompositionEventArgs(e.Device, e.TextComposition));
 		}
-		
+
 		void textArea_MouseWheel(object sender, MouseWheelEventArgs e)
 		{
 			e.Handled = RaiseEventPair(GetScrollEventTarget(),
-			                           PreviewMouseWheelEvent, MouseWheelEvent,
-			                           new MouseWheelEventArgs(e.MouseDevice, e.Timestamp, e.Delta));
+									   PreviewMouseWheelEvent, MouseWheelEvent,
+									   new MouseWheelEventArgs(e.MouseDevice, e.Timestamp, e.Delta));
 		}
-		
+
 		UIElement GetScrollEventTarget()
 		{
 			if (completionList == null)
 				return this;
 			return completionList.ScrollViewer ?? completionList.ListBox ?? (UIElement)completionList;
 		}
-		
+
 		/// <summary>
 		/// Gets/Sets whether the completion window should close automatically.
 		/// The default value is true.
 		/// </summary>
 		public bool CloseAutomatically { get; set; }
-		
+
 		/// <inheritdoc/>
 		protected override bool CloseOnFocusLost {
 			get { return this.CloseAutomatically; }
 		}
-		
+
 		/// <summary>
 		/// When this flag is set, code completion closes if the caret moves to the
 		/// beginning of the allowed range. This is useful in Ctrl+Space and "complete when typing",
@@ -183,7 +184,7 @@ namespace ICSharpCode.AvalonEdit.CodeCompletion
 		/// Has no effect if CloseAutomatically is false.
 		/// </summary>
 		public bool CloseWhenCaretAtBeginning { get; set; }
-		
+
 		void CaretPositionChanged(object sender, EventArgs e)
 		{
 			int offset = this.TextArea.Caret.Offset;

@@ -16,10 +16,6 @@
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
 
-using System;
-#if NREFACTORY
-using ICSharpCode.NRefactory.Editor;
-#endif
 using ICSharpCode.AvalonEdit.Utils;
 
 namespace ICSharpCode.AvalonEdit.Document
@@ -40,14 +36,14 @@ namespace ICSharpCode.AvalonEdit.Document
 			{
 				source.UpdateStarted += DeliverEvent;
 			}
-			
+
 			/// <inheritdoc/>
 			protected override void StopListening(TextDocument source)
 			{
 				source.UpdateStarted -= DeliverEvent;
 			}
 		}
-		
+
 		/// <summary>
 		/// Weak event manager for the <see cref="TextDocument.UpdateFinished"/> event.
 		/// </summary>
@@ -59,14 +55,14 @@ namespace ICSharpCode.AvalonEdit.Document
 			{
 				source.UpdateFinished += DeliverEvent;
 			}
-			
+
 			/// <inheritdoc/>
 			protected override void StopListening(TextDocument source)
 			{
 				source.UpdateFinished -= DeliverEvent;
 			}
 		}
-		
+
 		/// <summary>
 		/// Weak event manager for the <see cref="TextDocument.Changing"/> event.
 		/// </summary>
@@ -78,14 +74,14 @@ namespace ICSharpCode.AvalonEdit.Document
 			{
 				source.Changing += DeliverEvent;
 			}
-			
+
 			/// <inheritdoc/>
 			protected override void StopListening(TextDocument source)
 			{
 				source.Changing -= DeliverEvent;
 			}
 		}
-		
+
 		/// <summary>
 		/// Weak event manager for the <see cref="TextDocument.Changed"/> event.
 		/// </summary>
@@ -97,54 +93,14 @@ namespace ICSharpCode.AvalonEdit.Document
 			{
 				source.Changed += DeliverEvent;
 			}
-			
+
 			/// <inheritdoc/>
 			protected override void StopListening(TextDocument source)
 			{
 				source.Changed -= DeliverEvent;
 			}
 		}
-		
-		/// <summary>
-		/// Weak event manager for the <see cref="TextDocument.LineCountChanged"/> event.
-		/// </summary>
-		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1034:NestedTypesShouldNotBeVisible")]
-		[Obsolete("The TextDocument.LineCountChanged event will be removed in a future version. Use PropertyChangedEventManager instead.")]
-		public sealed class LineCountChanged : WeakEventManagerBase<LineCountChanged, TextDocument>
-		{
-			/// <inheritdoc/>
-			protected override void StartListening(TextDocument source)
-			{
-				source.LineCountChanged += DeliverEvent;
-			}
-			
-			/// <inheritdoc/>
-			protected override void StopListening(TextDocument source)
-			{
-				source.LineCountChanged -= DeliverEvent;
-			}
-		}
-		
-		/// <summary>
-		/// Weak event manager for the <see cref="TextDocument.TextLengthChanged"/> event.
-		/// </summary>
-		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1034:NestedTypesShouldNotBeVisible")]
-		[Obsolete("The TextDocument.TextLengthChanged event will be removed in a future version. Use PropertyChangedEventManager instead.")]
-		public sealed class TextLengthChanged : WeakEventManagerBase<TextLengthChanged, TextDocument>
-		{
-			/// <inheritdoc/>
-			protected override void StartListening(TextDocument source)
-			{
-				source.TextLengthChanged += DeliverEvent;
-			}
-			
-			/// <inheritdoc/>
-			protected override void StopListening(TextDocument source)
-			{
-				source.TextLengthChanged -= DeliverEvent;
-			}
-		}
-		
+
 		/// <summary>
 		/// Weak event manager for the <see cref="TextDocument.TextChanged"/> event.
 		/// </summary>
@@ -156,7 +112,7 @@ namespace ICSharpCode.AvalonEdit.Document
 			{
 				source.TextChanged += DeliverEvent;
 			}
-			
+
 			/// <inheritdoc/>
 			protected override void StopListening(TextDocument source)
 			{

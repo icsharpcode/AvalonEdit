@@ -24,9 +24,6 @@ using System.Windows;
 using ICSharpCode.AvalonEdit.Document;
 using ICSharpCode.AvalonEdit.Highlighting;
 using ICSharpCode.AvalonEdit.Utils;
-#if NREFACTORY
-using ICSharpCode.NRefactory.Editor;
-#endif
 
 namespace ICSharpCode.AvalonEdit.Editing
 {
@@ -46,10 +43,10 @@ namespace ICSharpCode.AvalonEdit.Editing
 				return textArea.emptySelection;
 			else
 				return new SimpleSelection(textArea,
-				                           new TextViewPosition(textArea.Document.GetLocation(startOffset)),
-				                           new TextViewPosition(textArea.Document.GetLocation(endOffset)));
+										   new TextViewPosition(textArea.Document.GetLocation(startOffset)),
+										   new TextViewPosition(textArea.Document.GetLocation(endOffset)));
 		}
-		
+
 		internal static Selection Create(TextArea textArea, TextViewPosition start, TextViewPosition end)
 		{
 			if (textArea == null)
@@ -59,7 +56,7 @@ namespace ICSharpCode.AvalonEdit.Editing
 			else
 				return new SimpleSelection(textArea, start, end);
 		}
-		
+
 		/// <summary>
 		/// Creates a new simple selection that selects the text in the specified segment.
 		/// </summary>
@@ -69,9 +66,9 @@ namespace ICSharpCode.AvalonEdit.Editing
 				throw new ArgumentNullException("segment");
 			return Create(textArea, segment.Offset, segment.EndOffset);
 		}
-		
+
 		internal readonly TextArea textArea;
-		
+
 		/// <summary>
 		/// Constructor for Selection.
 		/// </summary>
@@ -81,33 +78,33 @@ namespace ICSharpCode.AvalonEdit.Editing
 				throw new ArgumentNullException("textArea");
 			this.textArea = textArea;
 		}
-		
+
 		/// <summary>
 		/// Gets the start position of the selection.
 		/// </summary>
 		public abstract TextViewPosition StartPosition { get; }
-		
+
 		/// <summary>
 		/// Gets the end position of the selection.
 		/// </summary>
 		public abstract TextViewPosition EndPosition { get; }
-		
+
 		/// <summary>
 		/// Gets the selected text segments.
 		/// </summary>
 		public abstract IEnumerable<SelectionSegment> Segments { get; }
-		
+
 		/// <summary>
 		/// Gets the smallest segment that contains all segments in this selection.
 		/// May return null if the selection is empty.
 		/// </summary>
 		public abstract ISegment SurroundingSegment { get; }
-		
+
 		/// <summary>
 		/// Replaces the selection with the specified text.
 		/// </summary>
 		public abstract void ReplaceSelectionWithText(string newText);
-		
+
 		internal string AddSpacesIfRequired(string newText, TextViewPosition start, TextViewPosition end)
 		{
 			if (EnableVirtualSpace && InsertVirtualSpaces(newText, start, end)) {
@@ -128,7 +125,7 @@ namespace ICSharpCode.AvalonEdit.Editing
 			}
 			return newText;
 		}
-		
+
 		bool InsertVirtualSpaces(string newText, TextViewPosition start, TextViewPosition end)
 		{
 			return (!string.IsNullOrEmpty(newText) || !(IsInVirtualSpace(start) && IsInVirtualSpace(end)))
@@ -136,48 +133,48 @@ namespace ICSharpCode.AvalonEdit.Editing
 				&& newText != "\n"
 				&& newText != "\r";
 		}
-		
+
 		bool IsInVirtualSpace(TextViewPosition pos)
 		{
 			return pos.VisualColumn > textArea.TextView.GetOrConstructVisualLine(textArea.Document.GetLineByNumber(pos.Line)).VisualLength;
 		}
-		
+
 		/// <summary>
 		/// Updates the selection when the document changes.
 		/// </summary>
 		public abstract Selection UpdateOnDocumentChange(DocumentChangeEventArgs e);
-		
+
 		/// <summary>
 		/// Gets whether the selection is empty.
 		/// </summary>
 		public virtual bool IsEmpty {
 			get { return Length == 0; }
 		}
-		
+
 		/// <summary>
 		/// Gets whether virtual space is enabled for this selection.
 		/// </summary>
 		public virtual bool EnableVirtualSpace {
 			get { return textArea.Options.EnableVirtualSpace; }
 		}
-		
+
 		/// <summary>
 		/// Gets the selection length.
 		/// </summary>
 		public abstract int Length { get; }
-		
+
 		/// <summary>
 		/// Returns a new selection with the changed end point.
 		/// </summary>
 		/// <exception cref="NotSupportedException">Cannot set endpoint for empty selection</exception>
 		public abstract Selection SetEndpoint(TextViewPosition endPosition);
-		
+
 		/// <summary>
 		/// If this selection is empty, starts a new selection from <paramref name="startPosition"/> to
 		/// <paramref name="endPosition"/>, otherwise, changes the endpoint of this selection.
 		/// </summary>
 		public abstract Selection StartSelectionOrSetEndpoint(TextViewPosition startPosition, TextViewPosition endPosition);
-		
+
 		/// <summary>
 		/// Gets whether the selection is multi-line.
 		/// </summary>
@@ -194,7 +191,7 @@ namespace ICSharpCode.AvalonEdit.Editing
 				return document.GetLineByOffset(start) != document.GetLineByOffset(end);
 			}
 		}
-		
+
 		/// <summary>
 		/// Gets the selected text.
 		/// </summary>
@@ -221,7 +218,7 @@ namespace ICSharpCode.AvalonEdit.Editing
 				return text ?? string.Empty;
 			}
 		}
-		
+
 		/// <summary>
 		/// Creates a HTML fragment for the selected text.
 		/// </summary>
@@ -241,13 +238,13 @@ namespace ICSharpCode.AvalonEdit.Editing
 			}
 			return html.ToString();
 		}
-		
+
 		/// <inheritdoc/>
 		public abstract override bool Equals(object obj);
-		
+
 		/// <inheritdoc/>
 		public abstract override int GetHashCode();
-		
+
 		/// <summary>
 		/// Gets whether the specified offset is included in the selection.
 		/// </summary>
@@ -266,22 +263,22 @@ namespace ICSharpCode.AvalonEdit.Editing
 			}
 			return false;
 		}
-		
+
 		/// <summary>
 		/// Creates a data object containing the selection's text.
 		/// </summary>
 		public virtual DataObject CreateDataObject(TextArea textArea)
 		{
 			DataObject data = new DataObject();
-			
+
 			// Ensure we use the appropriate newline sequence for the OS
 			string text = TextUtilities.NormalizeNewLines(GetText(), Environment.NewLine);
-			
+
 			// Enable drag/drop to Word, Notepad++ and others
 			if (EditingCommandHandler.ConfirmDataFormat(textArea, data, DataFormats.UnicodeText)) {
 				data.SetText(text);
 			}
-			
+
 			// Enable drag/drop to SciTe:
 			// We cannot use SetText, thus we need to use typeof(string).FullName as data format.
 			// new DataObject(object) calls SetData(object), which in turn calls SetData(Type, data),
@@ -290,7 +287,7 @@ namespace ICSharpCode.AvalonEdit.Editing
 			if (EditingCommandHandler.ConfirmDataFormat(textArea, data, typeof(string).FullName)) {
 				data.SetData(typeof(string).FullName, text);
 			}
-			
+
 			// Also copy text in HTML format to clipboard - good for pasting text into Word
 			// or to the SharpDevelop forums.
 			if (EditingCommandHandler.ConfirmDataFormat(textArea, data, DataFormats.Html)) {

@@ -19,7 +19,6 @@
 using System;
 using System.ComponentModel;
 using System.Reflection;
-using System.Text;
 
 namespace ICSharpCode.AvalonEdit
 {
@@ -36,7 +35,7 @@ namespace ICSharpCode.AvalonEdit
 		public TextEditorOptions()
 		{
 		}
-		
+
 		/// <summary>
 		/// Initializes a new instance of TextEditorOptions by copying all values
 		/// from <paramref name="options"/> to the new instance.
@@ -45,20 +44,20 @@ namespace ICSharpCode.AvalonEdit
 		{
 			// get all the fields in the class
 			FieldInfo[] fields = typeof(TextEditorOptions).GetFields(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
-			
+
 			// copy each value over to 'this'
-			foreach(FieldInfo fi in fields) {
+			foreach (FieldInfo fi in fields) {
 				if (!fi.IsNotSerialized)
 					fi.SetValue(this, fi.GetValue(options));
 			}
 		}
 		#endregion
-		
+
 		#region PropertyChanged handling
 		/// <inheritdoc/>
 		[field: NonSerialized]
 		public event PropertyChangedEventHandler PropertyChanged;
-		
+
 		/// <summary>
 		/// Raises the PropertyChanged event.
 		/// </summary>
@@ -67,7 +66,7 @@ namespace ICSharpCode.AvalonEdit
 		{
 			OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
 		}
-		
+
 		/// <summary>
 		/// Raises the PropertyChanged event.
 		/// </summary>
@@ -78,10 +77,10 @@ namespace ICSharpCode.AvalonEdit
 			}
 		}
 		#endregion
-		
+
 		#region ShowSpaces / ShowTabs / ShowEndOfLine / ShowBoxForControlCharacters
 		bool showSpaces;
-		
+
 		/// <summary>
 		/// Gets/Sets whether to show · for spaces.
 		/// </summary>
@@ -96,9 +95,9 @@ namespace ICSharpCode.AvalonEdit
 				}
 			}
 		}
-		
+
 		bool showTabs;
-		
+
 		/// <summary>
 		/// Gets/Sets whether to show » for tabs.
 		/// </summary>
@@ -113,9 +112,9 @@ namespace ICSharpCode.AvalonEdit
 				}
 			}
 		}
-		
+
 		bool showEndOfLine;
-		
+
 		/// <summary>
 		/// Gets/Sets whether to show ¶ at the end of lines.
 		/// </summary>
@@ -130,9 +129,9 @@ namespace ICSharpCode.AvalonEdit
 				}
 			}
 		}
-		
+
 		bool showBoxForControlCharacters = true;
-		
+
 		/// <summary>
 		/// Gets/Sets whether to show a box with the hex code for control characters.
 		/// </summary>
@@ -148,10 +147,10 @@ namespace ICSharpCode.AvalonEdit
 			}
 		}
 		#endregion
-		
+
 		#region EnableHyperlinks
 		bool enableHyperlinks = true;
-		
+
 		/// <summary>
 		/// Gets/Sets whether to enable clickable hyperlinks in the editor.
 		/// </summary>
@@ -166,9 +165,9 @@ namespace ICSharpCode.AvalonEdit
 				}
 			}
 		}
-		
+
 		bool enableEmailHyperlinks = true;
-		
+
 		/// <summary>
 		/// Gets/Sets whether to enable clickable hyperlinks for e-mail addresses in the editor.
 		/// </summary>
@@ -183,9 +182,9 @@ namespace ICSharpCode.AvalonEdit
 				}
 			}
 		}
-		
+
 		bool requireControlModifierForHyperlinkClick = true;
-		
+
 		/// <summary>
 		/// Gets/Sets whether the user needs to press Control to click hyperlinks.
 		/// The default value is true.
@@ -202,15 +201,15 @@ namespace ICSharpCode.AvalonEdit
 			}
 		}
 		#endregion
-		
+
 		#region TabSize / IndentationSize / ConvertTabsToSpaces / GetIndentationString
 		// I'm using '_' prefixes for the fields here to avoid confusion with the local variables
 		// in the methods below.
 		// The fields should be accessed only by their property - the fields might not be used
 		// if someone overrides the property.
-		
+
 		int indentationSize = 4;
-		
+
 		/// <summary>
 		/// Gets/Sets the width of one indentation unit.
 		/// </summary>
@@ -232,9 +231,9 @@ namespace ICSharpCode.AvalonEdit
 				}
 			}
 		}
-		
+
 		bool convertTabsToSpaces;
-		
+
 		/// <summary>
 		/// Gets/Sets whether to use spaces for indentation instead of tabs.
 		/// </summary>
@@ -250,7 +249,7 @@ namespace ICSharpCode.AvalonEdit
 				}
 			}
 		}
-		
+
 		/// <summary>
 		/// Gets the text used for indentation.
 		/// </summary>
@@ -259,7 +258,7 @@ namespace ICSharpCode.AvalonEdit
 		public string IndentationString {
 			get { return GetIndentationString(1); }
 		}
-		
+
 		/// <summary>
 		/// Gets text required to indent from the specified <paramref name="column"/> to the next indentation level.
 		/// </summary>
@@ -275,9 +274,9 @@ namespace ICSharpCode.AvalonEdit
 			}
 		}
 		#endregion
-		
+
 		bool cutCopyWholeLine = true;
-		
+
 		/// <summary>
 		/// Gets/Sets whether copying without a selection copies the whole current line.
 		/// </summary>
@@ -291,9 +290,9 @@ namespace ICSharpCode.AvalonEdit
 				}
 			}
 		}
-		
+
 		bool allowScrollBelowDocument;
-		
+
 		/// <summary>
 		/// Gets/Sets whether the user can scroll below the bottom of the document.
 		/// The default value is false; but it a good idea to set this property to true when using folding.
@@ -308,9 +307,9 @@ namespace ICSharpCode.AvalonEdit
 				}
 			}
 		}
-		
+
 		double wordWrapIndentation = 0;
-		
+
 		/// <summary>
 		/// Gets/Sets the indentation used for all lines except the first when word-wrapping.
 		/// The default value is 0.
@@ -327,9 +326,9 @@ namespace ICSharpCode.AvalonEdit
 				}
 			}
 		}
-		
+
 		bool inheritWordWrapIndentation = true;
-		
+
 		/// <summary>
 		/// Gets/Sets whether the indentation is inherited from the first line when word-wrapping.
 		/// The default value is true.
@@ -345,9 +344,9 @@ namespace ICSharpCode.AvalonEdit
 				}
 			}
 		}
-		
+
 		bool enableRectangularSelection = true;
-		
+
 		/// <summary>
 		/// Enables rectangular selection (press ALT and select a rectangle)
 		/// </summary>
@@ -361,9 +360,9 @@ namespace ICSharpCode.AvalonEdit
 				}
 			}
 		}
-		
+
 		bool enableTextDragDrop = true;
-		
+
 		/// <summary>
 		/// Enable dragging text within the text area.
 		/// </summary>
@@ -377,9 +376,9 @@ namespace ICSharpCode.AvalonEdit
 				}
 			}
 		}
-		
+
 		bool enableVirtualSpace;
-		
+
 		/// <summary>
 		/// Gets/Sets whether the user can set the caret behind the line ending
 		/// (into "virtual space").
@@ -396,9 +395,9 @@ namespace ICSharpCode.AvalonEdit
 				}
 			}
 		}
-		
+
 		bool enableImeSupport = true;
-		
+
 		/// <summary>
 		/// Gets/Sets whether the support for Input Method Editors (IME)
 		/// for non-alphanumeric scripts (Chinese, Japanese, Korean, ...) is enabled.
@@ -413,9 +412,9 @@ namespace ICSharpCode.AvalonEdit
 				}
 			}
 		}
-		
+
 		bool showColumnRuler = false;
-		
+
 		/// <summary>
 		/// Gets/Sets whether the column ruler should be shown.
 		/// </summary>
@@ -429,9 +428,9 @@ namespace ICSharpCode.AvalonEdit
 				}
 			}
 		}
-		
+
 		int columnRulerPosition = 80;
-		
+
 		/// <summary>
 		/// Gets/Sets where the column ruler should be shown.
 		/// </summary>
@@ -445,9 +444,9 @@ namespace ICSharpCode.AvalonEdit
 				}
 			}
 		}
-		
+
 		bool highlightCurrentLine = false;
-		
+
 		/// <summary>
 		/// Gets/Sets if current line should be shown.
 		/// </summary>
@@ -461,9 +460,9 @@ namespace ICSharpCode.AvalonEdit
 				}
 			}
 		}
-		
+
 		bool hideCursorWhileTyping = true;
-		
+
 		/// <summary>
 		/// Gets/Sets if mouse cursor should be hidden while user is typing.
 		/// </summary>
@@ -477,9 +476,9 @@ namespace ICSharpCode.AvalonEdit
 				}
 			}
 		}
-		
+
 		bool allowToggleOverstrikeMode = false;
-		
+
 		/// <summary>
 		/// Gets/Sets if the user is allowed to enable/disable overstrike mode.
 		/// </summary>

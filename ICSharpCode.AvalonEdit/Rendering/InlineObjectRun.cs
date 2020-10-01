@@ -33,7 +33,7 @@ namespace ICSharpCode.AvalonEdit.Rendering
 		/// Gets the inline element that is displayed.
 		/// </summary>
 		public UIElement Element { get; private set; }
-		
+
 		/// <summary>
 		/// Creates a new InlineObjectElement.
 		/// </summary>
@@ -46,17 +46,17 @@ namespace ICSharpCode.AvalonEdit.Rendering
 				throw new ArgumentNullException("element");
 			this.Element = element;
 		}
-		
+
 		/// <inheritdoc/>
 		public override TextRun CreateTextRun(int startVisualColumn, ITextRunConstructionContext context)
 		{
 			if (context == null)
 				throw new ArgumentNullException("context");
-			
+
 			return new InlineObjectRun(1, this.TextRunProperties, this.Element);
 		}
 	}
-	
+
 	/// <summary>
 	/// A text run with an embedded UIElement.
 	/// </summary>
@@ -66,7 +66,7 @@ namespace ICSharpCode.AvalonEdit.Rendering
 		int length;
 		TextRunProperties properties;
 		internal Size desiredSize;
-		
+
 		/// <summary>
 		/// Creates a new InlineObjectRun instance.
 		/// </summary>
@@ -81,55 +81,55 @@ namespace ICSharpCode.AvalonEdit.Rendering
 				throw new ArgumentNullException("properties");
 			if (element == null)
 				throw new ArgumentNullException("element");
-			
+
 			this.length = length;
 			this.properties = properties;
 			this.element = element;
 		}
-		
+
 		/// <summary>
 		/// Gets the element displayed by the InlineObjectRun.
 		/// </summary>
 		public UIElement Element {
 			get { return element; }
 		}
-		
+
 		/// <summary>
 		/// Gets the VisualLine that contains this object. This property is only available after the object
 		/// was added to the text view.
 		/// </summary>
 		public VisualLine VisualLine { get; internal set; }
-		
+
 		/// <inheritdoc/>
 		public override LineBreakCondition BreakBefore {
 			get { return LineBreakCondition.BreakDesired; }
 		}
-		
+
 		/// <inheritdoc/>
 		public override LineBreakCondition BreakAfter {
 			get { return LineBreakCondition.BreakDesired; }
 		}
-		
+
 		/// <inheritdoc/>
 		public override bool HasFixedSize {
 			get { return true; }
 		}
-		
+
 		/// <inheritdoc/>
 		public override CharacterBufferReference CharacterBufferReference {
 			get { return new CharacterBufferReference(); }
 		}
-		
+
 		/// <inheritdoc/>
 		public override int Length {
 			get { return length; }
 		}
-		
+
 		/// <inheritdoc/>
 		public override TextRunProperties Properties {
 			get { return properties; }
 		}
-		
+
 		/// <inheritdoc/>
 		public override TextEmbeddedObjectMetrics Format(double remainingParagraphWidth)
 		{
@@ -138,7 +138,7 @@ namespace ICSharpCode.AvalonEdit.Rendering
 				baseline = desiredSize.Height;
 			return new TextEmbeddedObjectMetrics(desiredSize.Width, desiredSize.Height, baseline);
 		}
-		
+
 		/// <inheritdoc/>
 		public override Rect ComputeBoundingBox(bool rightToLeft, bool sideways)
 		{
@@ -151,7 +151,7 @@ namespace ICSharpCode.AvalonEdit.Rendering
 				return Rect.Empty;
 			}
 		}
-		
+
 		/// <inheritdoc/>
 		public override void Draw(DrawingContext drawingContext, Point origin, bool rightToLeft, bool sideways)
 		{

@@ -17,8 +17,6 @@
 // DEALINGS IN THE SOFTWARE.
 
 using System;
-using System.Collections.Generic;
-using System.IO;
 
 using ICSharpCode.AvalonEdit.Document;
 
@@ -39,7 +37,7 @@ namespace ICSharpCode.AvalonEdit.Indentation.CSharp
 		/// <summary>Advances to the next line.</summary>
 		bool MoveNext();
 	}
-	
+
 	#region TextDocumentAccessor
 	/// <summary>
 	/// Adapter IDocumentAccessor -> TextDocument
@@ -49,7 +47,7 @@ namespace ICSharpCode.AvalonEdit.Indentation.CSharp
 		readonly TextDocument doc;
 		readonly int minLine;
 		readonly int maxLine;
-		
+
 		/// <summary>
 		/// Creates a new TextDocumentAccessor.
 		/// </summary>
@@ -61,7 +59,7 @@ namespace ICSharpCode.AvalonEdit.Indentation.CSharp
 			this.minLine = 1;
 			this.maxLine = doc.LineCount;
 		}
-		
+
 		/// <summary>
 		/// Creates a new TextDocumentAccessor that indents only a part of the document.
 		/// </summary>
@@ -73,27 +71,27 @@ namespace ICSharpCode.AvalonEdit.Indentation.CSharp
 			this.minLine = minLine;
 			this.maxLine = maxLine;
 		}
-		
+
 		int num;
 		string text;
 		DocumentLine line;
-		
+
 		/// <inheritdoc/>
 		public bool IsReadOnly {
 			get {
 				return num < minLine;
 			}
 		}
-		
+
 		/// <inheritdoc/>
 		public int LineNumber {
 			get {
 				return num;
 			}
 		}
-		
+
 		bool lineDirty;
-		
+
 		/// <inheritdoc/>
 		public string Text {
 			get { return text; }
@@ -103,7 +101,7 @@ namespace ICSharpCode.AvalonEdit.Indentation.CSharp
 				lineDirty = true;
 			}
 		}
-		
+
 		/// <inheritdoc/>
 		public bool MoveNext()
 		{
