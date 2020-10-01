@@ -55,7 +55,7 @@
     <Optimize>True</Optimize>
     <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
     <BaseIntermediateOutputPath>obj\</BaseIntermediateOutputPath>
-	<DefineTrace>True</DefineTrace>
+    <DefineTrace>True</DefineTrace>
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.Targets" />
   <ItemGroup>
@@ -63,9 +63,6 @@
       <Project>{3B2A5653-EC97-4001-BB9B-D90F1AF2C371}</Project>
       <Name>ICSharpCode.NRefactory</Name>
     </ProjectReference>
-    <Reference Include="nunit.framework">
-      <HintPath>$(SolutionDir)\packages\NUnit.2.6.3\lib\nunit.framework.dll</HintPath>
-    </Reference>
     <Reference Include="PresentationCore">
       <RequiredTargetFramework>3.0</RequiredTargetFramework>
     </Reference>
@@ -118,9 +115,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Search" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
+    <PackageReference Include="NUnit">
+      <Version>2.6.3</Version>
+    </PackageReference>
   </ItemGroup>
 </Project>
