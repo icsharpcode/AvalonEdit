@@ -1,5 +1,8 @@
 Note: this changelog only lists major changes and fixes for major bugs. For a complete list of changes, see the git log.
 
+2020/09/07: AvalonEdit 6.1 Preview 1
+* https://github.com/icsharpcode/AvalonEdit/compare/v6.0.1...v6.1-preview1
+
 2019/12/30: AvalonEdit 6.0.1
 * Minor bug fixes
 

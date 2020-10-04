@@ -114,8 +114,11 @@ namespace ICSharpCode.AvalonEdit.Editing
 				return this;
 			if (patternInterface == PatternInterface.Scroll) {
 				TextEditor editor = TextArea.GetService(typeof(TextEditor)) as TextEditor;
-				if (editor != null)
-					return FromElement(editor).GetPattern(patternInterface);
+				if (editor != null) {
+					var fromElement = FromElement(editor);
+					if (fromElement != null)
+						return fromElement.GetPattern(patternInterface);
+				}
 			}
 			return base.GetPattern(patternInterface);
 		}

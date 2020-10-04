@@ -8,7 +8,7 @@ variables:
   solution: '**/ICSharpCode.AvalonEdit.sln'
   buildPlatform: 'Any CPU'
   buildVersion: '6.1.0.$(Build.BuildId)'
-  nupkgVersion: '6.1.0-preview1'
+  nupkgVersion: '6.1.0-preview2'
 
 pool:
   vmImage: 'windows-2019'
@@ -24,7 +24,7 @@ steps:
   displayName: 'Install .NET Core 3.1'
   inputs:
     packageType: sdk
-    version: '3.1.100'
+    version: '3.1.x'
     installationPath: $(Agent.ToolsDirectory)/dotnet
       
 - task: NuGetToolInstaller@1

@@ -3,7 +3,7 @@ version: '6.1.0.{build}'
 dotnet_csproj:
   patch: true
   file: '**\*.csproj'
-  version: '6.1.0-preview1'
+  version: '6.1.0-preview2'
   assembly_version: '{version}'
   file_version: '{version}'
 
