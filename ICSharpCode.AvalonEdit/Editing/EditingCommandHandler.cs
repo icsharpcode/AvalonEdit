@@ -482,6 +482,9 @@ namespace ICSharpCode.AvalonEdit.Editing
 			} catch (OutOfMemoryException) {
 				// may happen when trying to paste a huge string
 				return null;
+            } catch (COMException) {
+                // may happen when trying to paste the data from clipboard that is invalid 
+                return null;
 			}
 		}
 		#endregion
