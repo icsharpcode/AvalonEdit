@@ -68,6 +68,9 @@ namespace ICSharpCode.AvalonEdit.Folding
 		protected override void OnRender(DrawingContext drawingContext)
 		{
 			FoldingMargin margin = VisualParent as FoldingMargin;
+			if (margin == null) {
+				return;
+			}
 			Pen activePen = new Pen(margin.SelectedFoldingMarkerBrush, 1);
 			Pen inactivePen = new Pen(margin.FoldingMarkerBrush, 1);
 			activePen.StartLineCap = inactivePen.StartLineCap = PenLineCap.Square;
