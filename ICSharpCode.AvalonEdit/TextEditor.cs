@@ -682,7 +682,7 @@ namespace ICSharpCode.AvalonEdit
 		{
 			ApplyTemplate(); // ensure scrollViewer is created
 			if (scrollViewer != null)
-				scrollViewer.ScrollToEnd();
+				ScrollTo(TextArea.Caret.Line,TextArea.Caret.Column,VisualYPosition.LineBottom,scrollViewer.ViewportHeight, 0.3);
 		}
 
 		/// <summary>
@@ -1117,7 +1117,7 @@ namespace ICSharpCode.AvalonEdit
 		public void ScrollTo(int line, int column)
 		{
 			const double MinimumScrollFraction = 0.3;
-			ScrollTo(line, column, VisualYPosition.LineMiddle, null != scrollViewer ? scrollViewer.ViewportHeight / 2 : 0.0, MinimumScrollFraction);
+			ScrollTo(line, column, VisualYPosition.LineBottom,scrollViewer.ViewportHeight, MinimumScrollFraction);
 		}
 
 		/// <summary>
@@ -1172,6 +1172,21 @@ namespace ICSharpCode.AvalonEdit
 					}
 				}
 			}
+		}
+		
+		//2020/12/16 By Gheyret
+		public bool RightToLeft{
+			set{
+				base.FlowDirection = value?FlowDirection.RightToLeft:FlowDirection.LeftToRight;
+				base.UpdateDefaultStyle();
+			}
+			get{
+				return base.FlowDirection == FlowDirection.RightToLeft;
+			}
+		}
+		
+		public void BringCaretToView(){
+			ScrollTo(TextArea.Caret.Line, TextArea.Caret.Line, VisualYPosition.TextMiddle, scrollViewer.ViewportHeight/2, 0.3);
 		}
 	}
 }
