@@ -27,7 +27,7 @@ namespace ICSharpCode.AvalonEdit.Rendering
 		internal Typeface typeface;
 		internal double fontRenderingEmSize;
 		internal Brush foregroundBrush;
-		internal Brush backgroundBrush;
+		internal Brush backgroundBrush = null;
 		internal System.Globalization.CultureInfo cultureInfo;
 
 		public override Typeface Typeface { get { return typeface; } }
