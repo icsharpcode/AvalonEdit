@@ -482,6 +482,9 @@ namespace ICSharpCode.AvalonEdit.Editing
 			} catch (OutOfMemoryException) {
 				// may happen when trying to paste a huge string
 				return null;
+			} catch (COMException) {
+				// may happen with incorrect data => Data on clipboard is invalid (Exception from HRESULT: 0x800401D3 (CLIPBRD_E_BAD_DATA))
+				return null;
 			}
 		}
 		#endregion
