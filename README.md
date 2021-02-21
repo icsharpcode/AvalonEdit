@@ -1,4 +1,4 @@
-﻿# AvalonEdit [![NuGet](https://img.shields.io/nuget/v/AvalonEdit.svg)](https://nuget.org/packages/AvalonEdit) [![Build status](https://ci.appveyor.com/api/projects/status/bvvux3y2b6tw272e/branch/master?svg=true)](https://ci.appveyor.com/project/icsharpcode/avalonedit/branch/master) [![Build Status Azure Pipelines](https://icsharpcode.visualstudio.com/icsharpcode-pipelines/_apis/build/status/icsharpcode.AvalonEdit?branchName=master)](https://icsharpcode.visualstudio.com/icsharpcode-pipelines/_build/latest?definitionId=3&branchName=master)
+﻿# AvalonEdit [![NuGet](https://img.shields.io/nuget/v/AvalonEdit.svg)](https://nuget.org/packages/AvalonEdit) [![Build AvalonEdit](https://github.com/icsharpcode/AvalonEdit/actions/workflows/dotnet.yml/badge.svg)](https://github.com/icsharpcode/AvalonEdit/actions/workflows/dotnet.yml)
 
 
 AvalonEdit is the name of the WPF-based text editor in SharpDevelop 4.x "Mirador" and beyond. It is also being used in ILSpy and many other projects.
