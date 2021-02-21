@@ -500,19 +500,19 @@ namespace ICSharpCode.AvalonEdit.Editing
 		{
 			TextArea textArea = GetTextArea(target);
 			if (textArea != null && textArea.Document != null) {
-				int firstLineIndex, lastLineIndex;
 				if (textArea.Selection.Length == 0) {
-					// There is no selection, simply delete current line
-					firstLineIndex = lastLineIndex = textArea.Caret.Line;
+					// delete the current line
+					DocumentLine line = textArea.Document.GetLineByNumber(textArea.Caret.Line);
+					textArea.Document.Remove(line.Offset, line.TotalLength);
 				} else {
-					// There is a selection, remove all lines affected by it (use Min/Max to be independent from selection direction)
-					firstLineIndex = Math.Min(textArea.Selection.StartPosition.Line, textArea.Selection.EndPosition.Line);
-					lastLineIndex = Math.Max(textArea.Selection.StartPosition.Line, textArea.Selection.EndPosition.Line);
+					// delete all lines encompassed by the selection
+					ISegment segment = textArea.Selection.SurroundingSegment;
+					DocumentLine line1 = textArea.Document.GetLineByOffset(segment.Offset);
+					DocumentLine line2 = textArea.Document.GetLineByOffset(segment.EndOffset - 1);
+					int offset = line1.Offset;
+					int endOffset = line2.EndOffset + line2.DelimiterLength;
+					textArea.Document.Remove(offset, endOffset - offset);
 				}
-				DocumentLine startLine = textArea.Document.GetLineByNumber(firstLineIndex);
-				DocumentLine endLine = textArea.Document.GetLineByNumber(lastLineIndex);
-				textArea.Selection = Selection.Create(textArea, startLine.Offset, endLine.Offset + endLine.TotalLength);
-				textArea.RemoveSelectedText();
 				args.Handled = true;
 			}
 		}
