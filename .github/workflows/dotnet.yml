@@ -31,8 +31,9 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 5.0.x
-    - name: Restore dependencies
-      run: dotnet restore ICSharpCode.AvalonEdit.sln 
+    - name: Setup NuGet.exe
+      uses: nuget/setup-nuget@v1
+    - run: nuget restore ICSharpCode.AvalonEdit.sln 
     - name: Build
       run: dotnet build ICSharpCode.AvalonEdit.sln --no-restore -c ${{ matrix.configuration }}
     - name: Test
