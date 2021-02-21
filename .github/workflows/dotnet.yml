@@ -33,7 +33,6 @@ jobs:
         dotnet-version: 5.0.x
     - name: Setup NuGet.exe
       uses: nuget/setup-nuget@v1
-    - name: Restore NuGet packages     
     - run: nuget restore ICSharpCode.AvalonEdit.sln 
     - name: Build
       run: dotnet build ICSharpCode.AvalonEdit.sln --no-restore -c ${{ matrix.configuration }}
