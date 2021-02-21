@@ -33,11 +33,12 @@ jobs:
         dotnet-version: 5.0.x
     - name: Setup NuGet.exe
       uses: nuget/setup-nuget@v1
+    - name: Restore NuGet packages     
     - run: nuget restore ICSharpCode.AvalonEdit.sln 
     - name: Build
       run: dotnet build ICSharpCode.AvalonEdit.sln --no-restore -c ${{ matrix.configuration }}
     - name: Test
-      run: dotnet test ICSharpCode.AvalonEdit.sln --no-build --verbosity normal
+      run: dotnet test ICSharpCode.AvalonEdit.sln --no-build --verbosity normal -c ${{ matrix.configuration }}
     - name: Style - tab check
       run: python BuildTools\tidy.py
     - name: Pack
@@ -46,6 +47,10 @@ jobs:
       if: matrix.configuration == 'release'
       uses: actions/upload-artifact@v2
       with:
-        name: ICSharpCode.AvalonEdit NuGet Package (${{ matrix.configuration }})
+        name: AvalonEdit NuGet Package (${{ matrix.configuration }})
         path: ICSharpCode.AvalonEdit/bin/Release/AvalonEdit*.nupkg
         if-no-files-found: error      
+    - name: Publish NuGet
+      if: github.ref == 'refs/heads/master' && matrix.configuration == 'release'
+      run: |
+        dotnet nuget push "ICSharpCode.AvalonEdit/bin/Release/AvalonEdit*.nupkg" --api-key ${{ secrets.GITHUB_TOKEN }} --source https://nuget.pkg.github.com/${{ github.repository_owner }}
