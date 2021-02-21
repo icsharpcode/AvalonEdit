@@ -52,4 +52,4 @@ jobs:
     - name: Publish NuGet
       if: github.ref == 'refs/heads/master' && matrix.configuration == 'release'
       run: |
-        dotnet nuget push "ICSharpCode.AvalonEdit/bin/Release/AvalonEdit*.nupkg" --api-key ${{ secrets.GITHUB_TOKEN }} --source https://nuget.pkg.github.com/${{ github.repository_owner }}
+        dotnet nuget push "ICSharpCode.AvalonEdit\bin\Release\AvalonEdit*.nupkg" --api-key ${{ secrets.GITHUB_TOKEN }} --source https://nuget.pkg.github.com/${{ github.repository_owner }}
