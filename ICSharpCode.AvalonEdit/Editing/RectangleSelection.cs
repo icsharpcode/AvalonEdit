@@ -288,12 +288,15 @@ namespace ICSharpCode.AvalonEdit.Editing
 		/// <inheritdoc/>
 		public override Selection UpdateOnDocumentChange(DocumentChangeEventArgs e)
 		{
-			TextLocation newStartLocation = textArea.Document.GetLocation(e.GetNewOffset(topLeftOffset, AnchorMovementType.AfterInsertion));
-			TextLocation newEndLocation = textArea.Document.GetLocation(e.GetNewOffset(bottomRightOffset, AnchorMovementType.BeforeInsertion));
+			// we don't want to recalculate the whole selection, as this is called for every line within the selection
+			// and it can cause selection changes to take a wildly-long time.
+			return this;
+			//TextLocation newStartLocation = textArea.Document.GetLocation(e.GetNewOffset(topLeftOffset, AnchorMovementType.AfterInsertion));
+			//TextLocation newEndLocation = textArea.Document.GetLocation(e.GetNewOffset(bottomRightOffset, AnchorMovementType.BeforeInsertion));
 
-			return new RectangleSelection(textArea,
-										  new TextViewPosition(newStartLocation, GetVisualColumnFromXPos(newStartLocation.Line, startXPos)),
-										  new TextViewPosition(newEndLocation, GetVisualColumnFromXPos(newEndLocation.Line, endXPos)));
+			//return new RectangleSelection(textArea,
+			//							  new TextViewPosition(newStartLocation, GetVisualColumnFromXPos(newStartLocation.Line, startXPos)),
+			//							  new TextViewPosition(newEndLocation, GetVisualColumnFromXPos(newEndLocation.Line, endXPos)));
 		}
 
 		/// <inheritdoc/>
