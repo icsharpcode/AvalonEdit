@@ -17,7 +17,7 @@ jobs:
         Solution: '**/ICSharpCode.AvalonEdit.sln'
         BuildPlatform: 'Any CPU'
         BuildVersion: '6.1.0'
-        NupkgVersion: '6.1.0-preview2'
+        NupkgVersion: '6.1.0'
     steps:
     - uses: actions/checkout@v2
     - name: Update project version
