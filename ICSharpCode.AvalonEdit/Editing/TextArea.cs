@@ -317,7 +317,10 @@ namespace ICSharpCode.AvalonEdit.Editing
 		void OnDocumentChanged(DocumentChangeEventArgs e)
 		{
 			caret.OnDocumentChanged(e);
-			this.Selection = selection.UpdateOnDocumentChange(e);
+
+			if (! (selection is RectangleSelection)) {
+				this.Selection = selection.UpdateOnDocumentChange(e);
+			}
 		}
 
 		void OnUpdateStarted()
