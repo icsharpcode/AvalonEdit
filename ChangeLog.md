@@ -3,6 +3,10 @@ Note: this changelog only lists major changes and fixes for major bugs. For a co
 tbd: AvalonEdit 6.2-preview1
 * tbd
 
+2021/03/15: AvalonEdit 6.1.1
+
+* Fix wrong implementation of attached properties
+
 2021/03/08: AvalonEdit 6.1.0
 * https://github.com/icsharpcode/AvalonEdit/compare/v6.0.1...v6.1.0
 
