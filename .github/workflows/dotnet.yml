@@ -17,14 +17,13 @@ jobs:
         Solution: '**/ICSharpCode.AvalonEdit.sln'
         BuildPlatform: 'Any CPU'
         BuildVersion: '6.1.1'
-        NupkgVersion: '6.1.1'
     steps:
     - uses: actions/checkout@v2
     - name: Update project version
       uses: roryprimrose/set-vs-sdk-project-version@v1
       with:
         projectFilter: '**/ICSharpCode.AvalonEdit.csproj'
-        version: ${{ env.NupkgVersion }}
+        version: ${{ env.BuildVersion }}.${{ github.run_number }}
         assemblyVersion: ${{ env.BuildVersion }}.${{ github.run_number }}
         fileVersion: ${{ env.BuildVersion }}.${{ github.run_number }}    
     - name: Setup .NET
@@ -49,7 +48,7 @@ jobs:
         name: AvalonEdit NuGet Package (${{ matrix.configuration }})
         path: ICSharpCode.AvalonEdit/bin/Release/AvalonEdit*.nupkg
         if-no-files-found: error      
-#    - name: Publish NuGet
-#      if: github.ref == 'refs/heads/master' && matrix.configuration == 'release'
-#      run: |
-#        dotnet nuget push "ICSharpCode.AvalonEdit\bin\Release\AvalonEdit*.nupkg" --api-key ${{ secrets.GITHUB_TOKEN }} --source https://nuget.pkg.github.com/${{ github.repository_owner }}
+    - name: Publish NuGet
+      if: github.ref == 'refs/heads/master' && matrix.configuration == 'release'
+      run: |
+        dotnet nuget push "ICSharpCode.AvalonEdit\bin\Release\AvalonEdit*.nupkg" --api-key ${{ secrets.GITHUB_TOKEN }} --source https://nuget.pkg.github.com/${{ github.repository_owner }}
