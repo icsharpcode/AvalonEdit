@@ -12,8 +12,8 @@ can be found on the [AvalonEdit homepage](http://avalonedit.net/)
 How to build
 -------
 
-AvalonEdit is targeting netcoreapp3.0, net40 and net45 TFMs. Because of netcoreapp3.0 you must have .NET Core 3.0 SDK installed 
-on your machine. Visual Studio 2019 16.3 and up is required for working with the solution (global.json will select the proper SDK to use for building for you).
+AvalonEdit is targeting net5.0-windows, netcoreapp3.1, net40 and net45 TFMs. Because of net5.0-windows you must have the .NET 5.0 SDK installed 
+on your machine. Visual Studio 2019 16.8 and up is required for working with the solution (global.json will select the proper SDK to use for building for you).
 
 
 Documentation
