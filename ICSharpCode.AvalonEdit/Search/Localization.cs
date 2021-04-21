@@ -60,6 +60,20 @@ namespace ICSharpCode.AvalonEdit.Search
 		}
 
 		/// <summary>
+		/// Default: 'Replace next (ALT+R)'
+		/// </summary>
+		public virtual string ReplaceNextText {
+			get { return "Replace next (ALT+R)"; }
+		}
+
+		/// <summary>
+		/// Default: 'Replace all (ALT+A)'
+		/// </summary>
+		public virtual string ReplaceAllText {
+			get { return "Replace all (ALT+A)"; }
+		}
+
+		/// <summary>
 		/// Default: 'Error: '
 		/// </summary>
 		public virtual string ErrorText {

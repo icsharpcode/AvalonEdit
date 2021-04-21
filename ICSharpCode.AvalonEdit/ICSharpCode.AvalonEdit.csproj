@@ -71,4 +71,10 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Search\replacenext.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Search\replaceall.png" />
+  </ItemGroup>
 </Project>

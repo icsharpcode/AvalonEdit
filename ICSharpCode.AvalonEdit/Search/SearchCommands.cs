@@ -31,6 +31,22 @@ namespace ICSharpCode.AvalonEdit.Search
 	public static class SearchCommands
 	{
 		/// <summary>
+		/// Opens the Find panel
+		/// </summary>
+		public static readonly RoutedCommand Find = new RoutedCommand(
+			"Find", typeof(SearchPanel),
+			new InputGestureCollection { new KeyGesture(Key.F, ModifierKeys.Control) }
+		);
+
+		/// <summary>
+		/// Opens the Replace panel
+		/// </summary>
+		public static readonly RoutedCommand Replace = new RoutedCommand(
+			"Replace", typeof(SearchPanel),
+			new InputGestureCollection { new KeyGesture(Key.H, ModifierKeys.Control) }
+		);
+
+		/// <summary>
 		/// Finds the next occurrence in the file.
 		/// </summary>
 		public static readonly RoutedCommand FindNext = new RoutedCommand(
@@ -44,6 +60,22 @@ namespace ICSharpCode.AvalonEdit.Search
 		public static readonly RoutedCommand FindPrevious = new RoutedCommand(
 			"FindPrevious", typeof(SearchPanel),
 			new InputGestureCollection { new KeyGesture(Key.F3, ModifierKeys.Shift) }
+		);
+
+		/// <summary>
+		/// Replaces the current occurrence and finds the next occurrence in the file.
+		/// </summary>
+		public static readonly RoutedCommand ReplaceNext = new RoutedCommand(
+			"ReplaceNext", typeof(SearchPanel),
+			new InputGestureCollection { new KeyGesture(Key.R, ModifierKeys.Alt) }
+		);
+
+		/// <summary>
+		/// Replaces all occurrence in the file.
+		/// </summary>
+		public static readonly RoutedCommand ReplaceAll = new RoutedCommand(
+			"ReplaceAll", typeof(SearchPanel),
+			new InputGestureCollection { new KeyGesture(Key.A, ModifierKeys.Alt) }
 		);
 
 		/// <summary>
@@ -70,15 +102,25 @@ namespace ICSharpCode.AvalonEdit.Search
 		internal void RegisterGlobalCommands(CommandBindingCollection commandBindings)
 		{
 			commandBindings.Add(new CommandBinding(ApplicationCommands.Find, ExecuteFind));
+			commandBindings.Add(new CommandBinding(ApplicationCommands.Replace, ExecuteReplace));
+			commandBindings.Add(new CommandBinding(SearchCommands.Find, ExecuteFind));
+			commandBindings.Add(new CommandBinding(SearchCommands.Replace, ExecuteReplace));
 			commandBindings.Add(new CommandBinding(SearchCommands.FindNext, ExecuteFindNext, CanExecuteWithOpenSearchPanel));
 			commandBindings.Add(new CommandBinding(SearchCommands.FindPrevious, ExecuteFindPrevious, CanExecuteWithOpenSearchPanel));
+			commandBindings.Add(new CommandBinding(SearchCommands.ReplaceNext, ExecuteReplaceNext, CanExecuteWithOpenSearchPanel));
+			commandBindings.Add(new CommandBinding(SearchCommands.ReplaceAll, ExecuteReplaceAll, CanExecuteWithOpenSearchPanel));
 		}
 
 		void RegisterCommands(ICollection<CommandBinding> commandBindings)
 		{
 			commandBindings.Add(new CommandBinding(ApplicationCommands.Find, ExecuteFind));
+			commandBindings.Add(new CommandBinding(ApplicationCommands.Replace, ExecuteReplace));
+			commandBindings.Add(new CommandBinding(SearchCommands.Find, ExecuteFind));
+			commandBindings.Add(new CommandBinding(SearchCommands.Replace, ExecuteReplace));
 			commandBindings.Add(new CommandBinding(SearchCommands.FindNext, ExecuteFindNext, CanExecuteWithOpenSearchPanel));
 			commandBindings.Add(new CommandBinding(SearchCommands.FindPrevious, ExecuteFindPrevious, CanExecuteWithOpenSearchPanel));
+			commandBindings.Add(new CommandBinding(SearchCommands.ReplaceNext, ExecuteReplaceNext, CanExecuteWithOpenSearchPanel));
+			commandBindings.Add(new CommandBinding(SearchCommands.ReplaceAll, ExecuteReplaceAll, CanExecuteWithOpenSearchPanel));
 			commandBindings.Add(new CommandBinding(SearchCommands.CloseSearchPanel, ExecuteCloseSearchPanel, CanExecuteWithOpenSearchPanel));
 		}
 
@@ -86,7 +128,14 @@ namespace ICSharpCode.AvalonEdit.Search
 
 		void ExecuteFind(object sender, ExecutedRoutedEventArgs e)
 		{
-			panel.Open();
+			panel.Open(false);
+			if (!(TextArea.Selection.IsEmpty || TextArea.Selection.IsMultiline))
+				panel.SearchPattern = TextArea.Selection.GetText();
+			Dispatcher.CurrentDispatcher.BeginInvoke(DispatcherPriority.Input, (Action)delegate { panel.Reactivate(); });
+		}
+
+		void ExecuteReplace(object sender, ExecutedRoutedEventArgs e) {
+			panel.Open(true);
 			if (!(TextArea.Selection.IsEmpty || TextArea.Selection.IsMultiline))
 				panel.SearchPattern = TextArea.Selection.GetText();
 			Dispatcher.CurrentDispatcher.BeginInvoke(DispatcherPriority.Input, (Action)delegate { panel.Reactivate(); });
@@ -116,6 +165,20 @@ namespace ICSharpCode.AvalonEdit.Search
 		{
 			if (!panel.IsClosed) {
 				panel.FindPrevious();
+				e.Handled = true;
+			}
+		}
+		
+		void ExecuteReplaceNext(object sender, ExecutedRoutedEventArgs e) {
+			if (!panel.IsClosed) {
+				panel.ReplaceNext();
+				e.Handled = true;
+			}
+		}
+
+		void ExecuteReplaceAll(object sender, ExecutedRoutedEventArgs e) {
+			if (!panel.IsClosed) {
+				panel.ReplaceAll();
 				e.Handled = true;
 			}
 		}
