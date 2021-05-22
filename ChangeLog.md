@@ -2,6 +2,7 @@ Note: this changelog only lists major changes and fixes for major bugs. For a co
 
 tbd: AvalonEdit 6.2-preview1
 * tbd
+* Change framework targets to net462, .NET Core 3.1 and .NET 5.0 (was net40+net45)
 
 2021/03/15: AvalonEdit 6.1.1
 
