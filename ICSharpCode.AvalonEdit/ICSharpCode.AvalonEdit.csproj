@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
   <PropertyGroup>
     <OutputType>Library</OutputType>
-    <TargetFrameworks>net5.0-windows;netcoreapp3.1;net40;net45</TargetFrameworks>
+    <TargetFrameworks>net5.0-windows;netcoreapp3.1;net462</TargetFrameworks>
     <UseWPF>true</UseWPF>
     <UseWindowsForms>true</UseWindowsForms>
     <DefineConstants>TRACE</DefineConstants>
@@ -37,18 +37,13 @@
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp3.1' ">
     <DefineConstants>TRACE</DefineConstants>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'net40' ">
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'net462' ">
     <DefineConstants>TRACE</DefineConstants>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'net45' ">
-    <DefineConstants>TRACE</DefineConstants>
-  </PropertyGroup>
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net40' ">
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net462' ">
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net45' ">
-    <Reference Include="System.Windows.Forms" />
-  </ItemGroup>
+
   <ItemGroup>
     <None Remove="Search\next.png" />
     <None Remove="Search\prev.png" />
