@@ -17,6 +17,7 @@ jobs:
         Solution: '**/ICSharpCode.AvalonEdit.sln'
         BuildPlatform: 'Any CPU'
         BuildVersion: '6.1.1'
+        CommonBuildParams: '/p:ContinuousIntegrationBuild=true /p:EmbedUntrackedSources=true'
     steps:
     - uses: actions/checkout@v2
     - name: Update project version
@@ -34,13 +35,13 @@ jobs:
       uses: nuget/setup-nuget@v1
     - run: nuget restore ICSharpCode.AvalonEdit.sln 
     - name: Build
-      run: dotnet build ICSharpCode.AvalonEdit.sln --no-restore -c ${{ matrix.configuration }}
+      run: dotnet build ICSharpCode.AvalonEdit.sln --no-restore -c ${{ matrix.configuration }} ${{ env.CommonBuildParams }}
     - name: Test
       run: dotnet test ICSharpCode.AvalonEdit.sln --no-build --verbosity normal -c ${{ matrix.configuration }}
     - name: Style - tab check
       run: python BuildTools\tidy.py
     - name: Pack
-      run:  dotnet pack ICSharpCode.AvalonEdit/ICSharpCode.AvalonEdit.csproj -c ${{ matrix.configuration }}
+      run:  dotnet pack ICSharpCode.AvalonEdit/ICSharpCode.AvalonEdit.csproj -c ${{ matrix.configuration }} ${{ env.CommonBuildParams }}
     - name: Upload NuGet
       if: matrix.configuration == 'release'
       uses: actions/upload-artifact@v2
