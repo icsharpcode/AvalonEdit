@@ -1,10 +1,9 @@
 Note: this changelog only lists major changes and fixes for major bugs. For a complete list of changes, see the git log.
 
-tbd: AvalonEdit 6.2-preview1
-* tbd
+2021/06/01: AvalonEdit 6.1.2
+* TFM changes: netcoreapp3.0 removed in favor of netcoreapp3.1 (LTS), net5.0-windows added
 
 2021/03/15: AvalonEdit 6.1.1
-
 * Fix wrong implementation of attached properties
 
 2021/03/08: AvalonEdit 6.1.0
