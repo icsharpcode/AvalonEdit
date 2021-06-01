@@ -1,50 +1,44 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
-  <PropertyGroup>
-    <OutputType>WinExe</OutputType>
-    <TargetFrameworks>net5.0-windows;netcoreapp3.1;net40;net45</TargetFrameworks>
+	<PropertyGroup>
+		<OutputType>WinExe</OutputType>
+		<TargetFrameworks>net5.0-windows;netcoreapp3.1;net472</TargetFrameworks>
 	<UseWPF>true</UseWPF>
 	<UseWindowsForms>true</UseWindowsForms>
 	<DefineConstants>TRACE</DefineConstants>
-    <SignAssembly>true</SignAssembly>
+		<SignAssembly>true</SignAssembly>
 	<AssemblyOriginatorKeyFile>..\ICSharpCode.AvalonEdit\ICSharpCode.AvalonEdit.snk</AssemblyOriginatorKeyFile>
-    <RootNamespace>AvalonEdit.Sample</RootNamespace>
+		<RootNamespace>AvalonEdit.Sample</RootNamespace>
 	<Company>ic#code</Company>
-    <Copyright>2000-2021 AlphaSierraPapa for the SharpDevelop Team</Copyright>
-    <Description>Sample for WPF-based extensible text editor</Description>
+		<Copyright>2000-2021 AlphaSierraPapa for the SharpDevelop Team</Copyright>
+		<Description>Sample for WPF-based extensible text editor</Description>
 	<IsPackable>false</IsPackable>	
-  </PropertyGroup>
-  
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'net5.0-windows' ">
-    <DefineConstants>TRACE</DefineConstants>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp3.1' ">
-    <DefineConstants>TRACE</DefineConstants>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'net40' ">
-    <DefineConstants>TRACE</DefineConstants>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'net45' ">
-    <DefineConstants>TRACE</DefineConstants>
-  </PropertyGroup>
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net40' ">
+	</PropertyGroup>
+	
+	<PropertyGroup Condition=" '$(TargetFramework)' == 'net5.0-windows' ">
+		<DefineConstants>TRACE</DefineConstants>
+	</PropertyGroup>
+	<PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp3.1' ">
+		<DefineConstants>TRACE</DefineConstants>
+	</PropertyGroup>
+	<PropertyGroup Condition=" '$(TargetFramework)' == 'net472' ">
+		<DefineConstants>TRACE</DefineConstants>
+	</PropertyGroup>
+	<ItemGroup Condition=" '$(TargetFramework)' == 'net472' ">
 		<Reference Include="System.Windows.Forms" />
-  </ItemGroup>
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net45' ">
-		<Reference Include="System.Windows.Forms" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\ICSharpCode.AvalonEdit\ICSharpCode.AvalonEdit.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Remove="Images\*" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\*" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Remove="CustomHighlighting.xshd" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="CustomHighlighting.xshd" />
-  </ItemGroup>
+	</ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\ICSharpCode.AvalonEdit\ICSharpCode.AvalonEdit.csproj" />
+	</ItemGroup>
+	<ItemGroup>
+		<None Remove="Images\*" />
+	</ItemGroup>
+	<ItemGroup>
+		<Resource Include="Images\*" />
+	</ItemGroup>
+	<ItemGroup>
+		<None Remove="CustomHighlighting.xshd" />
+	</ItemGroup>
+	<ItemGroup>
+		<EmbeddedResource Include="CustomHighlighting.xshd" />
+	</ItemGroup>
 </Project>
