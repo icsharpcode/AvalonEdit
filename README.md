@@ -22,7 +22,7 @@ Documentation
 Check out the [official documentation](http://avalonedit.net/documentation/) and the [samples and articles wiki page](https://github.com/icsharpcode/AvalonEdit/wiki/Samples-and-Articles)
 
 To build the Documentation you need to install Sandcastle from https://github.com/EWSoftware/SHFB/releases (currently validated tooling is
-v2019.4.14.0)
+v2021.4.9.0)
 
 The build of the Documentation can take very long, please be patient.
 
