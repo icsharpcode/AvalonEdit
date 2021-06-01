@@ -13,7 +13,7 @@
     <RootNamespace>Documentation</RootNamespace>
     <Name>Documentation</Name>
     <!-- SHFB properties -->
-    <FrameworkVersion>.NET Framework 4.5</FrameworkVersion>
+    <FrameworkVersion>.NET Framework 4.7.2</FrameworkVersion>
     <OutputPath>.\Help\</OutputPath>
     <HtmlHelpName>AvalonEdit Documentation</HtmlHelpName>
     <Language>en-US</Language>
