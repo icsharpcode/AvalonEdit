@@ -857,6 +857,11 @@ namespace ICSharpCode.AvalonEdit.Editing
 			if (TextEntered != null) {
 				TextEntered(this, e);
 			}
+
+			if (this.IndentationStrategy is ILineChangedListener) {
+				DocumentLine line = this.Document.GetLineByNumber(this.Caret.Line);
+				((ILineChangedListener)this.IndentationStrategy).OnLineChanged(this.Document, line, e.Text);
+			}
 		}
 
 		/// <inheritdoc/>

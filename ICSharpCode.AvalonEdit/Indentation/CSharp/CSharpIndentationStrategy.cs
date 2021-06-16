@@ -25,7 +25,7 @@ namespace ICSharpCode.AvalonEdit.Indentation.CSharp
 	/// <summary>
 	/// Smart indentation for C#.
 	/// </summary>
-	public class CSharpIndentationStrategy : DefaultIndentationStrategy
+	public class CSharpIndentationStrategy : DefaultIndentationStrategy, ILineChangedListener
 	{
 		/// <summary>
 		/// Creates a new CSharpIndentationStrategy.
@@ -91,6 +91,15 @@ namespace ICSharpCode.AvalonEdit.Indentation.CSharp
 		public override void IndentLines(TextDocument document, int beginLine, int endLine)
 		{
 			Indent(new TextDocumentAccessor(document, beginLine, endLine), true);
+		}
+
+		/// <inheritdoc cref="ILineChangedListener.OnLineChanged"/>
+		public void OnLineChanged(TextDocument document, DocumentLine line, string newText)
+		{
+			// Reformat line when blocks are created
+			if (newText == "{" || newText == "}") {
+				IndentLine(document, line);
+			}
 		}
 	}
 }
