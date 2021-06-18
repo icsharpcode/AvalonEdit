@@ -752,6 +752,9 @@ namespace ICSharpCode.AvalonEdit.Editing
 		public TextArea TextArea { get { return textArea; } }
 	}
 	
+	/// <summary>
+	/// This class moves the current caret position when a line is moved up or down
+	/// </summary>
 	class CaretPreserver 
 		: CaretSelectionPreserver
 	{
@@ -774,8 +777,17 @@ namespace ICSharpCode.AvalonEdit.Editing
 		TextLocation caretLocation;
 	}
 
+	/// <summary>
+	/// This class moves the current selection when the lines containing that selection
+	/// are moved up or down.
+	///
+	/// NOTE: The SelectionPreserver must inherit from the CaretPreserver as if the caret 
+	/// is not within the selection then the selection is not considered valid and is 
+	/// cleared. By inheriting from the CaretPreserver we move both the selection and 
+	/// the caret at the same time.
+	/// </summary> 
 	class SelectionPreserver
-		: CaretSelectionPreserver
+		: CaretPreserver
 	{
 		public SelectionPreserver(TextArea textArea)
 			: base(textArea)
@@ -786,11 +798,14 @@ namespace ICSharpCode.AvalonEdit.Editing
 
 		public override void Restore()
 		{
+			base.Restore();
 			TextArea.Selection = Selection.Create(TextArea, new TextViewPosition(startLocation), new TextViewPosition(endLocation));
 		}
 
+
 		public override void MoveLine(int i)
 		{
+			base.MoveLine(i);
 			startLocation = new TextLocation(startLocation.Line + i, startLocation.Column);
 			endLocation = new TextLocation(endLocation.Line + i, endLocation.Column);
 		}
@@ -835,7 +850,7 @@ namespace ICSharpCode.AvalonEdit.Editing
 		}
 
 		/// <summary>
-		/// Move the tailing lineberak to the head.
+		/// Move the tailing linebreak to the head.
 		/// </summary>
 		/// <param name="self">A string which ends with one or more linebreaks.</param>
 		/// <returns></returns>
