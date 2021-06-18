@@ -18,47 +18,48 @@
 
 using System;
 using System.Windows.Media;
-using ICSharpCode.AvalonEdit.Editing;
-#if NREFACTORY
-using ICSharpCode.NRefactory.Editor;
-#else
+
 using ICSharpCode.AvalonEdit.Document;
-#endif
+using ICSharpCode.AvalonEdit.Editing;
 
 namespace ICSharpCode.AvalonEdit.CodeCompletion
 {
 	/// <summary>
 	/// Describes an entry in the <see cref="CompletionList"/>.
 	/// </summary>
+	/// <remarks>
+	/// Note that the CompletionList uses WPF data binding against the properties in this interface.
+	/// Thus, your implementation of the interface must use public properties; not explicit interface implementation.
+	/// </remarks>
 	public interface ICompletionData
 	{
 		/// <summary>
 		/// Gets the image.
 		/// </summary>
 		ImageSource Image { get; }
-		
+
 		/// <summary>
 		/// Gets the text. This property is used to filter the list of visible elements.
 		/// </summary>
 		string Text { get; }
-		
+
 		/// <summary>
 		/// The displayed content. This can be the same as 'Text', or a WPF UIElement if
 		/// you want to display rich content.
 		/// </summary>
 		object Content { get; }
-		
+
 		/// <summary>
 		/// Gets the description.
 		/// </summary>
 		object Description { get; }
-		
+
 		/// <summary>
 		/// Gets the priority. This property is used in the selection logic. You can use it to prefer selecting those items
 		/// which the user is accessing most frequently.
 		/// </summary>
 		double Priority { get; }
-		
+
 		/// <summary>
 		/// Perform the completion.
 		/// </summary>

@@ -1,0 +1,43 @@
+<SyntaxDefinition name="CLLE"
+        xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
+  <Color name="Comment" foreground="Green" />
+  <Color name="String" foreground="Green" />
+
+  <!-- This is the main ruleset. -->
+  <RuleSet ignoreCase="true">
+    <Span color="Comment" begin="//" />
+
+    <Span color="String"  multiline="true">
+      <Begin>'</Begin>
+      <End>'</End>
+    </Span>
+
+    <Span color="Comment" multiline="true">
+      <Begin>/\*</Begin>
+      <End>\*/</End>
+    </Span>
+
+    <!-- Digits -->
+    <Rule foreground="DarkBlue">
+      \b0[xX][0-9a-fA-F]+  # hex number
+      |    \b
+      (    \d+(\.[0-9]+)?   #number with optional floating point
+      |    \.[0-9]+         #or just starting with floating point
+      )
+      ([eE][+-]?[0-9]+)? # optional exponent
+    </Rule>
+
+    <Rule foreground="DarkBlue">
+      (\w+)
+    </Rule>
+    
+    <Rule foreground="Blue">
+      \B[\%\&amp;]\w+
+    </Rule>
+
+    <!-- Directives -->
+    <Rule foreground="Orange">
+      \B\*\w+
+    </Rule>
+  </RuleSet>
+</SyntaxDefinition>

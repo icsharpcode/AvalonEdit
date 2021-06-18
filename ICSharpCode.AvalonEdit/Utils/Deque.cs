@@ -18,7 +18,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 
 namespace ICSharpCode.AvalonEdit.Utils
 {
@@ -31,12 +30,12 @@ namespace ICSharpCode.AvalonEdit.Utils
 	{
 		T[] arr = Empty<T>.Array;
 		int size, head, tail;
-		
+
 		/// <inheritdoc/>
 		public int Count {
 			get { return size; }
 		}
-		
+
 		/// <inheritdoc/>
 		public void Clear()
 		{
@@ -45,7 +44,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 			head = 0;
 			tail = 0;
 		}
-		
+
 		/// <summary>
 		/// Gets/Sets an element inside the deque.
 		/// </summary>
@@ -59,7 +58,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 				arr[(head + index) % arr.Length] = value;
 			}
 		}
-		
+
 		/// <summary>
 		/// Adds an element to the end of the deque.
 		/// </summary>
@@ -72,7 +71,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 			if (tail == arr.Length) tail = 0;
 			size++;
 		}
-		
+
 		/// <summary>
 		/// Pops an element from the end of the deque.
 		/// </summary>
@@ -89,7 +88,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 			size--;
 			return val;
 		}
-		
+
 		/// <summary>
 		/// Adds an element to the front of the deque.
 		/// </summary>
@@ -104,7 +103,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 			arr[head] = item;
 			size++;
 		}
-		
+
 		/// <summary>
 		/// Pops an element from the end of the deque.
 		/// </summary>
@@ -119,7 +118,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 			size--;
 			return val;
 		}
-		
+
 		void SetCapacity(int capacity)
 		{
 			T[] newArr = new T[capacity];
@@ -128,7 +127,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 			tail = (size == capacity) ? 0 : size;
 			arr = newArr;
 		}
-		
+
 		/// <inheritdoc/>
 		public IEnumerator<T> GetEnumerator()
 		{
@@ -142,21 +141,21 @@ namespace ICSharpCode.AvalonEdit.Utils
 					yield return arr[i];
 			}
 		}
-		
+
 		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
 		{
 			return this.GetEnumerator();
 		}
-		
+
 		bool ICollection<T>.IsReadOnly {
 			get { return false; }
 		}
-		
+
 		void ICollection<T>.Add(T item)
 		{
 			PushBack(item);
 		}
-		
+
 		/// <inheritdoc/>
 		public bool Contains(T item)
 		{
@@ -166,7 +165,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 					return true;
 			return false;
 		}
-		
+
 		/// <inheritdoc/>
 		public void CopyTo(T[] array, int arrayIndex)
 		{
@@ -180,7 +179,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 				Array.Copy(arr, 0, array, arrayIndex + num1, tail);
 			}
 		}
-		
+
 		bool ICollection<T>.Remove(T item)
 		{
 			throw new NotSupportedException();

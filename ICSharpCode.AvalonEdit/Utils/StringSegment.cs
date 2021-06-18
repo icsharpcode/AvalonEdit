@@ -29,7 +29,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 		readonly string text;
 		readonly int offset;
 		readonly int count;
-		
+
 		/// <summary>
 		/// Creates a new StringSegment.
 		/// </summary>
@@ -45,7 +45,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 			this.offset = offset;
 			this.count = count;
 		}
-		
+
 		/// <summary>
 		/// Creates a new StringSegment.
 		/// </summary>
@@ -57,28 +57,28 @@ namespace ICSharpCode.AvalonEdit.Utils
 			this.offset = 0;
 			this.count = text.Length;
 		}
-		
+
 		/// <summary>
 		/// Gets the string used for this segment.
 		/// </summary>
 		public string Text {
 			get { return text; }
 		}
-		
+
 		/// <summary>
 		/// Gets the start offset of the segment with the text.
 		/// </summary>
 		public int Offset {
 			get { return offset; }
 		}
-		
+
 		/// <summary>
 		/// Gets the length of the segment.
 		/// </summary>
 		public int Count {
 			get { return count; }
 		}
-		
+
 		#region Equals and GetHashCode implementation
 		/// <inheritdoc/>
 		public override bool Equals(object obj)
@@ -88,20 +88,20 @@ namespace ICSharpCode.AvalonEdit.Utils
 			else
 				return false;
 		}
-		
+
 		/// <inheritdoc/>
 		public bool Equals(StringSegment other)
 		{
 			// add comparisions for all members here
 			return object.ReferenceEquals(this.text, other.text) && offset == other.offset && count == other.count;
 		}
-		
+
 		/// <inheritdoc/>
 		public override int GetHashCode()
 		{
 			return text.GetHashCode() ^ offset ^ count;
 		}
-		
+
 		/// <summary>
 		/// Equality operator.
 		/// </summary>
@@ -109,7 +109,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 		{
 			return left.Equals(right);
 		}
-		
+
 		/// <summary>
 		/// Inequality operator.
 		/// </summary>

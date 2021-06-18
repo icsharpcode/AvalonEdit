@@ -16,7 +16,6 @@
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
 
-using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Input;
@@ -34,17 +33,17 @@ namespace ICSharpCode.AvalonEdit.Editing
 		/// Gets the caret navigation input handler.
 		/// </summary>
 		public TextAreaInputHandler CaretNavigation { get; private set; }
-		
+
 		/// <summary>
 		/// Gets the editing input handler.
 		/// </summary>
 		public TextAreaInputHandler Editing { get; private set; }
-		
+
 		/// <summary>
 		/// Gets the mouse selection input handler.
 		/// </summary>
 		public ITextAreaInputHandler MouseSelection { get; private set; }
-		
+
 		/// <summary>
 		/// Creates a new TextAreaDefaultInputHandler instance.
 		/// </summary>
@@ -53,11 +52,11 @@ namespace ICSharpCode.AvalonEdit.Editing
 			this.NestedInputHandlers.Add(CaretNavigation = CaretNavigationCommandHandler.Create(textArea));
 			this.NestedInputHandlers.Add(Editing = EditingCommandHandler.Create(textArea));
 			this.NestedInputHandlers.Add(MouseSelection = new SelectionMouseHandler(textArea));
-			
+
 			this.CommandBindings.Add(new CommandBinding(ApplicationCommands.Undo, ExecuteUndo, CanExecuteUndo));
 			this.CommandBindings.Add(new CommandBinding(ApplicationCommands.Redo, ExecuteRedo, CanExecuteRedo));
 		}
-		
+
 		internal static KeyBinding CreateFrozenKeyBinding(ICommand command, ModifierKeys modifiers, Key key)
 		{
 			KeyBinding kb = new KeyBinding(command, key, modifiers);
@@ -68,7 +67,7 @@ namespace ICSharpCode.AvalonEdit.Editing
 				f.Freeze();
 			return kb;
 		}
-		
+
 		internal static void WorkaroundWPFMemoryLeak(List<InputBinding> inputBindings)
 		{
 			// Work around WPF memory leak:
@@ -78,7 +77,7 @@ namespace ICSharpCode.AvalonEdit.Editing
 			UIElement dummyElement = new UIElement();
 			dummyElement.InputBindings.AddRange(inputBindings);
 		}
-		
+
 		#region Undo / Redo
 		UndoStack GetUndoStack()
 		{
@@ -88,7 +87,7 @@ namespace ICSharpCode.AvalonEdit.Editing
 			else
 				return null;
 		}
-		
+
 		void ExecuteUndo(object sender, ExecutedRoutedEventArgs e)
 		{
 			var undoStack = GetUndoStack();
@@ -100,7 +99,7 @@ namespace ICSharpCode.AvalonEdit.Editing
 				e.Handled = true;
 			}
 		}
-		
+
 		void CanExecuteUndo(object sender, CanExecuteRoutedEventArgs e)
 		{
 			var undoStack = GetUndoStack();
@@ -109,7 +108,7 @@ namespace ICSharpCode.AvalonEdit.Editing
 				e.CanExecute = undoStack.CanUndo;
 			}
 		}
-		
+
 		void ExecuteRedo(object sender, ExecutedRoutedEventArgs e)
 		{
 			var undoStack = GetUndoStack();
@@ -121,7 +120,7 @@ namespace ICSharpCode.AvalonEdit.Editing
 				e.Handled = true;
 			}
 		}
-		
+
 		void CanExecuteRedo(object sender, CanExecuteRoutedEventArgs e)
 		{
 			var undoStack = GetUndoStack();

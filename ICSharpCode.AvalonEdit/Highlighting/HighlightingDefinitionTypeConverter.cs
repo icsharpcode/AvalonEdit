@@ -36,7 +36,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 			else
 				return base.CanConvertFrom(context, sourceType);
 		}
-		
+
 		/// <inheritdoc/>
 		public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
 		{
@@ -46,7 +46,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 			else
 				return base.ConvertFrom(context, culture, value);
 		}
-		
+
 		/// <inheritdoc/>
 		public override bool CanConvertTo(ITypeDescriptorContext context, Type destinationType)
 		{
@@ -55,7 +55,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 			else
 				return base.CanConvertTo(context, destinationType);
 		}
-		
+
 		/// <inheritdoc/>
 		public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destinationType)
 		{

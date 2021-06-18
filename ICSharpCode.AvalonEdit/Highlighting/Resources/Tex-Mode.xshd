@@ -2,17 +2,17 @@
 <!-- syntaxdefinition for TeX document 2001 by Mike Krueger (gleaned from Jedit) -->
 
 <SyntaxDefinition name = "TeX" extensions = ".tex">
-	
+
 	<Digits   name = "Digits" bold = "false" italic = "false" color = "Black"/>
-	
+
 	<RuleSets>
 		<RuleSet ignorecase = "false">
 		  	<Delimiters>&amp;~!@%^*()-+=|\#/{}[]:;"'&lt;&gt; , .?</Delimiters>
-			
+
 			<Span name = "LineComment" bold = "false" italic = "true" color = "SlateGray" stopateol = "true">
 				<Begin>%</Begin>
 			</Span>
-			
+
 			<Span name = "MathMode" rule = "MathMode" bold = "false" italic = "false" color = "Black" stopateol = "false">
 				<Begin>$$</Begin>
 				<End>$$</End>
@@ -21,17 +21,17 @@
 				<Begin>\[</Begin>
 				<End>\]</End>
 			</Span>
-			
+
 			<!-- \... commands -->
 			<MarkFollowing markmarker ="true" bold = "true" italic = "false" color = "MidnightBlue">\</MarkFollowing>
-			
+
 			<!-- some commands must be handled specially -->
 			<KeyWords name = "Keyword1" bold = "false" italic = "false" color = "Blue">
 				<Key word = "\$" />
 				<Key word = "\\" />
 				<Key word = "\%" />
 		  	</KeyWords>
-		  
+
 		 	<KeyWords name = "KeyWords2" bold="true" italic="false" color="Green">
 				    <Key word = ")" />
 				    <Key word = ")" />
@@ -61,15 +61,15 @@
 				    <Key word = "`" />
 	 	 	</KeyWords>
 		</RuleSet>
-		
+
 		<RuleSet name = "MathMode" ignorecase = "false">
 		  	<Delimiters>&amp;~!@%^*()-+=|\#/{}[]:;"'&lt;&gt; , .?</Delimiters>
-			
-			
+
+
 			<Span name = "LineComment" bold = "false" italic = "true" color = "SlateGray" stopateol = "true">
 				<Begin>%</Begin>
 			</Span>
-		 	
+
 			<!-- \... commands -->
 			<MarkFollowing markmarker ="true" bold = "true" italic = "false" color = "MidnightBlue">\</MarkFollowing>
 
@@ -103,6 +103,6 @@
 	 	 	</KeyWords>
 		</RuleSet>
 	</RuleSets>
-	
+
 </SyntaxDefinition>
 

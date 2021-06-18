@@ -18,20 +18,13 @@
 
 using System;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using System.Security;
 using System.Windows;
-using System.Windows.Input;
 using System.Windows.Interop;
-using System.Windows.Media;
 using System.Windows.Media.TextFormatting;
 
-using ICSharpCode.AvalonEdit;
-using ICSharpCode.AvalonEdit.Document;
 using ICSharpCode.AvalonEdit.Rendering;
 using ICSharpCode.AvalonEdit.Utils;
-using Draw = System.Drawing;
 
 namespace ICSharpCode.AvalonEdit.Editing
 {
@@ -47,14 +40,14 @@ namespace ICSharpCode.AvalonEdit.Editing
 			public POINT ptCurrentPos;
 			public RECT rcArea;
 		}
-		
+
 		[StructLayout(LayoutKind.Sequential)]
 		struct POINT
 		{
 			public int x;
 			public int y;
 		}
-		
+
 		[StructLayout(LayoutKind.Sequential)]
 		struct RECT
 		{
@@ -63,8 +56,8 @@ namespace ICSharpCode.AvalonEdit.Editing
 			public int right;
 			public int bottom;
 		}
-		
-		[StructLayout(LayoutKind.Sequential, CharSet=CharSet.Unicode)]
+
+		[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
 		struct LOGFONT
 		{
 			public int lfHeight;
@@ -80,17 +73,17 @@ namespace ICSharpCode.AvalonEdit.Editing
 			public byte lfClipPrecision;
 			public byte lfQuality;
 			public byte lfPitchAndFamily;
-			[MarshalAs(UnmanagedType.ByValTStr, SizeConst=32)] public string lfFaceName;
+			[MarshalAs(UnmanagedType.ByValTStr, SizeConst = 32)] public string lfFaceName;
 		}
-		
+
 		const int CPS_CANCEL = 0x4;
 		const int NI_COMPOSITIONSTR = 0x15;
 		const int GCS_COMPSTR = 0x0008;
-		
+
 		public const int WM_IME_COMPOSITION = 0x10F;
 		public const int WM_IME_SETCONTEXT = 0x281;
 		public const int WM_INPUTLANGCHANGE = 0x51;
-		
+
 		[DllImport("imm32.dll")]
 		public static extern IntPtr ImmAssociateContext(IntPtr hWnd, IntPtr hIMC);
 		[DllImport("imm32.dll")]
@@ -112,13 +105,13 @@ namespace ICSharpCode.AvalonEdit.Editing
 		[DllImport("imm32.dll")]
 		[return: MarshalAs(UnmanagedType.Bool)]
 		static extern bool ImmGetCompositionFont(IntPtr hIMC, out LOGFONT font);
-		
+
 		[DllImport("msctf.dll")]
 		static extern int TF_CreateThreadMgr(out ITfThreadMgr threadMgr);
-		
+
 		[ThreadStatic] static bool textFrameworkThreadMgrInitialized;
 		[ThreadStatic] static ITfThreadMgr textFrameworkThreadMgr;
-		
+
 		public static ITfThreadMgr GetTextFrameworkThreadManager()
 		{
 			if (!textFrameworkThreadMgrInitialized) {
@@ -127,12 +120,12 @@ namespace ICSharpCode.AvalonEdit.Editing
 			}
 			return textFrameworkThreadMgr;
 		}
-		
+
 		public static bool NotifyIme(IntPtr hIMC)
 		{
 			return ImmNotifyIME(hIMC, NI_COMPOSITIONSTR, CPS_CANCEL);
 		}
-		
+
 		public static bool SetCompositionWindow(HwndSource source, IntPtr hIMC, TextArea textArea)
 		{
 			if (textArea == null)
@@ -149,7 +142,7 @@ namespace ICSharpCode.AvalonEdit.Editing
 			form.rcArea.bottom = (int)textViewBounds.Bottom;
 			return ImmSetCompositionWindow(hIMC, ref form);
 		}
-		
+
 		public static bool SetCompositionFont(HwndSource source, IntPtr hIMC, TextArea textArea)
 		{
 			if (textArea == null)
@@ -160,7 +153,7 @@ namespace ICSharpCode.AvalonEdit.Editing
 			lf.lfHeight = (int)characterBounds.Height;
 			return ImmSetCompositionFont(hIMC, ref lf);
 		}
-		
+
 		static Rect GetBounds(this TextView textView, HwndSource source)
 		{
 			// this may happen during layout changes in AvalonDock, so we just return an empty rectangle
@@ -172,9 +165,9 @@ namespace ICSharpCode.AvalonEdit.Editing
 				.TransformToAncestor(source.RootVisual).TransformBounds(displayRect) // rect on root visual
 				.TransformToDevice(source.RootVisual); // rect on HWND
 		}
-		
+
 		static readonly Rect EMPTY_RECT = new Rect(0, 0, 0, 0);
-		
+
 		static Rect GetCharacterBounds(this TextView textView, TextViewPosition pos, HwndSource source)
 		{
 			VisualLine vl = textView.GetVisualLine(pos.Line);
@@ -193,7 +186,7 @@ namespace ICSharpCode.AvalonEdit.Editing
 			} else {
 				// if we are in virtual space, we just use one wide-space as character width
 				displayRect = new Rect(vl.GetVisualPosition(pos.VisualColumn, VisualYPosition.TextTop),
-				                       new Size(textView.WideSpaceWidth, textView.DefaultLineHeight));
+									   new Size(textView.WideSpaceWidth, textView.DefaultLineHeight));
 			}
 			// adjust to current scrolling
 			displayRect.Offset(-textView.ScrollOffset);
@@ -202,7 +195,7 @@ namespace ICSharpCode.AvalonEdit.Editing
 				.TransformToDevice(source.RootVisual); // rect on HWND
 		}
 	}
-	
+
 	[ComImport, Guid("aa80e801-2021-11d2-93e0-0060b067b86e"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
 	interface ITfThreadMgr
 	{

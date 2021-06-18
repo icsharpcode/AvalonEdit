@@ -32,14 +32,14 @@ namespace ICSharpCode.AvalonEdit.Utils
 	sealed class CallbackOnDispose : IDisposable
 	{
 		Action action;
-		
+
 		public CallbackOnDispose(Action action)
 		{
 			if (action == null)
 				throw new ArgumentNullException("action");
 			this.action = action;
 		}
-		
+
 		public void Dispose()
 		{
 			Action a = Interlocked.Exchange(ref action, null);
@@ -48,7 +48,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 			}
 		}
 	}
-	
+
 	/// <summary>
 	/// This class is used to prevent stack overflows by representing a 'busy' flag
 	/// that prevents reentrance when another call is running.
@@ -63,18 +63,18 @@ namespace ICSharpCode.AvalonEdit.Utils
 		public struct BusyLock : IDisposable
 		{
 			public static readonly BusyLock Failed = new BusyLock(null);
-			
+
 			readonly List<object> objectList;
-			
+
 			internal BusyLock(List<object> objectList)
 			{
 				this.objectList = objectList;
 			}
-			
+
 			public bool Success {
 				get { return objectList != null; }
 			}
-			
+
 			public void Dispose()
 			{
 				if (objectList != null) {
@@ -82,9 +82,9 @@ namespace ICSharpCode.AvalonEdit.Utils
 				}
 			}
 		}
-		
+
 		[ThreadStatic] static List<object> _activeObjects;
-		
+
 		public static BusyLock Enter(object obj)
 		{
 			List<object> activeObjects = _activeObjects;

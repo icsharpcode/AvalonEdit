@@ -23,8 +23,8 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Windows.Documents;
+
 using ICSharpCode.AvalonEdit.Document;
-using ICSharpCode.AvalonEdit.Utils;
 
 namespace ICSharpCode.AvalonEdit.Highlighting
 {
@@ -37,11 +37,11 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 		/// The empty string without any formatting information.
 		/// </summary>
 		public static readonly RichText Empty = new RichText(string.Empty);
-		
+
 		readonly string text;
 		internal readonly int[] stateChangeOffsets;
 		internal readonly HighlightingColor[] stateChanges;
-		
+
 		/// <summary>
 		/// Creates a RichText instance with the given text and RichTextModel.
 		/// </summary>
@@ -71,7 +71,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 				stateChanges = new HighlightingColor[] { HighlightingColor.Empty };
 			}
 		}
-		
+
 		internal RichText(string text, int[] offsets, HighlightingColor[] states)
 		{
 			this.text = text;
@@ -80,21 +80,21 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 			this.stateChangeOffsets = offsets;
 			this.stateChanges = states;
 		}
-		
+
 		/// <summary>
 		/// Gets the text.
 		/// </summary>
 		public string Text {
 			get { return text; }
 		}
-		
+
 		/// <summary>
 		/// Gets the text length.
 		/// </summary>
 		public int Length {
 			get { return text.Length; }
 		}
-		
+
 		int GetIndexForOffset(int offset)
 		{
 			if (offset < 0 || offset > text.Length)
@@ -107,7 +107,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 			}
 			return index;
 		}
-		
+
 		int GetEnd(int index)
 		{
 			// Gets the end of the color segment no. index.
@@ -116,7 +116,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 			else
 				return text.Length;
 		}
-		
+
 		/// <summary>
 		/// Gets the HighlightingColor for the specified offset.
 		/// </summary>
@@ -124,7 +124,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 		{
 			return stateChanges[GetIndexForOffset(offset)];
 		}
-		
+
 		/// <summary>
 		/// Retrieves the highlighted sections in the specified range.
 		/// The highlighted sections will be sorted by offset, and there will not be any nested or overlapping sections.
@@ -145,7 +145,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 				index++;
 			}
 		}
-		
+
 		/// <summary>
 		/// Creates a new RichTextModel with the formatting from this RichText.
 		/// </summary>
@@ -153,7 +153,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 		{
 			return new RichTextModel(stateChangeOffsets, stateChanges.Select(ch => ch.Clone()).ToArray());
 		}
-		
+
 		/// <summary>
 		/// Gets the text.
 		/// </summary>
@@ -161,7 +161,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 		{
 			return text;
 		}
-		
+
 		/// <summary>
 		/// Creates WPF Run instances that can be used for TextBlock.Inlines.
 		/// </summary>
@@ -190,7 +190,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 			if (state.FontStyle != null)
 				r.FontStyle = state.FontStyle.Value;
 		}
-		
+
 		/// <summary>
 		/// Produces HTML code for the line, with &lt;span style="..."&gt; tags.
 		/// </summary>
@@ -202,7 +202,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 			}
 			return stringWriter.ToString();
 		}
-		
+
 		/// <summary>
 		/// Produces HTML code for a section of the line, with &lt;span style="..."&gt; tags.
 		/// </summary>
@@ -214,7 +214,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 			}
 			return stringWriter.ToString();
 		}
-		
+
 		/// <summary>
 		/// Creates a substring of this rich text.
 		/// </summary>
@@ -230,7 +230,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 			model.UpdateOffsets(map);
 			return new RichText(newText, model);
 		}
-		
+
 		/// <summary>
 		/// Concatenates the specified rich texts.
 		/// </summary>
@@ -249,7 +249,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 			}
 			return new RichText(newText, model);
 		}
-		
+
 		/// <summary>
 		/// Concatenates the specified rich texts.
 		/// </summary>
@@ -257,7 +257,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 		{
 			return RichText.Concat(a, b);
 		}
-		
+
 		/// <summary>
 		/// Implicit conversion from string to RichText.
 		/// </summary>

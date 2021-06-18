@@ -18,6 +18,7 @@
 
 using System;
 using System.Linq;
+
 using ICSharpCode.AvalonEdit.Document;
 
 namespace ICSharpCode.AvalonEdit.Rendering
@@ -32,24 +33,24 @@ namespace ICSharpCode.AvalonEdit.Rendering
 		DocumentLine currentDocumentLine;
 		int firstLineStart;
 		int currentDocumentLineStartOffset, currentDocumentLineEndOffset;
-		
+
 		/// <summary>
 		/// Gets the current ITextRunConstructionContext.
 		/// </summary>
 		protected ITextRunConstructionContext CurrentContext { get; private set; }
-		
+
 		/// <inheritdoc/>
 		protected override void Colorize(ITextRunConstructionContext context)
 		{
 			if (context == null)
 				throw new ArgumentNullException("context");
 			this.CurrentContext = context;
-			
+
 			currentDocumentLine = context.VisualLine.FirstDocumentLine;
 			firstLineStart = currentDocumentLineStartOffset = currentDocumentLine.Offset;
 			currentDocumentLineEndOffset = currentDocumentLineStartOffset + currentDocumentLine.Length;
 			int currentDocumentLineTotalEndOffset = currentDocumentLineStartOffset + currentDocumentLine.TotalLength;
-			
+
 			if (context.VisualLine.FirstDocumentLine == context.VisualLine.LastDocumentLine) {
 				ColorizeLine(currentDocumentLine);
 			} else {
@@ -69,12 +70,12 @@ namespace ICSharpCode.AvalonEdit.Rendering
 			currentDocumentLine = null;
 			this.CurrentContext = null;
 		}
-		
+
 		/// <summary>
 		/// Override this method to colorize an individual document line.
 		/// </summary>
 		protected abstract void ColorizeLine(DocumentLine line);
-		
+
 		/// <summary>
 		/// Changes a part of the current document line.
 		/// </summary>

@@ -17,6 +17,7 @@
 // DEALINGS IN THE SOFTWARE.
 
 using System;
+
 using ICSharpCode.AvalonEdit.Document;
 
 namespace ICSharpCode.AvalonEdit.Indentation.CSharp
@@ -32,7 +33,7 @@ namespace ICSharpCode.AvalonEdit.Indentation.CSharp
 		public CSharpIndentationStrategy()
 		{
 		}
-		
+
 		/// <summary>
 		/// Creates a new CSharpIndentationStrategy and initializes the settings using the text editor options.
 		/// </summary>
@@ -40,9 +41,9 @@ namespace ICSharpCode.AvalonEdit.Indentation.CSharp
 		{
 			this.IndentationString = options.IndentationString;
 		}
-		
+
 		string indentationString = "\t";
-		
+
 		/// <summary>
 		/// Gets/Sets the indentation string.
 		/// </summary>
@@ -54,7 +55,7 @@ namespace ICSharpCode.AvalonEdit.Indentation.CSharp
 				indentationString = value;
 			}
 		}
-		
+
 		/// <summary>
 		/// Performs indentation using the specified document accessor.
 		/// </summary>
@@ -67,25 +68,25 @@ namespace ICSharpCode.AvalonEdit.Indentation.CSharp
 			IndentationSettings settings = new IndentationSettings();
 			settings.IndentString = this.IndentationString;
 			settings.LeaveEmptyLines = keepEmptyLines;
-			
+
 			IndentationReformatter r = new IndentationReformatter();
 			r.Reformat(document, settings);
 		}
-		
+
 		/// <inheritdoc cref="IIndentationStrategy.IndentLine"/>
 		public override void IndentLine(TextDocument document, DocumentLine line)
 		{
 			int lineNr = line.LineNumber;
 			TextDocumentAccessor acc = new TextDocumentAccessor(document, lineNr, lineNr);
 			Indent(acc, false);
-			
+
 			string t = acc.Text;
 			if (t.Length == 0) {
 				// use AutoIndentation for new lines in comments / verbatim strings.
 				base.IndentLine(document, line);
 			}
 		}
-		
+
 		/// <inheritdoc cref="IIndentationStrategy.IndentLines"/>
 		public override void IndentLines(TextDocument document, int beginLine, int endLine)
 		{

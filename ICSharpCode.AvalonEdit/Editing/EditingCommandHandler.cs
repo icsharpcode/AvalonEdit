@@ -18,7 +18,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -26,12 +25,10 @@ using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Input;
+
 using ICSharpCode.AvalonEdit.Document;
 using ICSharpCode.AvalonEdit.Highlighting;
 using ICSharpCode.AvalonEdit.Utils;
-#if NREFACTORY
-using ICSharpCode.NRefactory.Editor;
-#endif
 
 namespace ICSharpCode.AvalonEdit.Editing
 {
@@ -51,16 +48,16 @@ namespace ICSharpCode.AvalonEdit.Editing
 			handler.InputBindings.AddRange(InputBindings);
 			return handler;
 		}
-		
+
 		static readonly List<CommandBinding> CommandBindings = new List<CommandBinding>();
 		static readonly List<InputBinding> InputBindings = new List<InputBinding>();
-		
+
 		static void AddBinding(ICommand command, ModifierKeys modifiers, Key key, ExecutedRoutedEventHandler handler)
 		{
 			CommandBindings.Add(new CommandBinding(command, handler));
 			InputBindings.Add(TextAreaDefaultInputHandler.CreateFrozenKeyBinding(command, modifiers, key));
 		}
-		
+
 		static EditingCommandHandler()
 		{
 			CommandBindings.Add(new CommandBinding(ApplicationCommands.Delete, OnDelete(CaretMovementType.None), CanDelete));
@@ -77,7 +74,7 @@ namespace ICSharpCode.AvalonEdit.Editing
 			CommandBindings.Add(new CommandBinding(ApplicationCommands.Copy, OnCopy, CanCutOrCopy));
 			CommandBindings.Add(new CommandBinding(ApplicationCommands.Cut, OnCut, CanCutOrCopy));
 			CommandBindings.Add(new CommandBinding(ApplicationCommands.Paste, OnPaste, CanPaste));
-			
+
 			CommandBindings.Add(new CommandBinding(AvalonEditCommands.ToggleOverstrike, OnToggleOverstrike));
 			CommandBindings.Add(new CommandBinding(AvalonEditCommands.DeleteLine, OnDeleteLine));
 
@@ -95,15 +92,15 @@ namespace ICSharpCode.AvalonEdit.Editing
 			CommandBindings.Add(new CommandBinding(AvalonEditCommands.ConvertLeadingTabsToSpaces, OnConvertLeadingTabsToSpaces));
 			CommandBindings.Add(new CommandBinding(AvalonEditCommands.ConvertLeadingSpacesToTabs, OnConvertLeadingSpacesToTabs));
 			CommandBindings.Add(new CommandBinding(AvalonEditCommands.IndentSelection, OnIndentSelection));
-			
+
 			TextAreaDefaultInputHandler.WorkaroundWPFMemoryLeak(InputBindings);
 		}
-		
+
 		static TextArea GetTextArea(object target)
 		{
 			return target as TextArea;
 		}
-		
+
 		#region Text Transformation Helpers
 		enum DefaultSegmentType
 		{
@@ -111,7 +108,7 @@ namespace ICSharpCode.AvalonEdit.Editing
 			WholeDocument,
 			CurrentLine
 		}
-		
+
 		/// <summary>
 		/// Calls transformLine on all lines in the selected range.
 		/// transformLine needs to handle read-only segments!
@@ -151,7 +148,7 @@ namespace ICSharpCode.AvalonEdit.Editing
 				args.Handled = true;
 			}
 		}
-		
+
 		/// <summary>
 		/// Calls transformLine on all writable segment in the selected range.
 		/// </summary>
@@ -185,7 +182,7 @@ namespace ICSharpCode.AvalonEdit.Editing
 			}
 		}
 		#endregion
-		
+
 		#region EnterLineBreak
 		static void OnEnter(object target, ExecutedRoutedEventArgs args)
 		{
@@ -196,7 +193,7 @@ namespace ICSharpCode.AvalonEdit.Editing
 			}
 		}
 		#endregion
-		
+
 		#region Tab
 		static void OnTab(object target, ExecutedRoutedEventArgs args)
 		{
@@ -228,7 +225,7 @@ namespace ICSharpCode.AvalonEdit.Editing
 				args.Handled = true;
 			}
 		}
-		
+
 		static void OnShiftTab(object target, ExecutedRoutedEventArgs args)
 		{
 			TransformSelectedLines(
@@ -244,7 +241,7 @@ namespace ICSharpCode.AvalonEdit.Editing
 				}, target, args, DefaultSegmentType.CurrentLine);
 		}
 		#endregion
-		
+
 		#region Delete
 		static ExecutedRoutedEventHandler OnDelete(CaretMovementType caretMovement)
 		{
@@ -264,9 +261,13 @@ namespace ICSharpCode.AvalonEdit.Editing
 						// thus we need to validate endPos before using it in the selection.
 						if (endPos.Line < 1 || endPos.Column < 1)
 							endPos = new TextViewPosition(Math.Max(endPos.Line, 1), Math.Max(endPos.Column, 1));
+						// Don't do anything if the number of lines of a rectangular selection would be changed by the deletion.
+						if (textArea.Selection is RectangleSelection && startPos.Line != endPos.Line)
+							return;
 						// Don't select the text to be deleted; just reuse the ReplaceSelectionWithText logic
-						var sel = new SimpleSelection(textArea, startPos, endPos);
-						sel.ReplaceSelectionWithText(string.Empty);
+						// Reuse the existing selection, so that we continue using the same logic
+						textArea.Selection.StartSelectionOrSetEndpoint(startPos, endPos)
+							.ReplaceSelectionWithText(string.Empty);
 					} else {
 						textArea.RemoveSelectedText();
 					}
@@ -275,7 +276,7 @@ namespace ICSharpCode.AvalonEdit.Editing
 				}
 			};
 		}
-		
+
 		static void CanDelete(object target, CanExecuteRoutedEventArgs args)
 		{
 			// HasSomethingSelected for delete command
@@ -286,7 +287,7 @@ namespace ICSharpCode.AvalonEdit.Editing
 			}
 		}
 		#endregion
-		
+
 		#region Clipboard commands
 		static void CanCutOrCopy(object target, CanExecuteRoutedEventArgs args)
 		{
@@ -297,7 +298,7 @@ namespace ICSharpCode.AvalonEdit.Editing
 				args.Handled = true;
 			}
 		}
-		
+
 		static void OnCopy(object target, ExecutedRoutedEventArgs args)
 		{
 			TextArea textArea = GetTextArea(target);
@@ -311,7 +312,7 @@ namespace ICSharpCode.AvalonEdit.Editing
 				args.Handled = true;
 			}
 		}
-		
+
 		static void OnCut(object target, ExecutedRoutedEventArgs args)
 		{
 			TextArea textArea = GetTextArea(target);
@@ -332,7 +333,7 @@ namespace ICSharpCode.AvalonEdit.Editing
 				args.Handled = true;
 			}
 		}
-		
+
 		static bool CopySelectedText(TextArea textArea)
 		{
 			var data = textArea.Selection.CreateDataObject(textArea);
@@ -340,29 +341,29 @@ namespace ICSharpCode.AvalonEdit.Editing
 			textArea.RaiseEvent(copyingEventArgs);
 			if (copyingEventArgs.CommandCancelled)
 				return false;
-			
+
 			try {
 				Clipboard.SetDataObject(data, true);
 			} catch (ExternalException) {
 				// Apparently this exception sometimes happens randomly.
 				// The MS controls just ignore it, so we'll do the same.
 			}
-			
+
 			string text = textArea.Selection.GetText();
 			text = TextUtilities.NormalizeNewLines(text, Environment.NewLine);
 			textArea.OnTextCopied(new TextEventArgs(text));
 			return true;
 		}
-		
+
 		const string LineSelectedType = "MSDEVLineSelect";  // This is the type VS 2003 and 2005 use for flagging a whole line copy
-		
+
 		public static bool ConfirmDataFormat(TextArea textArea, DataObject dataObject, string format)
 		{
 			var e = new DataObjectSettingDataEventArgs(dataObject, format);
 			textArea.RaiseEvent(e);
 			return !e.CommandCancelled;
 		}
-		
+
 		static bool CopyWholeLine(TextArea textArea, DocumentLine line)
 		{
 			ISegment wholeLine = new SimpleSegment(line.Offset, line.TotalLength);
@@ -372,25 +373,25 @@ namespace ICSharpCode.AvalonEdit.Editing
 			DataObject data = new DataObject();
 			if (ConfirmDataFormat(textArea, data, DataFormats.UnicodeText))
 				data.SetText(text);
-			
+
 			// Also copy text in HTML format to clipboard - good for pasting text into Word
 			// or to the SharpDevelop forums.
 			if (ConfirmDataFormat(textArea, data, DataFormats.Html)) {
 				IHighlighter highlighter = textArea.GetService(typeof(IHighlighter)) as IHighlighter;
 				HtmlClipboard.SetHtml(data, HtmlClipboard.CreateHtmlFragment(textArea.Document, highlighter, wholeLine, new HtmlOptions(textArea.Options)));
 			}
-			
+
 			if (ConfirmDataFormat(textArea, data, LineSelectedType)) {
 				MemoryStream lineSelected = new MemoryStream(1);
 				lineSelected.WriteByte(1);
 				data.SetData(LineSelectedType, lineSelected, false);
 			}
-			
+
 			var copyingEventArgs = new DataObjectCopyingEventArgs(data, false);
 			textArea.RaiseEvent(copyingEventArgs);
 			if (copyingEventArgs.CommandCancelled)
 				return false;
-			
+
 			try {
 				Clipboard.SetDataObject(data, true);
 			} catch (ExternalException) {
@@ -401,7 +402,7 @@ namespace ICSharpCode.AvalonEdit.Editing
 			textArea.OnTextCopied(new TextEventArgs(text));
 			return true;
 		}
-		
+
 		static void CanPaste(object target, CanExecuteRoutedEventArgs args)
 		{
 			TextArea textArea = GetTextArea(target);
@@ -413,7 +414,7 @@ namespace ICSharpCode.AvalonEdit.Editing
 				args.Handled = true;
 			}
 		}
-		
+
 		static void OnPaste(object target, ExecutedRoutedEventArgs args)
 		{
 			TextArea textArea = GetTextArea(target);
@@ -426,19 +427,19 @@ namespace ICSharpCode.AvalonEdit.Editing
 				}
 				if (dataObject == null)
 					return;
-				
+
 				var pastingEventArgs = new DataObjectPastingEventArgs(dataObject, false, DataFormats.UnicodeText);
 				textArea.RaiseEvent(pastingEventArgs);
 				if (pastingEventArgs.CommandCancelled)
 					return;
-				
+
 				string text = GetTextToPaste(pastingEventArgs, textArea);
-				
+
 				if (!string.IsNullOrEmpty(text)) {
 					dataObject = pastingEventArgs.DataObject;
 					bool fullLine = textArea.Options.CutCopyWholeLine && dataObject.GetDataPresent(LineSelectedType);
 					bool rectangular = dataObject.GetDataPresent(RectangleSelection.RectangularSelectionDataType);
-					
+
 					if (fullLine) {
 						DocumentLine currentLine = textArea.Document.GetLineByNumber(textArea.Caret.Line);
 						if (textArea.ReadOnlySectionProvider.CanInsert(currentLine.Offset)) {
@@ -455,7 +456,7 @@ namespace ICSharpCode.AvalonEdit.Editing
 				args.Handled = true;
 			}
 		}
-		
+
 		internal static string GetTextToPaste(DataObjectPastingEventArgs pastingEventArgs, TextArea textArea)
 		{
 			var dataObject = pastingEventArgs.DataObject;
@@ -476,7 +477,7 @@ namespace ICSharpCode.AvalonEdit.Editing
 					text = (string)dataObject.GetData(DataFormats.Text);
 				else
 					return null; // no text data format
-				// convert text back to correct newlines for this document
+								 // convert text back to correct newlines for this document
 				string newLine = TextUtilities.GetNewLineFromDocument(textArea.Document, textArea.Caret.Line);
 				text = TextUtilities.NormalizeNewLines(text, newLine);
 				text = textArea.Options.ConvertTabsToSpaces ? text.Replace("\t", new String(' ', textArea.Options.IndentationSize)) : text;
@@ -484,19 +485,22 @@ namespace ICSharpCode.AvalonEdit.Editing
 			} catch (OutOfMemoryException) {
 				// may happen when trying to paste a huge string
 				return null;
+			} catch (COMException) {
+				// may happen with incorrect data => Data on clipboard is invalid (Exception from HRESULT: 0x800401D3 (CLIPBRD_E_BAD_DATA))
+				return null;
 			}
 		}
 		#endregion
-		
+
 		#region Toggle Overstrike
 		static void OnToggleOverstrike(object target, ExecutedRoutedEventArgs args)
 		{
 			TextArea textArea = GetTextArea(target);
-			if (textArea != null && textArea.Options.AllowToggleOverstrikeMode) 
+			if (textArea != null && textArea.Options.AllowToggleOverstrikeMode)
 				textArea.OverstrikeMode = !textArea.OverstrikeMode;
 		}
 		#endregion
-		
+
 		#region DeleteLine
 		static void OnDeleteLine(object target, ExecutedRoutedEventArgs args)
 		{
@@ -580,7 +584,7 @@ namespace ICSharpCode.AvalonEdit.Editing
 					textArea.Document.Remove(TextUtilities.GetLeadingWhitespace(textArea.Document, line));
 				}, target, args, DefaultSegmentType.WholeDocument);
 		}
-		
+
 		static void OnRemoveTrailingWhitespace(object target, ExecutedRoutedEventArgs args)
 		{
 			TransformSelectedLines(
@@ -588,12 +592,12 @@ namespace ICSharpCode.AvalonEdit.Editing
 					textArea.Document.Remove(TextUtilities.GetTrailingWhitespace(textArea.Document, line));
 				}, target, args, DefaultSegmentType.WholeDocument);
 		}
-		
+
 		static void OnConvertTabsToSpaces(object target, ExecutedRoutedEventArgs args)
 		{
 			TransformSelectedSegments(ConvertTabsToSpaces, target, args, DefaultSegmentType.WholeDocument);
 		}
-		
+
 		static void OnConvertLeadingTabsToSpaces(object target, ExecutedRoutedEventArgs args)
 		{
 			TransformSelectedLines(
@@ -601,7 +605,7 @@ namespace ICSharpCode.AvalonEdit.Editing
 					ConvertTabsToSpaces(textArea, TextUtilities.GetLeadingWhitespace(textArea.Document, line));
 				}, target, args, DefaultSegmentType.WholeDocument);
 		}
-		
+
 		static void ConvertTabsToSpaces(TextArea textArea, ISegment segment)
 		{
 			TextDocument document = textArea.Document;
@@ -614,12 +618,12 @@ namespace ICSharpCode.AvalonEdit.Editing
 				}
 			}
 		}
-		
+
 		static void OnConvertSpacesToTabs(object target, ExecutedRoutedEventArgs args)
 		{
 			TransformSelectedSegments(ConvertSpacesToTabs, target, args, DefaultSegmentType.WholeDocument);
 		}
-		
+
 		static void OnConvertLeadingSpacesToTabs(object target, ExecutedRoutedEventArgs args)
 		{
 			TransformSelectedLines(
@@ -627,7 +631,7 @@ namespace ICSharpCode.AvalonEdit.Editing
 					ConvertSpacesToTabs(textArea, TextUtilities.GetLeadingWhitespace(textArea.Document, line));
 				}, target, args, DefaultSegmentType.WholeDocument);
 		}
-		
+
 		static void ConvertSpacesToTabs(TextArea textArea, ISegment segment)
 		{
 			TextDocument document = textArea.Document;
@@ -649,7 +653,7 @@ namespace ICSharpCode.AvalonEdit.Editing
 			}
 		}
 		#endregion
-		
+
 		#region Convert...Case
 		static void ConvertCase(Func<string, string> transformText, object target, ExecutedRoutedEventArgs args)
 		{
@@ -660,27 +664,27 @@ namespace ICSharpCode.AvalonEdit.Editing
 					textArea.Document.Replace(segment.Offset, segment.Length, newText, OffsetChangeMappingType.CharacterReplace);
 				}, target, args, DefaultSegmentType.WholeDocument);
 		}
-		
+
 		static void OnConvertToUpperCase(object target, ExecutedRoutedEventArgs args)
 		{
 			ConvertCase(CultureInfo.CurrentCulture.TextInfo.ToUpper, target, args);
 		}
-		
+
 		static void OnConvertToLowerCase(object target, ExecutedRoutedEventArgs args)
 		{
 			ConvertCase(CultureInfo.CurrentCulture.TextInfo.ToLower, target, args);
 		}
-		
+
 		static void OnConvertToTitleCase(object target, ExecutedRoutedEventArgs args)
 		{
 			ConvertCase(CultureInfo.CurrentCulture.TextInfo.ToTitleCase, target, args);
 		}
-		
+
 		static void OnInvertCase(object target, ExecutedRoutedEventArgs args)
 		{
 			ConvertCase(InvertCase, target, args);
 		}
-		
+
 		static string InvertCase(string text)
 		{
 			CultureInfo culture = CultureInfo.CurrentCulture;
@@ -692,11 +696,11 @@ namespace ICSharpCode.AvalonEdit.Editing
 			return new string(buffer);
 		}
 		#endregion
-		
+
 		static void OnIndentSelection(object target, ExecutedRoutedEventArgs args)
 		{
 			TextArea textArea = GetTextArea(target);
-			if (textArea != null && textArea.Document != null) {
+			if (textArea != null && textArea.Document != null && textArea.IndentationStrategy != null) {
 				using (textArea.Document.RunUpdate()) {
 					int start, end;
 					if (textArea.Selection.IsEmpty) {

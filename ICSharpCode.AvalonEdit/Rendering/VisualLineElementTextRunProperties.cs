@@ -18,9 +18,11 @@
 
 using System;
 using System.Globalization;
+using System.Linq;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.TextFormatting;
+
 using ICSharpCode.AvalonEdit.Utils;
 
 namespace ICSharpCode.AvalonEdit.Rendering
@@ -43,7 +45,7 @@ namespace ICSharpCode.AvalonEdit.Rendering
 		TextEffectCollection textEffects;
 		TextRunTypographyProperties typographyProperties;
 		NumberSubstitution numberSubstitution;
-		
+
 		/// <summary>
 		/// Creates a new VisualLineElementTextRunProperties instance that copies its values
 		/// from the specified <paramref name="textRunProperties"/>.
@@ -72,7 +74,7 @@ namespace ICSharpCode.AvalonEdit.Rendering
 			typographyProperties = textRunProperties.TypographyProperties;
 			numberSubstitution = textRunProperties.NumberSubstitution;
 		}
-		
+
 		/// <summary>
 		/// Creates a copy of this instance.
 		/// </summary>
@@ -80,17 +82,17 @@ namespace ICSharpCode.AvalonEdit.Rendering
 		{
 			return new VisualLineElementTextRunProperties(this);
 		}
-		
+
 		object ICloneable.Clone()
 		{
 			return Clone();
 		}
-		
+
 		/// <inheritdoc/>
 		public override Brush BackgroundBrush {
 			get { return backgroundBrush; }
 		}
-		
+
 		/// <summary>
 		/// Sets the <see cref="BackgroundBrush"/>.
 		/// </summary>
@@ -99,12 +101,12 @@ namespace ICSharpCode.AvalonEdit.Rendering
 			ExtensionMethods.CheckIsFrozen(value);
 			backgroundBrush = value;
 		}
-		
+
 		/// <inheritdoc/>
 		public override BaselineAlignment BaselineAlignment {
 			get { return baselineAlignment; }
 		}
-		
+
 		/// <summary>
 		/// Sets the <see cref="BaselineAlignment"/>.
 		/// </summary>
@@ -112,12 +114,12 @@ namespace ICSharpCode.AvalonEdit.Rendering
 		{
 			baselineAlignment = value;
 		}
-		
+
 		/// <inheritdoc/>
 		public override CultureInfo CultureInfo {
 			get { return cultureInfo; }
 		}
-		
+
 		/// <summary>
 		/// Sets the <see cref="CultureInfo"/>.
 		/// </summary>
@@ -127,12 +129,12 @@ namespace ICSharpCode.AvalonEdit.Rendering
 				throw new ArgumentNullException("value");
 			cultureInfo = value;
 		}
-		
+
 		/// <inheritdoc/>
 		public override double FontHintingEmSize {
 			get { return fontHintingEmSize; }
 		}
-		
+
 		/// <summary>
 		/// Sets the <see cref="FontHintingEmSize"/>.
 		/// </summary>
@@ -140,12 +142,12 @@ namespace ICSharpCode.AvalonEdit.Rendering
 		{
 			fontHintingEmSize = value;
 		}
-		
+
 		/// <inheritdoc/>
 		public override double FontRenderingEmSize {
 			get { return fontRenderingEmSize; }
 		}
-		
+
 		/// <summary>
 		/// Sets the <see cref="FontRenderingEmSize"/>.
 		/// </summary>
@@ -153,12 +155,12 @@ namespace ICSharpCode.AvalonEdit.Rendering
 		{
 			fontRenderingEmSize = value;
 		}
-		
+
 		/// <inheritdoc/>
 		public override Brush ForegroundBrush {
 			get { return foregroundBrush; }
 		}
-		
+
 		/// <summary>
 		/// Sets the <see cref="ForegroundBrush"/>.
 		/// </summary>
@@ -167,12 +169,12 @@ namespace ICSharpCode.AvalonEdit.Rendering
 			ExtensionMethods.CheckIsFrozen(value);
 			foregroundBrush = value;
 		}
-		
+
 		/// <inheritdoc/>
 		public override Typeface Typeface {
 			get { return typeface; }
 		}
-		
+
 		/// <summary>
 		/// Sets the <see cref="Typeface"/>.
 		/// </summary>
@@ -182,7 +184,7 @@ namespace ICSharpCode.AvalonEdit.Rendering
 				throw new ArgumentNullException("value");
 			typeface = value;
 		}
-		
+
 		/// <summary>
 		/// Gets the text decorations. The value may be null, a frozen <see cref="TextDecorationCollection"/>
 		/// or an unfrozen <see cref="TextDecorationCollection"/>.
@@ -193,16 +195,19 @@ namespace ICSharpCode.AvalonEdit.Rendering
 		public override TextDecorationCollection TextDecorations {
 			get { return textDecorations; }
 		}
-		
+
 		/// <summary>
 		/// Sets the <see cref="TextDecorations"/>.
 		/// </summary>
 		public void SetTextDecorations(TextDecorationCollection value)
 		{
 			ExtensionMethods.CheckIsFrozen(value);
-			textDecorations = value;
+			if (textDecorations == null)
+				textDecorations = value;
+			else
+				textDecorations = new TextDecorationCollection(textDecorations.Union(value));
 		}
-		
+
 		/// <summary>
 		/// Gets the text effects. The value may be null, a frozen <see cref="TextEffectCollection"/>
 		/// or an unfrozen <see cref="TextEffectCollection"/>.
@@ -213,7 +218,7 @@ namespace ICSharpCode.AvalonEdit.Rendering
 		public override TextEffectCollection TextEffects {
 			get { return textEffects; }
 		}
-		
+
 		/// <summary>
 		/// Sets the <see cref="TextEffects"/>.
 		/// </summary>
@@ -222,14 +227,14 @@ namespace ICSharpCode.AvalonEdit.Rendering
 			ExtensionMethods.CheckIsFrozen(value);
 			textEffects = value;
 		}
-		
+
 		/// <summary>
 		/// Gets the typography properties for the text run.
 		/// </summary>
 		public override TextRunTypographyProperties TypographyProperties {
 			get { return typographyProperties; }
 		}
-		
+
 		/// <summary>
 		/// Sets the <see cref="TypographyProperties"/>.
 		/// </summary>
@@ -237,14 +242,14 @@ namespace ICSharpCode.AvalonEdit.Rendering
 		{
 			typographyProperties = value;
 		}
-		
+
 		/// <summary>
 		/// Gets the number substitution settings for the text run.
 		/// </summary>
 		public override NumberSubstitution NumberSubstitution {
 			get { return numberSubstitution; }
 		}
-		
+
 		/// <summary>
 		/// Sets the <see cref="NumberSubstitution"/>.
 		/// </summary>

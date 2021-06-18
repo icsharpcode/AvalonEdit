@@ -1,0 +1,54 @@
+name: Build AvalonEdit
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        Configuration: [ Debug, Release ]
+    env:
+        Solution: '**/ICSharpCode.AvalonEdit.sln'
+        BuildPlatform: 'Any CPU'
+        BuildVersion: '6.1.2'
+    steps:
+    - uses: actions/checkout@v2
+    - name: Update project version
+      uses: roryprimrose/set-vs-sdk-project-version@v1
+      with:
+        projectFilter: '**/ICSharpCode.AvalonEdit.csproj'
+        version: ${{ env.BuildVersion }}.${{ github.run_number }}
+        assemblyVersion: ${{ env.BuildVersion }}.${{ github.run_number }}
+        fileVersion: ${{ env.BuildVersion }}.${{ github.run_number }}    
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 5.0.x
+    - name: Setup NuGet.exe
+      uses: nuget/setup-nuget@v1
+    - run: nuget restore ICSharpCode.AvalonEdit.sln 
+    - name: Build
+      run: dotnet build ICSharpCode.AvalonEdit.sln --no-restore -c ${{ matrix.configuration }}
+    - name: Test
+      run: dotnet test ICSharpCode.AvalonEdit.sln --no-build --verbosity normal -c ${{ matrix.configuration }}
+    - name: Style - tab check
+      run: python BuildTools\tidy.py
+    - name: Pack
+      run:  dotnet pack ICSharpCode.AvalonEdit/ICSharpCode.AvalonEdit.csproj -c ${{ matrix.configuration }}
+    - name: Upload NuGet
+      if: matrix.configuration == 'release'
+      uses: actions/upload-artifact@v2
+      with:
+        name: AvalonEdit NuGet Package (${{ matrix.configuration }})
+        path: ICSharpCode.AvalonEdit/bin/Release/AvalonEdit*.nupkg
+        if-no-files-found: error      
+    - name: Publish NuGet
+      if: github.ref == 'refs/heads/master' && matrix.configuration == 'release'
+      run: |
+        dotnet nuget push "ICSharpCode.AvalonEdit\bin\Release\AvalonEdit*.nupkg" --api-key ${{ secrets.GITHUB_TOKEN }} --source https://nuget.pkg.github.com/${{ github.repository_owner }}

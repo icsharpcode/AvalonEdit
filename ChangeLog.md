@@ -1,5 +1,29 @@
 Note: this changelog only lists major changes and fixes for major bugs. For a complete list of changes, see the git log.
 
+2021/06/01: AvalonEdit 6.1.2
+* TFM changes: netcoreapp3.0 removed in favor of netcoreapp3.1 (LTS), net5.0-windows added
+
+2021/03/15: AvalonEdit 6.1.1
+* Fix wrong implementation of attached properties
+
+2021/03/08: AvalonEdit 6.1.0
+* https://github.com/icsharpcode/AvalonEdit/compare/v6.0.1...v6.1.0
+
+2020/09/07: AvalonEdit 6.1 Preview 1
+* https://github.com/icsharpcode/AvalonEdit/compare/v6.0.1...v6.1-preview1
+
+2019/12/30: AvalonEdit 6.0.1
+* Minor bug fixes
+
+2019/09/24: AvalonEdit 6.0
+* Add support for .NET Core 3.0
+* Remove support for .NET 3.5
+* Add proper .editorconfig and fix formatting
+* Remove DOTNET4 and NREFACTORY symbols
+* Create snukpg and use SourceLink
+
+*Note: Versions 5.0.2, ..3 and ..4 are not contained in this change log*
+
 2014/06/28: AvalonEdit 5.0.1-pre
 * License changed from LGPL to MIT
 * New Feature: Hide mouse cursor while typing (enabled by default)

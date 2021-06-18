@@ -18,8 +18,8 @@
 
 using System;
 using System.Windows.Documents;
+
 using ICSharpCode.AvalonEdit.Document;
-using ICSharpCode.NRefactory.Editor;
 
 namespace ICSharpCode.AvalonEdit.Snippets
 {
@@ -30,7 +30,7 @@ namespace ICSharpCode.AvalonEdit.Snippets
 	public class SnippetBoundElement : SnippetElement
 	{
 		SnippetReplaceableTextElement targetElement;
-		
+
 		/// <summary>
 		/// Gets/Sets the target element.
 		/// </summary>
@@ -38,7 +38,7 @@ namespace ICSharpCode.AvalonEdit.Snippets
 			get { return targetElement; }
 			set { targetElement = value; }
 		}
-		
+
 		/// <summary>
 		/// Converts the text before copying it.
 		/// </summary>
@@ -46,7 +46,7 @@ namespace ICSharpCode.AvalonEdit.Snippets
 		{
 			return input;
 		}
-		
+
 		/// <inheritdoc/>
 		public override void Insert(InsertionContext context)
 		{
@@ -65,7 +65,7 @@ namespace ICSharpCode.AvalonEdit.Snippets
 				context.RegisterActiveElement(this, new BoundActiveElement(context, targetElement, this, segment));
 			}
 		}
-		
+
 		/// <inheritdoc/>
 		public override Inline ToTextRun()
 		{
@@ -78,7 +78,7 @@ namespace ICSharpCode.AvalonEdit.Snippets
 			return base.ToTextRun();
 		}
 	}
-	
+
 	sealed class BoundActiveElement : IActiveElement
 	{
 		InsertionContext context;
@@ -86,7 +86,7 @@ namespace ICSharpCode.AvalonEdit.Snippets
 		SnippetBoundElement boundElement;
 		internal IReplaceableActiveElement targetElement;
 		AnchorSegment segment;
-		
+
 		public BoundActiveElement(InsertionContext context, SnippetReplaceableTextElement targetSnippetElement, SnippetBoundElement boundElement, AnchorSegment segment)
 		{
 			this.context = context;
@@ -94,7 +94,7 @@ namespace ICSharpCode.AvalonEdit.Snippets
 			this.boundElement = boundElement;
 			this.segment = segment;
 		}
-		
+
 		public void OnInsertionCompleted()
 		{
 			targetElement = context.GetActiveElement(targetSnippetElement) as IReplaceableActiveElement;
@@ -102,7 +102,7 @@ namespace ICSharpCode.AvalonEdit.Snippets
 				targetElement.TextChanged += targetElement_TextChanged;
 			}
 		}
-		
+
 		void targetElement_TextChanged(object sender, EventArgs e)
 		{
 			// Don't copy text if the segments overlap (we would get an endless loop).
@@ -122,15 +122,15 @@ namespace ICSharpCode.AvalonEdit.Snippets
 				}
 			}
 		}
-		
+
 		public void Deactivate(SnippetEventArgs e)
 		{
 		}
-		
+
 		public bool IsEditable {
 			get { return false; }
 		}
-		
+
 		public ISegment Segment {
 			get { return segment; }
 		}

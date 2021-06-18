@@ -17,8 +17,6 @@
 // DEALINGS IN THE SOFTWARE.
 
 using System;
-using ICSharpCode.AvalonEdit.Document;
-using ICSharpCode.NRefactory.Editor;
 
 namespace ICSharpCode.AvalonEdit.Document
 {
@@ -30,7 +28,7 @@ namespace ICSharpCode.AvalonEdit.Document
 	public class DocumentChangeEventArgs : TextChangeEventArgs
 	{
 		volatile OffsetChangeMap offsetChangeMap;
-		
+
 		/// <summary>
 		/// Gets the OffsetChangeMap associated with this document change.
 		/// </summary>
@@ -46,12 +44,12 @@ namespace ICSharpCode.AvalonEdit.Document
 				return map;
 			}
 		}
-		
+
 		internal OffsetChangeMapEntry CreateSingleChangeMapEntry()
 		{
 			return new OffsetChangeMapEntry(this.Offset, this.RemovalLength, this.InsertionLength);
 		}
-		
+
 		/// <summary>
 		/// Gets the OffsetChangeMap, or null if the default offset map (=single replacement) is being used.
 		/// </summary>
@@ -60,7 +58,7 @@ namespace ICSharpCode.AvalonEdit.Document
 				return offsetChangeMap;
 			}
 		}
-		
+
 		/// <summary>
 		/// Gets the new offset where the specified offset moves after this document change.
 		/// </summary>
@@ -71,7 +69,7 @@ namespace ICSharpCode.AvalonEdit.Document
 			else
 				return CreateSingleChangeMapEntry().GetNewOffset(offset, movementType);
 		}
-		
+
 		/// <summary>
 		/// Creates a new DocumentChangeEventArgs object.
 		/// </summary>
@@ -79,7 +77,7 @@ namespace ICSharpCode.AvalonEdit.Document
 			: this(offset, removedText, insertedText, null)
 		{
 		}
-		
+
 		/// <summary>
 		/// Creates a new DocumentChangeEventArgs object.
 		/// </summary>
@@ -88,7 +86,7 @@ namespace ICSharpCode.AvalonEdit.Document
 		{
 			SetOffsetChangeMap(offsetChangeMap);
 		}
-		
+
 		/// <summary>
 		/// Creates a new DocumentChangeEventArgs object.
 		/// </summary>
@@ -97,7 +95,7 @@ namespace ICSharpCode.AvalonEdit.Document
 		{
 			SetOffsetChangeMap(offsetChangeMap);
 		}
-		
+
 		void SetOffsetChangeMap(OffsetChangeMap offsetChangeMap)
 		{
 			if (offsetChangeMap != null) {
@@ -108,7 +106,7 @@ namespace ICSharpCode.AvalonEdit.Document
 				this.offsetChangeMap = offsetChangeMap;
 			}
 		}
-		
+
 		/// <inheritdoc/>
 		public override TextChangeEventArgs Invert()
 		{

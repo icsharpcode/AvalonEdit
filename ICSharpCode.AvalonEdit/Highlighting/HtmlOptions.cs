@@ -18,11 +18,7 @@
 
 using System;
 using System.IO;
-#if DOTNET4
 using System.Net;
-#else
-using System.Web;
-#endif
 
 namespace ICSharpCode.AvalonEdit.Highlighting
 {
@@ -38,7 +34,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 		{
 			this.TabSize = 4;
 		}
-		
+
 		/// <summary>
 		/// Creates a new HtmlOptions instance that copies applicable options from the <see cref="TextEditorOptions"/>.
 		/// </summary>
@@ -48,12 +44,12 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 				throw new ArgumentNullException("options");
 			this.TabSize = options.IndentationSize;
 		}
-		
+
 		/// <summary>
 		/// The amount of spaces a tab gets converted to.
 		/// </summary>
 		public int TabSize { get; set; }
-		
+
 		/// <summary>
 		/// Writes the HTML attribute for the style to the text writer.
 		/// </summary>
@@ -64,14 +60,10 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 			if (color == null)
 				throw new ArgumentNullException("color");
 			writer.Write(" style=\"");
-			#if DOTNET4
 			WebUtility.HtmlEncode(color.ToCss(), writer);
-			#else
-			HttpUtility.HtmlEncode(color.ToCss(), writer);
-			#endif
 			writer.Write('"');
 		}
-		
+
 		/// <summary>
 		/// Gets whether the color needs to be written out to HTML.
 		/// </summary>

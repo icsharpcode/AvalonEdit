@@ -19,9 +19,6 @@
 using System;
 using System.Globalization;
 using System.Windows.Documents;
-#if NREFACTORY
-using ICSharpCode.NRefactory.Editor;
-#endif
 
 namespace ICSharpCode.AvalonEdit.Document
 {
@@ -56,7 +53,7 @@ namespace ICSharpCode.AvalonEdit.Document
 		/// </summary>
 		EveryCodepoint
 	}
-	
+
 	/// <summary>
 	/// Static helper methods for working with text.
 	/// </summary>
@@ -70,7 +67,7 @@ namespace ICSharpCode.AvalonEdit.Document
 			"DC4", "NAK", "SYN", "ETB", "CAN", "EM", "SUB", "ESC", "FS", "GS",
 			"RS", "US"
 		};
-		
+
 		// DEL (ASCII 127) and
 		// the names of the control characters in the C1 block (Unicode 128 to 159)
 		static readonly string[] delAndC1Table = {
@@ -80,7 +77,7 @@ namespace ICSharpCode.AvalonEdit.Document
 			"CCH", "MW", "SPA", "EPA", "SOS", "SGCI", "SCI", "CSI", "ST", "OSC",
 			"PM", "APC"
 		};
-		
+
 		/// <summary>
 		/// Gets the name of the control character.
 		/// For unknown characters, the unicode codepoint is returned as 4-digit hexadecimal value.
@@ -96,7 +93,7 @@ namespace ICSharpCode.AvalonEdit.Document
 				return num.ToString("x4", CultureInfo.InvariantCulture);
 		}
 		#endregion
-		
+
 		#region GetWhitespace
 		/// <summary>
 		/// Gets all whitespace (' ' and '\t', but no newlines) after offset.
@@ -105,7 +102,7 @@ namespace ICSharpCode.AvalonEdit.Document
 		/// <param name="offset">The offset where the whitespace starts.</param>
 		/// <returns>The segment containing the whitespace.</returns>
 		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "Whitespace",
-		                                                 Justification = "WPF uses 'Whitespace'")]
+														 Justification = "WPF uses 'Whitespace'")]
 		public static ISegment GetWhitespaceAfter(ITextSource textSource, int offset)
 		{
 			if (textSource == null)
@@ -118,7 +115,7 @@ namespace ICSharpCode.AvalonEdit.Document
 			}
 			return new SimpleSegment(offset, pos - offset);
 		}
-		
+
 		/// <summary>
 		/// Gets all whitespace (' ' and '\t', but no newlines) before offset.
 		/// </summary>
@@ -126,7 +123,7 @@ namespace ICSharpCode.AvalonEdit.Document
 		/// <param name="offset">The offset where the whitespace ends.</param>
 		/// <returns>The segment containing the whitespace.</returns>
 		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "Whitespace",
-		                                                 Justification = "WPF uses 'Whitespace'")]
+														 Justification = "WPF uses 'Whitespace'")]
 		public static ISegment GetWhitespaceBefore(ITextSource textSource, int offset)
 		{
 			if (textSource == null)
@@ -140,28 +137,28 @@ namespace ICSharpCode.AvalonEdit.Document
 			pos++; // go back the one character that isn't whitespace
 			return new SimpleSegment(pos, offset - pos);
 		}
-		
+
 		/// <summary>
 		/// Gets the leading whitespace segment on the document line.
 		/// </summary>
 		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "Whitespace",
-		                                                 Justification = "WPF uses 'Whitespace'")]
+														 Justification = "WPF uses 'Whitespace'")]
 		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters",
-		                                                 Justification = "Parameter cannot be ITextSource because it must belong to the DocumentLine")]
+														 Justification = "Parameter cannot be ITextSource because it must belong to the DocumentLine")]
 		public static ISegment GetLeadingWhitespace(TextDocument document, DocumentLine documentLine)
 		{
 			if (documentLine == null)
 				throw new ArgumentNullException("documentLine");
 			return GetWhitespaceAfter(document, documentLine.Offset);
 		}
-		
+
 		/// <summary>
 		/// Gets the trailing whitespace segment on the document line.
 		/// </summary>
 		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "Whitespace",
-		                                                 Justification = "WPF uses 'Whitespace'")]
+														 Justification = "WPF uses 'Whitespace'")]
 		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters",
-		                                                 Justification = "Parameter cannot be ITextSource because it must belong to the DocumentLine")]
+														 Justification = "Parameter cannot be ITextSource because it must belong to the DocumentLine")]
 		public static ISegment GetTrailingWhitespace(TextDocument document, DocumentLine documentLine)
 		{
 			if (documentLine == null)
@@ -175,7 +172,7 @@ namespace ICSharpCode.AvalonEdit.Document
 				return segment;
 		}
 		#endregion
-		
+
 		#region GetSingleIndentationSegment
 		/// <summary>
 		/// Gets a single indentation segment starting at <paramref name="offset"/> - at most one tab
@@ -211,7 +208,7 @@ namespace ICSharpCode.AvalonEdit.Document
 			return new SimpleSegment(offset, pos - offset);
 		}
 		#endregion
-		
+
 		#region GetCharacterClass
 		/// <summary>
 		/// Gets whether the character is whitespace, part of an identifier, or line terminator.
@@ -225,7 +222,7 @@ namespace ICSharpCode.AvalonEdit.Document
 				return CharacterClass.IdentifierPart;
 			return GetCharacterClass(char.GetUnicodeCategory(c));
 		}
-		
+
 		static CharacterClass GetCharacterClass(char highSurrogate, char lowSurrogate)
 		{
 			if (char.IsSurrogatePair(highSurrogate, lowSurrogate)) {
@@ -235,7 +232,7 @@ namespace ICSharpCode.AvalonEdit.Document
 				return CharacterClass.Other;
 			}
 		}
-		
+
 		static CharacterClass GetCharacterClass(UnicodeCategory c)
 		{
 			switch (c) {
@@ -260,7 +257,7 @@ namespace ICSharpCode.AvalonEdit.Document
 			}
 		}
 		#endregion
-		
+
 		#region GetNextCaretPosition
 		/// <summary>
 		/// Gets the next caret position.
@@ -292,8 +289,7 @@ namespace ICSharpCode.AvalonEdit.Document
 					throw new ArgumentException("Unsupported CaretPositioningMode: " + mode, "mode");
 			}
 			if (direction != LogicalDirection.Backward
-			    && direction != LogicalDirection.Forward)
-			{
+				&& direction != LogicalDirection.Forward) {
 				throw new ArgumentException("Invalid LogicalDirection: " + direction, "direction");
 			}
 			int textLength = textSource.TextLength;
@@ -307,12 +303,12 @@ namespace ICSharpCode.AvalonEdit.Document
 			}
 			while (true) {
 				int nextPos = (direction == LogicalDirection.Backward) ? offset - 1 : offset + 1;
-				
+
 				// return -1 if there is no further caret position in the text source
 				// we also need this to handle offset values outside the valid range
 				if (nextPos < 0 || nextPos > textLength)
 					return -1;
-				
+
 				// check if we've run against the textSource borders.
 				// a 'textSource' usually isn't the whole document, but a single VisualLineElement.
 				if (nextPos == 0) {
@@ -351,12 +347,12 @@ namespace ICSharpCode.AvalonEdit.Document
 				offset = nextPos;
 			}
 		}
-		
+
 		static bool IsNormal(CaretPositioningMode mode)
 		{
 			return mode == CaretPositioningMode.Normal || mode == CaretPositioningMode.EveryCodepoint;
 		}
-		
+
 		static bool StopBetweenCharacters(CaretPositioningMode mode, CharacterClass charBefore, CharacterClass charAfter)
 		{
 			if (mode == CaretPositioningMode.EveryCodepoint)
@@ -369,19 +365,17 @@ namespace ICSharpCode.AvalonEdit.Document
 				return true;
 			if (charBefore == charAfter) {
 				if (charBefore == CharacterClass.Other &&
-				    (mode == CaretPositioningMode.WordBorderOrSymbol || mode == CaretPositioningMode.WordStartOrSymbol))
-				{
+					(mode == CaretPositioningMode.WordBorderOrSymbol || mode == CaretPositioningMode.WordStartOrSymbol)) {
 					// With the "OrSymbol" modes, there's a word border and start between any two unknown characters
 					return true;
 				}
 			} else {
 				// this looks like a possible border
-				
+
 				// if we're looking for word starts, check that this is a word start (and not a word end)
 				// if we're just checking for word borders, accept unconditionally
 				if (!((mode == CaretPositioningMode.WordStart || mode == CaretPositioningMode.WordStartOrSymbol)
-				      && (charAfter == CharacterClass.Whitespace || charAfter == CharacterClass.LineTerminator)))
-				{
+					  && (charAfter == CharacterClass.Whitespace || charAfter == CharacterClass.LineTerminator))) {
 					return true;
 				}
 			}
@@ -389,7 +383,7 @@ namespace ICSharpCode.AvalonEdit.Document
 		}
 		#endregion
 	}
-	
+
 	/// <summary>
 	/// Classifies a character as whitespace, line terminator, part of an identifier, or other.
 	/// </summary>
@@ -403,7 +397,7 @@ namespace ICSharpCode.AvalonEdit.Document
 		/// The character is whitespace (but not line terminator).
 		/// </summary>
 		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "Whitespace",
-		                                                 Justification = "WPF uses 'Whitespace'")]
+														 Justification = "WPF uses 'Whitespace'")]
 		Whitespace,
 		/// <summary>
 		/// The character can be part of an identifier (Letter, digit or underscore).

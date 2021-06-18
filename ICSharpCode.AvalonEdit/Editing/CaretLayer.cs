@@ -20,7 +20,6 @@ using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using System.Windows.Media.Animation;
 using System.Windows.Threading;
 
 using ICSharpCode.AvalonEdit.Rendering;
@@ -31,13 +30,13 @@ namespace ICSharpCode.AvalonEdit.Editing
 	sealed class CaretLayer : Layer
 	{
 		TextArea textArea;
-		
+
 		bool isVisible;
 		Rect caretRectangle;
-		
+
 		DispatcherTimer caretBlinkTimer = new DispatcherTimer();
 		bool blink;
-		
+
 		public CaretLayer(TextArea textArea) : base(textArea.TextView, KnownLayer.Caret)
 		{
 			this.textArea = textArea;
@@ -50,7 +49,7 @@ namespace ICSharpCode.AvalonEdit.Editing
 			blink = !blink;
 			InvalidateVisual();
 		}
-		
+
 		public void Show(Rect caretRectangle)
 		{
 			this.caretRectangle = caretRectangle;
@@ -58,7 +57,7 @@ namespace ICSharpCode.AvalonEdit.Editing
 			StartBlinkAnimation();
 			InvalidateVisual();
 		}
-		
+
 		public void Hide()
 		{
 			if (isVisible) {
@@ -67,25 +66,25 @@ namespace ICSharpCode.AvalonEdit.Editing
 				InvalidateVisual();
 			}
 		}
-		
+
 		void StartBlinkAnimation()
 		{
 			TimeSpan blinkTime = Win32.CaretBlinkTime;
 			blink = true; // the caret should visible initially
-			// This is important if blinking is disabled (system reports a negative blinkTime)
+						  // This is important if blinking is disabled (system reports a negative blinkTime)
 			if (blinkTime.TotalMilliseconds > 0) {
 				caretBlinkTimer.Interval = blinkTime;
 				caretBlinkTimer.Start();
 			}
 		}
-		
+
 		void StopBlinkAnimation()
 		{
 			caretBlinkTimer.Stop();
 		}
-		
+
 		internal Brush CaretBrush;
-		
+
 		protected override void OnRender(DrawingContext drawingContext)
 		{
 			base.OnRender(drawingContext);
@@ -93,7 +92,7 @@ namespace ICSharpCode.AvalonEdit.Editing
 				Brush caretBrush = this.CaretBrush;
 				if (caretBrush == null)
 					caretBrush = (Brush)textView.GetValue(TextBlock.ForegroundProperty);
-				
+
 				if (this.textArea.OverstrikeMode) {
 					SolidColorBrush scBrush = caretBrush as SolidColorBrush;
 					if (scBrush != null) {
@@ -103,11 +102,11 @@ namespace ICSharpCode.AvalonEdit.Editing
 						caretBrush.Freeze();
 					}
 				}
-				
+
 				Rect r = new Rect(caretRectangle.X - textView.HorizontalOffset,
-				                  caretRectangle.Y - textView.VerticalOffset,
-				                  caretRectangle.Width,
-				                  caretRectangle.Height);
+								  caretRectangle.Y - textView.VerticalOffset,
+								  caretRectangle.Width,
+								  caretRectangle.Height);
 				drawingContext.DrawRectangle(caretBrush, null, PixelSnapHelpers.Round(r, PixelSnapHelpers.GetPixelSize(this)));
 			}
 		}

@@ -34,19 +34,18 @@ namespace ICSharpCode.AvalonEdit.Rendering
 		{
 			this.VisualLine = visualLine;
 		}
-		
+
 		public VisualLine VisualLine { get; private set; }
 		public TextView TextView { get; set; }
 		public TextDocument Document { get; set; }
 		public TextRunProperties GlobalTextRunProperties { get; set; }
-		
+
 		public override TextRun GetTextRun(int textSourceCharacterIndex)
 		{
 			try {
 				foreach (VisualLineElement element in VisualLine.Elements) {
 					if (textSourceCharacterIndex >= element.VisualColumn
-					    && textSourceCharacterIndex < element.VisualColumn + element.VisualLength)
-					{
+						&& textSourceCharacterIndex < element.VisualColumn + element.VisualLength) {
 						int relativeOffset = textSourceCharacterIndex - element.VisualColumn;
 						TextRun run = element.CreateTextRun(textSourceCharacterIndex, this);
 						if (run == null)
@@ -91,14 +90,13 @@ namespace ICSharpCode.AvalonEdit.Rendering
 			}
 			return new FormattedTextRun(new FormattedTextElement(TextView.cachedElements.GetTextForNonPrintableCharacter(newlineText, this), 0), GlobalTextRunProperties);
 		}
-		
+
 		public override TextSpan<CultureSpecificCharacterBufferRange> GetPrecedingText(int textSourceCharacterIndexLimit)
 		{
 			try {
 				foreach (VisualLineElement element in VisualLine.Elements) {
 					if (textSourceCharacterIndexLimit > element.VisualColumn
-					    && textSourceCharacterIndexLimit <= element.VisualColumn + element.VisualLength)
-					{
+						&& textSourceCharacterIndexLimit <= element.VisualColumn + element.VisualLength) {
 						TextSpan<CultureSpecificCharacterBufferRange> span = element.GetPrecedingText(textSourceCharacterIndexLimit, this);
 						if (span == null)
 							break;
@@ -115,15 +113,15 @@ namespace ICSharpCode.AvalonEdit.Rendering
 				throw;
 			}
 		}
-		
+
 		public override int GetTextEffectCharacterIndexFromTextSourceCharacterIndex(int textSourceCharacterIndex)
 		{
 			throw new NotSupportedException();
 		}
-		
+
 		string cachedString;
 		int cachedStringOffset;
-		
+
 		public StringSegment GetText(int offset, int length)
 		{
 			if (cachedString != null) {

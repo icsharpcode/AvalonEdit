@@ -16,12 +16,8 @@
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
 
-using System;
 using System.Diagnostics;
-using System.Text;
-#if NREFACTORY
-using ICSharpCode.NRefactory.Editor;
-#endif
+
 using ICSharpCode.AvalonEdit.Document;
 using ICSharpCode.AvalonEdit.Rendering;
 using ICSharpCode.AvalonEdit.Utils;
@@ -37,7 +33,7 @@ namespace ICSharpCode.AvalonEdit.Folding
 		bool isFolded;
 		internal CollapsedLineSection[] collapsedSections;
 		string title;
-		
+
 		/// <summary>
 		/// Gets/sets if the section is folded.
 		/// </summary>
@@ -47,11 +43,11 @@ namespace ICSharpCode.AvalonEdit.Folding
 				if (isFolded != value) {
 					isFolded = value;
 					ValidateCollapsedLineSections(); // create/destroy CollapsedLineSection
-						manager.Redraw(this);
+					manager.Redraw(this);
 				}
 			}
 		}
-		
+
 		internal void ValidateCollapsedLineSections()
 		{
 			if (!isFolded) {
@@ -82,7 +78,7 @@ namespace ICSharpCode.AvalonEdit.Folding
 				}
 			}
 		}
-		
+
 		/// <inheritdoc/>
 		protected override void OnSegmentChanged()
 		{
@@ -92,7 +88,7 @@ namespace ICSharpCode.AvalonEdit.Folding
 			if (IsConnectedToCollection)
 				manager.Redraw(this);
 		}
-		
+
 		/// <summary>
 		/// Gets/Sets the text used to display the collapsed version of the folding section.
 		/// </summary>
@@ -108,7 +104,7 @@ namespace ICSharpCode.AvalonEdit.Folding
 				}
 			}
 		}
-		
+
 		/// <summary>
 		/// Gets the content of the collapsed lines as text.
 		/// </summary>
@@ -117,70 +113,12 @@ namespace ICSharpCode.AvalonEdit.Folding
 				return manager.document.GetText(StartOffset, EndOffset - StartOffset);
 			}
 		}
-		
-		/// <summary>
-		/// Gets the content of the collapsed lines as tooltip text.
-		/// </summary>
-		[Obsolete]
-		public string TooltipText {
-			get {
-				// This fixes SD-1394:
-				// Each line is checked for leading indentation whitespaces. If
-				// a line has the same or more indentation than the first line,
-				// it is reduced. If a line is less indented than the first line
-				// the indentation is removed completely.
-				//
-				// See the following example:
-				// 	line 1
-				// 		line 2
-				// 			line 3
-				//  line 4
-				//
-				// is reduced to:
-				// line 1
-				// 	line 2
-				// 		line 3
-				// line 4
-				
-				var startLine = manager.document.GetLineByOffset(StartOffset);
-				var endLine = manager.document.GetLineByOffset(EndOffset);
-				var builder = new StringBuilder();
-				
-				var current = startLine;
-				ISegment startIndent = TextUtilities.GetLeadingWhitespace(manager.document, startLine);
-				
-				while (current != endLine.NextLine) {
-					ISegment currentIndent = TextUtilities.GetLeadingWhitespace(manager.document, current);
-					
-					if (current == startLine && current == endLine)
-						builder.Append(manager.document.GetText(StartOffset, EndOffset - StartOffset));
-					else if (current == startLine) {
-						if (current.EndOffset - StartOffset > 0)
-							builder.AppendLine(manager.document.GetText(StartOffset, current.EndOffset - StartOffset).TrimStart());
-					} else if (current == endLine) {
-						if (startIndent.Length <= currentIndent.Length)
-							builder.Append(manager.document.GetText(current.Offset + startIndent.Length, EndOffset - current.Offset - startIndent.Length));
-						else
-							builder.Append(manager.document.GetText(current.Offset + currentIndent.Length, EndOffset - current.Offset - currentIndent.Length));
-					} else {
-						if (startIndent.Length <= currentIndent.Length)
-							builder.AppendLine(manager.document.GetText(current.Offset + startIndent.Length, current.Length - startIndent.Length));
-						else
-							builder.AppendLine(manager.document.GetText(current.Offset + currentIndent.Length, current.Length - currentIndent.Length));
-					}
-					
-					current = current.NextLine;
-				}
-				
-				return builder.ToString();
-			}
-		}
-		
+
 		/// <summary>
 		/// Gets/Sets an additional object associated with this folding section.
 		/// </summary>
 		public object Tag { get; set; }
-		
+
 		internal FoldingSection(FoldingManager manager, int startOffset, int endOffset)
 		{
 			Debug.Assert(manager != null);
@@ -188,7 +126,7 @@ namespace ICSharpCode.AvalonEdit.Folding
 			this.StartOffset = startOffset;
 			this.Length = endOffset - startOffset;
 		}
-		
+
 		void RemoveCollapsedLineSection()
 		{
 			if (collapsedSections != null) {

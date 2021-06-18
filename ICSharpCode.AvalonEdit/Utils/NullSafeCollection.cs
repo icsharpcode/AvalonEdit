@@ -34,7 +34,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 				throw new ArgumentNullException("item");
 			base.InsertItem(index, item);
 		}
-		
+
 		/// <inheritdoc/>
 		protected override void SetItem(int index, T item)
 		{

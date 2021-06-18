@@ -29,7 +29,7 @@ namespace ICSharpCode.AvalonEdit.Snippets
 		/// Gets the reason for deactivation.
 		/// </summary>
 		public DeactivateReason Reason { get; private set; }
-		
+
 		/// <summary>
 		/// Creates a new SnippetEventArgs object, with a DeactivateReason.
 		/// </summary>
@@ -38,7 +38,7 @@ namespace ICSharpCode.AvalonEdit.Snippets
 			this.Reason = reason;
 		}
 	}
-	
+
 	/// <summary>
 	/// Describes the reason for deactivation of a <see cref="SnippetElement" />.
 	/// </summary>

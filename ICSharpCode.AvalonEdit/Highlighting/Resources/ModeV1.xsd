@@ -4,12 +4,12 @@
 		<xsd:documentation>
 		This schema defines the syntax for mode definitions in SharpDevelop.
 		The schema can be simplified quite a bit but it does the job as is.
-		
-		
+
+
 		If you are using this file as a reference it is probably easiest to scroll to
 		the botton to find the definition of the root element called SyntaxDefinition and
 		then unwind the different type definitions and refernces.
-		
+
 		Note on coloring:
 		Many tags define how some symbol should be colored. If a specific symbol
 		can not be matched onto either a Span definition, Keyword, or a Digit/Number it
@@ -17,7 +17,7 @@
 		current span or the default color of the mode as a whole if no span has been entered.
 		</xsd:documentation>
 	</xsd:annotation>
-	
+
 	<!-- Defines the default rendering of the mode -->
 	<xsd:complexType name="EnvironmentEntry">
 		<xsd:attribute name="bold" type="xsd:boolean" />
@@ -25,7 +25,7 @@
 		<xsd:attribute name="color" type="xsd:string" />
 		<xsd:attribute name="bgcolor" type="xsd:string" />
 	</xsd:complexType>
-	
+
 	<xsd:complexType name="CustomEnvironmentEntry">
 		<xsd:attribute name="name" type="xsd:string" use="required" />
 		<xsd:attribute name="bold" type="xsd:boolean" />
@@ -33,10 +33,10 @@
 		<xsd:attribute name="color" type="xsd:string" />
 		<xsd:attribute name="bgcolor" type="xsd:string" />
 	</xsd:complexType>
-	
+
 	<!-- The environment tag defines the coloring of various attributes in SharpDevelop -->
 	<xsd:complexType name="Environment">
-		
+
 		<xsd:choice minOccurs="0" maxOccurs="unbounded">
 			<xsd:element name="Default" type="EnvironmentEntry" minOccurs="0" maxOccurs="1" />
 			<xsd:element name="Selection" type="EnvironmentEntry" minOccurs="0" maxOccurs="1"/>
@@ -44,33 +44,33 @@
 			<xsd:element name="InvalidLines" type="EnvironmentEntry" minOccurs="0" maxOccurs="1"/>
 			<xsd:element name="CaretMarker" type="EnvironmentEntry" minOccurs="0" maxOccurs="1"/>
 			<xsd:element name="CaretLine" type="EnvironmentEntry" minOccurs="0" maxOccurs="1"/>
-			
+
 			<xsd:element name="LineNumbers" type="EnvironmentEntry" minOccurs="0" maxOccurs="1"/>
-			
+
 			<xsd:element name="FoldLine" type="EnvironmentEntry" minOccurs="0" maxOccurs="1"/>
 			<xsd:element name="FoldMarker" type="EnvironmentEntry" minOccurs="0" maxOccurs="1"/>
 			<xsd:element name="SelectedFoldLine" type="EnvironmentEntry" minOccurs="0" maxOccurs="1"/>
-			
+
 			<xsd:element name="EOLMarkers" type="EnvironmentEntry" minOccurs="0" maxOccurs="1"/>
 			<xsd:element name="SpaceMarkers" type="EnvironmentEntry" minOccurs="0" maxOccurs="1"/>
 			<xsd:element name="TabMarkers" type="EnvironmentEntry" minOccurs="0" maxOccurs="1"/>
-			
+
 			<xsd:element name="Custom" type="CustomEnvironmentEntry" minOccurs="0" maxOccurs="unbounded"/>
 		</xsd:choice>
 	</xsd:complexType>
-	
+
 	<xsd:complexType name="Properties">
 		<xsd:sequence>
 			<xsd:element name="Property" type="Property" minOccurs="0" maxOccurs="unbounded"/>
 		</xsd:sequence>
 	</xsd:complexType>
-	
+
 	<xsd:complexType name="Property">
 		<!-- The actual KeyWord, typically reserved words or symbols in a programming language -->
 		<xsd:attribute name="name" type="xsd:string" />
 		<xsd:attribute name="value" type="xsd:string" />
 	</xsd:complexType>
-	
+
 	<!-- The Digits tag defines the color for rendering Digits-->
 	<xsd:complexType name="Digits">
 		<xsd:attribute name="name" type="xsd:string" />
@@ -79,7 +79,7 @@
 		<xsd:attribute name="color" type="xsd:string" />
 		<xsd:attribute name="bgcolor" type="xsd:string" />
 	</xsd:complexType>
-	
+
 	<!-- Defines the delimiting characters of the syntax, e.g., the characters that, "break up" a line
     into separate symbols, typically key words. It is not necessary, or desirable to include the
     characters that denot the start or end of a span. Space and Tab are implicitly defined as delimeters
@@ -90,7 +90,7 @@
 			</xsd:extension>
 		</xsd:simpleContent>
 	</xsd:complexType>
-	
+
 	<!-- The beginning symbol of a Span -->
 	<xsd:complexType name="Begin">
 		<xsd:simpleContent>
@@ -106,7 +106,7 @@
 			</xsd:extension>
 		</xsd:simpleContent>
 	</xsd:complexType>
-	
+
 	<!-- The end symbol of a Span -->
 	<xsd:complexType name="End">
 		<xsd:simpleContent>
@@ -121,7 +121,7 @@
 			</xsd:extension>
 		</xsd:simpleContent>
 	</xsd:complexType>
-	
+
 	<xsd:complexType name="Span">
 		<xsd:sequence>
 			<!-- Defines the symbol that indicates the beginning of the span. -->
@@ -137,20 +137,20 @@
 		<!-- Defines wether the Span should terminate automatically at the end of line. Typical examples
        		 include one-line comments such as // in C++ or REM in Windows .Bat files. -->
 		<xsd:attribute name="stopateol" type="xsd:boolean" />
-		
+
 		<!-- OBSOLUTE: Defines whether C-style escape sequences using \ are applicable or not in the span. -->
 		<xsd:attribute name="noescapesequences" type="xsd:boolean" />
-		
+
 		<!-- defines the escape character -->
 		<xsd:attribute name="escapecharacter" type="xsd:string" />
-		
+
 		<!-- The default rendering style for the span -->
 		<xsd:attribute name="bold" type="xsd:boolean" />
 		<xsd:attribute name="italic" type="xsd:boolean" />
 		<xsd:attribute name="color" type="xsd:string" />
 		<xsd:attribute name="bgcolor" type="xsd:string" />
 	</xsd:complexType>
-	
+
 	<xsd:complexType name="MarkPrevious">
 		<xsd:simpleContent>
 			<xsd:extension base="xsd:string">
@@ -164,7 +164,7 @@
 			</xsd:extension>
 		</xsd:simpleContent>
 	</xsd:complexType>
-	
+
 	<!-- Allows you to define the coloring of the symbol that follows a specified symbol -->
 	<xsd:complexType name="MarkFollowing">
 		<xsd:simpleContent>
@@ -179,13 +179,13 @@
 			</xsd:extension>
 		</xsd:simpleContent>
 	</xsd:complexType>
-	
+
 	<xsd:complexType name="Key">
 		<!-- The actual KeyWord, typically reserved words or symbols in a programming language -->
 		<xsd:attribute name="word" type="xsd:string" />
 	</xsd:complexType>
-	
-	
+
+
 	<!-- A grouping of keywords that sholuld be colored the same way -->
 	<xsd:complexType name="KeyWords">
 		<xsd:sequence>
@@ -202,7 +202,7 @@
 		<xsd:attribute name="color" type="xsd:string" />
 		<xsd:attribute name="bgcolor" type="xsd:string" />
 	</xsd:complexType>
-	
+
 	<xsd:complexType name="RuleSet">
 		<xsd:sequence>
 			<!-- Defines the delimiting characters of the syntax, e.g., the characters that, "break up" a line
@@ -212,7 +212,7 @@
 			<xsd:element name="Delimiters" type="Delimiters" minOccurs="0" maxOccurs="1">
 			</xsd:element>
 			<!-- A Span tag defines a scope, or what can be seen as a separate parsing context where a different set of
-            	 highlighting rules are applicable compared to the text where the span is found. 
+            	 highlighting rules are applicable compared to the text where the span is found.
             	 Examples of spans include:
             	 - A string in a language as C
             	 - A <script> tag in Html
@@ -251,7 +251,7 @@
 		<!-- defines the escape character -->
 		<xsd:attribute name="escapecharacter" type="xsd:string" />
 	</xsd:complexType>
-	
+
 	<!-- The RuleSets tag is just a grouping of the set of RuleSets for a mode. -->
 	<xsd:complexType name="RuleSets">
 		<xsd:sequence minOccurs="0" maxOccurs="unbounded">
@@ -260,7 +260,7 @@
 			</xsd:element>
 		</xsd:sequence>
 	</xsd:complexType>
-	
+
 	<!-- SyntaxDefinition is the root-element in a mode definition file -->
 	<xsd:element name="SyntaxDefinition">
 		<xsd:complexType>
@@ -268,13 +268,13 @@
 				<!-- The Environment tag defines colors, for various standard elements in the SharpDevelop GUI, if
 				     not given the default values are used. -->
 				<xsd:element name="Environment" type="Environment" minOccurs="0" maxOccurs="1"/>
-				
+
 				<!-- The Properties section defines properties which are bound to the highlighting -->
 				<xsd:element name="Properties" type="Properties" minOccurs="0" maxOccurs="1" />
-				
+
 				<!-- The Digits tag defines the color for rendering Digits-->
 				<xsd:element name="Digits" type="Digits" minOccurs="0" maxOccurs="1"/>
-				
+
 				<!-- The RuleSets tag defines the rule sets that are used in the mode. Note that all modes are defined in
 					 a flat structture even if they are used recursively. For an example of a mode that uses
 					 multiple rule sets see the XML-mode. There is a top level rule-set and and another rule-set

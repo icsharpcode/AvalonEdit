@@ -36,21 +36,21 @@ namespace ICSharpCode.AvalonEdit.Editing
 		public DragDropException() : base()
 		{
 		}
-		
+
 		/// <summary>
 		/// Creates a new DragDropException.
 		/// </summary>
 		public DragDropException(string message) : base(message)
 		{
 		}
-		
+
 		/// <summary>
 		/// Creates a new DragDropException.
 		/// </summary>
 		public DragDropException(string message, Exception innerException) : base(message, innerException)
 		{
 		}
-		
+
 		/// <summary>
 		/// Deserializes a DragDropException.
 		/// </summary>

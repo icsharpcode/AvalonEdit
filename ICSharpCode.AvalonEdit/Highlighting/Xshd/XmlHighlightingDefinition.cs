@@ -23,6 +23,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Text.RegularExpressions;
+
 using ICSharpCode.AvalonEdit.Utils;
 
 namespace ICSharpCode.AvalonEdit.Highlighting.Xshd
@@ -31,7 +32,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting.Xshd
 	sealed class XmlHighlightingDefinition : IHighlightingDefinition
 	{
 		public string Name { get; private set; }
-		
+
 		public XmlHighlightingDefinition(XshdSyntaxDefinition xshd, IHighlightingDefinitionReferenceResolver resolver)
 		{
 			this.Name = xshd.Name;
@@ -52,23 +53,23 @@ namespace ICSharpCode.AvalonEdit.Highlighting.Xshd
 				throw new HighlightingDefinitionInvalidException("Could not find main RuleSet.");
 			// Translate elements within the rulesets (resolving references and processing imports)
 			xshd.AcceptElements(new TranslateElementVisitor(this, rnev.ruleSets, resolver));
-			
+
 			foreach (var p in xshd.Elements.OfType<XshdProperty>())
 				propDict.Add(p.Name, p.Value);
 		}
-		
+
 		#region RegisterNamedElements
 		sealed class RegisterNamedElementsVisitor : IXshdVisitor
 		{
 			XmlHighlightingDefinition def;
 			internal readonly Dictionary<XshdRuleSet, HighlightingRuleSet> ruleSets
 				= new Dictionary<XshdRuleSet, HighlightingRuleSet>();
-			
+
 			public RegisterNamedElementsVisitor(XmlHighlightingDefinition def)
 			{
 				this.def = def;
 			}
-			
+
 			public object VisitRuleSet(XshdRuleSet ruleSet)
 			{
 				HighlightingRuleSet hrs = new HighlightingRuleSet();
@@ -78,13 +79,13 @@ namespace ICSharpCode.AvalonEdit.Highlighting.Xshd
 						throw Error(ruleSet, "Name must not be the empty string");
 					if (def.ruleSetDict.ContainsKey(ruleSet.Name))
 						throw Error(ruleSet, "Duplicate rule set name '" + ruleSet.Name + "'.");
-					
+
 					def.ruleSetDict.Add(ruleSet.Name, hrs);
 				}
 				ruleSet.AcceptElements(this);
 				return null;
 			}
-			
+
 			public object VisitColor(XshdColor color)
 			{
 				if (color.Name != null) {
@@ -92,17 +93,17 @@ namespace ICSharpCode.AvalonEdit.Highlighting.Xshd
 						throw Error(color, "Name must not be the empty string");
 					if (def.colorDict.ContainsKey(color.Name))
 						throw Error(color, "Duplicate color name '" + color.Name + "'.");
-					
+
 					def.colorDict.Add(color.Name, new HighlightingColor());
 				}
 				return null;
 			}
-			
+
 			public object VisitKeywords(XshdKeywords keywords)
 			{
 				return keywords.ColorReference.AcceptVisitor(this);
 			}
-			
+
 			public object VisitSpan(XshdSpan span)
 			{
 				span.BeginColorReference.AcceptVisitor(this);
@@ -110,19 +111,19 @@ namespace ICSharpCode.AvalonEdit.Highlighting.Xshd
 				span.EndColorReference.AcceptVisitor(this);
 				return span.RuleSetReference.AcceptVisitor(this);
 			}
-			
+
 			public object VisitImport(XshdImport import)
 			{
 				return import.RuleSetReference.AcceptVisitor(this);
 			}
-			
+
 			public object VisitRule(XshdRule rule)
 			{
 				return rule.ColorReference.AcceptVisitor(this);
 			}
 		}
 		#endregion
-		
+
 		#region TranslateElements
 		sealed class TranslateElementVisitor : IXshdVisitor
 		{
@@ -133,7 +134,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting.Xshd
 			HashSet<XshdRuleSet> processingStartedRuleSets = new HashSet<XshdRuleSet>();
 			HashSet<XshdRuleSet> processedRuleSets = new HashSet<XshdRuleSet>();
 			bool ignoreCase;
-			
+
 			public TranslateElementVisitor(XmlHighlightingDefinition def, Dictionary<XshdRuleSet, HighlightingRuleSet> ruleSetDict, IHighlightingDefinitionReferenceResolver resolver)
 			{
 				Debug.Assert(def != null);
@@ -146,7 +147,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting.Xshd
 					reverseRuleSetDict.Add(pair.Value, pair.Key);
 				}
 			}
-			
+
 			public object VisitRuleSet(XshdRuleSet ruleSet)
 			{
 				HighlightingRuleSet rs = ruleSetDict[ruleSet];
@@ -154,13 +155,13 @@ namespace ICSharpCode.AvalonEdit.Highlighting.Xshd
 					return rs;
 				if (!processingStartedRuleSets.Add(ruleSet))
 					throw Error(ruleSet, "RuleSet cannot be processed because it contains cyclic <Import>");
-				
+
 				bool oldIgnoreCase = ignoreCase;
 				if (ruleSet.IgnoreCase != null)
 					ignoreCase = ruleSet.IgnoreCase.Value;
-				
+
 				rs.Name = ruleSet.Name;
-				
+
 				foreach (XshdElement element in ruleSet.Elements) {
 					object o = element.AcceptVisitor(this);
 					HighlightingRuleSet elementRuleSet = o as HighlightingRuleSet;
@@ -178,38 +179,41 @@ namespace ICSharpCode.AvalonEdit.Highlighting.Xshd
 						}
 					}
 				}
-				
+
 				ignoreCase = oldIgnoreCase;
 				processedRuleSets.Add(ruleSet);
-				
+
 				return rs;
 			}
-			
+
 			static void Merge(HighlightingRuleSet target, HighlightingRuleSet source)
 			{
 				target.Rules.AddRange(source.Rules);
 				target.Spans.AddRange(source.Spans);
 			}
-			
+
 			public object VisitColor(XshdColor color)
 			{
 				HighlightingColor c;
 				if (color.Name != null)
 					c = def.colorDict[color.Name];
-				else if (color.Foreground == null && color.FontStyle == null && color.FontWeight == null)
+				else if (color.Foreground == null && color.Background == null && color.Underline == null && color.FontStyle == null && color.FontWeight == null)
 					return null;
 				else
 					c = new HighlightingColor();
-				
+
 				c.Name = color.Name;
 				c.Foreground = color.Foreground;
 				c.Background = color.Background;
 				c.Underline = color.Underline;
+				c.Strikethrough = color.Strikethrough;
 				c.FontStyle = color.FontStyle;
 				c.FontWeight = color.FontWeight;
+				c.FontFamily = color.FontFamily;
+				c.FontSize = color.FontSize;
 				return c;
 			}
-			
+
 			public object VisitKeywords(XshdKeywords keywords)
 			{
 				if (keywords.Words.Count == 0)
@@ -229,7 +233,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting.Xshd
 					// "\b(?>in|int)\b" does not match "int" because the atomic group captures "in".
 					// To solve this, we are sorting the keywords by descending length.
 					int i = 0;
-					foreach (string keyword in keywords.Words.OrderByDescending(w=>w.Length)) {
+					foreach (string keyword in keywords.Words.OrderByDescending(w => w.Length)) {
 						if (i++ > 0)
 							keyWordRegex.Append('|');
 						keyWordRegex.Append(Regex.Escape(keyword));
@@ -254,12 +258,12 @@ namespace ICSharpCode.AvalonEdit.Highlighting.Xshd
 					Regex = CreateRegex(keywords, keyWordRegex.ToString(), XshdRegexType.Default)
 				};
 			}
-			
+
 			static bool IsSimpleWord(string word)
 			{
 				return char.IsLetterOrDigit(word[0]) && char.IsLetterOrDigit(word, word.Length - 1);
 			}
-			
+
 			Regex CreateRegex(XshdElement position, string regex, XshdRegexType regexType)
 			{
 				if (regex == null)
@@ -275,7 +279,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting.Xshd
 					throw Error(position, ex.Message);
 				}
 			}
-			
+
 			HighlightingColor GetColor(XshdElement position, XshdReference<XshdColor> colorReference)
 			{
 				if (colorReference.InlineElement != null) {
@@ -290,7 +294,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting.Xshd
 					return null;
 				}
 			}
-			
+
 			IHighlightingDefinition GetDefinition(XshdElement position, string definitionName)
 			{
 				if (definitionName == null)
@@ -302,7 +306,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting.Xshd
 					throw Error(position, "Could not find definition with name '" + definitionName + "'.");
 				return d;
 			}
-			
+
 			HighlightingRuleSet GetRuleSet(XshdElement position, XshdReference<XshdRuleSet> ruleSetReference)
 			{
 				if (ruleSetReference.InlineElement != null) {
@@ -317,7 +321,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting.Xshd
 					return null;
 				}
 			}
-			
+
 			public object VisitSpan(XshdSpan span)
 			{
 				string endRegex = span.EndRegex;
@@ -343,7 +347,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting.Xshd
 					SpanColorIncludesEnd = true
 				};
 			}
-			
+
 			public object VisitImport(XshdImport import)
 			{
 				HighlightingRuleSet hrs = GetRuleSet(import, import.RuleSetReference);
@@ -355,7 +359,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting.Xshd
 				}
 				return hrs;
 			}
-			
+
 			public object VisitRule(XshdRule rule)
 			{
 				return new HighlightingRule {
@@ -365,7 +369,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting.Xshd
 			}
 		}
 		#endregion
-		
+
 		static Exception Error(XshdElement element, string message)
 		{
 			if (element.LineNumber > 0)
@@ -374,14 +378,14 @@ namespace ICSharpCode.AvalonEdit.Highlighting.Xshd
 			else
 				return new HighlightingDefinitionInvalidException(message);
 		}
-		
+
 		Dictionary<string, HighlightingRuleSet> ruleSetDict = new Dictionary<string, HighlightingRuleSet>();
 		Dictionary<string, HighlightingColor> colorDict = new Dictionary<string, HighlightingColor>();
 		[OptionalField]
 		Dictionary<string, string> propDict = new Dictionary<string, string>();
-		
+
 		public HighlightingRuleSet MainRuleSet { get; private set; }
-		
+
 		public HighlightingRuleSet GetNamedRuleSet(string name)
 		{
 			if (string.IsNullOrEmpty(name))
@@ -392,7 +396,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting.Xshd
 			else
 				return null;
 		}
-		
+
 		public HighlightingColor GetNamedColor(string name)
 		{
 			HighlightingColor c;
@@ -401,18 +405,18 @@ namespace ICSharpCode.AvalonEdit.Highlighting.Xshd
 			else
 				return null;
 		}
-		
+
 		public IEnumerable<HighlightingColor> NamedHighlightingColors {
 			get {
 				return colorDict.Values;
 			}
 		}
-		
+
 		public override string ToString()
 		{
 			return this.Name;
 		}
-		
+
 		public IDictionary<string, string> Properties {
 			get {
 				return propDict;

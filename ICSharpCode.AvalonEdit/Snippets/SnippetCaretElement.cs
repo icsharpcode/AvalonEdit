@@ -18,7 +18,7 @@
 
 using System;
 using System.Runtime.Serialization;
-using ICSharpCode.NRefactory.Editor;
+
 using ICSharpCode.AvalonEdit.Document;
 
 namespace ICSharpCode.AvalonEdit.Snippets
@@ -31,14 +31,14 @@ namespace ICSharpCode.AvalonEdit.Snippets
 	{
 		[OptionalField]
 		bool setCaretOnlyIfTextIsSelected;
-		
+
 		/// <summary>
 		/// Creates a new SnippetCaretElement.
 		/// </summary>
 		public SnippetCaretElement()
 		{
 		}
-		
+
 		/// <summary>
 		/// Creates a new SnippetCaretElement.
 		/// </summary>
@@ -50,14 +50,14 @@ namespace ICSharpCode.AvalonEdit.Snippets
 		{
 			this.setCaretOnlyIfTextIsSelected = setCaretOnlyIfTextIsSelected;
 		}
-		
+
 		/// <inheritdoc/>
 		public override void Insert(InsertionContext context)
 		{
 			if (!setCaretOnlyIfTextIsSelected || !string.IsNullOrEmpty(context.SelectedText))
 				SetCaret(context);
 		}
-		
+
 		internal static void SetCaret(InsertionContext context)
 		{
 			TextAnchor pos = context.Document.CreateAnchor(context.InsertionPosition);

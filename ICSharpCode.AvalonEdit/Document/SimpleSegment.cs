@@ -19,10 +19,8 @@
 using System;
 using System.Diagnostics;
 using System.Globalization;
+
 using ICSharpCode.AvalonEdit.Utils;
-#if NREFACTORY
-using ICSharpCode.NRefactory.Editor;
-#endif
 
 namespace ICSharpCode.AvalonEdit.Document
 {
@@ -33,7 +31,7 @@ namespace ICSharpCode.AvalonEdit.Document
 	struct SimpleSegment : IEquatable<SimpleSegment>, ISegment
 	{
 		public static readonly SimpleSegment Invalid = new SimpleSegment(-1, -1);
-		
+
 		/// <summary>
 		/// Gets the overlapping portion of the segments.
 		/// Returns SimpleSegment.Invalid if the segments don't overlap.
@@ -47,70 +45,70 @@ namespace ICSharpCode.AvalonEdit.Document
 			else
 				return new SimpleSegment(start, end - start);
 		}
-		
+
 		public readonly int Offset, Length;
-		
+
 		int ISegment.Offset {
 			get { return Offset; }
 		}
-		
+
 		int ISegment.Length {
 			get { return Length; }
 		}
-		
+
 		public int EndOffset {
 			get {
 				return Offset + Length;
 			}
 		}
-		
+
 		public SimpleSegment(int offset, int length)
 		{
 			this.Offset = offset;
 			this.Length = length;
 		}
-		
+
 		public SimpleSegment(ISegment segment)
 		{
 			Debug.Assert(segment != null);
 			this.Offset = segment.Offset;
 			this.Length = segment.Length;
 		}
-		
+
 		public override int GetHashCode()
 		{
 			unchecked {
 				return Offset + 10301 * Length;
 			}
 		}
-		
+
 		public override bool Equals(object obj)
 		{
 			return (obj is SimpleSegment) && Equals((SimpleSegment)obj);
 		}
-		
+
 		public bool Equals(SimpleSegment other)
 		{
 			return this.Offset == other.Offset && this.Length == other.Length;
 		}
-		
+
 		public static bool operator ==(SimpleSegment left, SimpleSegment right)
 		{
 			return left.Equals(right);
 		}
-		
+
 		public static bool operator !=(SimpleSegment left, SimpleSegment right)
 		{
 			return !left.Equals(right);
 		}
-		
+
 		/// <inheritdoc/>
 		public override string ToString()
 		{
 			return "[Offset=" + Offset.ToString(CultureInfo.InvariantCulture) + ", Length=" + Length.ToString(CultureInfo.InvariantCulture) + "]";
 		}
 	}
-	
+
 	/// <summary>
 	/// A segment using <see cref="TextAnchor"/>s as start and end positions.
 	/// </summary>
@@ -125,12 +123,12 @@ namespace ICSharpCode.AvalonEdit.Document
 	public sealed class AnchorSegment : ISegment
 	{
 		readonly TextAnchor start, end;
-		
+
 		/// <inheritdoc/>
 		public int Offset {
 			get { return start.Offset; }
 		}
-		
+
 		/// <inheritdoc/>
 		public int Length {
 			get {
@@ -138,7 +136,7 @@ namespace ICSharpCode.AvalonEdit.Document
 				return Math.Max(0, end.Offset - start.Offset);
 			}
 		}
-		
+
 		/// <inheritdoc/>
 		public int EndOffset {
 			get {
@@ -146,7 +144,7 @@ namespace ICSharpCode.AvalonEdit.Document
 				return Math.Max(start.Offset, end.Offset);
 			}
 		}
-		
+
 		/// <summary>
 		/// Creates a new AnchorSegment using the specified anchors.
 		/// The anchors must have <see cref="TextAnchor.SurviveDeletion"/> set to true.
@@ -164,7 +162,7 @@ namespace ICSharpCode.AvalonEdit.Document
 			this.start = start;
 			this.end = end;
 		}
-		
+
 		/// <summary>
 		/// Creates a new AnchorSegment that creates new anchors.
 		/// </summary>
@@ -172,7 +170,7 @@ namespace ICSharpCode.AvalonEdit.Document
 			: this(document, ThrowUtil.CheckNotNull(segment, "segment").Offset, segment.Length)
 		{
 		}
-		
+
 		/// <summary>
 		/// Creates a new AnchorSegment that creates new anchors.
 		/// </summary>
@@ -187,7 +185,7 @@ namespace ICSharpCode.AvalonEdit.Document
 			this.end.SurviveDeletion = true;
 			this.end.MovementType = AnchorMovementType.BeforeInsertion;
 		}
-		
+
 		/// <inheritdoc/>
 		public override string ToString()
 		{
