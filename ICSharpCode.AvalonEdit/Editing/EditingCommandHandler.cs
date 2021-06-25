@@ -530,11 +530,13 @@ namespace ICSharpCode.AvalonEdit.Editing
 			TextArea textArea = GetTextArea(target);
 			if (textArea != null && textArea.Document != null) {
 				using (var caretSelectionPreserver = CaretSelectionPreserver.Create(textArea)) {
-					var selectionLineRange = new SelectionLineRange(textArea.Caret, textArea.Selection);
-					if (selectionLineRange.FirstLine == 1) return;
+					var selectionFirstLine = textArea.Selection.IsEmpty ? textArea.Caret.Line : textArea.Selection.StartPosition.Line;
+					var selectionLastLine = textArea.Selection.IsEmpty ? textArea.Caret.Line : textArea.Selection.EndPosition.Line;
+					// we cannot move up if the selection is on the first line
+					if (selectionFirstLine == 1) return;
 
-					DocumentLine movedLine = textArea.Document.GetLineByNumber(selectionLineRange.FirstLine - 1);
-					DocumentLine lastLine = textArea.Document.GetLineByNumber(selectionLineRange.LastLine);
+					DocumentLine movedLine = textArea.Document.GetLineByNumber(selectionFirstLine - 1);
+					DocumentLine lastLine = textArea.Document.GetLineByNumber(selectionLastLine);
 
 					using (textArea.Document.RunUpdate()) {
 						textArea.Selection = Selection.Create(textArea, movedLine.Offset, movedLine.Offset + movedLine.TotalLength);
@@ -556,12 +558,14 @@ namespace ICSharpCode.AvalonEdit.Editing
 			TextArea textArea = GetTextArea(target);
 			if (textArea != null && textArea.Document != null) {
 				using (var caretSelectionPreserver = CaretSelectionPreserver.Create(textArea)) {
-					var selectionLineRange = new SelectionLineRange(textArea.Caret, textArea.Selection);
-					if (selectionLineRange.LastLine == textArea.Document.LineCount) return;
+					var selectionFirstLine = textArea.Selection.IsEmpty ? textArea.Caret.Line : textArea.Selection.StartPosition.Line;
+					var selectionLastLine = textArea.Selection.IsEmpty ? textArea.Caret.Line : textArea.Selection.EndPosition.Line;
+					// we cannot move down if the selection is on the last line
+					if (selectionLastLine == textArea.Document.LineCount) return;
 
-					DocumentLine firstLine = textArea.Document.GetLineByNumber(selectionLineRange.FirstLine);
-					DocumentLine lastLine = textArea.Document.GetLineByNumber(selectionLineRange.LastLine);
-					DocumentLine movedLine = textArea.Document.GetLineByNumber(selectionLineRange.LastLine + 1);
+					DocumentLine firstLine = textArea.Document.GetLineByNumber(selectionFirstLine);
+					DocumentLine lastLine = textArea.Document.GetLineByNumber(selectionLastLine);
+					DocumentLine movedLine = textArea.Document.GetLineByNumber(selectionLastLine + 1);
 
 					using (textArea.Document.RunUpdate()) {
 						textArea.Selection = Selection.Create(textArea, lastLine.EndOffset, movedLine.EndOffset);
@@ -573,6 +577,38 @@ namespace ICSharpCode.AvalonEdit.Editing
 				}
 				args.Handled = true;
 			}
+		}
+
+		/// <summary>
+		/// Move the leading linebreak to the end.
+		/// </summary>
+		/// <param name="self">A string which starts with one or more linebreaks.</param>
+		/// <returns></returns>
+		private static string RotateHeadLinebreak(this string self)
+		{
+			int len = self.Length;
+			// check if the line break is /n or /r/n
+			string linebreak =
+				(len >= 2 && self.Substring(0, 2) == "\r\n")
+				? "\r\n"
+				: self.Substring(0, 1);
+			return self.Remove(0, linebreak.Length) + linebreak;
+		}
+
+		/// <summary>
+		/// Move the tailing linebreak to the head.
+		/// </summary>
+		/// <param name="self">A string which ends with one or more linebreaks.</param>
+		/// <returns></returns>
+		private static string RotateTailLinebreak(this string self)
+		{
+			int len = self.Length;
+			// check if the line break is /n or /r/n
+			string linebreak =
+				(len >= 2 && self.Substring(len - 2, 2) == "\r\n")
+				? "\r\n"
+				: self.Substring(len - 1, 1);
+			return linebreak + self.Remove(len - linebreak.Length);
 		}
 		#endregion
 
@@ -715,153 +751,6 @@ namespace ICSharpCode.AvalonEdit.Editing
 				textArea.Caret.BringCaretToView();
 				args.Handled = true;
 			}
-		}
-	}
-
-	abstract class CaretSelectionPreserver
-		: IDisposable
-	{
-		protected CaretSelectionPreserver(TextArea _textArea)
-		{
-			isDisposed = false;
-			textArea = _textArea;
-		}
-
-		public static CaretSelectionPreserver Create(TextArea textArea)
-		{
-			if (textArea.Selection.IsEmpty) {
-				return new CaretPreserver(textArea);
-			} else {
-				return new SelectionPreserver(textArea);
-			}
-		}
-
-		public void Dispose()
-		{
-			if (isDisposed) return;
-			isDisposed = true;
-			Restore();
-		}
-
-		public abstract void Restore();
-		public abstract void MoveLine(int i);
-
-		private bool isDisposed;
-
-		private TextArea textArea;
-		public TextArea TextArea { get { return textArea; } }
-	}
-	
-	/// <summary>
-	/// This class moves the current caret position when a line is moved up or down
-	/// </summary>
-	class CaretPreserver 
-		: CaretSelectionPreserver
-	{
-		public CaretPreserver(TextArea textArea)
-			: base(textArea)
-		{
-			caretLocation = textArea.Caret.Location;
-		}
-
-		public override void Restore()
-		{
-			TextArea.Caret.Location = caretLocation;
-		}
-
-		public override void MoveLine(int i)
-		{
-			caretLocation = new TextLocation(caretLocation.Line + i, caretLocation.Column);
-		}
-
-		TextLocation caretLocation;
-	}
-
-	/// <summary>
-	/// This class moves the current selection when the lines containing that selection
-	/// are moved up or down.
-	///
-	/// NOTE: The SelectionPreserver must inherit from the CaretPreserver as if the caret 
-	/// is not within the selection then the selection is not considered valid and is 
-	/// cleared. By inheriting from the CaretPreserver we move both the selection and 
-	/// the caret at the same time.
-	/// </summary> 
-	class SelectionPreserver
-		: CaretPreserver
-	{
-		public SelectionPreserver(TextArea textArea)
-			: base(textArea)
-		{
-			startLocation = textArea.Selection.StartPosition.Location;
-			endLocation = textArea.Selection.EndPosition.Location;
-		}
-
-		public override void Restore()
-		{
-			base.Restore();
-			TextArea.Selection = Selection.Create(TextArea, new TextViewPosition(startLocation), new TextViewPosition(endLocation));
-		}
-
-
-		public override void MoveLine(int i)
-		{
-			base.MoveLine(i);
-			startLocation = new TextLocation(startLocation.Line + i, startLocation.Column);
-			endLocation = new TextLocation(endLocation.Line + i, endLocation.Column);
-		}
-
-		TextLocation startLocation, endLocation;
-	}
-
-	struct SelectionLineRange
-	{
-		public SelectionLineRange(Caret caret, Selection selection)
-		{
-			if (selection.IsEmpty) {
-				firstLine = lastLine = caret.Line;
-			} else {
-				int l1 = selection.StartPosition.Line, l2 = selection.EndPosition.Line;
-				firstLine = Math.Min(l1, l2);
-				lastLine = Math.Max(l1, l2);
-			}
-		}
-
-		int firstLine;
-		int lastLine;
-		public int FirstLine { get { return firstLine; } }
-		public int LastLine { get { return lastLine; } }
-	}
-	
-	static class StringExtensions
-	{
-		/// <summary>
-		/// Move the head linebreak to the tail.
-		/// </summary>
-		/// <param name="self">A string which begins with one or more linebreaks.</param>
-		/// <returns></returns>
-		public static string RotateHeadLinebreak(this string self)
-		{
-			int len = self.Length;
-			string linebreak = 
-				(len >= 2 && self.Substring(0, 2) == "\r\n")
-				? "\r\n"
-				: self.Substring(0, 1);
-			return self.Remove(0, linebreak.Length) + linebreak;
-		}
-
-		/// <summary>
-		/// Move the tailing linebreak to the head.
-		/// </summary>
-		/// <param name="self">A string which ends with one or more linebreaks.</param>
-		/// <returns></returns>
-		public static string RotateTailLinebreak(this string self)
-		{
-			int len = self.Length;
-			string linebreak =
-				(len >= 2 && self.Substring(len - 2, 2) == "\r\n")
-				? "\r\n"
-				: self.Substring(len - 1, 1);
-			return linebreak + self.Remove(len - linebreak.Length);
 		}
 	}
 }
