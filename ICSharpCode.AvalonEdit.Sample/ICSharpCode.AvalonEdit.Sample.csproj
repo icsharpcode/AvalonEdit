@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
 	<PropertyGroup>
 		<OutputType>WinExe</OutputType>
-		<TargetFrameworks>net5.0-windows;netcoreapp3.1;net472</TargetFrameworks>
+		<TargetFrameworks>net6.0-windows;netcoreapp3.1;net472</TargetFrameworks>
 	<UseWPF>true</UseWPF>
 	<UseWindowsForms>true</UseWindowsForms>
 	<DefineConstants>TRACE</DefineConstants>
@@ -14,7 +14,7 @@
 	<IsPackable>false</IsPackable>	
 	</PropertyGroup>
 	
-	<PropertyGroup Condition=" '$(TargetFramework)' == 'net5.0-windows' ">
+	<PropertyGroup Condition=" '$(TargetFramework)' == 'net6.0-windows' ">
 		<DefineConstants>TRACE</DefineConstants>
 	</PropertyGroup>
 	<PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp3.1' ">

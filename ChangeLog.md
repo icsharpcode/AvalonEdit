@@ -1,5 +1,8 @@
 Note: this changelog only lists major changes and fixes for major bugs. For a complete list of changes, see the git log.
 
+tbd: AvalonEdit 6.1.3
+* TFM changes: net6.0-windows (LTS) added
+
 2021/06/01: AvalonEdit 6.1.2
 * TFM changes: netcoreapp3.0 removed in favor of netcoreapp3.1 (LTS), net5.0-windows added
 
