@@ -69,7 +69,7 @@
     <EmbeddedResource Include="Highlighting\Resources\*" />
     <EmbeddedResource Remove="Highlighting\Resources\Resources.cs" />
     <Resource Include="Highlighting\Resources\Resources.cs" />
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0">
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>

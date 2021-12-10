@@ -2,17 +2,17 @@
   <PropertyGroup>
     <OutputType>Library</OutputType>
     <TargetFrameworks>net6.0-windows;netcoreapp3.1;net40;net45</TargetFrameworks>
-	<UseWPF>true</UseWPF>
-	<UseWindowsForms>true</UseWindowsForms>
-	<DefineConstants>TRACE</DefineConstants>
+    <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
+    <DefineConstants>TRACE</DefineConstants>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\ICSharpCode.AvalonEdit\ICSharpCode.AvalonEdit.snk</AssemblyOriginatorKeyFile>
-	<Company>ic#code</Company>
+    <Company>ic#code</Company>
     <Copyright>2000-2021 AlphaSierraPapa for the SharpDevelop Team</Copyright>
     <Description>Tests for WPF-based extensible text editor</Description>
-	<IsPackable>false</IsPackable>
+    <IsPackable>false</IsPackable>
   </PropertyGroup>
-  
+
   <PropertyGroup Condition=" '$(TargetFramework)' == 'net6.0-windows' ">
     <DefineConstants>TRACE</DefineConstants>
   </PropertyGroup>
@@ -27,8 +27,8 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-    <PackageReference Include="NUnit" Version="3.11.0" />
-    <PackageReference Include="NUnit3TestAdapter" Version="3.13.0" />
+    <PackageReference Include="NUnit" Version="3.13.2" />
+    <PackageReference Include="NUnit3TestAdapter" Version="4.1.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ICSharpCode.AvalonEdit\ICSharpCode.AvalonEdit.csproj" />
