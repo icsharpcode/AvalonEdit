@@ -65,6 +65,14 @@ jobs:
         path: ICSharpCode.AvalonEdit/bin/Release/AvalonEdit*.nupkg
         if-no-files-found: error      
 
+    - name: Upload Snupkg Artifact
+      if: matrix.configuration == 'release'
+      uses: actions/upload-artifact@v2
+      with:
+        name: AvalonEdit Snupkg (${{ matrix.configuration }})
+        path: ICSharpCode.AvalonEdit/bin/Release/AvalonEdit*.snupkg
+        if-no-files-found: error      
+        
     - name: Publish NuGet
       if: github.ref == 'refs/heads/master' && matrix.configuration == 'release'
       run: |
