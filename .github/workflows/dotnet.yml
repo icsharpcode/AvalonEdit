@@ -43,13 +43,25 @@ jobs:
     - name: Setup VSTest
       uses: Malcolmnixon/Setup-VSTest@v4
       
-    - name: Execute Unit Tests
-      run: vstest.console $env:Tests1 $env:Tests2 $env:Tests3 $env:Tests4
+    - name: net6.0-windows Unit Tests
+      run: vstest.console $env:TestAssembly
       env:
-        Tests1: ICSharpCode.AvalonEdit.Tests\bin\${{ matrix.configuration }}\net6.0-windows\ICSharpCode.AvalonEdit.Tests.dll
-        Tests2: ICSharpCode.AvalonEdit.Tests\bin\${{ matrix.configuration }}\netcoreapp3.1\ICSharpCode.AvalonEdit.Tests.dll
-        Tests3: ICSharpCode.AvalonEdit.Tests\bin\${{ matrix.configuration }}\net45\ICSharpCode.AvalonEdit.Tests.dll
-        Tests4: ICSharpCode.AvalonEdit.Tests\bin\${{ matrix.configuration }}\net40\ICSharpCode.AvalonEdit.Tests.dll
+        TestAssembly: ICSharpCode.AvalonEdit.Tests\bin\${{ matrix.configuration }}\net6.0-windows\ICSharpCode.AvalonEdit.Tests.dll
+
+    - name: netcoreapp3.1 Unit Tests
+      run: vstest.console $env:TestAssembly
+      env:
+        TestAssembly: ICSharpCode.AvalonEdit.Tests\bin\${{ matrix.configuration }}\netcoreapp3.1\ICSharpCode.AvalonEdit.Tests.dll
+        
+    - name: net45 Unit Tests
+      run: vstest.console $env:TestAssembly
+      env:
+        TestAssembly: ICSharpCode.AvalonEdit.Tests\bin\${{ matrix.configuration }}\net45\ICSharpCode.AvalonEdit.Tests.dll
+        
+    - name: net40 Unit Tests
+      run: vstest.console $env:TestAssembly
+      env:
+        TestAssembly: ICSharpCode.AvalonEdit.Tests\bin\${{ matrix.configuration }}\net40\ICSharpCode.AvalonEdit.Tests.dll
         
     - name: Style - tab check
       run: python BuildTools\tidy.py
