@@ -16,6 +16,9 @@
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
 
+using System.Windows;
+using System.Windows.Media;
+
 using NUnit.Framework;
 
 namespace ICSharpCode.AvalonEdit.Highlighting
@@ -38,6 +41,18 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 			Assert.AreEqual(text1.GetHighlightingAt(0), text3.GetHighlightingAt(0));
 			Assert.AreNotEqual(text1.GetHighlightingAt(0), text3.GetHighlightingAt(5));
 			Assert.AreEqual(text2.GetHighlightingAt(0), text3.GetHighlightingAt(5));
+		}
+
+		[Test]
+		public void ToHtmlTest()
+		{
+			var textModel = new RichTextModel();
+			textModel.SetBackground(5, 3, new SimpleHighlightingBrush(Colors.Yellow));
+			textModel.SetForeground(9, 6, new SimpleHighlightingBrush(Colors.Blue));
+			textModel.SetFontWeight(15, 1, FontWeights.Bold);
+			var text = new RichText("This has spaces!", textModel);
+			var html = text.ToHtml(new HtmlOptions());
+			Assert.AreEqual("This&nbsp;<span style=\"background-color: #ffff00; \">has</span>&nbsp;<span style=\"color: #0000ff; \">spaces</span><span style=\"font-weight: bold; \">!</span>", html);
 		}
 	}
 }
