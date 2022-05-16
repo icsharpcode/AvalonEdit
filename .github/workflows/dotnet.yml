@@ -58,15 +58,10 @@ jobs:
       env:
         TestAssembly: ICSharpCode.AvalonEdit.Tests\bin\${{ matrix.configuration }}\netcoreapp3.1\ICSharpCode.AvalonEdit.Tests.dll
         
-    - name: net45 Unit Tests
+    - name: net462 Unit Tests
       run: vstest.console $env:TestAssembly
       env:
-        TestAssembly: ICSharpCode.AvalonEdit.Tests\bin\${{ matrix.configuration }}\net45\ICSharpCode.AvalonEdit.Tests.dll
-        
-    - name: net40 Unit Tests
-      run: vstest.console $env:TestAssembly
-      env:
-        TestAssembly: ICSharpCode.AvalonEdit.Tests\bin\${{ matrix.configuration }}\net40\ICSharpCode.AvalonEdit.Tests.dll
+        TestAssembly: ICSharpCode.AvalonEdit.Tests\bin\${{ matrix.configuration }}\net462\ICSharpCode.AvalonEdit.Tests.dll
         
     - name: Style - tab check
       run: python BuildTools\tidy.py
