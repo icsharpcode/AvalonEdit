@@ -40,5 +40,6 @@ A good place to start are the "top 10" listed under **GitHub Usage** for the [Av
 * https://github.com/KirillOsenkov/MSBuildStructuredLog A logger for MSBuild 
 * https://github.com/aelij/RoslynPad RoslynPad
 * https://github.com/huangjia2107/XamlViewer LightWeight Xaml Editor
+* https://github.com/simonbs/Runestone Performant plain text editor for iOS with syntax highlighting, line numbers, invisible characters and much more
 
 Note: if your project is not listed here, let us know! :)
