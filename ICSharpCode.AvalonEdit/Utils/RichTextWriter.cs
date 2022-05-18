@@ -56,10 +56,9 @@ namespace ICSharpCode.AvalonEdit.Utils
 			// If we just call Write(richText.Text.Substring(...)) below, then the C# compiler invokes
 			// the non-virtual Write(RichText) method due to RichText's implicit conversion from string.
 			// That leads to an immediate, unconditional StackOverflowException!
-			TextWriter textWriter = this;
 			foreach (var section in richText.GetHighlightedSections(offset, length)) {
 				BeginSpan(section.Color);
-				textWriter.Write(richText.Text.Substring(section.Offset, section.Length));
+				((TextWriter)this).Write(richText.Text.Substring(section.Offset, section.Length));
 				EndSpan();
 			}
 		}
