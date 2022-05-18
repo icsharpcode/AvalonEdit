@@ -9,7 +9,7 @@
 	<AssemblyOriginatorKeyFile>..\ICSharpCode.AvalonEdit\ICSharpCode.AvalonEdit.snk</AssemblyOriginatorKeyFile>
 		<RootNamespace>AvalonEdit.Sample</RootNamespace>
 	<Company>ic#code</Company>
-		<Copyright>2000-2021 AlphaSierraPapa for the SharpDevelop Team</Copyright>
+		<Copyright>2000-2022 AlphaSierraPapa for the SharpDevelop Team</Copyright>
 		<Description>Sample for WPF-based extensible text editor</Description>
 	<IsPackable>false</IsPackable>	
 	</PropertyGroup>
