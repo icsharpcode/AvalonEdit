@@ -74,7 +74,7 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: AvalonEdit NuGet Package (${{ matrix.configuration }})
-        path: ICSharpCode.AvalonEdit/bin/Release/AvalonEdit*.nupkg
+        path: ICSharpCode.AvalonEdit/bin/Release/ICSharpCode.AvalonEdit*.nupkg
         if-no-files-found: error      
 
     - name: Upload Snupkg Artifact
@@ -82,10 +82,10 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: AvalonEdit Snupkg (${{ matrix.configuration }})
-        path: ICSharpCode.AvalonEdit/bin/Release/AvalonEdit*.snupkg
+        path: ICSharpCode.AvalonEdit/bin/Release/ICSharpCode.AvalonEdit*.snupkg
         if-no-files-found: error      
         
     - name: Publish NuGet
       if: github.ref == 'refs/heads/master' && matrix.configuration == 'release'
       run: |
-        dotnet nuget push "ICSharpCode.AvalonEdit\bin\Release\AvalonEdit*.nupkg" --api-key ${{ secrets.GITHUB_TOKEN }} --source https://nuget.pkg.github.com/${{ github.repository_owner }}
+        dotnet nuget push "ICSharpCode.AvalonEdit\bin\Release\ICSharpCode.AvalonEdit*.nupkg" --api-key ${{ secrets.GITHUB_TOKEN }} --source https://nuget.pkg.github.com/${{ github.repository_owner }}
