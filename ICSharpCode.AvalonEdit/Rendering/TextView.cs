@@ -1264,7 +1264,7 @@ namespace ICSharpCode.AvalonEdit.Rendering
 							}
 						}
 						startVC = element.VisualColumn;
-						length = element.DocumentLength;
+						length = element.VisualLength;
 						currentBrush = element.BackgroundBrush;
 					} else {
 						length += element.VisualLength;
