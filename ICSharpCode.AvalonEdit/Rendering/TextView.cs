@@ -811,7 +811,7 @@ namespace ICSharpCode.AvalonEdit.Rendering
 				allVisualLines.Add(l);
 				// update all visual top values (building the line might have changed visual top of other lines due to word wrapping)
 				foreach (var line in allVisualLines) {
-					line.VisualTop = heightTree.GetVisualPosition(line.FirstDocumentLine);
+					line.VisualTop = heightTree.GetVisualPosition(line.FirstDocumentLine.LineNumber);
 				}
 			}
 			return l;
@@ -974,10 +974,11 @@ namespace ICSharpCode.AvalonEdit.Rendering
 			VisualLineTextParagraphProperties paragraphProperties = CreateParagraphProperties(globalTextRunProperties);
 
 			Debug.WriteLine("Measure availableSize=" + availableSize + ", scrollOffset=" + scrollOffset);
-			var firstLineInView = heightTree.GetLineByVisualPosition(scrollOffset.Y);
+			var firstLineNumberInView = heightTree.GetLineByVisualPosition(scrollOffset.Y);
+			var firstLineInView = document.GetLineByNumber(firstLineNumberInView);
 
 			// number of pixels clipped from the first visual line(s)
-			clippedPixelsOnTop = scrollOffset.Y - heightTree.GetVisualPosition(firstLineInView);
+			clippedPixelsOnTop = scrollOffset.Y - heightTree.GetVisualPosition(firstLineNumberInView);
 			// clippedPixelsOnTop should be >= 0, except for floating point inaccurracy.
 			Debug.Assert(clippedPixelsOnTop >= -ExtensionMethods.Epsilon);
 
@@ -1081,8 +1082,8 @@ namespace ICSharpCode.AvalonEdit.Rendering
 
 			if (visualLine.FirstDocumentLine != visualLine.LastDocumentLine) {
 				// Check whether the lines are collapsed correctly:
-				double firstLinePos = heightTree.GetVisualPosition(visualLine.FirstDocumentLine.NextLine);
-				double lastLinePos = heightTree.GetVisualPosition(visualLine.LastDocumentLine.NextLine ?? visualLine.LastDocumentLine);
+				double firstLinePos = heightTree.GetVisualPosition(visualLine.FirstDocumentLine.LineNumber + 1);
+				double lastLinePos = heightTree.GetVisualPosition(visualLine.LastDocumentLine.LineNumber + 1);
 				if (!firstLinePos.IsClose(lastLinePos)) {
 					for (int i = visualLine.FirstDocumentLine.LineNumber + 1; i <= visualLine.LastDocumentLine.LineNumber; i++) {
 						if (!heightTree.GetIsCollapsed(i))
@@ -1135,7 +1136,7 @@ namespace ICSharpCode.AvalonEdit.Rendering
 				lastLineBreak = textLine.GetTextLineBreak();
 			}
 			visualLine.SetTextLines(textLines);
-			heightTree.SetHeight(visualLine.FirstDocumentLine, visualLine.Height);
+			heightTree.SetHeight(visualLine.FirstDocumentLine.LineNumber, visualLine.Height);
 			return visualLine;
 		}
 
@@ -1756,7 +1757,7 @@ namespace ICSharpCode.AvalonEdit.Rendering
 			VerifyAccess();
 			if (heightTree == null)
 				throw ThrowUtil.NoDocumentAssigned();
-			return heightTree.GetVisualPosition(heightTree.GetLineByNumber(line));
+			return heightTree.GetVisualPosition(line);
 		}
 
 		VisualLineElement GetVisualLineElementFromPosition(Point visualPosition)
@@ -2002,7 +2003,7 @@ namespace ICSharpCode.AvalonEdit.Rendering
 			VerifyAccess();
 			if (heightTree == null)
 				throw ThrowUtil.NoDocumentAssigned();
-			return heightTree.GetLineByVisualPosition(visualTop);
+			return document.GetLineByNumber(heightTree.GetLineByVisualPosition(visualTop));
 		}
 
 		/// <inheritdoc/>

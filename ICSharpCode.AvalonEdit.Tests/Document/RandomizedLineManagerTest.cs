@@ -18,7 +18,10 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+
 using ICSharpCode.AvalonEdit.Rendering;
+
 using NUnit.Framework;
 
 namespace ICSharpCode.AvalonEdit.Document
@@ -31,7 +34,7 @@ namespace ICSharpCode.AvalonEdit.Document
 	{
 		TextDocument document;
 		Random rnd;
-		
+
 		[OneTimeSetUp]
 		public void FixtureSetup()
 		{
@@ -39,13 +42,13 @@ namespace ICSharpCode.AvalonEdit.Document
 			Console.WriteLine("RandomizedLineManagerTest Seed: " + seed);
 			rnd = new Random(seed);
 		}
-		
+
 		[SetUp]
 		public void Setup()
 		{
 			document = new TextDocument();
 		}
-		
+
 		[Test]
 		public void ShortReplacements()
 		{
@@ -58,12 +61,12 @@ namespace ICSharpCode.AvalonEdit.Document
 				for (int j = 0; j < newTextLength; j++) {
 					buffer[j] = chars[rnd.Next(0, chars.Length)];
 				}
-				
+
 				document.Replace(offset, length, new string(buffer, 0, newTextLength));
 				CheckLines();
 			}
 		}
-		
+
 		[Test]
 		public void LargeReplacements()
 		{
@@ -76,7 +79,7 @@ namespace ICSharpCode.AvalonEdit.Document
 				for (int j = 0; j < newTextLength; j++) {
 					buffer[j] = chars[rnd.Next(0, chars.Length)];
 				}
-				
+
 				string newText = new string(buffer, 0, newTextLength);
 				string expectedText = document.Text.Remove(offset, length).Insert(offset, newText);
 				document.Replace(offset, length, newText);
@@ -84,7 +87,7 @@ namespace ICSharpCode.AvalonEdit.Document
 				CheckLines();
 			}
 		}
-		
+
 		void CheckLines()
 		{
 			string text = document.Text;
@@ -100,7 +103,7 @@ namespace ICSharpCode.AvalonEdit.Document
 					Assert.AreEqual(i - lineStart, line.Length);
 					i++; // consume \n
 					lineNumber++;
-					lineStart = i+1;
+					lineStart = i + 1;
 				} else if (c == '\r' || c == '\n') {
 					DocumentLine line = document.GetLineByNumber(lineNumber);
 					Assert.AreEqual(lineNumber, line.LineNumber);
@@ -108,12 +111,12 @@ namespace ICSharpCode.AvalonEdit.Document
 					Assert.AreEqual(lineStart, line.Offset);
 					Assert.AreEqual(i - lineStart, line.Length);
 					lineNumber++;
-					lineStart = i+1;
+					lineStart = i + 1;
 				}
 			}
 			Assert.AreEqual(lineNumber, document.LineCount);
 		}
-		
+
 		[Test]
 		public void CollapsingTest()
 		{
@@ -121,14 +124,15 @@ namespace ICSharpCode.AvalonEdit.Document
 			char[] buffer = new char[20];
 			HeightTree heightTree = new HeightTree(document, 10);
 			List<CollapsedLineSection> collapsedSections = new List<CollapsedLineSection>();
-			for (int i = 0; i < 2500; i++) {
-//				Console.WriteLine("Iteration " + i);
-//				Console.WriteLine(heightTree.GetTreeAsString());
-//				foreach (CollapsedLineSection cs in collapsedSections) {
-//					Console.WriteLine(cs);
-//				}
-				
-				switch (rnd.Next(0, 10)) {
+			for (int i = 0; i < 25000; i++) {
+				//				Debug.WriteLine("Iteration " + i);
+				//				Debug.WriteLine(heightTree.GetTreeAsString());
+				//				foreach (CollapsedLineSection cs in collapsedSections) {
+				//					Debug.WriteLine(cs);
+				//				}
+
+				int command = rnd.Next(0, 10);
+				switch (command) {
 					case 0:
 					case 1:
 					case 2:
@@ -136,12 +140,19 @@ namespace ICSharpCode.AvalonEdit.Document
 					case 4:
 					case 5:
 						int offset = rnd.Next(0, document.TextLength);
-						int length = rnd.Next(0, document.TextLength - offset);
+						int length;
+						if (command == 0) {
+							length = rnd.Next(0, document.TextLength - offset);
+						} else if (command == 1) {
+							length = 0;
+						} else {
+							length = rnd.Next(0, Math.Min(15, document.TextLength - offset));
+						}
 						int newTextLength = rnd.Next(0, 20);
 						for (int j = 0; j < newTextLength; j++) {
 							buffer[j] = chars[rnd.Next(0, chars.Length)];
 						}
-						
+
 						document.Replace(offset, length, new string(buffer, 0, newTextLength));
 						break;
 					case 6:
@@ -162,7 +173,7 @@ namespace ICSharpCode.AvalonEdit.Document
 						break;
 					case 9:
 						foreach (DocumentLine ls in document.Lines) {
-							heightTree.SetHeight(ls, ls.LineNumber);
+							heightTree.SetHeight(ls.LineNumber, ls.LineNumber);
 						}
 						break;
 				}
