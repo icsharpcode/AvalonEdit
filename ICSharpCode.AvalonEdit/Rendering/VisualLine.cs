@@ -733,7 +733,7 @@ namespace ICSharpCode.AvalonEdit.Rendering
 		{
 			Debug.Assert(phase == LifetimePhase.Live);
 			if (visual == null)
-				visual = new VisualLineDrawingVisual(this);
+				visual = new VisualLineDrawingVisual(this,textView.FlowDirection);
 			return visual;
 		}
 	}
@@ -744,13 +744,19 @@ namespace ICSharpCode.AvalonEdit.Rendering
 		public readonly double Height;
 		internal bool IsAdded;
 
-		public VisualLineDrawingVisual(VisualLine visualLine)
+		public VisualLineDrawingVisual(VisualLine visualLine, FlowDirection flow)
 		{
 			this.VisualLine = visualLine;
 			var drawingContext = RenderOpen();
 			double pos = 0;
 			foreach (TextLine textLine in visualLine.TextLines) {
-				textLine.Draw(drawingContext, new Point(0, pos), InvertAxes.None);
+				if (flow == FlowDirection.RightToLeft) {
+					textLine.Draw(drawingContext, new Point(0, pos), InvertAxes.Horizontal);
+				} 
+				else // FlowDirection is LeftToRight
+				{
+					textLine.Draw(drawingContext, new Point(0, pos), InvertAxes.None);
+				}
 				pos += textLine.Height;
 			}
 			this.Height = pos;
