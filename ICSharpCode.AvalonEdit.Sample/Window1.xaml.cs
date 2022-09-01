@@ -69,6 +69,8 @@ namespace ICSharpCode.AvalonEdit.Sample
 			
 			textEditor.TextArea.TextEntering += textEditor_TextArea_TextEntering;
 			textEditor.TextArea.TextEntered += textEditor_TextArea_TextEntered;
+			textEditor.Text += "\r\nAvalonedit قا خۇش كەلدىڭىز!";
+			textEditor.FlowDirection = FlowDirection.RightToLeft;
 			SearchPanel.Install(textEditor);
 			
 			DispatcherTimer foldingUpdateTimer = new DispatcherTimer();
