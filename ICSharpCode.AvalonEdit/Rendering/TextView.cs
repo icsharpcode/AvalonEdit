@@ -2033,7 +2033,8 @@ namespace ICSharpCode.AvalonEdit.Rendering
 				|| e.Property == Control.FontSizeProperty
 				|| e.Property == Control.FontStretchProperty
 				|| e.Property == Control.FontStyleProperty
-				|| e.Property == Control.FontWeightProperty) {
+				|| e.Property == Control.FontWeightProperty
+				|| e.Property == Control.FlowDirectionProperty) {
 				// changing font properties requires recreating cached elements
 				RecreateCachedElements();
 				// and we need to re-measure the font metrics:
