@@ -36,6 +36,17 @@ namespace ICSharpCode.AvalonEdit.Editing
 	/// </summary>
 	public class LineNumberMargin : AbstractMargin, IWeakEventListener
 	{
+		/// <summary>
+		/// Creates a new instance of a LineNumberMargin
+		/// </summary>
+		public LineNumberMargin()
+			:base()
+		{
+			// override Property Value Inheritance, and always render
+			// the line number margin left-to-right
+			FlowDirection = FlowDirection.LeftToRight;
+		}
+
 		static LineNumberMargin()
 		{
 			DefaultStyleKeyProperty.OverrideMetadata(typeof(LineNumberMargin),
