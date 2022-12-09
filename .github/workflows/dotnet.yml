@@ -1,0 +1,91 @@
+name: Build AvalonEdit
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: windows-2022
+    strategy:
+      matrix:
+        Configuration: [ Debug, Release ]
+    env:
+        Solution: '**/ICSharpCode.AvalonEdit.sln'
+        BuildPlatform: 'Any CPU'
+        BuildVersion: '6.1.4'
+    steps:
+    - uses: actions/checkout@v2
+    - name: Update project version
+      uses: roryprimrose/set-vs-sdk-project-version@v1
+      with:
+        projectFilter: '**/ICSharpCode.AvalonEdit.csproj'
+        version: ${{ env.BuildVersion }}.${{ github.run_number }}
+        assemblyVersion: ${{ env.BuildVersion }}.${{ github.run_number }}
+        fileVersion: ${{ env.BuildVersion }}.${{ github.run_number }}    
+
+    - name: Setup .NET 3.1 (for unit tests only)
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.x
+        
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 6.0.x
+
+    - name: Add msbuild to PATH
+      uses: microsoft/setup-msbuild@v1.1
+
+    - run: msbuild ICSharpCode.AvalonEdit.sln /t:Restore /p:Configuration=${{ matrix.configuration }}
+
+    - name: Build
+      run: msbuild ICSharpCode.AvalonEdit.sln /p:Configuration=${{ matrix.configuration }}
+
+    - name: Setup VSTest
+      uses: Malcolmnixon/Setup-VSTest@v4
+      
+    - name: net6.0-windows Unit Tests
+      run: vstest.console $env:TestAssembly
+      env:
+        TestAssembly: ICSharpCode.AvalonEdit.Tests\bin\${{ matrix.configuration }}\net6.0-windows\ICSharpCode.AvalonEdit.Tests.dll
+
+    - name: netcoreapp3.1 Unit Tests
+      run: vstest.console $env:TestAssembly
+      env:
+        TestAssembly: ICSharpCode.AvalonEdit.Tests\bin\${{ matrix.configuration }}\netcoreapp3.1\ICSharpCode.AvalonEdit.Tests.dll
+        
+    - name: net462 Unit Tests
+      run: vstest.console $env:TestAssembly
+      env:
+        TestAssembly: ICSharpCode.AvalonEdit.Tests\bin\${{ matrix.configuration }}\net462\ICSharpCode.AvalonEdit.Tests.dll
+        
+    - name: Style - tab check
+      run: python BuildTools\tidy.py
+
+    - name: Pack
+      run: dotnet pack ICSharpCode.AvalonEdit/ICSharpCode.AvalonEdit.csproj -c ${{ matrix.configuration }}
+
+    - name: Upload NuGet
+      if: matrix.configuration == 'release'
+      uses: actions/upload-artifact@v2
+      with:
+        name: AvalonEdit NuGet Package (${{ matrix.configuration }})
+        path: ICSharpCode.AvalonEdit/bin/Release/AvalonEdit*.nupkg
+        if-no-files-found: error      
+
+    - name: Upload Snupkg Artifact
+      if: matrix.configuration == 'release'
+      uses: actions/upload-artifact@v2
+      with:
+        name: AvalonEdit Snupkg (${{ matrix.configuration }})
+        path: ICSharpCode.AvalonEdit/bin/Release/AvalonEdit*.snupkg
+        if-no-files-found: error      
+        
+    - name: Publish NuGet
+      if: github.ref == 'refs/heads/master' && matrix.configuration == 'release'
+      run: |
+        dotnet nuget push "ICSharpCode.AvalonEdit\bin\Release\AvalonEdit*.nupkg" --api-key ${{ secrets.GITHUB_TOKEN }} --source https://nuget.pkg.github.com/${{ github.repository_owner }}

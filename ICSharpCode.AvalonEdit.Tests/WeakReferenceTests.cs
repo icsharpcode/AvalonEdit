@@ -27,6 +27,7 @@ using NUnit.Framework;
 namespace ICSharpCode.AvalonEdit
 {
 	[TestFixture]
+	[Apartment(System.Threading.ApartmentState.STA)]
 	public class WeakReferenceTests
 	{
 		[Test]
