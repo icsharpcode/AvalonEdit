@@ -10,9 +10,9 @@
     <Company>ic#code</Company>
     <Copyright>2000-2022 AlphaSierraPapa for the SharpDevelop Team</Copyright>
     <Description>AvalonEdit is the WPF-based text editor used in SharpDevelop. There are five builds of AvalonEdit included in this package: .NET Framework 4.5 and 4.0, .NET Core 3.1, .NET 5.0 for Windows, .NET 6.0 for Windows.</Description>
-    <Version>6.1</Version>
-    <AssemblyVersion>6.1.0.0</AssemblyVersion>
-    <FileVersion>6.1.0.0</FileVersion>
+    <Version>6.2</Version>
+    <AssemblyVersion>6.2.0.0</AssemblyVersion>
+    <FileVersion>6.2.0.0</FileVersion>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
   </PropertyGroup>
 

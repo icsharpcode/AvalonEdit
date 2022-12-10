@@ -16,9 +16,9 @@ jobs:
     env:
         Solution: '**/ICSharpCode.AvalonEdit.sln'
         BuildPlatform: 'Any CPU'
-        BuildVersion: '6.1.4'
+        BuildVersion: '6.2.0'
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Update project version
       uses: roryprimrose/set-vs-sdk-project-version@v1
       with:
@@ -28,12 +28,12 @@ jobs:
         fileVersion: ${{ env.BuildVersion }}.${{ github.run_number }}    
 
     - name: Setup .NET 3.1 (for unit tests only)
-      uses: actions/setup-dotnet@v1
+      uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 3.1.x
         
     - name: Setup .NET
-      uses: actions/setup-dotnet@v1
+      uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 6.0.x
 
@@ -71,7 +71,7 @@ jobs:
 
     - name: Upload NuGet
       if: matrix.configuration == 'release'
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: AvalonEdit NuGet Package (${{ matrix.configuration }})
         path: ICSharpCode.AvalonEdit/bin/Release/AvalonEdit*.nupkg
@@ -79,7 +79,7 @@ jobs:
 
     - name: Upload Snupkg Artifact
       if: matrix.configuration == 'release'
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: AvalonEdit Snupkg (${{ matrix.configuration }})
         path: ICSharpCode.AvalonEdit/bin/Release/AvalonEdit*.snupkg
