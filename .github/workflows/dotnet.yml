@@ -27,12 +27,12 @@ jobs:
         assemblyVersion: ${{ env.BuildVersion }}.${{ github.run_number }}
         fileVersion: ${{ env.BuildVersion }}.${{ github.run_number }}    
 
-    - name: Setup .NET 3.1 (for unit tests only)
+    - name: Setup .NET 7
       uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: 3.1.x
+        dotnet-version: 7.0.x
         
-    - name: Setup .NET
+    - name: Setup LTS .NET
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 6.0.x
@@ -53,10 +53,10 @@ jobs:
       env:
         TestAssembly: ICSharpCode.AvalonEdit.Tests\bin\${{ matrix.configuration }}\net6.0-windows\ICSharpCode.AvalonEdit.Tests.dll
 
-    - name: netcoreapp3.1 Unit Tests
+    - name: net7.0-windows Unit Tests
       run: vstest.console $env:TestAssembly
       env:
-        TestAssembly: ICSharpCode.AvalonEdit.Tests\bin\${{ matrix.configuration }}\netcoreapp3.1\ICSharpCode.AvalonEdit.Tests.dll
+        TestAssembly: ICSharpCode.AvalonEdit.Tests\bin\${{ matrix.configuration }}\net7.0-windows\ICSharpCode.AvalonEdit.Tests.dll
         
     - name: net462 Unit Tests
       run: vstest.console $env:TestAssembly
