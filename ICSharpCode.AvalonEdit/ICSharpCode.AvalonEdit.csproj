@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
   <PropertyGroup>
     <OutputType>Library</OutputType>
-    <TargetFrameworks>net6.0-windows;netcoreapp3.1;net462</TargetFrameworks>
+    <TargetFrameworks>net6.0-windows;netcoreapp3.1;net472</TargetFrameworks>
     <UseWPF>true</UseWPF>
     <UseWindowsForms>true</UseWindowsForms>
     <DefineConstants>TRACE</DefineConstants>
@@ -65,5 +65,11 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Search\replacenext.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Search\replaceall.png" />
   </ItemGroup>
 </Project>
