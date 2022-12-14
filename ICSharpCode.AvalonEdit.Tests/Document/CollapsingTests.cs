@@ -35,7 +35,7 @@ namespace ICSharpCode.AvalonEdit.Document
 			document.Text = "1\n2\n3\n4\n5\n6\n7\n8\n9\n10";
 			heightTree = new HeightTree(document, 10);
 			foreach (DocumentLine line in document.Lines) {
-				heightTree.SetHeight(line, line.LineNumber);
+				heightTree.SetHeight(line.LineNumber, line.LineNumber);
 			}
 		}
 		
@@ -82,7 +82,7 @@ namespace ICSharpCode.AvalonEdit.Document
 						for (int i = 1; i <= 10; i++) {
 							Assert.IsFalse(heightTree.GetIsCollapsed(i));
 						}
-			CheckHeights();
+						CheckHeights();
 					} catch {
 						Console.WriteLine("from = " + from + ", to = " + to);
 						throw;

@@ -15,6 +15,8 @@
 // FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
+#nullable enable
+using System;
 
 using ICSharpCode.AvalonEdit.Document;
 
@@ -26,8 +28,14 @@ namespace ICSharpCode.AvalonEdit.Rendering
 	/// </summary>
 	public sealed class CollapsedLineSection
 	{
-		DocumentLine start, end;
-		HeightTree heightTree;
+		// note: we don't need to store start/end, we could recompute them from
+		// the height tree if that had parent pointers.
+		DocumentLine? start, end;
+		internal readonly HeightTree heightTree;
+		internal HeightTreeLeafNode? startLeaf, endLeaf;
+		// tree nodes that contains the start/end of the collapsed section
+		internal byte startIndexInLeaf, endIndexInLeaf;
+		// start/end line within the HeightTreeLeafNode
 
 #if DEBUG
 		internal string ID;
@@ -61,7 +69,7 @@ namespace ICSharpCode.AvalonEdit.Rendering
 		/// When the section is uncollapsed or the text containing it is deleted,
 		/// this property returns null.
 		/// </summary>
-		public DocumentLine Start {
+		public DocumentLine? Start {
 			get { return start; }
 			internal set { start = value; }
 		}
@@ -71,9 +79,15 @@ namespace ICSharpCode.AvalonEdit.Rendering
 		/// When the section is uncollapsed or the text containing it is deleted,
 		/// this property returns null.
 		/// </summary>
-		public DocumentLine End {
+		public DocumentLine? End {
 			get { return end; }
 			internal set { end = value; }
+		}
+
+		internal void Reset()
+		{
+			start = end = null;
+			startLeaf = endLeaf = null;
 		}
 
 		/// <summary>
@@ -83,18 +97,28 @@ namespace ICSharpCode.AvalonEdit.Rendering
 		/// </summary>
 		public void Uncollapse()
 		{
-			if (start == null)
+			if (startLeaf == null || endLeaf == null)
 				return;
-
-			if (!heightTree.IsDisposed) {
-				heightTree.Uncollapse(this);
-#if DEBUG
-				heightTree.CheckProperties();
-#endif
+			HeightTreeNode startNode = startLeaf;
+			HeightTreeNode endNode = endLeaf;
+			while (startNode != endNode) {
+				startNode.RemoveEvent(this, HeightTreeNode.EventKind.Start);
+				endNode.RemoveEvent(this, HeightTreeNode.EventKind.End);
+				startNode.parent!.UpdateHeight(startNode.indexInParent);
+				endNode.parent!.UpdateHeight(endNode.indexInParent);
+				startNode = startNode.parent;
+				endNode = endNode.parent;
+			}
+			// Now we have arrived at the node which has both events.
+			startNode.RemoveEvent(this, HeightTreeNode.EventKind.Start);
+			startNode.RemoveEvent(this, HeightTreeNode.EventKind.End);
+			// Propagate the new height up to the root node.
+			while (startNode.parent != null) {
+				startNode.parent.UpdateHeight(startNode.indexInParent);
+				startNode = startNode.parent;
 			}
 
-			start = null;
-			end = null;
+			Reset();
 		}
 
 		/// <summary>
@@ -105,6 +129,32 @@ namespace ICSharpCode.AvalonEdit.Rendering
 		{
 			return "[CollapsedSection" + ID + " Start=" + (start != null ? start.LineNumber.ToString() : "null")
 				+ " End=" + (end != null ? end.LineNumber.ToString() : "null") + "]";
+		}
+
+		internal bool StartIsWithin(HeightTreeNode heightTreeNode, out int index)
+		{
+			index = startIndexInLeaf;
+			HeightTreeNode? node = startLeaf;
+			while (node != null) {
+				if (node == heightTreeNode)
+					return true;
+				index = node.indexInParent;
+				node = node.parent;
+			}
+			return false;
+		}
+
+		internal bool EndIsWithin(HeightTreeNode heightTreeNode, out int index)
+		{
+			index = endIndexInLeaf;
+			HeightTreeNode? node = endLeaf;
+			while (node != null) {
+				if (node == heightTreeNode)
+					return true;
+				index = node.indexInParent;
+				node = node.parent;
+			}
+			return false;
 		}
 	}
 }
