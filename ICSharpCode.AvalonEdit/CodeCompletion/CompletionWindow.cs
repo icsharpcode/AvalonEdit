@@ -60,6 +60,8 @@ namespace ICSharpCode.AvalonEdit.CodeCompletion
 			toolTip.PlacementTarget = this;
 			toolTip.Placement = PlacementMode.Right;
 			toolTip.Closed += toolTip_Closed;
+			// assign to FrameworkElement ToolTip to allow styling
+			ToolTip = toolTip;
 
 			AttachEvents();
 		}
