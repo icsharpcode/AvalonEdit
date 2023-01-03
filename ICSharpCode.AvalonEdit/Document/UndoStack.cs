@@ -37,7 +37,7 @@ namespace ICSharpCode.AvalonEdit.Document
 		internal const int StatePlayback = 1;
 		// undo stack is reverting/repeating a set of changes and modifies the document to do this
 		internal const int StatePlaybackModifyDocument = 2;
-		/// state is used for checking that noone but the UndoStack performs changes
+		/// state is used for checking that no one but the UndoStack performs changes
 		/// during Undo events
 		internal int state = StateListen;
 
