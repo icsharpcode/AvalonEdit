@@ -978,7 +978,7 @@ namespace ICSharpCode.AvalonEdit.Rendering
 
 			// number of pixels clipped from the first visual line(s)
 			clippedPixelsOnTop = scrollOffset.Y - heightTree.GetVisualPosition(firstLineInView);
-			// clippedPixelsOnTop should be >= 0, except for floating point inaccurracy.
+			// clippedPixelsOnTop should be >= 0, except for floating point inaccuracy.
 			Debug.Assert(clippedPixelsOnTop >= -ExtensionMethods.Epsilon);
 
 			newVisualLines = new List<VisualLine>();
