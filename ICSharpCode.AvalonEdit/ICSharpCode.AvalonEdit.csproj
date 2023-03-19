@@ -8,11 +8,11 @@
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>ICSharpCode.AvalonEdit.snk</AssemblyOriginatorKeyFile>
     <Company>ic#code</Company>
-    <Copyright>2000-2022 AlphaSierraPapa for the SharpDevelop Team</Copyright>
+    <Copyright>2000-2023 AlphaSierraPapa for the SharpDevelop Team</Copyright>
     <Description>AvalonEdit is the WPF-based text editor used in SharpDevelop.</Description>
-    <Version>6.2</Version>
-    <AssemblyVersion>6.2.0.0</AssemblyVersion>
-    <FileVersion>6.2.0.0</FileVersion>
+    <Version>6.3</Version>
+    <AssemblyVersion>6.3.0.0</AssemblyVersion>
+    <FileVersion>6.3.0.0</FileVersion>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
   </PropertyGroup>
 

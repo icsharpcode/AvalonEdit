@@ -3,6 +3,11 @@ Note: this changelog only lists major changes and fixes for major bugs. For a co
 tbd: AvalonEdit XML
 * tbd
 
+2023/03/19: AvalonEdit 6.3.0
+* Change framework targets: .NET 7.0 instead of .NET Core 3.1
+* Spelling fixes by @jimfoye
+* Fixes by @ltrzesniewski for keyword ordering and named highlighting registrations
+
 2022/12/10: AvalonEdit 6.2.0
 * Change framework targets to .NET Framework 4.6.2, .NET Core 3.1 and .NET 6.0 (.NET Framework 4.0, 4.5 and .NET 5.0 removed)
 * Minor bug fixes
