@@ -19,6 +19,9 @@
 using System;
 using System.ComponentModel;
 using System.Reflection;
+using System.Text.RegularExpressions;
+
+using ICSharpCode.AvalonEdit.Rendering;
 
 namespace ICSharpCode.AvalonEdit
 {
@@ -166,6 +169,20 @@ namespace ICSharpCode.AvalonEdit
 			}
 		}
 
+		string linkRegex = LinkElementGenerator.defaultLinkRegex.ToString();
+		/// <summary>
+		/// Gets/Sets the regex used to parse hyperlinks.
+		/// </summary>
+		public virtual string LinkRegex {
+			get { return linkRegex; }
+			set {
+				if (!Equals(linkRegex, value)) {
+					linkRegex = value;
+					OnPropertyChanged(nameof(LinkRegex));
+				}
+			}
+		}
+
 		bool enableEmailHyperlinks = true;
 
 		/// <summary>
@@ -179,6 +196,20 @@ namespace ICSharpCode.AvalonEdit
 				if (enableEmailHyperlinks != value) {
 					enableEmailHyperlinks = value;
 					OnPropertyChanged("EnableEMailHyperlinks");
+				}
+			}
+		}
+
+		string mailRegex = LinkElementGenerator.defaultMailRegex.ToString();
+		/// <summary>
+		/// Gets/Sets the regex used to parse mail hyperlinks.
+		/// </summary>
+		public virtual string MailRegex {
+			get { return mailRegex; }
+			set {
+				if (!Equals(mailRegex, value)) {
+					mailRegex = value;
+					OnPropertyChanged(nameof(MailRegex));
 				}
 			}
 		}
