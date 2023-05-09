@@ -70,6 +70,28 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 		/// </summary>
 		public bool SpanColorIncludesEnd { get; set; }
 
+		/// <summary>
+		/// Gets the match from the specified position using the <see cref="StartExpression"/> regex.
+		/// </summary>
+		/// <param name="text">The string to search for a match</param>
+		/// <param name="position">The zero-based character position at which to start the search</param>
+		/// <returns>And object that contains information about the match</returns>
+		public RuleMatch GetStartMatch(string text, int position)
+		{
+			return RuleMatch.FromRegexMatch(StartExpression.Match(text, position));
+		}
+
+		/// <summary>
+		/// Gets the match from the specified position using the <see cref="EndExpression"/> regex.
+		/// </summary>
+		/// <param name="text">The string to search for a match</param>
+		/// <param name="position">The zero-based character position at which to start the search</param>
+		/// <returns>And object that contains information about the match</returns>
+		public RuleMatch GetEndMatch(string text, int position)
+		{
+			return RuleMatch.FromRegexMatch(EndExpression.Match(text, position));
+		}
+
 		/// <inheritdoc/>
 		public override string ToString()
 		{
