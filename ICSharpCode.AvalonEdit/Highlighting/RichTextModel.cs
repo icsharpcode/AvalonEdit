@@ -22,6 +22,8 @@ using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using System.Windows.Documents;
+using System.Windows.Media;
+using System.Windows.Media.Media3D;
 
 using ICSharpCode.AvalonEdit.Document;
 
@@ -229,6 +231,29 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 			int endIndex = GetIndexForOffset(offset + length);
 			for (int i = startIndex; i < endIndex; i++) {
 				stateChanges[i].Background = brush;
+			}
+		}
+		/// <summary>
+		/// Sets the fontsize on the specified text segment 
+		/// </summary>
+		public void SetFontSize(int offset, int length, int fontSize)
+		{
+			int startIndex = GetIndexForOffset(offset);
+			int endIndex = GetIndexForOffset(offset + length);
+			for (int i = startIndex; i < endIndex; i++) {
+				stateChanges[i].FontSize = fontSize;
+			}
+		}
+
+		/// <summary>
+		/// Sets the FontFamily for the specified text segment
+		/// </summary>
+		public void SetFontFamily(int offset, int length, FontFamily family)
+		{
+			int startIndex = GetIndexForOffset(offset);
+			int endIndex = GetIndexForOffset(offset + length);
+			for (int i = startIndex; i < endIndex; i++) {
+				stateChanges[i].FontFamily = family;
 			}
 		}
 

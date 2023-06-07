@@ -179,6 +179,31 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 			return runs;
 		}
 
+		public Run[] CreateRunsOnLineBreaks()
+		{
+			var lines = text.Split(Environment.NewLine);
+			int relevantIndex=0;
+			Run[] runs = new Run[lines.Length];
+			for (int i = 0; i < runs.Length; i++) 
+			{
+				int lengthUntil = lines.Take(i).Sum(x => x.Length) + (i * Environment.NewLine.Length);
+				for(int j = 0; j < stateChangeOffsets.Length; j++) {
+					if (stateChangeOffsets[j]==lengthUntil)
+						relevantIndex = j;
+					if (j == stateChangeOffsets.Length - 1)
+						relevantIndex = j;
+					if (stateChangeOffsets[j]>lengthUntil)
+						relevantIndex = j-1;
+				}
+				Run r = new Run(lines[i]);
+				HighlightingColor state = stateChanges[relevantIndex];
+				ApplyColorToTextElement(r,state);
+				runs[i] = r;
+			}
+
+			return runs;
+		}
+
 		internal static void ApplyColorToTextElement(TextElement r, HighlightingColor state)
 		{
 			if (state.Foreground != null)
@@ -189,6 +214,12 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 				r.FontWeight = state.FontWeight.Value;
 			if (state.FontStyle != null)
 				r.FontStyle = state.FontStyle.Value;
+			if (state.FontFamily != null)
+				r.FontFamily = state.FontFamily;
+			if (state.FontSize != null) {
+				r.FontSize = state.FontSize.Value;
+			}
+
 		}
 
 		/// <summary>

@@ -16,8 +16,12 @@
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
 
+using System.Linq;
 using System.Windows;
+using System.Windows.Documents;
 using System.Windows.Media;
+
+using ICSharpCode.AvalonEdit.Utils;
 
 using NUnit.Framework;
 
@@ -54,5 +58,61 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 			var html = text.ToHtml(new HtmlOptions());
 			Assert.AreEqual("This&nbsp;<span style=\"background-color: #ffff00; \">has</span>&nbsp;<span style=\"color: #0000ff; \">spaces</span><span style=\"font-weight: bold; \">!</span>", html);
 		}
+
+		[Test]
+		public void ToRunTest()
+		{
+			var textModel = new RichTextModel();
+			textModel.SetForeground(0,4, new SimpleHighlightingBrush(Colors.Yellow));
+			textModel.SetFontSize(0, 4, 55);
+			textModel.SetForeground(4, 4, new SimpleHighlightingBrush(Colors.Black));
+			textModel.SetFontFamily(4, 4, new FontFamily("Comic Sans MS"));
+			var text = new RichText("ab\r\nTest",textModel);
+			var runs = text.CreateRuns();
+
+			Run[] expected = new Run[2];
+			Run run1 = new Run("ab\r\n");
+			run1.Foreground = (new SimpleHighlightingBrush(Colors.Yellow)).GetBrush(null);
+			run1.FontSize = 55;
+			Run run2 = new Run("Test");
+			run2.FontFamily = new FontFamily("Comic Sans MS");
+			run2.Foreground = (new SimpleHighlightingBrush(Colors.Black)).GetBrush(null);
+			expected[0] = run1;
+			expected[1] = run2;
+			for(int i= 0; i<expected.Length; i++) {
+				Assert.AreEqual(expected[i].Foreground.ToString(), runs[i].Foreground.ToString());
+				Assert.AreEqual(expected[i].FontSize, runs[i].FontSize);
+				Assert.AreEqual(expected[i].Text, runs[i].Text);
+				Assert.AreEqual(expected[i].TextDecorations, runs[i].TextDecorations);
+			}
+		}
+		[Test]
+		public void ToRunOnLineBreakTest()
+		{
+			var textModel = new RichTextModel();
+			textModel.SetForeground(0, 4, new SimpleHighlightingBrush(Colors.Yellow));
+			textModel.SetFontSize(0, 4, 55);
+			textModel.SetForeground(4, 4, new SimpleHighlightingBrush(Colors.Black));
+			textModel.SetFontFamily(4, 4, new FontFamily("Comic Sans MS"));
+			var text = new RichText("ab\r\nTest", textModel);
+			var runs = text.CreateRunsOnLineBreaks();
+
+			Run[] expected = new Run[2];
+			Run run1 = new Run("ab");
+			run1.Foreground = (new SimpleHighlightingBrush(Colors.Yellow)).GetBrush(null);
+			run1.FontSize = 55;
+			Run run2 = new Run("Test");
+			run2.FontFamily = new FontFamily("Comic Sans MS");
+			run2.Foreground = (new SimpleHighlightingBrush(Colors.Black)).GetBrush(null);
+			expected[0] = run1;
+			expected[1] = run2;
+			for (int i = 0; i < expected.Length; i++) {
+				Assert.AreEqual(expected[i].Foreground.ToString(), runs[i].Foreground.ToString());
+				Assert.AreEqual(expected[i].FontSize, runs[i].FontSize);
+				Assert.AreEqual(expected[i].Text, runs[i].Text);
+				Assert.AreEqual(expected[i].TextDecorations, runs[i].TextDecorations);
+			}
+		}
+
 	}
 }
