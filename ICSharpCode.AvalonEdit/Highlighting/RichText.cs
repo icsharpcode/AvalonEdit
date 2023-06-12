@@ -179,6 +179,9 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 			return runs;
 		}
 
+		/// <summary>
+		/// Creates WPF Run instances on each new Line, using the active Highlighting at the start of the line for the whole Run. 
+		/// </summary>
 		public Run[] CreateRunsOnLineBreaks()
 		{
 			var lines = text.Split(Environment.NewLine);
@@ -188,12 +191,18 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 			{
 				int lengthUntil = lines.Take(i).Sum(x => x.Length) + (i * Environment.NewLine.Length);
 				for(int j = 0; j < stateChangeOffsets.Length; j++) {
-					if (stateChangeOffsets[j]==lengthUntil)
+					if (stateChangeOffsets[j] == lengthUntil) {
 						relevantIndex = j;
-					if (j == stateChangeOffsets.Length - 1)
+						break;
+					}
+					if (j == stateChangeOffsets.Length - 1) {
 						relevantIndex = j;
-					if (stateChangeOffsets[j]>lengthUntil)
+						break;
+					}
+					if (stateChangeOffsets[j] > lengthUntil) {
 						relevantIndex = j-1;
+						break;
+					}
 				}
 				Run r = new Run(lines[i]);
 				HighlightingColor state = stateChanges[relevantIndex];
