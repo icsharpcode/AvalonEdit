@@ -45,6 +45,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 		bool? strikethrough;
 		HighlightingBrush foreground;
 		HighlightingBrush background;
+		FontStretch? fontStretch;
 		bool frozen;
 
 		/// <summary>
@@ -174,6 +175,23 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 		}
 
 		/// <summary>
+		/// Gets/sets the font strech applied by the highlighting
+		/// </summary>
+		public FontStretch? FontStretch {
+			get {
+				return fontStretch;
+			}
+			set {
+				if(frozen)
+					throw new InvalidOperationException();
+				if (value == FontStretches.Medium)
+					fontStretch = FontStretches.Normal;
+				else
+					fontStretch = value;
+			}
+		}
+
+		/// <summary>
 		/// Creates a new HighlightingColor instance.
 		/// </summary>
 		public HighlightingColor()
@@ -202,6 +220,8 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 				this.FontFamily = new FontFamily(info.GetString("Family"));
 			if (info.GetBoolean("HasSize"))
 				this.FontSize = info.GetInt32("Size");
+			if (info.GetBoolean("HasStretch"))
+				this.FontStretch = (FontStretch?)new FontStretchConverter().ConvertFromInvariantString(info.GetString("Stretch"));
 		}
 
 		/// <summary>
@@ -233,6 +253,9 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 			info.AddValue("HasSize", this.FontSize.HasValue);
 			if (this.FontSize.HasValue)
 				info.AddValue("Size", this.FontSize.Value.ToString());
+			info.AddValue("HasStretch",this.FontStretch.HasValue);
+			if(this.FontStretch.HasValue)
+				info.AddValue("Stretch",this.FontStretch.Value.ToString());
 		}
 
 		/// <summary>
@@ -275,6 +298,11 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 
 				b.Remove(b.Length - 1, 1);
 				b.Append(Strikethrough.Value ? " line-through" : " none");
+				b.Append("; ");
+			}
+			if(FontStretch != null) {
+				b.Append("font-stretch: ");
+				b.Append(FontStretch.Value.ToString().ToLowerInvariant());	
 				b.Append("; ");
 			}
 			return b.ToString();
@@ -331,7 +359,8 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 			return this.name == other.name && this.fontWeight == other.fontWeight
 				&& this.fontStyle == other.fontStyle && this.underline == other.underline && this.strikethrough == other.strikethrough
 				&& object.Equals(this.foreground, other.foreground) && object.Equals(this.background, other.background)
-				&& object.Equals(this.fontFamily, other.fontFamily) && object.Equals(this.FontSize, other.FontSize);
+				&& object.Equals(this.fontFamily, other.fontFamily) && object.Equals(this.FontSize, other.FontSize)
+				&& object.Equals(this.fontStretch,other.fontStretch);
 		}
 
 		/// <inheritdoc/>
@@ -350,7 +379,9 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 				if (fontFamily != null)
 					hashCode += 1000000123 * fontFamily.GetHashCode();
 				if (fontSize != null)
-					hashCode += 1000000167 * fontSize.GetHashCode();
+					hashCode += 1000000181 * fontSize.GetHashCode();
+				if (fontStretch != null)
+					hashCode += 1000000207 * fontStretch.GetHashCode();
 			}
 			return hashCode;
 		}
@@ -378,13 +409,15 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 				this.fontFamily = color.fontFamily;
 			if (color.fontSize != null)
 				this.fontSize = color.fontSize;
+			if(color.fontStretch != null)
+				this.fontStretch = color.fontStretch;
 		}
 
 		internal bool IsEmptyForMerge {
 			get {
 				return fontWeight == null && fontStyle == null && underline == null
 					   && strikethrough == null && foreground == null && background == null
-					   && fontFamily == null && fontSize == null;
+					   && fontFamily == null && fontSize == null && fontStretch == null;
 			}
 		}
 	}

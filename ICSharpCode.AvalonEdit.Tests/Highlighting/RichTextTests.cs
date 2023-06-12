@@ -65,8 +65,10 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 		{
 			var textModel = new RichTextModel();
 			textModel.SetForeground(0,4, new SimpleHighlightingBrush(Colors.Yellow));
+			textModel.SetStrikethrough(0, 4, true);
 			textModel.SetFontSize(0, 4, 55);
 			textModel.SetForeground(4, 4, new SimpleHighlightingBrush(Colors.Black));
+			textModel.SetUnderline(4, 4, false);
 			textModel.SetFontFamily(4, 4, new FontFamily("Comic Sans MS"));
 			textModel.SetForeground(8,99, new SimpleHighlightingBrush(Colors.Blue));
 			var text = new RichText("ab\r\nTest as\r\n fast",textModel);
@@ -76,6 +78,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 			Run run1 = new Run("ab\r\n");
 			run1.Foreground = (new SimpleHighlightingBrush(Colors.Yellow)).GetBrush(null);
 			run1.FontSize = 55;
+			run1.TextDecorations.Add(TextDecorations.Strikethrough);
 			Run run2 = new Run("Test");
 			run2.FontFamily = new FontFamily("Comic Sans MS");
 			run2.Foreground = (new SimpleHighlightingBrush(Colors.Black)).GetBrush(null);
@@ -97,8 +100,10 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 		{
 			var textModel = new RichTextModel();
 			textModel.SetForeground(0, 4, new SimpleHighlightingBrush(Colors.Yellow));
+			textModel.SetStrikethrough(0, 4, true);
 			textModel.SetFontSize(0, 4, 55);
 			textModel.SetForeground(4, 4, new SimpleHighlightingBrush(Colors.Black));
+			textModel.SetUnderline(4, 4, false);
 			textModel.SetFontFamily(4, 4, new FontFamily("Comic Sans MS"));
 			textModel.SetForeground(8,99, new SimpleHighlightingBrush(Colors.Blue));
 			var text = new RichText("ab\r\nTest as\r\n fast", textModel);
@@ -108,6 +113,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 			Run run1 = new Run("ab");
 			run1.Foreground = (new SimpleHighlightingBrush(Colors.Yellow)).GetBrush(null);
 			run1.FontSize = 55;
+			run1.TextDecorations.Add(TextDecorations.Strikethrough);
 			Run run2 = new Run("Test as");
 			run2.FontFamily = new FontFamily("Comic Sans MS");
 			run2.Foreground = (new SimpleHighlightingBrush(Colors.Black)).GetBrush(null);

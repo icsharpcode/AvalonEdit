@@ -213,7 +213,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 			return runs;
 		}
 
-		internal static void ApplyColorToTextElement(TextElement r, HighlightingColor state)
+		internal static void ApplyColorToTextElement(Run r, HighlightingColor state)
 		{
 			if (state.Foreground != null)
 				r.Foreground = state.Foreground.GetBrush(null);
@@ -227,6 +227,15 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 				r.FontFamily = state.FontFamily;
 			if (state.FontSize != null) {
 				r.FontSize = state.FontSize.Value;
+			}
+			if (state.Strikethrough != null && state.Strikethrough.Value) {
+				r.TextDecorations.Add(System.Windows.TextDecorations.Strikethrough);
+			}
+			if (state.Underline != null && state.Underline.Value) {
+				r.TextDecorations.Add(System.Windows.TextDecorations.Underline);
+			}
+			if(state.FontStretch != null) {
+				r.FontStretch = state.FontStretch.Value;
 			}
 
 		}

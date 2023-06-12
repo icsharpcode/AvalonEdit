@@ -282,6 +282,42 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 		}
 
 		/// <summary>
+		/// Sets the Underline property for the specified text segment
+		/// </summary>
+		public void SetUnderline(int offset, int length, bool underline)
+		{
+			int startIndex = GetIndexForOffset(offset);
+			int endIndex = GetIndexForOffset(offset + length);
+			for (int i = startIndex; i < endIndex; i++) {
+				stateChanges[i].Underline = underline;
+			}
+		}
+
+		/// <summary>
+		/// Sets the Strikthrough property for the specified text segment
+		/// </summary>
+		public void SetStrikethrough(int offset, int length, bool strikethrough)
+		{
+			int startIndex = GetIndexForOffset(offset);
+			int endIndex = GetIndexForOffset(offset + length);
+			for (int i = startIndex; i < endIndex; i++) {
+				stateChanges[i].Strikethrough = strikethrough;
+			}
+		}
+		/// <summary>
+		/// Sets the Strikthrough property for the specified text segment
+		/// </summary>
+		public void SetStretch(int offset, int length, FontStretch stretch)
+		{
+			int startIndex = GetIndexForOffset(offset);
+			int endIndex = GetIndexForOffset(offset + length);
+			for (int i = startIndex; i < endIndex; i++) {
+				stateChanges[i].FontStretch = stretch;
+			}
+		}
+
+
+		/// <summary>
 		/// Retrieves the highlighted sections in the specified range.
 		/// The highlighted sections will be sorted by offset, and there will not be any nested or overlapping sections.
 		/// </summary>
