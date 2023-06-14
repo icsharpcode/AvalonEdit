@@ -18,7 +18,7 @@
 
 using System.Windows.Input;
 
-namespace ICSharpCode.AvalonEdit
+namespace AcAvalonEdit
 {
 	/// <summary>
 	/// Custom commands for AvalonEdit.

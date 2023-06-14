@@ -22,10 +22,10 @@ using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Media;
 
-using ICSharpCode.AvalonEdit.Document;
-using ICSharpCode.AvalonEdit.Rendering;
+using AcAvalonEdit.Document;
+using AcAvalonEdit.Rendering;
 
-namespace ICSharpCode.AvalonEdit.Snippets
+namespace AcAvalonEdit.Snippets
 {
 	/// <summary>
 	/// Text element that is supposed to be replaced by the user.

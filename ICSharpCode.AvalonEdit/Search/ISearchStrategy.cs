@@ -20,9 +20,9 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
-using ICSharpCode.AvalonEdit.Document;
+using AcAvalonEdit.Document;
 
-namespace ICSharpCode.AvalonEdit.Search
+namespace AcAvalonEdit.Search
 {
 	/// <summary>
 	/// Basic interface for search algorithms.

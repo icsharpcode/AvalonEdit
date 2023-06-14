@@ -21,10 +21,10 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 
-using ICSharpCode.AvalonEdit.Document;
-using ICSharpCode.AvalonEdit.Utils;
+using AcAvalonEdit.Document;
+using AcAvalonEdit.Utils;
 
-namespace ICSharpCode.AvalonEdit.Rendering
+namespace AcAvalonEdit.Rendering
 {
 	/// <summary>
 	/// Red-black tree similar to DocumentLineTree, augmented with collapsing and height data.

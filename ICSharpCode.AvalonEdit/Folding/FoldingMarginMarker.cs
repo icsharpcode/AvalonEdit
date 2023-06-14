@@ -21,10 +21,10 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 
-using ICSharpCode.AvalonEdit.Rendering;
-using ICSharpCode.AvalonEdit.Utils;
+using AcAvalonEdit.Rendering;
+using AcAvalonEdit.Utils;
 
-namespace ICSharpCode.AvalonEdit.Folding
+namespace AcAvalonEdit.Folding
 {
 	sealed class FoldingMarginMarker : UIElement
 	{

@@ -19,7 +19,7 @@
 using System.Windows;
 using System.Windows.Media.TextFormatting;
 
-namespace ICSharpCode.AvalonEdit.Rendering
+namespace AcAvalonEdit.Rendering
 {
 	sealed class VisualLineTextParagraphProperties : TextParagraphProperties
 	{

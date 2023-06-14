@@ -22,11 +22,11 @@ using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Media;
 
-using ICSharpCode.AvalonEdit.Utils;
+using AcAvalonEdit.Utils;
 
 using NUnit.Framework;
 
-namespace ICSharpCode.AvalonEdit.Highlighting
+namespace AcAvalonEdit.Highlighting
 {
 	[TestFixture]
 	public class RichTextTests

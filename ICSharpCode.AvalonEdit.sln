@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.33516.290
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ICSharpCode.AvalonEdit", "ICSharpCode.AvalonEdit\ICSharpCode.AvalonEdit.csproj", "{417F2A81-E1C2-4366-B24B-C5DC8F958844}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AcAvalonEdit", "ICSharpCode.AvalonEdit\AcAvalonEdit.csproj", "{417F2A81-E1C2-4366-B24B-C5DC8F958844}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ICSharpCode.AvalonEdit.Sample", "ICSharpCode.AvalonEdit.Sample\ICSharpCode.AvalonEdit.Sample.csproj", "{E506196C-A5E8-4D24-B889-6BA401C0B2B9}"
 EndProject

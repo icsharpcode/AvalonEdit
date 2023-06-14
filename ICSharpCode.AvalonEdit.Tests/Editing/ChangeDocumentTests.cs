@@ -18,10 +18,10 @@
 
 using System;
 using System.Text;
-using ICSharpCode.AvalonEdit.Document;
+using AcAvalonEdit.Document;
 using NUnit.Framework;
 
-namespace ICSharpCode.AvalonEdit.Editing
+namespace AcAvalonEdit.Editing
 {
 	[TestFixture]
 	[Apartment(System.Threading.ApartmentState.STA)]

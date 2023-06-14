@@ -20,10 +20,10 @@ using System;
 using System.Diagnostics;
 using System.Windows;
 
-using ICSharpCode.AvalonEdit.Document;
-using ICSharpCode.AvalonEdit.Rendering;
+using AcAvalonEdit.Document;
+using AcAvalonEdit.Rendering;
 
-namespace ICSharpCode.AvalonEdit.Editing
+namespace AcAvalonEdit.Editing
 {
 	/// <summary>
 	/// Base class for margins.

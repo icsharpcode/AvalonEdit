@@ -18,9 +18,9 @@
 
 using System;
 
-using ICSharpCode.AvalonEdit.Document;
+using AcAvalonEdit.Document;
 
-namespace ICSharpCode.AvalonEdit.Editing
+namespace AcAvalonEdit.Editing
 {
 	/// <summary>
 	/// Represents a selected segment.

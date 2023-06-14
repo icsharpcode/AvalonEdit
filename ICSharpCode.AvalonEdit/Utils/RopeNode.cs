@@ -21,7 +21,7 @@ using System.Diagnostics;
 
 using System.Text;
 
-namespace ICSharpCode.AvalonEdit.Utils
+namespace AcAvalonEdit.Utils
 {
 	// Class used to represent a node in the tree.
 	// There are three types of nodes:

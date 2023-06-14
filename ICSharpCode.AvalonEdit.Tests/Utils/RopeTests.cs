@@ -21,7 +21,7 @@ using System.IO;
 using NUnit.Framework;
 using System.Text;
 
-namespace ICSharpCode.AvalonEdit.Utils
+namespace AcAvalonEdit.Utils
 {
 	[TestFixture]
 	public class RopeTests

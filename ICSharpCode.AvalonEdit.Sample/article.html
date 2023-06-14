@@ -60,7 +60,7 @@ For details on AvalonEdit, please see <a href="http://www.avalonedit.net/">www.a
 
 <h2>Introduction</h2>
 
-<p>ICSharpCode.AvalonEdit is the WPF-based text editor that I've written for SharpDevelop 4.0. It is meant as a replacement
+<p>AcAvalonEdit is the WPF-based text editor that I've written for SharpDevelop 4.0. It is meant as a replacement
 for <a href="http://www.codeproject.com/KB/edit/TextEditorControl.aspx">ICSharpCode.TextEditor</a>, but should be:
 <ul>
 <li>Extensible</li>
@@ -84,7 +84,7 @@ the mscorlib XML documentation file, 7 MB, 74100 LOC), even when features like f
 
 <h2>Using the Code</h2>
 
-<p>The main class of the editor is <code>ICSharpCode.AvalonEdit.TextEditor</code>.
+<p>The main class of the editor is <code>AcAvalonEdit.TextEditor</code>.
 You can use it just similar to a normal WPF <code>TextBox</code>:
 <pre lang="xml">&lt;avalonEdit:TextEditor
     xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit"
@@ -107,15 +107,15 @@ ASP.NET, Boo, Coco/R grammars, C++, C#, HTML, Java, JavaScript, Patch files, PHP
 As you can see in this dependency graph, AvalonEdit consists of a few sub-namespaces that have cleanly separated jobs.
 Most of the namespaces have a kind of 'main' class.
 <ul>
-<li>ICSharpCode.AvalonEdit.Utils: Various utility classes</li>
-<li>ICSharpCode.AvalonEdit.Document: <code>TextDocument</code> &mdash; text model</li>
-<li>ICSharpCode.AvalonEdit.Rendering: <code>TextView</code> &mdash; extensible view onto the document</li>
-<li>ICSharpCode.AvalonEdit.Editing: <code>TextArea</code> &mdash; controls text editing (e.g. caret, selection, handles user input)</li>
-<li>ICSharpCode.AvalonEdit.Folding: <code>FoldingManager</code> &mdash; enables code collapsing</li>
-<li>ICSharpCode.AvalonEdit.Highlighting: <code>HighlightingManager</code> &mdash; highlighting engine</li>
-<li>ICSharpCode.AvalonEdit.Highlighting.Xshd: <code>HighlightingLoader</code> &mdash; XML syntax highlighting definition support (.xshd files)</li>
-<li>ICSharpCode.AvalonEdit.CodeCompletion: <code>CompletionWindow</code> &mdash; shows a drop-down list for code completion</li>
-<li>ICSharpCode.AvalonEdit: <code>TextEditor</code> &mdash; the main control that brings it all together</li>
+<li>AcAvalonEdit.Utils: Various utility classes</li>
+<li>AcAvalonEdit.Document: <code>TextDocument</code> &mdash; text model</li>
+<li>AcAvalonEdit.Rendering: <code>TextView</code> &mdash; extensible view onto the document</li>
+<li>AcAvalonEdit.Editing: <code>TextArea</code> &mdash; controls text editing (e.g. caret, selection, handles user input)</li>
+<li>AcAvalonEdit.Folding: <code>FoldingManager</code> &mdash; enables code collapsing</li>
+<li>AcAvalonEdit.Highlighting: <code>HighlightingManager</code> &mdash; highlighting engine</li>
+<li>AcAvalonEdit.Highlighting.Xshd: <code>HighlightingLoader</code> &mdash; XML syntax highlighting definition support (.xshd files)</li>
+<li>AcAvalonEdit.CodeCompletion: <code>CompletionWindow</code> &mdash; shows a drop-down list for code completion</li>
+<li>AcAvalonEdit: <code>TextEditor</code> &mdash; the main control that brings it all together</li>
 </ul>
 
 <p>
@@ -129,7 +129,7 @@ or <code>textEditor.TextArea.TextView</code>.
 <!------------------------------------------------------------>
 <h2>The Text Model: Document</h2>
 
-<p>The main class of the model is <code>ICSharpCode.AvalonEdit.Document.TextDocument</code>.
+<p>The main class of the model is <code>AcAvalonEdit.Document.TextDocument</code>.
 Basically, the document is a <code>StringBuilder</code> with events.
 However, the <code>Document</code> namespace also contains several features that are useful to applications working with the text editor.
 
@@ -184,7 +184,7 @@ This collection is read-only to user code and is automatically updated to reflec
 In the whole 'Document' section, there was no mention of extensibility.
 The text rendering infrastructure now has to compensate for that by being completely extensible.
 
-<p>The <code>ICSharpCode.AvalonEdit.Rendering.TextView</code> class is the heart of AvalonEdit.
+<p>The <code>AcAvalonEdit.Rendering.TextView</code> class is the heart of AvalonEdit.
 It takes care of getting the document onto the screen.
 
 <p>To do this in an extensible way, the <code>TextView</code> uses its own kind of model: the <code>VisualLine</code>.
@@ -323,7 +323,7 @@ cached from before the user typed <code>/*</code>.
 
 <p>While the stack of active spans might change frequently inside the lines, it rarely changes from the beginning of one line to the beginning of the next line.
 With most languages, such changes happen only at the start and end of multiline comments. The highlighting engine exploits this property by storing
-the list of span stacks in a special data structure (<code>ICSharpCode.AvalonEdit.Utils.CompressingTreeList</code>).
+the list of span stacks in a special data structure (<code>AcAvalonEdit.Utils.CompressingTreeList</code>).
 The memory usage of the highlighting engine is linear to the number of span stack changes; not to the total number of lines.
 This allows the highlighting engine to store the span stacks for big code files using only a tiny amount of memory,
 especially in languages like C# where sequences of <code>//</code> or <code>///</code> are more popular than <code>/* */</code> comments.

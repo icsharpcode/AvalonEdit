@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 
-namespace ICSharpCode.AvalonEdit.Document
+namespace AcAvalonEdit.Document
 {
 	/// <summary>
 	/// Creates/Deletes lines when text is inserted/removed.

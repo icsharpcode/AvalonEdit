@@ -25,11 +25,11 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.TextFormatting;
 
-using ICSharpCode.AvalonEdit.Document;
-using ICSharpCode.AvalonEdit.Rendering;
-using ICSharpCode.AvalonEdit.Utils;
+using AcAvalonEdit.Document;
+using AcAvalonEdit.Rendering;
+using AcAvalonEdit.Utils;
 
-namespace ICSharpCode.AvalonEdit.Editing
+namespace AcAvalonEdit.Editing
 {
 	/// <summary>
 	/// Margin showing line numbers.

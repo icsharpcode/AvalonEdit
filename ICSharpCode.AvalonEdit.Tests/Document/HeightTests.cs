@@ -18,10 +18,10 @@
 
 using System;
 using System.Linq;
-using ICSharpCode.AvalonEdit.Rendering;
+using AcAvalonEdit.Rendering;
 using NUnit.Framework;
 
-namespace ICSharpCode.AvalonEdit.Document
+namespace AcAvalonEdit.Document
 {
 	[TestFixture]
 	public class HeightTests

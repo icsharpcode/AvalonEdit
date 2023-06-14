@@ -18,9 +18,9 @@
 
 using System;
 
-using ICSharpCode.AvalonEdit.Document;
+using AcAvalonEdit.Document;
 
-namespace ICSharpCode.AvalonEdit.Indentation.CSharp
+namespace AcAvalonEdit.Indentation.CSharp
 {
 	/// <summary>
 	/// Smart indentation for C#.

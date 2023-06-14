@@ -26,11 +26,11 @@ using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Input;
 
-using ICSharpCode.AvalonEdit.Document;
-using ICSharpCode.AvalonEdit.Highlighting;
-using ICSharpCode.AvalonEdit.Utils;
+using AcAvalonEdit.Document;
+using AcAvalonEdit.Highlighting;
+using AcAvalonEdit.Utils;
 
-namespace ICSharpCode.AvalonEdit.Editing
+namespace AcAvalonEdit.Editing
 {
 	/// <summary>
 	/// We re-use the CommandBinding and InputBinding instances between multiple text areas,

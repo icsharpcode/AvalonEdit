@@ -16,9 +16,9 @@
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
 
-using ICSharpCode.AvalonEdit.Document;
+using AcAvalonEdit.Document;
 
-namespace ICSharpCode.AvalonEdit.Rendering
+namespace AcAvalonEdit.Rendering
 {
 	/// <summary>
 	/// Represents a collapsed line section.

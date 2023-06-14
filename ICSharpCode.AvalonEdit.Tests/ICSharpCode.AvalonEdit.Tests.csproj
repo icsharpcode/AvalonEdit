@@ -31,6 +31,6 @@
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.2.0" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ICSharpCode.AvalonEdit\ICSharpCode.AvalonEdit.csproj" />
+    <ProjectReference Include="..\ICSharpCode.AvalonEdit\AcAvalonEdit.csproj" />
   </ItemGroup>
 </Project>

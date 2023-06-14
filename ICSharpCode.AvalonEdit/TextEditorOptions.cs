@@ -20,7 +20,7 @@ using System;
 using System.ComponentModel;
 using System.Reflection;
 
-namespace ICSharpCode.AvalonEdit
+namespace AcAvalonEdit
 {
 	/// <summary>
 	/// A container for the text editor options.

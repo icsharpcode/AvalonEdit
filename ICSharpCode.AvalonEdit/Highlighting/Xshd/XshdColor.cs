@@ -22,7 +22,7 @@ using System.Runtime.Serialization;
 using System.Windows;
 using System.Windows.Media;
 
-namespace ICSharpCode.AvalonEdit.Highlighting.Xshd
+namespace AcAvalonEdit.Highlighting.Xshd
 {
 	/// <summary>
 	/// A color in an Xshd file.

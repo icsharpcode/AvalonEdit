@@ -20,7 +20,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace ICSharpCode.AvalonEdit.Document
+namespace AcAvalonEdit.Document
 {
 	/// <summary>
 	/// A read-only view on a (potentially mutable) text source.

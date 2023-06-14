@@ -20,7 +20,7 @@ using System;
 using System.ComponentModel;
 using System.Globalization;
 
-namespace ICSharpCode.AvalonEdit.Document
+namespace AcAvalonEdit.Document
 {
 	/// <summary>
 	/// A line/column position.

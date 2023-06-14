@@ -20,7 +20,7 @@ using System;
 using System.Windows;
 using System.Windows.Media;
 
-namespace ICSharpCode.AvalonEdit.Rendering
+namespace AcAvalonEdit.Rendering
 {
 	sealed class CurrentLineHighlightRenderer : IBackgroundRenderer
 	{

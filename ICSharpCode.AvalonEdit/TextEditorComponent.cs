@@ -19,11 +19,11 @@
 using System;
 using System.ComponentModel;
 
-using ICSharpCode.AvalonEdit.Document;
-using ICSharpCode.AvalonEdit.Editing;
-using ICSharpCode.AvalonEdit.Rendering;
+using AcAvalonEdit.Document;
+using AcAvalonEdit.Editing;
+using AcAvalonEdit.Rendering;
 
-namespace ICSharpCode.AvalonEdit
+namespace AcAvalonEdit
 {
 	/// <summary>
 	/// Represents a text editor control (<see cref="TextEditor"/>, <see cref="TextArea"/>

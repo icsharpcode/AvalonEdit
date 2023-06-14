@@ -20,9 +20,9 @@ using System;
 using System.Collections.Generic;
 using System.Windows.Input;
 
-using ICSharpCode.AvalonEdit.Utils;
+using AcAvalonEdit.Utils;
 
-namespace ICSharpCode.AvalonEdit.Editing
+namespace AcAvalonEdit.Editing
 {
 	/// <summary>
 	/// A set of input bindings and event handlers for the text area.

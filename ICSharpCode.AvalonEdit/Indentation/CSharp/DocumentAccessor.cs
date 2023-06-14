@@ -18,9 +18,9 @@
 
 using System;
 
-using ICSharpCode.AvalonEdit.Document;
+using AcAvalonEdit.Document;
 
-namespace ICSharpCode.AvalonEdit.Indentation.CSharp
+namespace AcAvalonEdit.Indentation.CSharp
 {
 	/// <summary>
 	/// Interface used for the indentation class to access the document.

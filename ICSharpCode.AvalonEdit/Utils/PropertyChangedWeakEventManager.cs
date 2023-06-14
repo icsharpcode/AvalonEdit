@@ -18,7 +18,7 @@
 
 using System.ComponentModel;
 
-namespace ICSharpCode.AvalonEdit.Utils
+namespace AcAvalonEdit.Utils
 {
 	/// <summary>
 	/// WeakEventManager for INotifyPropertyChanged.PropertyChanged.

@@ -23,9 +23,9 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.TextFormatting;
 
-using ICSharpCode.AvalonEdit.Document;
+using AcAvalonEdit.Document;
 
-namespace ICSharpCode.AvalonEdit.Rendering
+namespace AcAvalonEdit.Rendering
 {
 	/// <summary>
 	/// Represents a visual element in the document.

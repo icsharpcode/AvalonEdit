@@ -18,10 +18,10 @@
 
 using System;
 using System.Linq;
-using ICSharpCode.AvalonEdit.Document;
+using AcAvalonEdit.Document;
 using NUnit.Framework;
 
-namespace ICSharpCode.AvalonEdit.Search
+namespace AcAvalonEdit.Search
 {
 	[TestFixture]
 	public class FindTests

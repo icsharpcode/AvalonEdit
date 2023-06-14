@@ -21,7 +21,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 
-namespace ICSharpCode.AvalonEdit.Utils
+namespace AcAvalonEdit.Utils
 {
 	/// <summary>
 	/// TextReader implementation that reads text from a rope.

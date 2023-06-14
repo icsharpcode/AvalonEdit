@@ -26,13 +26,13 @@ using System.Windows.Media;
 using System.Windows.Threading;
 using System.Xml;
 
-using ICSharpCode.AvalonEdit.CodeCompletion;
-using ICSharpCode.AvalonEdit.Folding;
-using ICSharpCode.AvalonEdit.Highlighting;
-using ICSharpCode.AvalonEdit.Search;
+using AcAvalonEdit.CodeCompletion;
+using AcAvalonEdit.Folding;
+using AcAvalonEdit.Highlighting;
+using AcAvalonEdit.Search;
 using Microsoft.Win32;
 
-namespace ICSharpCode.AvalonEdit.Sample
+namespace AcAvalonEdit.Sample
 {
 	/// <summary>
 	/// Interaction logic for Window1.xaml
@@ -47,7 +47,7 @@ namespace ICSharpCode.AvalonEdit.Sample
 				if (s == null)
 					throw new InvalidOperationException("Could not find embedded resource");
 				using (XmlReader reader = new XmlTextReader(s)) {
-					customHighlighting = ICSharpCode.AvalonEdit.Highlighting.Xshd.
+					customHighlighting = AcAvalonEdit.Highlighting.Xshd.
 						HighlightingLoader.Load(reader, HighlightingManager.Instance);
 				}
 			}
@@ -165,17 +165,17 @@ namespace ICSharpCode.AvalonEdit.Sample
 				switch (textEditor.SyntaxHighlighting.Name) {
 					case "XML":
 						foldingStrategy = new XmlFoldingStrategy();
-						textEditor.TextArea.IndentationStrategy = new ICSharpCode.AvalonEdit.Indentation.DefaultIndentationStrategy();
+						textEditor.TextArea.IndentationStrategy = new AcAvalonEdit.Indentation.DefaultIndentationStrategy();
 						break;
 					case "C#":
 					case "C++":
 					case "PHP":
 					case "Java":
-						textEditor.TextArea.IndentationStrategy = new ICSharpCode.AvalonEdit.Indentation.CSharp.CSharpIndentationStrategy(textEditor.Options);
+						textEditor.TextArea.IndentationStrategy = new AcAvalonEdit.Indentation.CSharp.CSharpIndentationStrategy(textEditor.Options);
 						foldingStrategy = new BraceFoldingStrategy();
 						break;
 					default:
-						textEditor.TextArea.IndentationStrategy = new ICSharpCode.AvalonEdit.Indentation.DefaultIndentationStrategy();
+						textEditor.TextArea.IndentationStrategy = new AcAvalonEdit.Indentation.DefaultIndentationStrategy();
 						foldingStrategy = null;
 						break;
 				}

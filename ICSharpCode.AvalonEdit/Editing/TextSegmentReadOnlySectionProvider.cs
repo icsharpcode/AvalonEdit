@@ -19,9 +19,9 @@
 using System;
 using System.Collections.Generic;
 
-using ICSharpCode.AvalonEdit.Document;
+using AcAvalonEdit.Document;
 
-namespace ICSharpCode.AvalonEdit.Editing
+namespace AcAvalonEdit.Editing
 {
 	/// <summary>
 	/// Implementation for <see cref="IReadOnlySectionProvider"/> that stores the segments

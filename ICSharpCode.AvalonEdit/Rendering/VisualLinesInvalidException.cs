@@ -19,7 +19,7 @@
 using System;
 using System.Runtime.Serialization;
 
-namespace ICSharpCode.AvalonEdit.Rendering
+namespace AcAvalonEdit.Rendering
 {
 	/// <summary>
 	/// A VisualLinesInvalidException indicates that you accessed the <see cref="TextView.VisualLines"/> property

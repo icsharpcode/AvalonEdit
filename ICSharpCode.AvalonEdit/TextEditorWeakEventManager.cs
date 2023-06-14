@@ -16,9 +16,9 @@
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
 
-using ICSharpCode.AvalonEdit.Utils;
+using AcAvalonEdit.Utils;
 
-namespace ICSharpCode.AvalonEdit
+namespace AcAvalonEdit
 {
 	/// <summary>
 	/// Contains weak event managers for <see cref="ITextEditorComponent"/>.

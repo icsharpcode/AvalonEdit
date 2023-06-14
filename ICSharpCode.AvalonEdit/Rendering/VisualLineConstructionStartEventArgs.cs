@@ -18,9 +18,9 @@
 
 using System;
 
-using ICSharpCode.AvalonEdit.Document;
+using AcAvalonEdit.Document;
 
-namespace ICSharpCode.AvalonEdit.Rendering
+namespace AcAvalonEdit.Rendering
 {
 	/// <summary>
 	/// EventArgs for the <see cref="TextView.VisualLineConstructionStarting"/> event.

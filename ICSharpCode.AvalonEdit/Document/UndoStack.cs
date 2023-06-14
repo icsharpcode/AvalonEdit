@@ -21,9 +21,9 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 
-using ICSharpCode.AvalonEdit.Utils;
+using AcAvalonEdit.Utils;
 
-namespace ICSharpCode.AvalonEdit.Document
+namespace AcAvalonEdit.Document
 {
 	/// <summary>
 	/// Undo stack implementation.

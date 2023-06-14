@@ -16,7 +16,7 @@
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
 
-namespace ICSharpCode.AvalonEdit.Search
+namespace AcAvalonEdit.Search
 {
 	/// <summary>
 	/// Holds default texts for buttons and labels in the SearchPanel. Override properties to add other languages.

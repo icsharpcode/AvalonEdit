@@ -18,7 +18,7 @@
 
 using System;
 
-namespace ICSharpCode.AvalonEdit.Highlighting.Xshd
+namespace AcAvalonEdit.Highlighting.Xshd
 {
 	/// <summary>
 	/// &lt;Import&gt; element.

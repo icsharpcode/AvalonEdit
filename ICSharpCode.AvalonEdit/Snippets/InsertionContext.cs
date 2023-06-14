@@ -20,10 +20,10 @@ using System;
 using System.Collections.Generic;
 using System.Windows;
 
-using ICSharpCode.AvalonEdit.Document;
-using ICSharpCode.AvalonEdit.Editing;
+using AcAvalonEdit.Document;
+using AcAvalonEdit.Editing;
 
-namespace ICSharpCode.AvalonEdit.Snippets
+namespace AcAvalonEdit.Snippets
 {
 	/// <summary>
 	/// Represents the context of a snippet insertion.
@@ -70,7 +70,7 @@ namespace ICSharpCode.AvalonEdit.Snippets
 		/// <summary>
 		/// Gets the text document.
 		/// </summary>
-		public ICSharpCode.AvalonEdit.Document.TextDocument Document { get; private set; }
+		public AcAvalonEdit.Document.TextDocument Document { get; private set; }
 
 		/// <summary>
 		/// Gets the text that was selected before the insertion of the snippet.
@@ -98,7 +98,7 @@ namespace ICSharpCode.AvalonEdit.Snippets
 		public int InsertionPosition { get; set; }
 
 		readonly int startPosition;
-		ICSharpCode.AvalonEdit.Document.AnchorSegment wholeSnippetAnchor;
+		AcAvalonEdit.Document.AnchorSegment wholeSnippetAnchor;
 		bool deactivateIfSnippetEmpty;
 
 		/// <summary>

@@ -22,9 +22,9 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Documents;
 
-using ICSharpCode.AvalonEdit.Document;
+using AcAvalonEdit.Document;
 
-namespace ICSharpCode.AvalonEdit.Search
+namespace AcAvalonEdit.Search
 {
 	class RegexSearchStrategy : ISearchStrategy
 	{

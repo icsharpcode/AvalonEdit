@@ -20,9 +20,9 @@ using System;
 using System.Windows;
 using System.Windows.Media;
 
-using ICSharpCode.AvalonEdit.Rendering;
+using AcAvalonEdit.Rendering;
 
-namespace ICSharpCode.AvalonEdit.Editing
+namespace AcAvalonEdit.Editing
 {
 	sealed class SelectionLayer : Layer, IWeakEventListener
 	{

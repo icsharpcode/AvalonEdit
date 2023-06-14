@@ -21,9 +21,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
 
-using ICSharpCode.AvalonEdit.Editing;
+using AcAvalonEdit.Editing;
 
-namespace ICSharpCode.AvalonEdit.Snippets
+namespace AcAvalonEdit.Snippets
 {
 	sealed class SnippetInputHandler : TextAreaStackedInputHandler
 	{

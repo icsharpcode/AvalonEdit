@@ -17,11 +17,11 @@
 // DEALINGS IN THE SOFTWARE.
 
 using System;
-using ICSharpCode.AvalonEdit.CodeCompletion;
-using ICSharpCode.AvalonEdit.Document;
-using ICSharpCode.AvalonEdit.Editing;
+using AcAvalonEdit.CodeCompletion;
+using AcAvalonEdit.Document;
+using AcAvalonEdit.Editing;
 
-namespace ICSharpCode.AvalonEdit.Sample
+namespace AcAvalonEdit.Sample
 {
 	/// <summary>
 	/// Implements AvalonEdit ICompletionData interface to provide the entries in the completion drop down.

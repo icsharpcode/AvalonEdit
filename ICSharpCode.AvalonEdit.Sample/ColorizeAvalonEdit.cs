@@ -20,8 +20,8 @@ using System;
 using System.Windows;
 using System.Windows.Media;
 
-using ICSharpCode.AvalonEdit.Document;
-using ICSharpCode.AvalonEdit.Rendering;
+using AcAvalonEdit.Document;
+using AcAvalonEdit.Rendering;
 
 namespace AvalonEdit.Sample
 {

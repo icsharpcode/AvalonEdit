@@ -18,7 +18,7 @@
 
 using System;
 
-namespace ICSharpCode.AvalonEdit.Highlighting.Xshd
+namespace AcAvalonEdit.Highlighting.Xshd
 {
 	/// <summary>
 	/// A property in an Xshd file.

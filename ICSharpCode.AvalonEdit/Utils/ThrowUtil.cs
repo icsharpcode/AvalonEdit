@@ -19,7 +19,7 @@
 using System;
 using System.Globalization;
 
-namespace ICSharpCode.AvalonEdit.Utils
+namespace AcAvalonEdit.Utils
 {
 	/// <summary>
 	/// Contains exception-throwing helper methods.

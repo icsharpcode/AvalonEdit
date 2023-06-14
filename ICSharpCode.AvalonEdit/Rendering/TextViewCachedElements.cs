@@ -20,9 +20,9 @@ using System;
 using System.Collections.Generic;
 using System.Windows.Media.TextFormatting;
 
-using ICSharpCode.AvalonEdit.Utils;
+using AcAvalonEdit.Utils;
 
-namespace ICSharpCode.AvalonEdit.Rendering
+namespace AcAvalonEdit.Rendering
 {
 	sealed class TextViewCachedElements : IDisposable
 	{

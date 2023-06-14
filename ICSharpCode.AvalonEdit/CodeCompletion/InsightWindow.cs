@@ -20,10 +20,10 @@ using System;
 using System.Windows;
 using System.Windows.Controls;
 
-using ICSharpCode.AvalonEdit.Editing;
-using ICSharpCode.AvalonEdit.Utils;
+using AcAvalonEdit.Editing;
+using AcAvalonEdit.Utils;
 
-namespace ICSharpCode.AvalonEdit.CodeCompletion
+namespace AcAvalonEdit.CodeCompletion
 {
 	/// <summary>
 	/// A popup-like window that is attached to a text segment.

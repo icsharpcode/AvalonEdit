@@ -17,10 +17,10 @@
 // DEALINGS IN THE SOFTWARE.
 
 using System;
-using ICSharpCode.AvalonEdit.Rendering;
+using AcAvalonEdit.Rendering;
 using NUnit.Framework;
 
-namespace ICSharpCode.AvalonEdit.Document
+namespace AcAvalonEdit.Document
 {
 	[TestFixture]
 	public class CollapsingTests

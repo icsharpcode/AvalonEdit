@@ -19,10 +19,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using ICSharpCode.AvalonEdit.Document;
+using AcAvalonEdit.Document;
 using NUnit.Framework;
 
-namespace ICSharpCode.AvalonEdit.Highlighting
+namespace AcAvalonEdit.Highlighting
 {
 	[TestFixture]
 	public class HighlightedLineMergeTests

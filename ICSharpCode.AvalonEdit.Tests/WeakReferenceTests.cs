@@ -19,12 +19,12 @@
 using System;
 using System.Runtime.CompilerServices;
 using System.Windows.Threading;
-using ICSharpCode.AvalonEdit.Document;
-using ICSharpCode.AvalonEdit.Editing;
-using ICSharpCode.AvalonEdit.Rendering;
+using AcAvalonEdit.Document;
+using AcAvalonEdit.Editing;
+using AcAvalonEdit.Rendering;
 using NUnit.Framework;
 
-namespace ICSharpCode.AvalonEdit
+namespace AcAvalonEdit
 {
 	[TestFixture]
 	[Apartment(System.Threading.ApartmentState.STA)]

@@ -19,9 +19,9 @@
 using System;
 using System.Windows.Documents;
 
-using ICSharpCode.AvalonEdit.Document;
+using AcAvalonEdit.Document;
 
-namespace ICSharpCode.AvalonEdit.Snippets
+namespace AcAvalonEdit.Snippets
 {
 	/// <summary>
 	/// An element that binds to a <see cref="SnippetReplaceableTextElement"/> and displays the same text.

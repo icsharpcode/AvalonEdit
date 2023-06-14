@@ -24,7 +24,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Xml;
 
-namespace ICSharpCode.AvalonEdit.Utils
+namespace AcAvalonEdit.Utils
 {
 	static class ExtensionMethods
 	{

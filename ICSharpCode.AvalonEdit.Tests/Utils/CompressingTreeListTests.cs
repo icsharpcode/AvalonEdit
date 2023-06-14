@@ -20,7 +20,7 @@ using System;
 using System.Linq;
 using NUnit.Framework;
 
-namespace ICSharpCode.AvalonEdit.Utils
+namespace AcAvalonEdit.Utils
 {
 	[TestFixture]
 	public class CompressingTreeListTests

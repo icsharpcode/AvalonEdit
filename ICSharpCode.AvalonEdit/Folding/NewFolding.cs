@@ -18,9 +18,9 @@
 
 using System;
 
-using ICSharpCode.AvalonEdit.Document;
+using AcAvalonEdit.Document;
 
-namespace ICSharpCode.AvalonEdit.Folding
+namespace AcAvalonEdit.Folding
 {
 	/// <summary>
 	/// Helper class used for <see cref="FoldingManager.UpdateFoldings"/>.

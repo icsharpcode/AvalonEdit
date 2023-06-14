@@ -24,9 +24,9 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Text.RegularExpressions;
 
-using ICSharpCode.AvalonEdit.Utils;
+using AcAvalonEdit.Utils;
 
-namespace ICSharpCode.AvalonEdit.Highlighting.Xshd
+namespace AcAvalonEdit.Highlighting.Xshd
 {
 	[Serializable]
 	sealed class XmlHighlightingDefinition : IHighlightingDefinition

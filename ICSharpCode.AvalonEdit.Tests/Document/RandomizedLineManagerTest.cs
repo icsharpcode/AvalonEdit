@@ -18,10 +18,10 @@
 
 using System;
 using System.Collections.Generic;
-using ICSharpCode.AvalonEdit.Rendering;
+using AcAvalonEdit.Rendering;
 using NUnit.Framework;
 
-namespace ICSharpCode.AvalonEdit.Document
+namespace AcAvalonEdit.Document
 {
 	/// <summary>
 	/// A randomized test for the line manager.

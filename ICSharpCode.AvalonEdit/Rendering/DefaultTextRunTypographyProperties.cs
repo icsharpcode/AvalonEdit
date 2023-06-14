@@ -19,7 +19,7 @@
 using System.Windows;
 using System.Windows.Media.TextFormatting;
 
-namespace ICSharpCode.AvalonEdit.Rendering
+namespace AcAvalonEdit.Rendering
 {
 	/// <summary>
 	/// Default implementation for TextRunTypographyProperties.

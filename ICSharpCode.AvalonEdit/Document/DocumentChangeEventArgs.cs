@@ -18,7 +18,7 @@
 
 using System;
 
-namespace ICSharpCode.AvalonEdit.Document
+namespace AcAvalonEdit.Document
 {
 	/// <summary>
 	/// Describes a change of the document text.

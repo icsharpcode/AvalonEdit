@@ -1,12 +1,12 @@
 ﻿using System.Linq;
 
-using ICSharpCode.AvalonEdit.Document;
-using ICSharpCode.AvalonEdit.Highlighting;
-using ICSharpCode.AvalonEdit.Highlighting.Xshd;
+using AcAvalonEdit.Document;
+using AcAvalonEdit.Highlighting;
+using AcAvalonEdit.Highlighting.Xshd;
 
 using NUnit.Framework;
 
-namespace ICSharpCode.AvalonEdit.Tests.Highlighting
+namespace AcAvalonEdit.Tests.Highlighting
 {
 	[TestFixture]
 	public class XmlHighlightingDefinitionTests

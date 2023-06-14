@@ -22,10 +22,10 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 
-using ICSharpCode.AvalonEdit.Document;
-using ICSharpCode.AvalonEdit.Editing;
+using AcAvalonEdit.Document;
+using AcAvalonEdit.Editing;
 
-namespace ICSharpCode.AvalonEdit.CodeCompletion
+namespace AcAvalonEdit.CodeCompletion
 {
 	/// <summary>
 	/// The code completion window.

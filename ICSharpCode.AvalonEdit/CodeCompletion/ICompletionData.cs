@@ -19,10 +19,10 @@
 using System;
 using System.Windows.Media;
 
-using ICSharpCode.AvalonEdit.Document;
-using ICSharpCode.AvalonEdit.Editing;
+using AcAvalonEdit.Document;
+using AcAvalonEdit.Editing;
 
-namespace ICSharpCode.AvalonEdit.CodeCompletion
+namespace AcAvalonEdit.CodeCompletion
 {
 	/// <summary>
 	/// Describes an entry in the <see cref="CompletionList"/>.

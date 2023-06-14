@@ -21,7 +21,7 @@ using System.Threading;
 using System.Windows;
 using NUnit.Framework;
 
-namespace ICSharpCode.AvalonEdit
+namespace AcAvalonEdit
 {
 	[TestFixture]
 	public class MultipleUIThreads

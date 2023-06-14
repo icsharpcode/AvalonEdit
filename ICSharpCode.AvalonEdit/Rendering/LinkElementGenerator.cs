@@ -19,9 +19,9 @@
 using System;
 using System.Text.RegularExpressions;
 
-using ICSharpCode.AvalonEdit.Utils;
+using AcAvalonEdit.Utils;
 
-namespace ICSharpCode.AvalonEdit.Rendering
+namespace AcAvalonEdit.Rendering
 {
 	// This class is public because it can be used as a base class for custom links.
 

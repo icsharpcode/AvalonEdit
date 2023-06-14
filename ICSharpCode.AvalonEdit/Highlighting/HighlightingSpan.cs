@@ -19,7 +19,7 @@
 using System;
 using System.Text.RegularExpressions;
 
-namespace ICSharpCode.AvalonEdit.Highlighting
+namespace AcAvalonEdit.Highlighting
 {
 	/// <summary>
 	/// A highlighting span is a region with start+end expression that has a different RuleSet inside

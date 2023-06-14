@@ -21,9 +21,9 @@ using System.IO;
 using System.Windows;
 using System.Windows.Media;
 
-using ICSharpCode.AvalonEdit.Highlighting;
+using AcAvalonEdit.Highlighting;
 
-namespace ICSharpCode.AvalonEdit.Utils
+namespace AcAvalonEdit.Utils
 {
 	// TODO: This class (and derived classes) is currently unused; decide whether to keep it.
 	// (until this is decided, keep the class internal)

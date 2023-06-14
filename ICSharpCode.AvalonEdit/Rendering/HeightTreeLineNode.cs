@@ -19,7 +19,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 
-namespace ICSharpCode.AvalonEdit.Rendering
+namespace AcAvalonEdit.Rendering
 {
 	struct HeightTreeLineNode
 	{

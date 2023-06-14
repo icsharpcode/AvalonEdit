@@ -18,10 +18,10 @@
 
 using System;
 using System.Windows.Documents;
-using ICSharpCode.AvalonEdit.Document;
+using AcAvalonEdit.Document;
 using NUnit.Framework;
 
-namespace ICSharpCode.AvalonEdit.Utils
+namespace AcAvalonEdit.Utils
 {
 	[TestFixture]
 	public class CaretNavigationTests

@@ -18,10 +18,10 @@
 
 using System;
 using System.Windows;
-using ICSharpCode.AvalonEdit.Document;
+using AcAvalonEdit.Document;
 using NUnit.Framework;
 
-namespace ICSharpCode.AvalonEdit.Highlighting
+namespace AcAvalonEdit.Highlighting
 {
 	[TestFixture]
 	public class HtmlClipboardTests

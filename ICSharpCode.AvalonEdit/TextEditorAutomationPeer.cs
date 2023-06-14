@@ -22,12 +22,12 @@ using System.Windows.Automation.Peers;
 using System.Windows.Automation.Provider;
 using System.Windows.Controls;
 
-using ICSharpCode.AvalonEdit.Utils;
+using AcAvalonEdit.Utils;
 
-namespace ICSharpCode.AvalonEdit
+namespace AcAvalonEdit
 {
 	/// <summary>
-	/// Exposes <see cref="ICSharpCode.AvalonEdit.TextEditor"/> to automation.
+	/// Exposes <see cref="AcAvalonEdit.TextEditor"/> to automation.
 	/// </summary>
 	public class TextEditorAutomationPeer : FrameworkElementAutomationPeer, IValueProvider
 	{

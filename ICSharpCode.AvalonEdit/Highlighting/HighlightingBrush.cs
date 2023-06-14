@@ -24,9 +24,9 @@ using System.Runtime.Serialization;
 using System.Windows;
 using System.Windows.Media;
 
-using ICSharpCode.AvalonEdit.Rendering;
+using AcAvalonEdit.Rendering;
 
-namespace ICSharpCode.AvalonEdit.Highlighting
+namespace AcAvalonEdit.Highlighting
 {
 	/// <summary>
 	/// A brush used for syntax highlighting. Can retrieve a real brush on-demand.

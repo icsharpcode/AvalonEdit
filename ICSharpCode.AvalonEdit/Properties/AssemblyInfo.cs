@@ -48,11 +48,11 @@ using System.Windows.Markup;
 
 [assembly: XmlnsPrefix("http://icsharpcode.net/sharpdevelop/avalonedit", "avalonedit")]
 
-[assembly: XmlnsDefinition("http://icsharpcode.net/sharpdevelop/avalonedit", "ICSharpCode.AvalonEdit")]
-[assembly: XmlnsDefinition("http://icsharpcode.net/sharpdevelop/avalonedit", "ICSharpCode.AvalonEdit.Editing")]
-[assembly: XmlnsDefinition("http://icsharpcode.net/sharpdevelop/avalonedit", "ICSharpCode.AvalonEdit.Rendering")]
-[assembly: XmlnsDefinition("http://icsharpcode.net/sharpdevelop/avalonedit", "ICSharpCode.AvalonEdit.Highlighting")]
-[assembly: XmlnsDefinition("http://icsharpcode.net/sharpdevelop/avalonedit", "ICSharpCode.AvalonEdit.Search")]
+[assembly: XmlnsDefinition("http://icsharpcode.net/sharpdevelop/avalonedit", "AcAvalonEdit")]
+[assembly: XmlnsDefinition("http://icsharpcode.net/sharpdevelop/avalonedit", "AcAvalonEdit.Editing")]
+[assembly: XmlnsDefinition("http://icsharpcode.net/sharpdevelop/avalonedit", "AcAvalonEdit.Rendering")]
+[assembly: XmlnsDefinition("http://icsharpcode.net/sharpdevelop/avalonedit", "AcAvalonEdit.Highlighting")]
+[assembly: XmlnsDefinition("http://icsharpcode.net/sharpdevelop/avalonedit", "AcAvalonEdit.Search")]
 
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2243:AttributeStringLiteralsShouldParseCorrectly",
 	Justification = "AssemblyInformationalVersion does not need to be a parsable version")]

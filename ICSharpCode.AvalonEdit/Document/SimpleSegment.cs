@@ -20,9 +20,9 @@ using System;
 using System.Diagnostics;
 using System.Globalization;
 
-using ICSharpCode.AvalonEdit.Utils;
+using AcAvalonEdit.Utils;
 
-namespace ICSharpCode.AvalonEdit.Document
+namespace AcAvalonEdit.Document
 {
 	/// <summary>
 	/// Represents a simple segment (Offset,Length pair) that is not automatically updated

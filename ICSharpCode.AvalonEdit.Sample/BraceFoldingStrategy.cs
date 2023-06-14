@@ -18,10 +18,10 @@
 
 using System;
 using System.Collections.Generic;
-using ICSharpCode.AvalonEdit.Document;
-using ICSharpCode.AvalonEdit.Folding;
+using AcAvalonEdit.Document;
+using AcAvalonEdit.Folding;
 
-namespace ICSharpCode.AvalonEdit.Sample
+namespace AcAvalonEdit.Sample
 {
 	/// <summary>
 	/// Allows producing foldings from a document based on braces.

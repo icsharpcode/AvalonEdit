@@ -19,7 +19,7 @@
 using System;
 using System.Collections.ObjectModel;
 
-namespace ICSharpCode.AvalonEdit.Utils
+namespace AcAvalonEdit.Utils
 {
 	/// <summary>
 	/// A collection that cannot contain null values.

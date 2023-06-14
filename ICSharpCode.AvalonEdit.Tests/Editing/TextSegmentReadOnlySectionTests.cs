@@ -16,12 +16,12 @@
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
 
-using ICSharpCode.AvalonEdit.Document;
+using AcAvalonEdit.Document;
 using System;
 using System.Linq;
 using NUnit.Framework;
 
-namespace ICSharpCode.AvalonEdit.Editing
+namespace AcAvalonEdit.Editing
 {
 	[TestFixture]
 	public class TextSegmentReadOnlySectionTests

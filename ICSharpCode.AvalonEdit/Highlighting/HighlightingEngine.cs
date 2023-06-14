@@ -22,12 +22,12 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-using ICSharpCode.AvalonEdit.Document;
-using ICSharpCode.AvalonEdit.Utils;
+using AcAvalonEdit.Document;
+using AcAvalonEdit.Utils;
 
-using SpanStack = ICSharpCode.AvalonEdit.Utils.ImmutableStack<ICSharpCode.AvalonEdit.Highlighting.HighlightingSpan>;
+using SpanStack = AcAvalonEdit.Utils.ImmutableStack<AcAvalonEdit.Highlighting.HighlightingSpan>;
 
-namespace ICSharpCode.AvalonEdit.Highlighting
+namespace AcAvalonEdit.Highlighting
 {
 	/// <summary>
 	/// Regex-based highlighting engine.

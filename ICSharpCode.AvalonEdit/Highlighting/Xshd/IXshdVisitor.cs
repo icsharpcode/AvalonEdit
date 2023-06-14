@@ -16,7 +16,7 @@
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
 
-namespace ICSharpCode.AvalonEdit.Highlighting.Xshd
+namespace AcAvalonEdit.Highlighting.Xshd
 {
 	/// <summary>
 	/// A visitor over the XSHD element tree.

@@ -18,11 +18,11 @@
 
 using System.Diagnostics;
 
-using ICSharpCode.AvalonEdit.Document;
-using ICSharpCode.AvalonEdit.Rendering;
-using ICSharpCode.AvalonEdit.Utils;
+using AcAvalonEdit.Document;
+using AcAvalonEdit.Rendering;
+using AcAvalonEdit.Utils;
 
-namespace ICSharpCode.AvalonEdit.Folding
+namespace AcAvalonEdit.Folding
 {
 	/// <summary>
 	/// A section that can be folded.

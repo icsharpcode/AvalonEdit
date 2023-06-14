@@ -19,9 +19,9 @@
 using System;
 using System.Diagnostics;
 
-using ICSharpCode.AvalonEdit.Utils;
+using AcAvalonEdit.Utils;
 
-namespace ICSharpCode.AvalonEdit.Document
+namespace AcAvalonEdit.Document
 {
 	/// <summary>
 	/// This class stacks the last x operations from the undostack and makes

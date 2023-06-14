@@ -20,7 +20,7 @@ using System;
 using System.Collections.Generic;
 using NUnit.Framework;
 
-namespace ICSharpCode.AvalonEdit.Document
+namespace AcAvalonEdit.Document
 {
 	[TestFixture]
 	public class TextSegmentTreeTest

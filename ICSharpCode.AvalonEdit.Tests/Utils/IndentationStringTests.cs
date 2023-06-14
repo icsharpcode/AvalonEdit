@@ -19,7 +19,7 @@
 using System;
 using NUnit.Framework;
 
-namespace ICSharpCode.AvalonEdit.Utils
+namespace AcAvalonEdit.Utils
 {
 	[TestFixture]
 	public class IndentationStringTests

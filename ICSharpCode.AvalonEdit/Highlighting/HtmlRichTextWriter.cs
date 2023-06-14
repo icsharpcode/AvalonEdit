@@ -24,9 +24,9 @@ using System.Text;
 using System.Windows;
 using System.Windows.Media;
 
-using ICSharpCode.AvalonEdit.Utils;
+using AcAvalonEdit.Utils;
 
-namespace ICSharpCode.AvalonEdit.Highlighting
+namespace AcAvalonEdit.Highlighting
 {
 	/// <summary>
 	/// RichTextWriter implementation that produces HTML.

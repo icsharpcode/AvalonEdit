@@ -20,7 +20,7 @@ using System;
 using System.IO;
 using System.Net;
 
-namespace ICSharpCode.AvalonEdit.Highlighting
+namespace AcAvalonEdit.Highlighting
 {
 	/// <summary>
 	/// Holds options for converting text to HTML.

@@ -24,7 +24,7 @@ using System.Windows.Input;
 using System.Windows.Media.TextFormatting;
 using System.Windows.Navigation;
 
-namespace ICSharpCode.AvalonEdit.Rendering
+namespace AcAvalonEdit.Rendering
 {
 	/// <summary>
 	/// VisualLineElement that represents a piece of text and is a clickable link.

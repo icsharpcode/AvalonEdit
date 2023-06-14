@@ -22,10 +22,10 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Threading;
 
-using ICSharpCode.AvalonEdit.Rendering;
-using ICSharpCode.AvalonEdit.Utils;
+using AcAvalonEdit.Rendering;
+using AcAvalonEdit.Utils;
 
-namespace ICSharpCode.AvalonEdit.Editing
+namespace AcAvalonEdit.Editing
 {
 	sealed class CaretLayer : Layer
 	{

@@ -24,9 +24,9 @@ using System.Linq;
 using System.Text;
 using System.Windows;
 
-using ICSharpCode.AvalonEdit.Utils;
+using AcAvalonEdit.Utils;
 
-namespace ICSharpCode.AvalonEdit.Document
+namespace AcAvalonEdit.Document
 {
 	/// <summary>
 	/// Interface to allow TextSegments to access the TextSegmentCollection - we cannot use a direct reference

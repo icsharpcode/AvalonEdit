@@ -28,7 +28,7 @@
 		<Reference Include="System.Windows.Forms" />
 	</ItemGroup>
 	<ItemGroup>
-		<ProjectReference Include="..\ICSharpCode.AvalonEdit\ICSharpCode.AvalonEdit.csproj" />
+		<ProjectReference Include="..\ICSharpCode.AvalonEdit\AcAvalonEdit.csproj" />
 	</ItemGroup>
 	<ItemGroup>
 		<None Remove="Images\*" />

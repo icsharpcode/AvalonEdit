@@ -19,7 +19,7 @@
 using System;
 using System.Windows;
 
-namespace ICSharpCode.AvalonEdit.Rendering
+namespace AcAvalonEdit.Rendering
 {
 	/// <summary>
 	/// An enumeration of well-known layers.

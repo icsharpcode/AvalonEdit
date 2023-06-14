@@ -19,9 +19,9 @@
 using System;
 using System.Linq;
 
-using ICSharpCode.AvalonEdit.Document;
+using AcAvalonEdit.Document;
 
-namespace ICSharpCode.AvalonEdit.Rendering
+namespace AcAvalonEdit.Rendering
 {
 	/// <summary>
 	/// Base class for <see cref="IVisualLineTransformer"/> that helps

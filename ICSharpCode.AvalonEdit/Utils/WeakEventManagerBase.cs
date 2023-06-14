@@ -20,7 +20,7 @@ using System;
 using System.Diagnostics;
 using System.Windows;
 
-namespace ICSharpCode.AvalonEdit.Utils
+namespace AcAvalonEdit.Utils
 {
 	/// <summary>
 	/// WeakEventManager with AddListener/RemoveListener and CurrentManager implementation.

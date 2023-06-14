@@ -1,7 +1,7 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 					xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-					xmlns:AvalonEdit="clr-namespace:ICSharpCode.AvalonEdit"
-					xmlns:editing="clr-namespace:ICSharpCode.AvalonEdit.Editing">
+					xmlns:AvalonEdit="clr-namespace:AcAvalonEdit"
+					xmlns:editing="clr-namespace:AcAvalonEdit.Editing">
 	<Style TargetType="{x:Type AvalonEdit:TextEditor}">
 		<Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}" />
 		<Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" />

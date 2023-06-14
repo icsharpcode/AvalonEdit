@@ -23,7 +23,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.TextFormatting;
 
-namespace ICSharpCode.AvalonEdit.Utils
+namespace AcAvalonEdit.Utils
 {
 	/// <summary>
 	/// Creates TextFormatter instances that with the correct TextFormattingMode, if running on .NET 4.0.

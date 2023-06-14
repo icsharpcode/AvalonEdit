@@ -19,9 +19,9 @@
 using System;
 using System.Collections.Generic;
 
-using ICSharpCode.AvalonEdit.Utils;
+using AcAvalonEdit.Utils;
 
-namespace ICSharpCode.AvalonEdit.Highlighting.Xshd
+namespace AcAvalonEdit.Highlighting.Xshd
 {
 	/// <summary>
 	/// A rule set in a XSHD file.

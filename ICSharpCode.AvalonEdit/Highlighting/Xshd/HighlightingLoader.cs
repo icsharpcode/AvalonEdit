@@ -20,7 +20,7 @@ using System;
 using System.Xml;
 using System.Xml.Schema;
 
-namespace ICSharpCode.AvalonEdit.Highlighting.Xshd
+namespace AcAvalonEdit.Highlighting.Xshd
 {
 	/// <summary>
 	/// Static class with helper methods to load XSHD highlighting files.

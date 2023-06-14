@@ -20,7 +20,7 @@ using System;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace ICSharpCode.AvalonEdit.Search
+namespace AcAvalonEdit.Search
 {
 	/// <summary>
 	/// Provides factory methods for ISearchStrategies.

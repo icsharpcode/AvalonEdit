@@ -20,7 +20,7 @@ using System;
 using System.Diagnostics;
 using System.Globalization;
 
-namespace ICSharpCode.AvalonEdit.Document
+namespace AcAvalonEdit.Document
 {
 	/// <summary>
 	/// Represents a line inside a <see cref="TextDocument"/>.

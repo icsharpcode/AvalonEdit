@@ -19,9 +19,9 @@
 using System.Windows;
 using System.Windows.Input;
 
-using ICSharpCode.AvalonEdit.Editing;
+using AcAvalonEdit.Editing;
 
-namespace ICSharpCode.AvalonEdit.CodeCompletion
+namespace AcAvalonEdit.CodeCompletion
 {
 	/// <summary>
 	/// Insight window that shows an OverloadViewer.

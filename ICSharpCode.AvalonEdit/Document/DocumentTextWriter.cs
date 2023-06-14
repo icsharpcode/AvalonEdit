@@ -20,7 +20,7 @@ using System;
 using System.IO;
 using System.Text;
 
-namespace ICSharpCode.AvalonEdit.Document
+namespace AcAvalonEdit.Document
 {
 	/// <summary>
 	/// A TextWriter implementation that directly inserts into a document.

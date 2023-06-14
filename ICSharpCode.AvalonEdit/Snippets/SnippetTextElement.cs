@@ -19,7 +19,7 @@
 using System;
 using System.Windows.Documents;
 
-namespace ICSharpCode.AvalonEdit.Snippets
+namespace AcAvalonEdit.Snippets
 {
 	/// <summary>
 	/// Represents a text element in a snippet.

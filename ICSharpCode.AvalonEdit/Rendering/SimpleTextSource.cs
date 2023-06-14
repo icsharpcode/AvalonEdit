@@ -19,7 +19,7 @@
 using System;
 using System.Windows.Media.TextFormatting;
 
-namespace ICSharpCode.AvalonEdit.Rendering
+namespace AcAvalonEdit.Rendering
 {
 	sealed class SimpleTextSource : TextSource
 	{

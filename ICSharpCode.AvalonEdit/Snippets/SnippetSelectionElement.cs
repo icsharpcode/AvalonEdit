@@ -19,7 +19,7 @@
 using System;
 using System.Text;
 
-namespace ICSharpCode.AvalonEdit.Snippets
+namespace AcAvalonEdit.Snippets
 {
 	/// <summary>
 	/// Inserts the previously selected text at the selection marker.

@@ -20,7 +20,7 @@ using System;
 using System.Linq;
 using System.Xml;
 
-namespace ICSharpCode.AvalonEdit.Highlighting.Xshd
+namespace AcAvalonEdit.Highlighting.Xshd
 {
 	/// <summary>
 	/// Xshd visitor implementation that saves an .xshd file as XML.
