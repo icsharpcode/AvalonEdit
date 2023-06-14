@@ -44,7 +44,6 @@ using System.Windows.Markup;
 )]
 
 [assembly: System.Runtime.InteropServices.ComVisible(false)]
-[assembly: NeutralResourcesLanguage("en-US")]
 
 [assembly: XmlnsPrefix("http://icsharpcode.net/sharpdevelop/avalonedit", "avalonedit")]
 

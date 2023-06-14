@@ -17,6 +17,7 @@
 // DEALINGS IN THE SOFTWARE.
 
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
@@ -25,11 +26,13 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Data;
+using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Markup;
 using System.Windows.Media;
 using System.Windows.Shapes;
 
+using AcAvalonEdit.CodeCompletion;
 using AcAvalonEdit.Document;
 using AcAvalonEdit.Editing;
 using AcAvalonEdit.Highlighting;
@@ -59,6 +62,9 @@ namespace AcAvalonEdit
 		/// </summary>
 		public TextEditor() : this(new TextArea())
 		{
+			WordWrap = true;
+			ShowLineNumbers = true;
+			Document.Changed += UpdateHighlighting;
 		}
 
 		/// <summary>
@@ -1155,7 +1161,7 @@ namespace AcAvalonEdit
 						remainingHeight -= vl.Height;
 					}
 				}
-				
+
 				Point p = textArea.TextView.GetVisualPosition(new TextViewPosition(line, Math.Max(1, column)), yPositionMode);
 				double verticalPos = p.Y - referencedVerticalViewPortOffset;
 				if (Math.Abs(verticalPos - scrollViewer.VerticalOffset) > minimumScrollFraction * scrollViewer.ViewportHeight) {
@@ -1173,5 +1179,209 @@ namespace AcAvalonEdit
 				}
 			}
 		}
+
+
+		#region Custom Additions
+
+		private AcAvalonEdit.Highlighting.RichTextModel _model = new();
+
+		/// <summary>
+		///  Fills the Text and Creates a Rich Text Model from the provided RichText
+		/// </summary>
+		/// <exception cref="ArgumentException">Malformed Flowdocument</exception>
+		public void Load(RichText rt)
+		{
+			_model = rt.ToRichTextModel();
+			Text = rt.Text;
+		}
+
+		/// <summary>
+		/// Fills the Text and creates a Rich Text Model from the provided Lists of strings and HighlightingColor
+		/// </summary>
+		/// <exception cref="ArgumentException">Malformed Flowdocument</exception>
+		public void Load(List<string> text, List<HighlightingColor> highlightingColors)
+		{
+			Text = string.Empty;
+			_model = new();
+			if (text.Count != highlightingColors.Count)
+				throw new ArgumentException("Arguments must be the same length");
+			StringBuilder stringBuilder = new StringBuilder();
+			for (int i = 0; i < text.Count; i++) {
+				_model.ApplyHighlighting(stringBuilder.Length, text[i].Length + Environment.NewLine.Length, highlightingColors[i]);
+				stringBuilder.Append(text[i]);
+				stringBuilder.Append(Environment.NewLine);
+			}
+			Text = stringBuilder.ToString();
+
+		}
+
+		/// <summary>
+		///  Fills the Text and Creates a Rich Text Model from the provided Flowdocument, only works if the Flowdocument only contains Paragraphs and Runs
+		/// </summary>
+		/// <exception cref="ArgumentException">Malformed Flowdocument</exception>
+		public void Load(FlowDocument flow)
+		{
+			if (flow.Blocks.Any(x => x is not Paragraph))
+				throw new ArgumentException("Only Paragraphs and Runs allowed");
+			if (flow.Blocks.Any(x => (x as Paragraph)!.Inlines.Any(x => x is not Run)))
+				throw new ArgumentException("Only Paragraphs and Runs allowed");
+
+			StringBuilder stringBuilder = new StringBuilder();
+			_model = new();
+
+			foreach (Paragraph p in flow.Blocks.Cast<Paragraph>()) {
+				foreach (Run r in p.Inlines.Cast<Run>()) {
+					_model.ApplyHighlighting(stringBuilder.Length, r.Text.Length + Environment.NewLine.Length, BuildHighlightingFromRun(r));
+					stringBuilder.Append(r.Text);
+					stringBuilder.Append(Environment.NewLine);
+				}
+			}
+
+			Text = stringBuilder.ToString();
+
+		}
+
+		private HighlightingColor BuildHighlightingFromRun(Run run)
+		{
+			HighlightingColor hlc = new();
+
+			hlc.Foreground = new SimpleHighlightingBrush((Color)ColorConverter.ConvertFromString(run.Foreground.ToString()));
+			hlc.Background = new SimpleHighlightingBrush((Color)ColorConverter.ConvertFromString((run.Background.ToString())));
+
+			hlc.FontFamily = run.FontFamily;
+			hlc.FontStyle = run.FontStyle;
+			hlc.FontWeight = run.FontWeight;
+			hlc.FontStretch = run.FontStretch;
+
+			//TODO: TextDecorations
+
+
+			return hlc;
+
+		}
+		/// <summary>
+		/// Applies specific Highlighting to the current Selection
+		/// </summary>
+		public void ApplyHighlightingToSelection(HighlightingColor highlightingColor)
+		{
+			_model.ApplyHighlighting(Document.GetOffset(TextArea.Selection.StartPosition.Location), TextArea.Selection.Length, highlightingColor);
+		}
+
+		/// <summary>
+		/// Applies specific Highlighting to the current Selection, on a per line basis for Compability
+		/// </summary>
+		public void ApplyHighlightingToLine(HighlightingColor highlightingColor)
+		{
+			if (SelectionLength == 0) {
+				_model.ApplyHighlighting(Document.Lines[TextArea.Caret.Line - 1].Offset, Document.Lines[TextArea.Caret.Line - 1].Length + Environment.NewLine.Length, highlightingColor);
+			} else {
+				int startline = TextArea.Selection.StartPosition.Line;
+				int endline = TextArea.Selection.EndPosition.Line;
+				for (int i = startline - 1; i < endline; i++) {
+					_model.ApplyHighlighting(Document.Lines[i].Offset, Document.Lines[i].Length + Environment.NewLine.Length, highlightingColor);
+				}
+			}
+
+		}
+
+		/// <summary>
+		/// Converts the Rich Text into a FlowDocument for Consumption, on a per Line basis for compability
+		/// </summary>
+		/// <returns></returns>
+		public FlowDocument GetFlowDocumentPerLine()
+		{
+			RichText rich = new(Text, _model);
+
+			var runs = rich.CreateRunsOnLineBreaks();
+			FlowDocument document = new FlowDocument();
+			foreach (Run run in runs) {
+				if (string.IsNullOrEmpty(run.Text))
+					run.Text = " ";
+				document.Blocks.Add(new Paragraph());
+				(document.Blocks.Last() as Paragraph)!.Inlines.Add(run);
+			}
+			return document;
+		}
+
+		/// <summary>
+		/// Returns the RichText of the current Highlighting and underlying Text
+		/// </summary>
+		/// <returns></returns>
+		public RichText GetRichText()
+		{
+			return new RichText(Text, _model);
+		}
+
+		private void UpdateHighlighting(object? sender, DocumentChangeEventArgs e)
+		{
+			_model.UpdateOffsets(e.OffsetChangeMap);
+		}
+
+		private bool _autocompleteOn = false;
+		private List<ICompletionData> _completionData;
+		private CompletionWindow? completionWindow;
+
+		/// <summary>
+		/// Enables a standard implementation of Autocomplete with the provided completion data
+		/// </summary>
+		/// <param name="completions"></param>
+		public void InitializeDefaultAutoCompleteWith(List<ICompletionData> completions)
+		{
+			if (_autocompleteOn) DisableDefaultAutocomplete();
+			_completionData = completions;
+			TextArea.TextEntering += OnTextEntering;
+			TextArea.TextEntered += OnTextEntered;
+
+			completionWindow = new CompletionWindow(TextArea) {
+				CloseWhenCaretAtBeginning = true
+			};
+			IList<ICompletionData> boundData = completionWindow.CompletionList.CompletionData;
+			boundData.Clear();
+			foreach (ICompletionData data in _completionData) {
+				boundData.Add(data);
+			}
+			if (boundData.Any()) {
+				completionWindow.Closed += delegate
+				{
+					completionWindow.IsOpen = false;
+				};
+			}
+		}
+
+		/// <summary>
+		/// Disables a standard implementation of Autocomplete 
+		/// </summary>
+		public void DisableDefaultAutocomplete()
+		{
+			if (!_autocompleteOn) return;
+			TextArea.TextEntering -= OnTextEntering;
+			TextArea.TextEntered -= OnTextEntered;
+			completionWindow?.Close();
+			completionWindow?.CompletionList.CompletionData.Clear();
+			completionWindow=null;
+		}
+
+		private void OnTextEntered(object sender, TextCompositionEventArgs e)
+		{
+			if (completionWindow is not null && e.Text.Length > 0) {
+				if (char.IsControl(e.Text[0]))
+					completionWindow.CompletionList.RequestInsertion(e);
+			}
+		}
+
+		private void OnTextEntering(object sender, TextCompositionEventArgs e)
+		{
+			if (e.Text == " ") {
+				completionWindow?.Close();
+				return;
+			}
+			if (completionWindow?.IsOpen ?? true) 
+				return;
+
+			completionWindow.Show();
+
+
+		}
+		#endregion
 	}
 }

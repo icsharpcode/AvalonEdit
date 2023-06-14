@@ -43,6 +43,10 @@ namespace AcAvalonEdit.CodeCompletion
 		}
 
 		/// <summary>
+		/// Shows if Window is open or closed
+		/// </summary>
+		public bool IsOpen { get; set; } = false;
+		/// <summary>
 		/// Creates a new code completion window.
 		/// </summary>
 		public CompletionWindow(TextArea textArea) : base(textArea)
