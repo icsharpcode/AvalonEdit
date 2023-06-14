@@ -11,7 +11,8 @@
 	<Company>ic#code</Company>
 		<Copyright>2000-2022 AlphaSierraPapa for the SharpDevelop Team</Copyright>
 		<Description>Sample for WPF-based extensible text editor</Description>
-	<IsPackable>false</IsPackable>	
+	<IsPackable>false</IsPackable>
+	<Platforms>AnyCPU;x64</Platforms>	
 	</PropertyGroup>
 	
 	<PropertyGroup Condition=" '$(TargetFramework)' == 'net6.0-windows' ">

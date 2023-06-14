@@ -11,6 +11,7 @@
     <Copyright>2000-2022 AlphaSierraPapa for the SharpDevelop Team</Copyright>
     <Description>Tests for WPF-based extensible text editor</Description>
     <IsPackable>false</IsPackable>
+    <Platforms>AnyCPU;x64</Platforms>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(TargetFramework)' == 'net6.0-windows' ">
