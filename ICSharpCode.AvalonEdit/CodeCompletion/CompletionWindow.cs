@@ -41,11 +41,7 @@ namespace AcAvalonEdit.CodeCompletion
 		public CompletionList CompletionList {
 			get { return completionList; }
 		}
-
-		/// <summary>
-		/// Shows if Window is open or closed
-		/// </summary>
-		public bool IsOpen { get; set; } = false;
+		
 		/// <summary>
 		/// Creates a new code completion window.
 		/// </summary>

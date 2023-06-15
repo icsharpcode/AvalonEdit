@@ -63,7 +63,6 @@ namespace AcAvalonEdit
 		public TextEditor() : this(new TextArea())
 		{
 			WordWrap = true;
-			ShowLineNumbers = true;
 			Document.Changed += UpdateHighlighting;
 		}
 
@@ -1088,6 +1087,8 @@ namespace AcAvalonEdit
 		}
 		#endregion
 
+
+		#region Stuff
 		object IServiceProvider.GetService(Type serviceType)
 		{
 			return textArea.GetService(serviceType);
@@ -1180,10 +1181,35 @@ namespace AcAvalonEdit
 			}
 		}
 
+		#endregion
+
 
 		#region Custom Additions
 
 		private AcAvalonEdit.Highlighting.RichTextModel _model = new();
+
+		/// <summary>
+		/// Returns the indices for all SelectedLines
+		/// </summary>
+		/// <returns></returns>
+		public int[]? GetSelectedLines(bool AtCaretChanged)
+		{
+			if (AtCaretChanged)
+				return new int[1] { TextArea.Caret.Line - 1 };
+			else {
+
+				if (SelectionLength == 0)
+					return null;
+
+				int startline = TextArea.Selection.StartPosition.Line - 1;
+				int endline = TextArea.Selection.EndPosition.Line - 1;
+				if (endline < startline) {
+					(startline, endline) = (endline, startline);
+				}
+				return Enumerable.Range(startline, (endline - startline) + 1).ToArray();
+			}
+		}
+
 
 		/// <summary>
 		///  Fills the Text and Creates a Rich Text Model from the provided RichText
@@ -1191,8 +1217,10 @@ namespace AcAvalonEdit
 		/// <exception cref="ArgumentException">Malformed Flowdocument</exception>
 		public void Load(RichText rt)
 		{
+			Document.Changed -= UpdateHighlighting;
 			_model = rt.ToRichTextModel();
 			Text = rt.Text;
+			Document.Changed += UpdateHighlighting;
 		}
 
 		/// <summary>
@@ -1201,8 +1229,10 @@ namespace AcAvalonEdit
 		/// <exception cref="ArgumentException">Malformed Flowdocument</exception>
 		public void Load(List<string> text, List<HighlightingColor> highlightingColors)
 		{
+			Document.Changed -= UpdateHighlighting;
 			Text = string.Empty;
-			_model = new();
+
+			TextArea.TextView.LineTransformers.Clear();
 			if (text.Count != highlightingColors.Count)
 				throw new ArgumentException("Arguments must be the same length");
 			StringBuilder stringBuilder = new StringBuilder();
@@ -1211,7 +1241,12 @@ namespace AcAvalonEdit
 				stringBuilder.Append(text[i]);
 				stringBuilder.Append(Environment.NewLine);
 			}
+
+			RichTextColorizer color = new RichTextColorizer(_model);
+			TextArea.TextView.LineTransformers.Add(color);
+			stringBuilder.Remove(stringBuilder.Length - Environment.NewLine.Length, Environment.NewLine.Length);
 			Text = stringBuilder.ToString();
+			Document.Changed += UpdateHighlighting;
 
 		}
 
@@ -1221,6 +1256,7 @@ namespace AcAvalonEdit
 		/// <exception cref="ArgumentException">Malformed Flowdocument</exception>
 		public void Load(FlowDocument flow)
 		{
+			Document.Changed -= UpdateHighlighting;
 			if (flow.Blocks.Any(x => x is not Paragraph))
 				throw new ArgumentException("Only Paragraphs and Runs allowed");
 			if (flow.Blocks.Any(x => (x as Paragraph)!.Inlines.Any(x => x is not Run)))
@@ -1236,8 +1272,10 @@ namespace AcAvalonEdit
 					stringBuilder.Append(Environment.NewLine);
 				}
 			}
+			stringBuilder.Remove(stringBuilder.Length - Environment.NewLine.Length, Environment.NewLine.Length);
 
 			Text = stringBuilder.ToString();
+			Document.Changed += UpdateHighlighting;
 
 		}
 
@@ -1277,11 +1315,15 @@ namespace AcAvalonEdit
 			} else {
 				int startline = TextArea.Selection.StartPosition.Line;
 				int endline = TextArea.Selection.EndPosition.Line;
+				if (endline < startline) {
+					(startline, endline) = (endline, startline);
+				}
 				for (int i = startline - 1; i < endline; i++) {
 					_model.ApplyHighlighting(Document.Lines[i].Offset, Document.Lines[i].Length + Environment.NewLine.Length, highlightingColor);
 				}
 			}
 
+			TextArea.TextView.Redraw();
 		}
 
 		/// <summary>
@@ -1332,20 +1374,6 @@ namespace AcAvalonEdit
 			TextArea.TextEntering += OnTextEntering;
 			TextArea.TextEntered += OnTextEntered;
 
-			completionWindow = new CompletionWindow(TextArea) {
-				CloseWhenCaretAtBeginning = true
-			};
-			IList<ICompletionData> boundData = completionWindow.CompletionList.CompletionData;
-			boundData.Clear();
-			foreach (ICompletionData data in _completionData) {
-				boundData.Add(data);
-			}
-			if (boundData.Any()) {
-				completionWindow.Closed += delegate
-				{
-					completionWindow.IsOpen = false;
-				};
-			}
 		}
 
 		/// <summary>
@@ -1358,7 +1386,7 @@ namespace AcAvalonEdit
 			TextArea.TextEntered -= OnTextEntered;
 			completionWindow?.Close();
 			completionWindow?.CompletionList.CompletionData.Clear();
-			completionWindow=null;
+			completionWindow = null;
 		}
 
 		private void OnTextEntered(object sender, TextCompositionEventArgs e)
@@ -1375,11 +1403,24 @@ namespace AcAvalonEdit
 				completionWindow?.Close();
 				return;
 			}
-			if (completionWindow?.IsOpen ?? true) 
+			if (completionWindow is not null)
 				return;
 
-			completionWindow.Show();
+			completionWindow ??= new CompletionWindow(TextArea);
 
+			completionWindow.CloseWhenCaretAtBeginning = true;
+			IList<ICompletionData> boundData = completionWindow.CompletionList.CompletionData;
+			boundData.Clear();
+			foreach (ICompletionData data in _completionData) {
+				boundData.Add(data);
+			}
+			if (boundData.Any()) {
+				completionWindow.Show();
+				completionWindow.Closed += delegate
+				{
+					completionWindow = null;
+				};
+			}
 
 		}
 		#endregion
