@@ -1376,6 +1376,7 @@ namespace AcAvalonEdit
 		private bool _autocompleteOn = false;
 		private List<ICompletionData> _completionData;
 		private CompletionWindow? completionWindow;
+		private List<ICompletionData> _defaultData;
 
 		/// <summary>
 		/// Enables a standard implementation of Autocomplete with the provided completion data
@@ -1385,8 +1386,24 @@ namespace AcAvalonEdit
 		{
 			if (_autocompleteOn) DisableDefaultAutocomplete();
 			_completionData = completions;
+			_defaultData = completions;
 			TextArea.TextEntering += OnTextEntering;
 			TextArea.TextEntered += OnTextEntered;
+			_autocompleteOn = true;
+		}
+
+		/// <summary>
+		///Adds additional Completion Data to the completion window, either with or without soft-reset 
+		/// </summary>
+		/// <param name="list"></param>
+		/// <param name="fromDefault"></param>
+		public void AddAdditionalCompletions(List<ICompletionData> list, bool fromDefault = true)
+		{
+			if (fromDefault) {
+				_completionData = _defaultData;
+			}
+
+			_completionData.AddRange(list);
 		}
 
 		/// <summary>
@@ -1400,6 +1417,7 @@ namespace AcAvalonEdit
 			completionWindow?.Close();
 			completionWindow?.CompletionList.CompletionData.Clear();
 			completionWindow = null;
+			_autocompleteOn = false;
 		}
 
 		private void OnTextEntered(object sender, TextCompositionEventArgs e)
