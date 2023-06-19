@@ -187,6 +187,13 @@ namespace AcAvalonEdit.CodeCompletion
 
 		void CaretPositionChanged(object sender, EventArgs e)
 		{
+			if(CloseAutomatically) {
+				if(completionList.ListBox.Items.IsEmpty) {
+					this.Visibility = Visibility.Hidden;
+				} else {
+					this.Visibility = Visibility.Visible;
+				}
+			}
 			int offset = this.TextArea.Caret.Offset;
 			if (offset == this.StartOffset) {
 				if (CloseAutomatically && CloseWhenCaretAtBeginning) {
@@ -200,7 +207,7 @@ namespace AcAvalonEdit.CodeCompletion
 				if (CloseAutomatically) {
 					Close();
 				}
-			} else {
+			}else {
 				TextDocument document = this.TextArea.Document;
 				if (document != null) {
 					completionList.SelectItem(document.GetText(this.StartOffset, offset - this.StartOffset));

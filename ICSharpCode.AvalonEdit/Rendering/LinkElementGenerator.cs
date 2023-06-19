@@ -19,6 +19,7 @@
 using System;
 using System.Text.RegularExpressions;
 
+using AcAvalonEdit.Highlighting;
 using AcAvalonEdit.Utils;
 
 namespace AcAvalonEdit.Rendering
@@ -102,6 +103,17 @@ namespace AcAvalonEdit.Rendering
 			}
 		}
 
+		/// <inheritdoc/>
+		public override VisualLineElement ConstructElement(int offset, RichTextColorizer? transfomer)
+		{
+			int matchOffset;
+			Match m = GetMatch(offset, out matchOffset);
+			if (m.Success && matchOffset == offset) {
+				return ConstructElementFromMatch(m);
+			} else {
+				return null;
+			}
+		}
 		/// <summary>
 		/// Constructs a VisualLineElement that replaces the matched text.
 		/// The default implementation will create a <see cref="VisualLineLinkText"/>

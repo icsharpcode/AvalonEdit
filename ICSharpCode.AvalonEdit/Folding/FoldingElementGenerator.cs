@@ -23,6 +23,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.TextFormatting;
 
+using AcAvalonEdit.Highlighting;
 using AcAvalonEdit.Rendering;
 using AcAvalonEdit.Utils;
 
@@ -147,6 +148,48 @@ namespace AcAvalonEdit.Folding
 			}
 		}
 
+		/// <inheritdoc/>
+		public override VisualLineElement ConstructElement(int offset,RichTextColorizer? transformer)
+		{
+			if (foldingManager == null)
+				return null;
+			int foldedUntil = -1;
+			FoldingSection foldingSection = null;
+			foreach (FoldingSection fs in foldingManager.GetFoldingsContaining(offset)) {
+				if (fs.IsFolded) {
+					if (fs.EndOffset > foldedUntil) {
+						foldedUntil = fs.EndOffset;
+						foldingSection = fs;
+					}
+				}
+			}
+			if (foldedUntil > offset && foldingSection != null) {
+				// Handle overlapping foldings: if there's another folded folding
+				// (starting within the foldingSection) that continues after the end of the folded section,
+				// then we'll extend our fold element to cover that overlapping folding.
+				bool foundOverlappingFolding;
+				do {
+					foundOverlappingFolding = false;
+					foreach (FoldingSection fs in FoldingManager.GetFoldingsContaining(foldedUntil)) {
+						if (fs.IsFolded && fs.EndOffset > foldedUntil) {
+							foldedUntil = fs.EndOffset;
+							foundOverlappingFolding = true;
+						}
+					}
+				} while (foundOverlappingFolding);
+
+				string title = foldingSection.Title;
+				if (string.IsNullOrEmpty(title))
+					title = "...";
+				var p = new VisualLineElementTextRunProperties(CurrentContext.GlobalTextRunProperties);
+				p.SetForegroundBrush(textBrush);
+				var textFormatter = TextFormatterFactory.Create(CurrentContext.TextView);
+				var text = FormattedTextElement.PrepareText(textFormatter, title, p);
+				return new FoldingLineElement(foldingSection, text, foldedUntil - offset) { textBrush = textBrush };
+			} else {
+				return null;
+			}
+		}
 		sealed class FoldingLineElement : FormattedTextElement
 		{
 			readonly FoldingSection fs;

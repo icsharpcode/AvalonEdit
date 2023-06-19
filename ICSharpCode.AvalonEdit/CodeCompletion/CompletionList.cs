@@ -20,6 +20,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -49,6 +50,7 @@ namespace AcAvalonEdit.CodeCompletion
 			get { return isFiltering; }
 			set { isFiltering = value; }
 		}
+
 
 		/// <summary>
 		/// Dependency property for <see cref="EmptyTemplate" />.

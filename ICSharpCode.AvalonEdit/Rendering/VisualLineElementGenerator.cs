@@ -18,6 +18,8 @@
 
 using System;
 
+using AcAvalonEdit.Highlighting;
+
 namespace AcAvalonEdit.Rendering
 {
 	/// <summary>
@@ -69,6 +71,7 @@ namespace AcAvalonEdit.Rendering
 		/// at the position where you signalled interest.
 		/// </remarks>
 		public abstract VisualLineElement ConstructElement(int offset);
+		public abstract VisualLineElement ConstructElement(int offset, RichTextColorizer? transformer);
 	}
 
 	internal interface IBuiltinElementGenerator

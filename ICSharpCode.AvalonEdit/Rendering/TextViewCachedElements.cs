@@ -18,8 +18,12 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Windows;
+using System.Windows.Media;
 using System.Windows.Media.TextFormatting;
 
+using AcAvalonEdit.Highlighting;
 using AcAvalonEdit.Utils;
 
 namespace AcAvalonEdit.Rendering
@@ -34,14 +38,69 @@ namespace AcAvalonEdit.Rendering
 			if (nonPrintableCharacterTexts == null)
 				nonPrintableCharacterTexts = new Dictionary<string, TextLine>();
 			TextLine textLine;
-			if (!nonPrintableCharacterTexts.TryGetValue(text, out textLine)) {
-				var p = new VisualLineElementTextRunProperties(context.GlobalTextRunProperties);
+			VisualLineElementTextRunProperties? p;
+			if (context.VisualLine?.Elements?.Any() ?? false)
+				p = new VisualLineElementTextRunProperties(context.VisualLine.Elements[0].TextRunProperties);
+			else {
+				p = new VisualLineElementTextRunProperties(context.GlobalTextRunProperties);
 				p.SetForegroundBrush(context.TextView.NonPrintableCharacterBrush);
-				if (formatter == null)
-					formatter = TextFormatterFactory.Create(context.TextView);
-				textLine = FormattedTextElement.PrepareText(formatter, text, p);
-				nonPrintableCharacterTexts[text] = textLine;
 			}
+
+
+			//var p = new VisualLineElementTextRunProperties(context.GlobalTextRunProperties);
+			//p.SetForegroundBrush(context.TextView.NonPrintableCharacterBrush);
+			if (formatter == null)
+				formatter = TextFormatterFactory.Create(context.TextView);
+			textLine = FormattedTextElement.PrepareText(formatter, text, p);
+			nonPrintableCharacterTexts[text] = textLine;
+			return textLine;
+		}
+
+		public TextLine GetTextForNonPrintableCharacter(string text, ITextRunConstructionContext context, RichTextColorizer? props)
+		{
+			if (props is null)
+				return (GetTextForNonPrintableCharacter(text, context));
+			if (nonPrintableCharacterTexts == null)
+				nonPrintableCharacterTexts = new Dictionary<string, TextLine>();
+			TextLine textLine;
+
+
+			var color = props.GetColorForOffsett(context.VisualLine.StartOffset);
+
+			
+			var p = new VisualLineElementTextRunProperties(context.GlobalTextRunProperties);
+			
+			if (color.Foreground != null) {
+				Brush b = color.Foreground.GetBrush(context);
+				if (b != null)
+					p.SetForegroundBrush(b);
+			}
+			if (color.Background != null) {
+				Brush b = color.Background.GetBrush(context);
+				if (b != null)
+					p.SetBackgroundBrush(b);
+			}
+			if (color.FontStyle != null || color.FontWeight != null || color.FontFamily != null) {
+				Typeface tf =p.Typeface;
+				p.SetTypeface(new Typeface(
+					color.FontFamily ?? tf.FontFamily,
+					color.FontStyle ?? tf.Style,
+					color.FontWeight ?? tf.Weight,
+					tf.Stretch
+				));
+			}
+			if (color.Underline ?? false)
+				p.SetTextDecorations(TextDecorations.Underline);
+			if (color.Strikethrough ?? false)
+				p.SetTextDecorations(TextDecorations.Strikethrough);
+			if (color.FontSize.HasValue)
+				p.SetFontRenderingEmSize(color.FontSize.Value);
+
+
+			if (formatter == null)
+				formatter = TextFormatterFactory.Create(context.TextView);
+			textLine = FormattedTextElement.PrepareText(formatter, text, p);
+			nonPrintableCharacterTexts[text] = textLine;
 			return textLine;
 		}
 

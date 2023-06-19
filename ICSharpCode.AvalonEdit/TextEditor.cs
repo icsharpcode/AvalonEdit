@@ -62,7 +62,6 @@ namespace AcAvalonEdit
 		/// </summary>
 		public TextEditor() : this(new TextArea())
 		{
-			WordWrap = true;
 			Document.Changed += UpdateHighlighting;
 		}
 
@@ -1186,8 +1185,7 @@ namespace AcAvalonEdit
 
 		#region Custom Additions
 
-		private AcAvalonEdit.Highlighting.RichTextModel _model = new();
-
+		private RichTextModel _model = new();
 		/// <summary>
 		/// Returns the indices for all SelectedLines
 		/// </summary>
@@ -1237,7 +1235,7 @@ namespace AcAvalonEdit
 				throw new ArgumentException("Arguments must be the same length");
 			StringBuilder stringBuilder = new StringBuilder();
 			for (int i = 0; i < text.Count; i++) {
-				_model.ApplyHighlighting(stringBuilder.Length, text[i].Length + Environment.NewLine.Length, highlightingColors[i]);
+				_model.ApplyHighlighting(Math.Max(0, stringBuilder.Length - 1), text[i].Length + Environment.NewLine.Length, highlightingColors[i]);
 				stringBuilder.Append(text[i]);
 				stringBuilder.Append(Environment.NewLine);
 			}
@@ -1345,6 +1343,22 @@ namespace AcAvalonEdit
 			return document;
 		}
 
+		private bool FreeText {
+			get {
+				ReadOnlySpan<char> help = Text.AsSpan();
+
+				var relevant = help[Document.Lines[TextArea.Caret.Line - 1].Offset..TextArea.Caret.Offset];
+				int counter = 0;
+				for (int i = 0; i < relevant.Length; i++) {
+					if (relevant[i] == '"')
+						counter++;
+				}
+				if (counter % 2 == 0) {
+					return false;
+				}
+				return true;
+			}
+		}
 		/// <summary>
 		/// Returns the RichText of the current Highlighting and underlying Text
 		/// </summary>
@@ -1373,7 +1387,6 @@ namespace AcAvalonEdit
 			_completionData = completions;
 			TextArea.TextEntering += OnTextEntering;
 			TextArea.TextEntered += OnTextEntered;
-
 		}
 
 		/// <summary>
@@ -1391,6 +1404,8 @@ namespace AcAvalonEdit
 
 		private void OnTextEntered(object sender, TextCompositionEventArgs e)
 		{
+			if (FreeText)
+				return;
 			if (completionWindow is not null && e.Text.Length > 0) {
 				if (char.IsControl(e.Text[0]))
 					completionWindow.CompletionList.RequestInsertion(e);
@@ -1403,7 +1418,11 @@ namespace AcAvalonEdit
 				completionWindow?.Close();
 				return;
 			}
-			if (completionWindow is not null)
+			if (FreeText || completionWindow is not null)
+				return;
+
+
+			if (char.IsDigit(e.Text[0]))
 				return;
 
 			completionWindow ??= new CompletionWindow(TextArea);
@@ -1416,8 +1435,7 @@ namespace AcAvalonEdit
 			}
 			if (boundData.Any()) {
 				completionWindow.Show();
-				completionWindow.Closed += delegate
-				{
+				completionWindow.Closed += delegate {
 					completionWindow = null;
 				};
 			}

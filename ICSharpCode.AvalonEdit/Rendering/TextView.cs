@@ -33,6 +33,7 @@ using System.Windows.Media.TextFormatting;
 using System.Windows.Threading;
 
 using AcAvalonEdit.Document;
+using AcAvalonEdit.Highlighting;
 using AcAvalonEdit.Utils;
 
 namespace AcAvalonEdit.Rendering
@@ -1078,7 +1079,9 @@ namespace AcAvalonEdit.Rendering
 				TextView = this
 			};
 
-			visualLine.ConstructVisualElements(textSource, elementGeneratorsArray);
+			RichTextColorizer? help = lineTransformersArray.FirstOrDefault(x => x is RichTextColorizer) as RichTextColorizer;
+
+			visualLine.ConstructVisualElements(textSource, elementGeneratorsArray,help);
 
 			if (visualLine.FirstDocumentLine != visualLine.LastDocumentLine) {
 				// Check whether the lines are collapsed correctly:

@@ -40,6 +40,10 @@ namespace AcAvalonEdit.Highlighting
 			this.richTextModel = richTextModel;
 		}
 
+		public HighlightingColor GetColorForOffsett(int offset)
+		{
+			return richTextModel.GetHighlightingAt(offset);
+		}
 		/// <inheritdoc/>
 		protected override void ColorizeLine(DocumentLine line)
 		{

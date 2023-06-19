@@ -27,6 +27,7 @@ using System.Windows.Media;
 using System.Windows.Media.TextFormatting;
 
 using AcAvalonEdit.Document;
+using AcAvalonEdit.Highlighting;
 using AcAvalonEdit.Utils;
 
 namespace AcAvalonEdit.Rendering
@@ -129,14 +130,14 @@ namespace AcAvalonEdit.Rendering
 			this.FirstDocumentLine = firstDocumentLine;
 		}
 
-		internal void ConstructVisualElements(ITextRunConstructionContext context, VisualLineElementGenerator[] generators)
+		internal void ConstructVisualElements(ITextRunConstructionContext context, VisualLineElementGenerator[] generators,RichTextColorizer? transformer)
 		{
 			Debug.Assert(phase == LifetimePhase.Generating);
 			foreach (VisualLineElementGenerator g in generators) {
 				g.StartGeneration(context);
 			}
 			elements = new List<VisualLineElement>();
-			PerformVisualElementConstruction(generators);
+			PerformVisualElementConstruction(generators,transformer);
 			foreach (VisualLineElementGenerator g in generators) {
 				g.FinishGeneration();
 			}
@@ -149,8 +150,8 @@ namespace AcAvalonEdit.Rendering
 			CalculateOffsets();
 			phase = LifetimePhase.Transforming;
 		}
-
-		void PerformVisualElementConstruction(VisualLineElementGenerator[] generators)
+		
+		void PerformVisualElementConstruction(VisualLineElementGenerator[] generators,RichTextColorizer? transformer)
 		{
 			TextDocument document = this.Document;
 			int offset = FirstDocumentLine.Offset;
@@ -181,7 +182,7 @@ namespace AcAvalonEdit.Rendering
 				askInterestOffset = 1;
 				foreach (VisualLineElementGenerator g in generators) {
 					if (g.cachedInterest == offset) {
-						VisualLineElement element = g.ConstructElement(offset);
+						VisualLineElement element = g.ConstructElement(offset,transformer);
 						if (element != null) {
 							elements.Add(element);
 							if (element.DocumentLength > 0) {

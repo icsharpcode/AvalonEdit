@@ -184,6 +184,8 @@ namespace AcAvalonEdit.Highlighting
 		/// </summary>
 		public Run[] CreateRunsOnLineBreaks()
 		{
+			if(Text.Length == 0)
+				return Array.Empty<Run>();
 			var lines = text.Split(Environment.NewLine);
 			int relevantIndex=0;
 			Run[] runs = new Run[lines.Length];

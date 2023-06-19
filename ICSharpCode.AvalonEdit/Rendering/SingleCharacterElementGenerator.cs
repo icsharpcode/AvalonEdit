@@ -23,6 +23,7 @@ using System.Windows.Media;
 using System.Windows.Media.TextFormatting;
 
 using AcAvalonEdit.Document;
+using AcAvalonEdit.Highlighting;
 using AcAvalonEdit.Utils;
 
 namespace AcAvalonEdit.Rendering
@@ -104,6 +105,25 @@ namespace AcAvalonEdit.Rendering
 				return new SpaceTextElement(CurrentContext.TextView.cachedElements.GetTextForNonPrintableCharacter("\u00B7", CurrentContext));
 			} else if (ShowTabs && c == '\t') {
 				return new TabTextElement(CurrentContext.TextView.cachedElements.GetTextForNonPrintableCharacter("\u00BB", CurrentContext));
+			} else if (ShowBoxForControlCharacters && char.IsControl(c)) {
+				var p = new VisualLineElementTextRunProperties(CurrentContext.GlobalTextRunProperties);
+				p.SetForegroundBrush(Brushes.White);
+				var textFormatter = TextFormatterFactory.Create(CurrentContext.TextView);
+				var text = FormattedTextElement.PrepareText(textFormatter,
+															TextUtilities.GetControlCharacterName(c), p);
+				return new SpecialCharacterBoxElement(text);
+			} else {
+				return null;
+			}
+		}
+
+		public override VisualLineElement ConstructElement(int offset,RichTextColorizer? transformer)
+		{
+			char c = CurrentContext.Document.GetCharAt(offset);
+			if (ShowSpaces && c == ' ') {
+				return new SpaceTextElement(CurrentContext.TextView.cachedElements.GetTextForNonPrintableCharacter("\u00B7", CurrentContext));
+			} else if (ShowTabs && c == '\t') {
+				return new TabTextElement(CurrentContext.TextView.cachedElements.GetTextForNonPrintableCharacter("\u00BB", CurrentContext,transformer ));
 			} else if (ShowBoxForControlCharacters && char.IsControl(c)) {
 				var p = new VisualLineElementTextRunProperties(CurrentContext.GlobalTextRunProperties);
 				p.SetForegroundBrush(Brushes.White);

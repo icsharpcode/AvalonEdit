@@ -54,8 +54,7 @@ namespace AcAvalonEdit.Rendering
 							throw new ArgumentException("The returned TextRun must not have length 0.", element.GetType().Name + ".Length");
 						if (relativeOffset + run.Length > element.VisualLength)
 							throw new ArgumentException("The returned TextRun is too long.", element.GetType().Name + ".CreateTextRun");
-						InlineObjectRun inlineRun = run as InlineObjectRun;
-						if (inlineRun != null) {
+						if (run is InlineObjectRun inlineRun) {
 							inlineRun.VisualLine = VisualLine;
 							VisualLine.hasInlineObjects = true;
 							TextView.AddInlineObject(inlineRun);
@@ -64,7 +63,7 @@ namespace AcAvalonEdit.Rendering
 					}
 				}
 				if (TextView.Options.ShowEndOfLine && textSourceCharacterIndex == VisualLine.VisualLength) {
-					return CreateTextRunForNewLine();
+					 return CreateTextRunForNewLine();
 				}
 				return new TextEndOfParagraph(1);
 			} catch (Exception ex) {
