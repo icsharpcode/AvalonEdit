@@ -19,6 +19,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -1428,6 +1429,34 @@ namespace AcAvalonEdit
 				if (char.IsControl(e.Text[0]))
 					completionWindow.CompletionList.RequestInsertion(e);
 			}
+			if (completionWindow is not null && e.Text == "." && _callBackForVariables is not null) {
+				if (completionWindow.CompletionList.VisibleCompletionsCount > 0) {
+					return;
+				}
+				string lastWord = GetLastWord();
+				List<ICompletionData>? ListToAdd = _callBackForVariables(lastWord);
+
+				if (ListToAdd is not null) {
+					foreach (var cData in ListToAdd) {
+						completionWindow.CompletionList.CompletionData.Add(cData);
+					}
+				}
+				completionWindow.Refresh(lastWord);
+			}
+		}
+
+		private string GetLastWord()
+		{
+			int index = TextArea.Caret.Offset - 2;
+			int length = 0;
+			for (; index >= 0; index--) {
+				if (char.IsWhiteSpace(Text[index])) {
+					break;
+				}
+				length++;
+			}
+
+			return Text.Substring(index + 1, length);
 		}
 
 		private void OnTextEntering(object sender, TextCompositionEventArgs e)
@@ -1439,9 +1468,6 @@ namespace AcAvalonEdit
 			if (FreeText || completionWindow is not null)
 				return;
 
-
-			if (char.IsDigit(e.Text[0]))
-				return;
 
 			completionWindow ??= new CompletionWindow(TextArea);
 
@@ -1457,8 +1483,19 @@ namespace AcAvalonEdit
 					completionWindow = null;
 				};
 			}
-
 		}
+
+		private Func<string, List<ICompletionData>>? _callBackForVariables;
+
+		/// <summary>
+		/// Sets a callback function to handle Intellisense on lazyload variables
+		/// </summary>
+		/// <param name="func"></param>
+		public void SetFunctionForIntellisenseCallback(Func<string, List<ICompletionData>>? func)
+		{
+			_callBackForVariables = func;
+		}
+
 		#endregion
 	}
 }

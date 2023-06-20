@@ -131,7 +131,6 @@ namespace AcAvalonEdit.CodeCompletion
 				HandleKey(e);
 			}
 		}
-
 		/// <summary>
 		/// Handles a key press. Used to let the completion list handle key presses while the
 		/// focus is still on the text editor.
@@ -232,18 +231,30 @@ namespace AcAvalonEdit.CodeCompletion
 		string currentText;
 		ObservableCollection<ICompletionData> currentList;
 
+
+		/// <summary>
+		/// Number of currently visible Completions
+		/// </summary>
+		public int VisibleCompletionsCount {
+			get {
+				if(currentList == null)
+					return 0;
+				return currentList.Count;
+			}
+		}
+
 		/// <summary>
 		/// Selects the best match, and filter the items if turned on using <see cref="IsFiltering" />.
 		/// </summary>
-		public void SelectItem(string text)
+		public void SelectItem(string text,bool force=false)
 		{
-			if (text == currentText)
+			if (text == currentText && !force)
 				return;
 			if (listBox == null)
 				ApplyTemplate();
 
 			if (this.IsFiltering) {
-				SelectItemFiltering(text);
+				SelectItemFiltering(text,force);
 			} else {
 				SelectItemWithStart(text);
 			}
@@ -253,11 +264,15 @@ namespace AcAvalonEdit.CodeCompletion
 		/// <summary>
 		/// Filters CompletionList items to show only those matching given query, and selects the best match.
 		/// </summary>
-		void SelectItemFiltering(string query)
+		void SelectItemFiltering(string query,bool force)
 		{
+			if(query == ".") {
+				this.currentList?.Clear();
+				return;
+			}
 			// if the user just typed one more character, don't filter all data but just filter what we are already displaying
 			var listToFilter = (this.currentList != null && (!string.IsNullOrEmpty(this.currentText)) && (!string.IsNullOrEmpty(query)) &&
-								query.StartsWith(this.currentText, StringComparison.Ordinal)) ?
+								query.StartsWith(this.currentText, StringComparison.Ordinal) && !force) ?
 				this.currentList : this.completionData;
 
 			var matchingItems =

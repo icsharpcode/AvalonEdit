@@ -41,7 +41,7 @@ namespace AcAvalonEdit.CodeCompletion
 		public CompletionList CompletionList {
 			get { return completionList; }
 		}
-		
+
 		/// <summary>
 		/// Creates a new code completion window.
 		/// </summary>
@@ -49,13 +49,13 @@ namespace AcAvalonEdit.CodeCompletion
 		{
 			// keep height automatic
 			this.CloseAutomatically = true;
-			this.SizeToContent = SizeToContent.Height;
+			this.SizeToContent = SizeToContent.WidthAndHeight;
 			this.MaxHeight = 300;
 			this.Width = 175;
 			this.Content = completionList;
 			// prevent user from resizing window to 0x0
 			this.MinHeight = 15;
-			this.MinWidth = 30;
+			this.MinWidth = 175;
 
 			toolTip.PlacementTarget = this;
 			toolTip.Placement = PlacementMode.Right;
@@ -187,8 +187,8 @@ namespace AcAvalonEdit.CodeCompletion
 
 		void CaretPositionChanged(object sender, EventArgs e)
 		{
-			if(CloseAutomatically) {
-				if(completionList.ListBox.Items.IsEmpty) {
+			if (CloseAutomatically) {
+				if (completionList.ListBox.Items.IsEmpty) {
 					this.Visibility = Visibility.Hidden;
 				} else {
 					this.Visibility = Visibility.Visible;
@@ -207,12 +207,23 @@ namespace AcAvalonEdit.CodeCompletion
 				if (CloseAutomatically) {
 					Close();
 				}
-			}else {
+			} else {
 				TextDocument document = this.TextArea.Document;
 				if (document != null) {
 					completionList.SelectItem(document.GetText(this.StartOffset, offset - this.StartOffset));
 				}
 			}
+		}
+
+		internal void Refresh(string word)
+		{
+			int offset = this.TextArea.Caret.Offset;
+			StartOffset = offset - word.Length - 1;
+			TextDocument document = this.TextArea.Document;
+			if (document != null) {
+				completionList.SelectItem(document.GetText(this.StartOffset, offset - this.StartOffset),true);
+			}
+			this.Visibility = Visibility.Visible;
 		}
 	}
 }
