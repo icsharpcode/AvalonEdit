@@ -103,10 +103,10 @@ namespace AcAvalonEdit.CodeCompletion
 			// The window must close before Complete() is called.
 			// If the Complete callback pushes stacked input handlers, we don't want to pop those when the CC window closes.
 			var item = completionList.SelectedItem;
-			if (item != null)
+			if (item != null) {
 				item.Complete(this.TextArea, new AnchorSegment(this.TextArea.Document, this.StartOffset, this.EndOffset - this.StartOffset), e);
+			}
 		}
-
 		void AttachEvents()
 		{
 			this.completionList.InsertionRequested += completionList_InsertionRequested;
@@ -221,9 +221,13 @@ namespace AcAvalonEdit.CodeCompletion
 			StartOffset = offset - word.Length - 1;
 			TextDocument document = this.TextArea.Document;
 			if (document != null) {
-				completionList.SelectItem(document.GetText(this.StartOffset, offset - this.StartOffset),true);
+				completionList.SelectItem(document.GetText(this.StartOffset, offset - this.StartOffset), true);
 			}
-			this.Visibility = Visibility.Visible;
+			if (completionList.VisibleCompletionsCount > 0) {
+				this.Visibility = Visibility.Visible;
+			} else {
+				this.Visibility = Visibility.Hidden;
+			}
 		}
 	}
 }

@@ -70,6 +70,7 @@ namespace AcAvalonEdit.CodeCompletion
 		public void Complete(TextArea textArea, ISegment completionSegment, EventArgs insertionRequestEventArgs)
 		{
 			textArea.Document.Replace(completionSegment, Text);
+			textArea.OnAutoCompleteFired(Text);
 		}
 	}
 

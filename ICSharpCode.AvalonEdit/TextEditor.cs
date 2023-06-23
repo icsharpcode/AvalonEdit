@@ -19,10 +19,12 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Configuration;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -1241,13 +1243,13 @@ namespace AcAvalonEdit
 				stringBuilder.Append(Environment.NewLine);
 			}
 
-			RichTextColorizer color = new RichTextColorizer(_model);
+			RichTextColorizer color = new(_model);
 			TextArea.TextView.LineTransformers.Add(color);
 			stringBuilder.Remove(stringBuilder.Length - Environment.NewLine.Length, Environment.NewLine.Length);
 			Text = stringBuilder.ToString();
 			Document.Changed += UpdateHighlighting;
-
 		}
+
 
 		/// <summary>
 		///  Fills the Text and Creates a Rich Text Model from the provided Flowdocument, only works if the Flowdocument only contains Paragraphs and Runs
@@ -1263,14 +1265,12 @@ namespace AcAvalonEdit
 
 			StringBuilder stringBuilder = new StringBuilder();
 			_model = new();
-
-			foreach (Paragraph p in flow.Blocks.Cast<Paragraph>()) {
-				foreach (Run r in p.Inlines.Cast<Run>()) {
-					_model.ApplyHighlighting(stringBuilder.Length, r.Text.Length + Environment.NewLine.Length, BuildHighlightingFromRun(r));
-					stringBuilder.Append(r.Text);
-					stringBuilder.Append(Environment.NewLine);
-				}
+			foreach (var r in flow.Blocks.Cast<Paragraph>().SelectMany(p => p.Inlines.Cast<Run>())) {
+				_model.ApplyHighlighting(stringBuilder.Length, r.Text.Length + Environment.NewLine.Length, BuildHighlightingFromRun(r));
+				stringBuilder.Append(r.Text);
+				stringBuilder.Append(Environment.NewLine);
 			}
+
 			stringBuilder.Remove(stringBuilder.Length - Environment.NewLine.Length, Environment.NewLine.Length);
 
 			Text = stringBuilder.ToString();
@@ -1311,7 +1311,8 @@ namespace AcAvalonEdit
 		{
 			if (SelectionLength == 0) {
 				_model.ApplyHighlighting(Document.Lines[TextArea.Caret.Line - 1].Offset, Document.Lines[TextArea.Caret.Line - 1].Length + Environment.NewLine.Length, highlightingColor);
-			} else {
+			}
+			else {
 				int startline = TextArea.Selection.StartPosition.Line;
 				int endline = TextArea.Selection.EndPosition.Line;
 				if (endline < startline) {
@@ -1373,6 +1374,18 @@ namespace AcAvalonEdit
 		{
 			_model.UpdateOffsets(e.OffsetChangeMap);
 		}
+		private void CompletionWindowOnReplace(object? sender, DocumentChangeEventArgs e)
+		{
+			if (e.RemovalLength > 0 && e.InsertionLength == 1) {
+				if (CreateCompletionWindow())
+					completionWindow.StartOffset--;
+				else {
+					completionWindow.StartOffset = e.Offset;
+					completionWindow.EndOffset = e.Offset + e.InsertionLength;
+
+				}
+			}
+		}
 
 		private bool _autocompleteOn = false;
 		private List<ICompletionData> _completionData;
@@ -1388,10 +1401,13 @@ namespace AcAvalonEdit
 			if (_autocompleteOn) DisableDefaultAutocomplete();
 			_completionData = completions;
 			_defaultData = completions;
+			TextArea.AutoCompleteFired += OnAutoCompletion;
 			TextArea.TextEntering += OnTextEntering;
 			TextArea.TextEntered += OnTextEntered;
+			Document.Changing += CompletionWindowOnReplace;
 			_autocompleteOn = true;
 		}
+
 
 		/// <summary>
 		///Adds additional Completion Data to the completion window, either with or without soft-reset 
@@ -1400,6 +1416,7 @@ namespace AcAvalonEdit
 		/// <param name="fromDefault"></param>
 		public void AddAdditionalCompletions(List<ICompletionData> list, bool fromDefault = true)
 		{
+
 			if (fromDefault) {
 				_completionData = _defaultData;
 			}
@@ -1415,8 +1432,10 @@ namespace AcAvalonEdit
 			if (!_autocompleteOn) return;
 			TextArea.TextEntering -= OnTextEntering;
 			TextArea.TextEntered -= OnTextEntered;
+			TextArea.AutoCompleteFired -= OnAutoCompletion;
 			completionWindow?.Close();
 			completionWindow?.CompletionList.CompletionData.Clear();
+			Document.Changing -= CompletionWindowOnReplace;
 			completionWindow = null;
 			_autocompleteOn = false;
 		}
@@ -1426,8 +1445,9 @@ namespace AcAvalonEdit
 			if (FreeText)
 				return;
 			if (completionWindow is not null && e.Text.Length > 0) {
-				if (char.IsControl(e.Text[0]))
-					completionWindow.CompletionList.RequestInsertion(e);
+				if (char.IsControl(e.Text[0])) {
+					completionWindow.Close();
+				}
 			}
 			if (completionWindow is not null && e.Text == "." && _callBackForVariables is not null) {
 				if (completionWindow.CompletionList.VisibleCompletionsCount > 0) {
@@ -1450,7 +1470,7 @@ namespace AcAvalonEdit
 			int index = TextArea.Caret.Offset - 2;
 			int length = 0;
 			for (; index >= 0; index--) {
-				if (char.IsWhiteSpace(Text[index])) {
+				if (char.IsWhiteSpace(Text[index]) || Text[index] == ',' || Text[index] == '(') {
 					break;
 				}
 				length++;
@@ -1465,8 +1485,13 @@ namespace AcAvalonEdit
 				completionWindow?.Close();
 				return;
 			}
+			CreateCompletionWindow();
+		}
+
+		private bool CreateCompletionWindow()
+		{
 			if (FreeText || completionWindow is not null)
-				return;
+				return false;
 
 
 			completionWindow ??= new CompletionWindow(TextArea);
@@ -1483,7 +1508,43 @@ namespace AcAvalonEdit
 					completionWindow = null;
 				};
 			}
+			return true;
 		}
+
+		private async void OnInsertionRequested(object? sender, EventArgs e)
+		{
+			int pre = Text.Length;
+			await Task.Delay(TimeSpan.FromMilliseconds(10));
+			SelectVariable(Text.Length - pre);
+
+		}
+
+		/// <summary>
+		/// Replaces the selected Text with a given string
+		/// </summary>
+		/// <param name="input"></param>
+		public void InsertText(string input)
+		{
+			TextArea.Selection.ReplaceSelectionWithText(input);
+			if (AutoSelectReplaceableVariables) {
+				SelectVariable(input.Length);
+			}
+
+		}
+
+		private void OnAutoCompletion(object sender, TextCompositionEventArgs e)
+		{
+			SelectVariable(e.Text.Length);
+		}
+		/// <summary>
+		/// When inserting Text should placeholders be automatically selected 
+		/// </summary>
+		public bool AutoSelectReplaceableVariables { get; set; } = true;
+
+		/// <summary>
+		///Start and end Delimiter for the variables 
+		/// </summary>
+		public char[] VariableDelimiters { get; set; } = new char[2];
 
 		private Func<string, List<ICompletionData>>? _callBackForVariables;
 
@@ -1496,6 +1557,64 @@ namespace AcAvalonEdit
 			_callBackForVariables = func;
 		}
 
+		private void SelectVariable(int length)
+		{
+			if (length == 0)
+				return;
+			int offset = TextArea.Caret.Offset - length;
+			var input = Text.AsSpan().Slice(offset, length);
+			if (input.Contains(VariableDelimiters[0]) && input.Contains(VariableDelimiters[1])) {
+				var start = input.IndexOf(VariableDelimiters[0]);
+				var end = input.IndexOf(VariableDelimiters[1]) + 1;
+				if (start > end) (start, end) = (end, start);
+				TextArea.Caret.Offset = offset + end;
+				TextArea.Selection = Selection.Create(TextArea, offset + start, offset + end);
+			}
+		}
+
+		private bool SelecteNextVariable()
+		{
+			int offset = TextArea.Caret.Offset;
+			var section = Text.AsSpan();
+
+			if (section.Slice(offset, Text.Length - offset).Contains(VariableDelimiters[0]) && section.Slice(offset, Text.Length - offset).Contains(VariableDelimiters[1])) {
+				var start = section.Slice(offset, Text.Length - offset).IndexOf(VariableDelimiters[0]);
+				var end = section.Slice(offset, Text.Length - offset).IndexOf(VariableDelimiters[1]) + 1;
+				if (start > end) (start, end) = (end, start);
+				TextArea.Caret.Offset = end + offset;
+				TextArea.Selection = Selection.Create(TextArea, start + offset, end + offset);
+			} else if (section.Slice(0, offset).Contains(VariableDelimiters[0]) && section.Slice(0, offset).Contains(VariableDelimiters[1])) {
+				var start = section.Slice(0, offset).IndexOf(VariableDelimiters[0]);
+				var end = section.Slice(0, offset).IndexOf(VariableDelimiters[1]) + 1;
+				if (start > end) (start, end) = (end, start);
+				TextArea.Caret.Offset = end;
+				TextArea.Selection = Selection.Create(TextArea, start, end);
+			}
+			else {
+				return false;
+			}
+
+			return true;
+
+		}
+
+		///<inheritdoc/>
+		protected override void OnPreviewKeyDown(KeyEventArgs e)
+		{
+			base.OnKeyDown(e);
+			if (!e.Handled) {
+				HandleKey(e);
+			}
+		}
+
+		private void HandleKey(KeyEventArgs e)
+		{
+			if (e.Handled || FreeText || completionWindow is not null)
+				return;
+			if (e.Key == Key.Tab) {
+				e.Handled = SelecteNextVariable();
+			}
+		}
 		#endregion
 	}
 }

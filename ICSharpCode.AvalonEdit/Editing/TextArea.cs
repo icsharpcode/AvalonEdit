@@ -35,6 +35,8 @@ using AcAvalonEdit.Indentation;
 using AcAvalonEdit.Rendering;
 using AcAvalonEdit.Utils;
 
+using static System.Net.Mime.MediaTypeNames;
+
 namespace AcAvalonEdit.Editing
 {
 	/// <summary>
@@ -840,6 +842,26 @@ namespace AcAvalonEdit.Editing
 		public event TextCompositionEventHandler TextEntered;
 
 		/// <summary>
+		/// Custom event for Intellisense autocomplete to invoke
+		/// </summary>
+		public event TextCompositionEventHandler AutoCompleteFired;
+
+		/// <summary>
+		/// Raises the AutoCompleteFiredEvent
+		/// </summary>
+		/// <param name="input"></param>
+		public void OnAutoCompleteFired(string input)
+		{
+			if (AutoCompleteFired != null) {
+
+				TextComposition textComposition = new TextComposition(InputManager.Current, this, input);
+				TextCompositionEventArgs e = new TextCompositionEventArgs(Keyboard.PrimaryDevice, textComposition);
+				AutoCompleteFired(this, e);
+			}
+		}
+
+
+		/// <summary>
 		/// Raises the TextEntering event.
 		/// </summary>
 		protected virtual void OnTextEntering(TextCompositionEventArgs e)
@@ -858,6 +880,7 @@ namespace AcAvalonEdit.Editing
 				TextEntered(this, e);
 			}
 		}
+
 
 		/// <inheritdoc/>
 		protected override void OnTextInput(TextCompositionEventArgs e)
