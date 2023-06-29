@@ -71,6 +71,16 @@ namespace AcAvalonEdit.Rendering
 		/// at the position where you signalled interest.
 		/// </remarks>
 		public abstract VisualLineElement ConstructElement(int offset);
+
+		/// <summary>
+		/// Constructs an element at the specified offset.
+		/// May return null if no element should be constructed.
+		/// </summary>
+		/// <remarks>
+		/// Avoid signalling interest and then building no element by returning null - doing so
+		/// causes the generated <see cref="VisualLineText"/> elements to be unnecessarily split
+		/// at the position where you signalled interest.
+		/// </remarks>
 		public abstract VisualLineElement ConstructElement(int offset, RichTextColorizer? transformer);
 	}
 

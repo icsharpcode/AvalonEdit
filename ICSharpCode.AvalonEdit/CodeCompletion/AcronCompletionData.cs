@@ -10,69 +10,93 @@ using AcAvalonEdit.Editing;
 
 namespace AcAvalonEdit.CodeCompletion
 {
-#pragma warning disable CS1591 // Fehledes XML-Kommentar für öffentlich sichtbaren Typ oder Element
-	public class AcronCompletionData : ICompletionData
-	{
-		public AcronCompletionData()
-		{
+   public class AcronCompletionData : ICompletionData
+   {
+      /// <inheritdoc/>
+      public AcronCompletionData()
+      {
 
-		}
+      }
 
-		private ImageSource _image;
-		public ImageSource Image {
-			get {
-				return _image;
-			}
-			set {
-				if (_image != value) {
-					_image = value;
-				}
-			}
-		}
-		private string _text;
-		public string Text {
-			get {
-				return _text;
-			}
-			set {
-				_text = value;
-			}
-		}
-		private object _content;
-		public object Content {
-			get {
-				return _content;
-			}
-			set {
-				_content = value;
-			}
-		}
+      private ImageSource _image;
+      /// <inheritdoc/>
+      public ImageSource Image
+      {
+         get
+         {
+            return _image;
+         }
+         set
+         {
+            if (_image != value)
+            {
+               _image = value;
+            }
+         }
+      }
+      private string _text;
+      /// <inheritdoc/>
+      public string Text
+      {
+         get
+         {
+            return _text;
+         }
+         set
+         {
+            _text = value;
+         }
+      }
+      private object _content;
+      /// <inheritdoc/>
+      public object Content
+      {
+         get
+         {
+            return _content;
+         }
+         set
+         {
+            _content = value;
+         }
+      }
 
-		private object _description;
-		public object Description {
-			get {
-				return _description;
-			}
-			set {
-				_description = value;
-			}
-		}
-		private double _priority;
-		public double Priority {
-			get {
-				return _priority;
-			}
-			set {
-				_priority = value;
-			}
-		}
+      private object _description;
+      /// <inheritdoc/>
+      public object Description
+      {
+         get
+         {
+            return _description;
+         }
+         set
+         {
+            _description = value;
+         }
+      }
 
-		public void Complete(TextArea textArea, ISegment completionSegment, EventArgs insertionRequestEventArgs)
-		{
-			textArea.Document.Replace(completionSegment, Text);
-			textArea.OnAutoCompleteFired(Text);
-		}
-	}
+      private double _priority;
+      /// <inheritdoc/>
+      public double Priority
+      {
+         get
+         {
+            return _priority;
+         }
+         set
+         {
+            _priority = value;
+         }
+      }
+      
+
+      /// <inheritdoc/>
+      public void Complete(TextArea textArea, ISegment completionSegment, EventArgs insertionRequestEventArgs)
+      {
+         textArea.Document.Replace(completionSegment, Text);
+         textArea.OnAutoCompleteFired(Text);
+      }
+   }
 
 #pragma warning restore CS1591 // Fehledes XML-Kommentar für öffentlich sichtbaren Typ oder Element
 }
