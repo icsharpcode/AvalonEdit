@@ -37,7 +37,10 @@ namespace ICSharpCode.AvalonEdit.Search
 	/// </summary>
 	public class SearchPanel : Control
 	{
-		public static readonly int DelayBeforeSearch = 250;
+		/// <summary>
+		/// Specifies the time to wait till the entered text is searched for
+		/// </summary>
+		public static int DelayBeforeSearch { get; set; } = 250;
 
 		TextArea textArea;
 		SearchInputHandler handler;
