@@ -31,7 +31,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 	/// Manages a list of syntax highlighting definitions.
 	/// </summary>
 	/// <remarks>
-	/// All memers on this class (including instance members) are thread-safe.
+	/// All members on this class (including instance members) are thread-safe.
 	/// </remarks>
 	public class HighlightingManager : IHighlightingDefinitionReferenceResolver
 	{
@@ -185,8 +185,9 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 				throw new ArgumentNullException("highlighting");
 
 			lock (lockObj) {
-				allHighlightings.Add(highlighting);
 				if (name != null) {
+					if (highlightingsByName.TryGetValue(name, out var existingDefinition))
+						allHighlightings.Remove(existingDefinition);
 					highlightingsByName[name] = highlighting;
 				}
 				if (extensions != null) {
@@ -194,6 +195,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 						highlightingsByExtension[ext] = highlighting;
 					}
 				}
+				allHighlightings.Add(highlighting);
 			}
 		}
 

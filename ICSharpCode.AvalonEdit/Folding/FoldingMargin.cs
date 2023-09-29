@@ -47,8 +47,24 @@ namespace ICSharpCode.AvalonEdit.Folding
 		/// FoldingMarkerBrush dependency property.
 		/// </summary>
 		public static readonly DependencyProperty FoldingMarkerBrushProperty =
-			DependencyProperty.RegisterAttached("FoldingMarkerBrush", typeof(Brush), typeof(FoldingMargin),
+			DependencyProperty.RegisterAttached(nameof(FoldingMarkerBrush), typeof(Brush), typeof(FoldingMargin),
 												new FrameworkPropertyMetadata(Brushes.Gray, FrameworkPropertyMetadataOptions.Inherits, OnUpdateBrushes));
+
+		/// <summary>
+		/// Gets the value of the <see cref="FoldingMarkerBrush"/> attached property for a specified <see cref="DependencyObject"/>.
+		/// </summary>
+		public static Brush GetFoldingMarkerBrush(DependencyObject obj)
+		{
+			return (Brush)obj.GetValue(FoldingMarkerBrushProperty);
+		}
+
+		/// <summary>
+		/// Sets the value of the <see cref="FoldingMarkerBrush"/> attached property for a specified <see cref="DependencyObject"/>.
+		/// </summary>
+		public static void SetFoldingMarkerBrush(DependencyObject obj, Brush value)
+		{
+			obj.SetValue(FoldingMarkerBrushProperty, value);
+		}
 
 		/// <summary>
 		/// Gets/sets the Brush used for displaying the lines of folding markers.
@@ -62,8 +78,24 @@ namespace ICSharpCode.AvalonEdit.Folding
 		/// FoldingMarkerBackgroundBrush dependency property.
 		/// </summary>
 		public static readonly DependencyProperty FoldingMarkerBackgroundBrushProperty =
-			DependencyProperty.RegisterAttached("FoldingMarkerBackgroundBrush", typeof(Brush), typeof(FoldingMargin),
+			DependencyProperty.RegisterAttached(nameof(FoldingMarkerBackgroundBrush), typeof(Brush), typeof(FoldingMargin),
 												new FrameworkPropertyMetadata(Brushes.White, FrameworkPropertyMetadataOptions.Inherits, OnUpdateBrushes));
+
+		/// <summary>
+		/// Gets the value of the <see cref="FoldingMarkerBackgroundBrush"/> attached property for a specified <see cref="DependencyObject"/>.
+		/// </summary>
+		public static Brush GetFoldingMarkerBackgroundBrush(DependencyObject obj)
+		{
+			return (Brush)obj.GetValue(FoldingMarkerBackgroundBrushProperty);
+		}
+
+		/// <summary>
+		/// Sets the value of the <see cref="FoldingMarkerBackgroundBrush"/> attached property for a specified <see cref="DependencyObject"/>.
+		/// </summary>
+		public static void SetFoldingMarkerBackgroundBrush(DependencyObject obj, Brush value)
+		{
+			obj.SetValue(FoldingMarkerBackgroundBrushProperty, value);
+		}
 
 		/// <summary>
 		/// Gets/sets the Brush used for displaying the background of folding markers.
@@ -77,9 +109,24 @@ namespace ICSharpCode.AvalonEdit.Folding
 		/// SelectedFoldingMarkerBrush dependency property.
 		/// </summary>
 		public static readonly DependencyProperty SelectedFoldingMarkerBrushProperty =
-			DependencyProperty.RegisterAttached("SelectedFoldingMarkerBrush",
-												typeof(Brush), typeof(FoldingMargin),
+			DependencyProperty.RegisterAttached(nameof(SelectedFoldingMarkerBrush), typeof(Brush), typeof(FoldingMargin),
 												new FrameworkPropertyMetadata(Brushes.Black, FrameworkPropertyMetadataOptions.Inherits, OnUpdateBrushes));
+
+		/// <summary>
+		/// Gets the value of the <see cref="SelectedFoldingMarkerBrush"/> attached property for a specified <see cref="DependencyObject"/>.
+		/// </summary>
+		public static Brush GetSelectedFoldingMarkerBrush(DependencyObject obj)
+		{
+			return (Brush)obj.GetValue(SelectedFoldingMarkerBrushProperty);
+		}
+
+		/// <summary>
+		/// Sets the value of the <see cref="SelectedFoldingMarkerBrush"/> attached property for a specified <see cref="DependencyObject"/>.
+		/// </summary>
+		public static void SetSelectedFoldingMarkerBrush(DependencyObject obj, Brush value)
+		{
+			obj.SetValue(SelectedFoldingMarkerBrushProperty, value);
+		}
 
 		/// <summary>
 		/// Gets/sets the Brush used for displaying the lines of selected folding markers.
@@ -93,9 +140,24 @@ namespace ICSharpCode.AvalonEdit.Folding
 		/// SelectedFoldingMarkerBackgroundBrush dependency property.
 		/// </summary>
 		public static readonly DependencyProperty SelectedFoldingMarkerBackgroundBrushProperty =
-			DependencyProperty.RegisterAttached("SelectedFoldingMarkerBackgroundBrush",
-												typeof(Brush), typeof(FoldingMargin),
+			DependencyProperty.RegisterAttached(nameof(SelectedFoldingMarkerBackgroundBrush), typeof(Brush), typeof(FoldingMargin),
 												new FrameworkPropertyMetadata(Brushes.White, FrameworkPropertyMetadataOptions.Inherits, OnUpdateBrushes));
+
+		/// <summary>
+		/// Gets the value of the <see cref="SelectedFoldingMarkerBackgroundBrush"/> attached property for a specified <see cref="DependencyObject"/>.
+		/// </summary>
+		public static Brush GetSelectedFoldingMarkerBackgroundBrush(DependencyObject obj)
+		{
+			return (Brush)obj.GetValue(SelectedFoldingMarkerBackgroundBrushProperty);
+		}
+
+		/// <summary>
+		/// Sets the value of the <see cref="SelectedFoldingMarkerBackgroundBrush"/> attached property for a specified <see cref="DependencyObject"/>.
+		/// </summary>
+		public static void SetSelectedFoldingMarkerBackgroundBrush(DependencyObject obj, Brush value)
+		{
+			obj.SetValue(SelectedFoldingMarkerBackgroundBrushProperty, value);
+		}
 
 		/// <summary>
 		/// Gets/sets the Brush used for displaying the background of selected folding markers.

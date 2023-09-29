@@ -1,5 +1,31 @@
 Note: this changelog only lists major changes and fixes for major bugs. For a complete list of changes, see the git log.
 
+tbd: AvalonEdit XML
+* tbd
+
+2023/03/19: AvalonEdit 6.3.0
+* Change framework targets: .NET 7.0 instead of .NET Core 3.1
+* Spelling fixes by @jimfoye
+* Fixes by @ltrzesniewski for keyword ordering and named highlighting registrations
+
+2022/12/10: AvalonEdit 6.2.0
+* Change framework targets to .NET Framework 4.6.2, .NET Core 3.1 and .NET 6.0 (.NET Framework 4.0, 4.5 and .NET 5.0 removed)
+* Minor bug fixes
+
+2021/12/28: AvalonEdit 6.1.3
+* TFM changes: net6.0-windows (LTS) added
+* Expose MarkerPen and MarkerCornerRadius on SearchPanel
+* Fix TSQL highlighting where a backslash exists before a single quote literal ('') in a string
+
+2021/06/01: AvalonEdit 6.1.2
+* TFM changes: netcoreapp3.0 removed in favor of netcoreapp3.1 (LTS), net5.0-windows added
+
+2021/03/15: AvalonEdit 6.1.1
+* Fix wrong implementation of attached properties
+
+2021/03/08: AvalonEdit 6.1.0
+* https://github.com/icsharpcode/AvalonEdit/compare/v6.0.1...v6.1.0
+
 2020/09/07: AvalonEdit 6.1 Preview 1
 * https://github.com/icsharpcode/AvalonEdit/compare/v6.0.1...v6.1-preview1
 

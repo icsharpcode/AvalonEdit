@@ -24,6 +24,7 @@ using NUnit.Framework;
 namespace ICSharpCode.AvalonEdit.Editing
 {
 	[TestFixture]
+	[Apartment(System.Threading.ApartmentState.STA)]
 	public class ChangeDocumentTests
 	{
 		[Test]
