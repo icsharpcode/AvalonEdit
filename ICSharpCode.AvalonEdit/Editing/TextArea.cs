@@ -424,6 +424,8 @@ namespace AcAvalonEdit.Editing
       /// </summary>
       public event EventHandler SelectionChanged;
 
+      internal bool HideCaret { get; set; } = true;
+
       /// <summary>
       /// Gets/Sets the selection in this text area.
       /// </summary>
@@ -660,14 +662,293 @@ namespace AcAvalonEdit.Editing
          get { return caret; }
       }
 
+
       void CaretPositionChanged(object sender, EventArgs e)
       {
          if (textView == null)
             return;
 
+         UnderlineSelectedFunctionParameters();
+
          this.textView.HighlightedLine = this.Caret.Line;
       }
 
+      Stack<byte> ParenthesisStack = new Stack<byte>();
+      /// <summary>
+      /// Naive method of highlighting function
+      /// </summary>
+      private int GetIndexOfArgumentInFunction(ReadOnlySpan<char> prev)
+      {
+         int counter = 0;
+
+         for (int i = prev.Length - 1; i >= 0; i--)
+         {
+            if (prev[i] == ',' && ParenthesisStack.Count == 0)
+            {
+               counter++;
+            }
+            if (prev[i] == ')')
+            {
+               ParenthesisStack.Push(Byte.MinValue);
+            }
+            if (prev[i] == '(')
+            {
+               ParenthesisStack.TryPop(out _);
+            }
+         }
+
+         return counter;
+      }
+
+      private (int innerPreI, int innerPostI) GetPostionOfArgument(ReadOnlySpan<char> prev, ReadOnlySpan<char> post)
+      {
+         int prevI = -1;
+         int postI = -1;
+         for (int i = prev.Length - 1; i >= 0; i--)
+         {
+            if (prev[i] == '(')
+            {
+               if (!ParenthesisStack.TryPop(out _))
+               {
+                  prevI = i;
+                  break;
+               }
+            }
+            if (prev[i] == ',' && ParenthesisStack.Count == 0)
+            {
+               prevI = i;
+               break;
+            }
+            if (prev[i] == ')')
+            {
+               ParenthesisStack.Push(Byte.MinValue);
+            }
+         }
+
+         for (int i = 0; i < post.Length; i++)
+         {
+            if (post[i] == ')')
+            {
+               if (!ParenthesisStack.TryPop(out _))
+               {
+                  postI = i;
+                  break;
+               }
+            }
+            if (post[i] == ',' && ParenthesisStack.Count == 0)
+            {
+               postI = i;
+               break;
+            }
+            if (post[i] == '(')
+            {
+               ParenthesisStack.Push(Byte.MinValue);
+            }
+         }
+
+         if (ParenthesisStack.Count > 0)
+            ParenthesisStack.Clear();
+
+         return (prevI, postI);
+
+      }
+
+      private (int prevI, int postI) GetPostionOfParenthesis(ReadOnlySpan<char> prev, ReadOnlySpan<char> post)
+      {
+         int prevI = -1;
+         int postI = -1;
+         for (int i = prev.Length - 1; i >= 0; i--)
+         {
+            if (prev[i] == '(')
+            {
+               if (!ParenthesisStack.TryPop(out _))
+               {
+                  prevI = i;
+                  break;
+               }
+            }
+            if (prev[i] == ')')
+            {
+               ParenthesisStack.Push(Byte.MinValue);
+            }
+         }
+
+         for (int i = 0; i < post.Length; i++)
+         {
+            if (post[i] == ')')
+            {
+               if (!ParenthesisStack.TryPop(out _))
+               {
+                  postI = i;
+                  break;
+               }
+            }
+            if (post[i] == '(')
+            {
+               ParenthesisStack.Push(Byte.MinValue);
+            }
+         }
+         if (ParenthesisStack.Count > 0)
+            ParenthesisStack.Clear();
+
+         return (prevI, postI);
+      }
+      internal string GetLastWord()
+      {
+         int index = Caret.Offset - 2;
+         int length = 0;
+         for (; index >= 0; index--)
+         {
+            if (char.IsWhiteSpace(Document.Text[index]) || Document.Text[index] == ',' || Document.Text[index] == '(')
+            {
+               break;
+            }
+            length++;
+         }
+
+         return Document.Text.Substring(index + 1, length);
+      }
+
+      private int GetLastWordLength(int index, ReadOnlySpan<char> element)
+      {
+         bool noWord = true;
+         int length = 0;
+         index--;
+         for (; index >= 0; index--)
+         {
+            //Ignore WhiteSpace between function name and parenthesis/
+            if (char.IsWhiteSpace(element[index]) && noWord)
+            {
+            }
+            else if (noWord)
+            {
+               noWord = false;
+               if (!char.IsLetterOrDigit(element[index]))
+                  return length;
+            }
+            else if (char.IsWhiteSpace(element[index]) || element[index] == ',' || element[index] == '(')
+            {
+               break;
+            }
+            length++;
+         }
+
+         return length + 1;
+      }
+
+      internal ToolTip Tooltip = new();
+      internal Highlighting.RichTextModel CursorColors = new();
+      private bool _highlightSelectedFormula = false;
+      /// <summary>
+      /// Enables or disables Highlighting of the current position inside of a function
+      /// </summary>
+      public bool HighlightSelectedFormula
+      {
+         get
+         {
+            return _highlightSelectedFormula;
+         }
+         set
+         {
+            _highlightSelectedFormula = value;
+         }
+      }
+
+      private bool _enableSyntaxTooltip = false;
+      /// <summary>
+      /// Enables or disables Syntax Tooltips
+      /// </summary>
+      public bool EnableSyntaxTooltip
+      {
+         get
+         {
+            return _enableSyntaxTooltip;
+         }
+         set
+         {
+            _enableSyntaxTooltip = value;
+            if (!_enableSyntaxTooltip)
+            {
+               Tooltip.Content = null;
+               Tooltip.IsOpen = false;
+            }
+         }
+      }
+      internal void UnderlineSelectedFunctionParameters()
+      {
+         if (!EnableSyntaxTooltip && !HighlightSelectedFormula)
+         {
+            return;
+         }
+         var span = Document.Text.AsSpan();
+         var prev = span[..Caret.Offset];
+         var post = span[Caret.Offset..];
+
+
+         (int prevI, int postI) = GetPostionOfParenthesis(prev, post);
+
+         (int innerPreI, int innerPostI) = GetPostionOfArgument(prev, post);
+
+         //Include FunctionName in Colorisation
+         var wordlength = GetLastWordLength(prevI, prev);
+
+         prevI -= wordlength;
+
+
+
+         CursorColors.Clear();
+         if (postI < 0 || prevI + 1 < 0)
+         {
+            Tooltip.IsOpen = false;
+            TextView.Redraw();
+            return;
+         }
+
+         if (EnableSyntaxTooltip && wordlength != 0 && TextEditor.CompletionWindow is null)
+         {
+            int argument = GetIndexOfArgumentInFunction(prev.Slice(prevI + wordlength));
+
+            object test;
+            if (argument == -1)
+            {
+               test = GetSyntaxForKey(prev.Slice(prevI + 1, wordlength - 1).Trim().ToString().ToLower());
+            }
+            else
+            {
+               test = GetSyntaxForKey(prev.Slice(prevI + 1, wordlength - 1).Trim().ToString().ToLower() + "_" + argument);
+            }
+
+            if (test is not null)
+            {
+               Tooltip.Placement = PlacementMode.Relative;
+               Tooltip.PlacementTarget = this;
+               var VisualPositionY = TextView.GetVisualPosition(new(Document.GetLocation(Caret.Offset + postI)), VisualYPosition.LineBottom);
+               var VisualPositionX = TextView.GetVisualPosition(new(Document.GetLocation(prevI + 1)), VisualYPosition.LineBottom);
+
+               Tooltip.VerticalOffset = VisualPositionY.Y + 5;
+               Tooltip.HorizontalOffset = VisualPositionX.X;
+
+               Tooltip.Content = test;
+               Tooltip.IsOpen = true;
+            }
+            else
+            {
+               Tooltip.Content = null;
+               Tooltip.IsOpen = false;
+            }
+         }
+
+         if (!HighlightSelectedFormula)
+         {
+            return;
+         }
+
+         CursorColors.SetUnderline(prevI + 1, postI + Caret.Offset - prevI, true, new(Colors.Aqua));
+         CursorColors.SetUnderline(innerPreI + 1, innerPostI + Caret.Offset - 1 - innerPreI, true, new Highlighting.SimpleHighlightingBrush(Colors.Blue));
+         CursorColors.SetUnderline(prevI + 1, wordlength, true, new(Colors.Gray));
+
+         TextView.Redraw();
+      }
       ObservableCollection<UIElement> leftMargins = new ObservableCollection<UIElement>();
 
       /// <summary>
@@ -896,7 +1177,8 @@ namespace AcAvalonEdit.Editing
       protected override void OnLostKeyboardFocus(KeyboardFocusChangedEventArgs e)
       {
          base.OnLostKeyboardFocus(e);
-         caret.Hide();
+         if (HideCaret)
+            caret.Hide();
          ime.OnLostKeyboardFocus(e);
       }
       #endregion
@@ -939,15 +1221,12 @@ namespace AcAvalonEdit.Editing
       /// <summary>
       /// Fills the Lookup Dictionary based on a List of ICompletionData 
       /// </summary>
-      /// <param name="keys"></param>
-      /// <param name="values"></param>
-      public void FillSyntaxLookUp(List<string> keys,List<FrameworkElement> values)
+      /// <param name="syntax"></param>
+      public void FillSyntaxLookUp(List<(string key, FrameworkElement value)> syntax)
       {
-         if (keys.Count != values.Count)
-            throw new ArgumentException($"Key count {keys.Count} is not equal to Value count {values.Count}");
-         for(int i=0; i<keys.Count; i++)
+         for (int i = 0; i < syntax.Count; i++)
          {
-            _syntaxLookUp.TryAdd(keys[i], values[i]);
+            _syntaxLookUp.TryAdd(syntax[i].key, syntax[i].value);
          }
       }
 

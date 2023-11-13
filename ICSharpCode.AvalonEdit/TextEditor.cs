@@ -19,7 +19,6 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Configuration;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -34,7 +33,6 @@ using System.Windows.Input;
 using System.Windows.Markup;
 using System.Windows.Media;
 using System.Windows.Shapes;
-
 using AcAvalonEdit.CodeCompletion;
 using AcAvalonEdit.Document;
 using AcAvalonEdit.Editing;
@@ -67,6 +65,9 @@ namespace AcAvalonEdit
       {
          Document.Changed += ActionsOnDocumentChanged;
          Document.Changing += CompletionWindowOnReplace;
+
+         RichTextColorizer FunctionUnderlining = new(TextArea.CursorColors);
+         TextArea.TextView.LineTransformers.Add(FunctionUnderlining);
 
          TextArea.SelectionCornerRadius = 0;
       }
@@ -1288,6 +1289,37 @@ namespace AcAvalonEdit
 
       #region Custom Additions
 
+      static readonly string CarriageReturn = "↵";
+      /// <summary>
+      /// Sets whether Shift+Enter and Alt+Enter should be transformed to a Carriage Return
+      /// </summary>
+      public bool TransformModifiedEnterToCarriageReturn { get; set; } = false;
+
+      /// <summary>
+      /// Hide or Show Caret when not in Focus
+      /// </summary>
+      public bool HideCaret
+      {
+         get
+         {
+            return TextArea.HideCaret;
+         }
+         set
+         {
+            if (value == TextArea.HideCaret)
+               return;
+            TextArea.HideCaret = value;
+            if (!value)
+            {
+               TextArea.Caret.Show();
+            }
+            else
+            {
+               TextArea.Caret.Hide();
+            }
+         }
+      }
+
       private RichTextModel _model = new();
       /// <summary>
       /// Returns the indices for all SelectedLines
@@ -1303,12 +1335,12 @@ namespace AcAvalonEdit
             if (SelectionLength == 0)
                return null;
 
-            var offS = TextArea.Selection.SurroundingSegment.Offset - 1;
-            var offE = TextArea.Selection.SurroundingSegment.EndOffset;
-            if (offS > -1 && offE < Text.Length && Text[offS] == VariableDelimiters[0] && Text[offE] == VariableDelimiters[1])
+            var OffsetStart = TextArea.Selection.SurroundingSegment.Offset - 1;
+            var OffsetEnd = TextArea.Selection.SurroundingSegment.EndOffset;
+            if (OffsetStart > -1 && OffsetEnd < Text.Length && Text[OffsetStart] == VariableDelimiters[0] && Text[OffsetEnd] == VariableDelimiters[1])
             {
-               TextArea.Selection = Selection.Create(TextArea, offS, offE + 1);
-               CaretOffset = offE + 1;
+               TextArea.Selection = Selection.Create(TextArea, OffsetStart, OffsetEnd + 1);
+               CaretOffset = OffsetEnd + 1;
             }
 
             int startline = TextArea.Selection.StartPosition.Line - 1;
@@ -1321,17 +1353,14 @@ namespace AcAvalonEdit
          }
       }
 
-
       /// <summary>
-      ///  Fills the Text and Creates a Rich Text Model from the provided RichText
+      /// Fills the Text with a given string, does not modify the Font settings
       /// </summary>
-      /// <exception cref="ArgumentException">Malformed Flowdocument</exception>
-      public void Load(RichText rt)
+      public void LoadText(string inputString)
       {
          Document.Changed -= ActionsOnDocumentChanged;
          Document.Changing -= CompletionWindowOnReplace;
-         _model = rt.ToRichTextModel();
-         Text = rt.Text;
+         Text = inputString;
          Document.Changed += ActionsOnDocumentChanged;
          Document.Changing += CompletionWindowOnReplace;
       }
@@ -1339,62 +1368,110 @@ namespace AcAvalonEdit
       /// <summary>
       /// Fills the Text and creates a Rich Text Model from the provided Lists of strings and HighlightingColor
       /// </summary>
-      /// <exception cref="ArgumentException">Malformed Flowdocument</exception>
       public void Load(List<string> text, List<HighlightingColor> highlightingColors)
       {
+         //Remove Eventhandlers
          Document.Changed -= ActionsOnDocumentChanged;
          Document.Changing -= CompletionWindowOnReplace;
-         Text = string.Empty;
 
+         //Clean Up
+         _model.Clear();
          TextArea.TextView.LineTransformers.Clear();
+
+
          if (text.Count != highlightingColors.Count)
             throw new ArgumentException("Arguments must be the same length");
-         StringBuilder stringBuilder = new StringBuilder();
+
+         int length = text.Sum(x => x.Length);
+         int newLineCount = text.Sum(x => CountLines(x));
+
+         //Calculate BufferLength for Span
+         int bufferLength = length - (newLineCount * Environment.NewLine.Length) + (text.Count - 1) * Environment.NewLine.Length;
+
+         Span<char> buffer = stackalloc char[bufferLength];
+         int bufferPos = 0;
+
          for (int i = 0; i < text.Count; i++)
          {
-            _model.ApplyHighlighting(Math.Max(0, stringBuilder.Length - 1), text[i].Length + Environment.NewLine.Length, highlightingColors[i]);
-            stringBuilder.Append(text[i]);
-            stringBuilder.Append(Environment.NewLine);
+            bufferPos = HideInternalLinebreaks(text, highlightingColors, buffer, bufferPos, i);
          }
 
+
+         Text = buffer.ToString();
          RichTextColorizer color = new(_model);
-         RichTextColorizer test = new(CursorColors);
          TextArea.TextView.LineTransformers.Add(color);
-         TextArea.TextView.LineTransformers.Add(test);
-         stringBuilder.Remove(stringBuilder.Length - Environment.NewLine.Length, Environment.NewLine.Length);
-         Text = stringBuilder.ToString();
+         RichTextColorizer FunctionUnderlining = new(TextArea.CursorColors);
+         TextArea.TextView.LineTransformers.Add(FunctionUnderlining);
+         //Reapply EventHandlers
          Document.Changed += ActionsOnDocumentChanged;
          Document.Changing += CompletionWindowOnReplace;
       }
 
+      /// <summary>
+      /// Transforms the input List of Textelements into a single string with hidden linebreaks
+      /// </summary>
+      /// <param name="text"></param>
+      /// <param name="highlightingColors"></param>
+      /// <param name="buffer"></param>
+      /// <param name="bufferPos"></param>
+      /// <param name="i"></param>
+      /// <returns></returns>
+      private int HideInternalLinebreaks(List<string> text, List<HighlightingColor> highlightingColors, Span<char> buffer, int bufferPos, int i)
+      {
+         var currentSpan = text[i].AsSpan();
+         int startIndex = bufferPos;
+         for (int j = 0; j < currentSpan.Length; j++)
+         {
+            if (j != currentSpan.Length - 1)
+               if (currentSpan.Slice(j, 2).SequenceEqual(Environment.NewLine))
+               {
+                  _model.SetEOLMarker(bufferPos);
+                  j++;
+                  continue;
+               }
+            buffer[bufferPos] = currentSpan[j];
+            bufferPos++;
+         }
+         if (i != text.Count - 1)
+            foreach (var c in Environment.NewLine)
+            {
+               buffer[bufferPos] = c;
+               bufferPos++;
+            }
+         int endIndex = bufferPos;
+         _model.ApplyHighlighting(startIndex, (endIndex - startIndex) + 1, highlightingColors[i]);
+         return bufferPos;
+      }
 
       /// <summary>
-      ///  Fills the Text and Creates a Rich Text Model from the provided Flowdocument, only works if the Flowdocument only contains Paragraphs and Runs
+      /// Counts Linebreaks in given string
       /// </summary>
-      /// <exception cref="ArgumentException">Malformed Flowdocument</exception>
-      public void Load(FlowDocument flow)
+      /// <param name="str"></param>
+      /// <returns></returns>
+      private static int CountLines(string str)
       {
-         Document.Changed -= ActionsOnDocumentChanged;
-         Document.Changing -= CompletionWindowOnReplace;
-         if (flow.Blocks.Any(x => x is not Paragraph))
-            throw new ArgumentException("Only Paragraphs and Runs allowed");
-         if (flow.Blocks.Any(x => (x as Paragraph)!.Inlines.Any(x => x is not Run)))
-            throw new ArgumentException("Only Paragraphs and Runs allowed");
+         if (string.IsNullOrEmpty(str))
+            return 0;
 
-         StringBuilder stringBuilder = new StringBuilder();
-         _model = new();
-         foreach (var r in flow.Blocks.Cast<Paragraph>().SelectMany(p => p.Inlines.Cast<Run>()))
+         int index = -1;
+         int count = 0;
+
+         while (-1 != (index = str.IndexOf(Environment.NewLine, index + 1)))
+            count++;
+
+         return count;
+      }
+
+      private StringBuilder BuildDocumentText(RichTextModel model, List<string> text, List<HighlightingColor> highlightingColors)
+      {
+         StringBuilder builder = new StringBuilder(text.Sum(x => x.Length));
+         for (int i = 0; i < text.Count; i++)
          {
-            _model.ApplyHighlighting(stringBuilder.Length, r.Text.Length + Environment.NewLine.Length, BuildHighlightingFromRun(r));
-            stringBuilder.Append(r.Text);
-            stringBuilder.Append(Environment.NewLine);
+            model.ApplyHighlighting(Math.Max(0, builder.Length - 1), text[i].Length + Environment.NewLine.Length, highlightingColors[i]);
+            builder.Append(text[i]);
+            builder.Append(Environment.NewLine);
          }
-
-         stringBuilder.Remove(stringBuilder.Length - Environment.NewLine.Length, Environment.NewLine.Length);
-
-         Text = stringBuilder.ToString();
-         Document.Changed += ActionsOnDocumentChanged;
-         Document.Changing += CompletionWindowOnReplace;
+         return builder;
       }
 
       private HighlightingColor BuildHighlightingFromRun(Run run)
@@ -1456,8 +1533,8 @@ namespace AcAvalonEdit
       /// <returns></returns>
       public FlowDocument GetFlowDocumentPerLine()
       {
-         toolTip.Content = null;
-         toolTip.IsOpen = false;
+         TextArea.Tooltip.Content = null;
+         TextArea.Tooltip.IsOpen = false;
          RichText rich = new(Text, _model);
 
          var runs = rich.CreateRunsOnLineBreaks();
@@ -1472,24 +1549,6 @@ namespace AcAvalonEdit
          return document;
       }
 
-      private bool FreeText
-      {
-         get
-         {
-            var relevant = Document.GetText(Document.Lines[TextArea.Caret.Line - 1].Offset, TextArea.Caret.Offset - Document.Lines[TextArea.Caret.Line - 1].Offset).AsSpan();
-            int counter = 0;
-            for (int i = 0; i < relevant.Length; i++)
-            {
-               if (relevant[i] == '"')
-                  counter++;
-            }
-            if (counter % 2 == 0)
-            {
-               return false;
-            }
-            return true;
-         }
-      }
       /// <summary>
       /// Returns the RichText of the current Highlighting and underlying Text
       /// </summary>
@@ -1501,28 +1560,37 @@ namespace AcAvalonEdit
 
       private void ActionsOnDocumentChanged(object? sender, DocumentChangeEventArgs e)
       {
+         _model.UpdateOffsets(e.OffsetChangeMap);
          if (_callBackForParsing is not null)
          {
             int line = TextArea.Caret.Line - 1;
-            string currLine = Document.GetText(Document.Lines[line].Offset, Document.Lines[line].EndOffset - Document.Lines[line].Offset);
-            if (completionWindow is null)
+            var currLine = Document.GetText(Document.Lines[line].Offset, Document.Lines[line].EndOffset - Document.Lines[line].Offset);
+            IEnumerable<int> relevantHighlights = _model.GetHighlightingsAt(Document.Lines[line].Offset, Document.Lines[line].EndOffset).Where(x => x.Item1.EOLMarker.HasValue).Select(x => x.Item2);
+            int offset = 0;
+            foreach (var hl in relevantHighlights)
+            {
+               currLine = currLine.Insert((offset + (hl - Document.Lines[line].Offset)), Environment.NewLine);
+               offset += Environment.NewLine.Length;
+            }
+            if (CompletionWindow is null || CompletionWindow.CompletionList.VisibleCompletionsCount == 0)
                _callBackForParsing(currLine, line);
             else
                _callBackForParsing("\"\"", line);
          }
-         _model.UpdateOffsets(e.OffsetChangeMap);
       }
 
       private void CompletionWindowOnReplace(object? sender, DocumentChangeEventArgs e)
       {
+         if (CompletionWindow is null)
+            return;
          if (e.RemovalLength > 0 && e.InsertionLength == 1)
          {
             if (CreateCompletionWindow())
-               completionWindow.StartOffset--;
+               CompletionWindow.StartOffset--;
             else
             {
-               completionWindow.StartOffset = e.Offset;
-               completionWindow.EndOffset = e.Offset + e.InsertionLength;
+               CompletionWindow.StartOffset = e.Offset;
+               CompletionWindow.EndOffset = e.Offset + e.InsertionLength;
 
             }
          }
@@ -1530,9 +1598,9 @@ namespace AcAvalonEdit
 
       private bool _autocompleteOn = false;
       private List<ICompletionData> _completionData;
-      private CompletionWindow? completionWindow;
       private List<ICompletionData> _defaultData;
-      private ToolTip toolTip = new ();
+
+      internal static CompletionWindow? CompletionWindow;
 
       /// <summary>
       /// Enables a standard implementation of Autocomplete with the provided completion data
@@ -1551,14 +1619,12 @@ namespace AcAvalonEdit
       /// <summary>
       /// Fills the Syntax Lookup for floating tooltips with Framework Elements
       /// </summary>
-      /// <param name="keys"></param>
-      /// <param name="values"></param>
-      public void FillSyntaxLookUp(List<string> keys, List<FrameworkElement> values)
+      /// <param name="syntax"></param>
+      public void FillSyntaxLookUp(List<(string, FrameworkElement)> syntax)
       {
-         TextArea.FillSyntaxLookUp(keys, values);
+         TextArea.FillSyntaxLookUp(syntax);
       }
 
-      private bool _enableSyntaxTooltip;
       /// <summary>
       /// Enables or disables Syntax Tooltips
       /// </summary>
@@ -1566,16 +1632,11 @@ namespace AcAvalonEdit
       {
          get
          {
-            return _enableSyntaxTooltip;
+            return TextArea.EnableSyntaxTooltip;
          }
          set
          {
-            _enableSyntaxTooltip = value;
-            if (!_enableSyntaxTooltip)
-            {
-               toolTip.Content = null;
-               toolTip.IsOpen = false;
-            }
+            TextArea.EnableSyntaxTooltip = value;
          }
       }
 
@@ -1595,6 +1656,27 @@ namespace AcAvalonEdit
          _completionData.AddRange(list);
       }
 
+
+      internal bool FreeText
+      {
+         get
+         {
+            var relevant = Document.GetText(Document.Lines[TextArea.Caret.Line - 1].Offset, TextArea.Caret.Offset - Document.Lines[TextArea.Caret.Line - 1].Offset).AsSpan();
+            int counter = 0;
+            for (int i = 0; i < relevant.Length; i++)
+            {
+               if (relevant[i] == '"')
+                  counter++;
+            }
+            if (counter % 2 == 0)
+            {
+               return false;
+            }
+            return true;
+         }
+      }
+
+
       /// <summary>
       /// Disables a standard implementation of Autocomplete 
       /// </summary>
@@ -1604,9 +1686,9 @@ namespace AcAvalonEdit
          TextArea.TextEntering -= OnTextEntering;
          TextArea.TextEntered -= OnTextEntered;
          TextArea.AutoCompleteFired -= OnAutoCompletion;
-         completionWindow?.Close();
-         completionWindow?.CompletionList.CompletionData.Clear();
-         completionWindow = null;
+         CompletionWindow?.Close();
+         CompletionWindow?.CompletionList.CompletionData.Clear();
+         CompletionWindow = null;
          _autocompleteOn = false;
       }
 
@@ -1614,80 +1696,38 @@ namespace AcAvalonEdit
       {
          if (FreeText)
             return;
-         if (completionWindow is not null && e.Text.Length > 0)
+         if (CompletionWindow is not null && e.Text.Length > 0)
          {
             if (char.IsControl(e.Text[0]))
             {
-               completionWindow.Close();
+               CompletionWindow.Close();
             }
          }
-         if (completionWindow is not null && e.Text == "." && _callBackForVariables is not null)
+         if (CompletionWindow is not null && e.Text == "." && _callBackForVariables is not null)
          {
-            if (completionWindow.CompletionList.VisibleCompletionsCount > 0)
+            if (CompletionWindow.CompletionList.VisibleCompletionsCount > 0)
             {
                return;
             }
-            string lastWord = GetLastWord();
+            string lastWord = TextArea.GetLastWord();
             List<ICompletionData>? ListToAdd = _callBackForVariables(lastWord);
 
             if (ListToAdd is not null)
             {
                foreach (var cData in ListToAdd)
                {
-                  completionWindow.CompletionList.CompletionData.Add(cData);
+                  CompletionWindow.CompletionList.CompletionData.Add(cData);
                }
             }
-            completionWindow.Refresh(lastWord);
+            CompletionWindow.Refresh(lastWord);
          }
-      }
-
-      private int GetLastWordLength(int index, ReadOnlySpan<char> element)
-      {
-         bool noWord = true;
-         int length = 0;
-         index--;
-         for (; index >= 0; index--)
-         {
-            //Ignore WhiteSpace between function name and parenthesis/
-            if (char.IsWhiteSpace(element[index]) && noWord)
-            {
-            }
-            else if (noWord)
-            {
-               noWord = false;
-               if (!char.IsLetterOrDigit(element[index]))
-                  return length;
-            }
-            else if (char.IsWhiteSpace(element[index]) || element[index] == ',' || element[index] == '(')
-            {
-               break;
-            }
-            length++;
-         }
-
-         return length + 1;
-      }
-      private string GetLastWord()
-      {
-         int index = TextArea.Caret.Offset - 2;
-         int length = 0;
-         for (; index >= 0; index--)
-         {
-            if (char.IsWhiteSpace(Text[index]) || Text[index] == ',' || Text[index] == '(')
-            {
-               break;
-            }
-            length++;
-         }
-
-         return Text.Substring(index + 1, length);
       }
 
       private void OnTextEntering(object sender, TextCompositionEventArgs e)
       {
          if (e.Text == " ")
          {
-            completionWindow?.Close();
+            CompletionWindow?.Close();
             return;
          }
          CreateCompletionWindow();
@@ -1695,15 +1735,15 @@ namespace AcAvalonEdit
 
       private bool CreateCompletionWindow()
       {
-         if (FreeText || completionWindow is not null)
+         if (FreeText || CompletionWindow is not null)
             return false;
 
-         completionWindow ??= new CompletionWindow(TextArea);
+         CompletionWindow ??= new CompletionWindow(TextArea);
 
-         toolTip.IsOpen = false;
-         toolTip.Content = null;
+         TextArea.Tooltip.IsOpen = false;
+         TextArea.Tooltip.Content = null;
 
-         IList<ICompletionData> boundData = completionWindow.CompletionList.CompletionData;
+         IList<ICompletionData> boundData = CompletionWindow.CompletionList.CompletionData;
          boundData.Clear();
          foreach (ICompletionData data in _completionData)
          {
@@ -1711,11 +1751,11 @@ namespace AcAvalonEdit
          }
          if (boundData.Any())
          {
-            completionWindow.Show();
-            completionWindow.Closed += delegate
+            CompletionWindow.Show();
+            CompletionWindow.Closed += delegate
             {
-               completionWindow = null;
-               ColorBackgroundForFunction();
+               CompletionWindow = null;
+               TextArea.UnderlineSelectedFunctionParameters();
             };
          }
          return true;
@@ -1733,14 +1773,17 @@ namespace AcAvalonEdit
       /// Replaces the selected Text with a given string
       /// </summary>
       /// <param name="input"></param>
-      public void InsertText(string input)
+      public void InsertText(string input, bool formular)
       {
          TextArea.Selection.ReplaceSelectionWithText(input);
-         if (AutoSelectReplaceableVariables)
+         if (AutoSelectReplaceableVariables && formular)
          {
             SelectVariable(input.Length);
          }
-
+         else
+         {
+            TextArea.ClearSelection();
+         }
       }
 
       private void OnAutoCompletion(object sender, TextCompositionEventArgs e)
@@ -1826,192 +1869,21 @@ namespace AcAvalonEdit
 
       }
 
-      RichTextModel CursorColors = new();
-
-      Stack<byte> ParenthesisStack = new Stack<byte>();
       /// <summary>
-      /// Naive method of highlighting function
+      /// Enables or disables Highlighting of the current position inside of a function
       /// </summary>
-      public void ColorBackgroundForFunction()
+      public bool HighlightSelectedFormula
       {
-         var span = Text.AsSpan();
-         var prev = span[..CaretOffset];
-         var post = span[CaretOffset..];
-
-
-         (int prevI, int postI) = GetPostionOfParenthesis(prev, post);
-
-         (int innerPreI, int innerPostI) = GetPostionOfArgument(prev, post);
-
-         //Include FunctionName in Colorisation
-         var wordlength = GetLastWordLength(prevI, prev);
-
-         prevI -= wordlength;
-
-
-
-         CursorColors.Clear();
-         if (postI < 0 || prevI+1 < 0)
+         get
          {
-            toolTip.IsOpen = false;
-            TextArea.TextView.Redraw();
-            return;
+            return TextArea.HighlightSelectedFormula;
          }
-
-         if (EnableSyntaxTooltip && wordlength!=0 && completionWindow is null)
+         set
          {
-            int argument = GetIndexOfArgumentInFunction(prev.Slice(prevI + wordlength));
-
-            object test;
-            if (argument == -1)
-            {
-               test = TextArea.GetSyntaxForKey(prev.Slice(prevI+1, wordlength-1).Trim().ToString().ToLower());
-            }
-            else
-            {
-               test = TextArea.GetSyntaxForKey(prev.Slice(prevI+1, wordlength-1).Trim().ToString().ToLower() + "_" + argument);
-            }
-
-            if (test is not null)
-            {
-               toolTip.Placement = PlacementMode.Relative;
-               toolTip.PlacementTarget = this;
-               var VisualPosition = TextArea.TextView.GetVisualPosition(new(Document.GetLocation(prevI + 1)), VisualYPosition.LineBottom);
-
-               toolTip.VerticalOffset = VisualPosition.Y;
-               toolTip.HorizontalOffset = VisualPosition.X;
-
-               toolTip.Content = test;
-               toolTip.IsOpen = true;
-            }
-            else
-            {
-               toolTip.Content = null;
-               toolTip.IsOpen = false;
-            }
+            TextArea.HighlightSelectedFormula = value;
          }
-
-         CursorColors.SetBackground(prevI + 1, (postI + CaretOffset) - prevI, new SimpleHighlightingBrush(Colors.Aqua));
-         CursorColors.SetBackground(innerPreI + 1, (innerPostI + CaretOffset - 1) - innerPreI, new SimpleHighlightingBrush(Colors.Blue));
-         TextArea.TextView.Redraw();
       }
 
-      private int GetIndexOfArgumentInFunction(ReadOnlySpan<char> prev)
-      {
-         int counter = 0;
-
-         for (int i = prev.Length - 1; i >= 0; i--)
-         {
-            if (prev[i] == ',' && ParenthesisStack.Count == 0)
-            {
-               counter++;
-            }
-            if (prev[i] == ')')
-            {
-               ParenthesisStack.Push(Byte.MinValue);
-            }
-            if (prev[i] == '(')
-            {
-               ParenthesisStack.TryPop(out _);
-            }
-         }
-
-         return counter;
-      }
-
-      private (int innerPreI, int innerPostI) GetPostionOfArgument(ReadOnlySpan<char> prev, ReadOnlySpan<char> post)
-      {
-         int prevI = -1;
-         int postI = -1;
-         for (int i = prev.Length - 1; i >= 0; i--)
-         {
-            if (prev[i] == '(')
-            {
-               if (!ParenthesisStack.TryPop(out _))
-               {
-                  prevI = i;
-                  break;
-               }
-            }
-            if (prev[i] == ',' && ParenthesisStack.Count == 0)
-            {
-               prevI = i;
-               break;
-            }
-            if (prev[i] == ')')
-            {
-               ParenthesisStack.Push(Byte.MinValue);
-            }
-         }
-
-         for (int i = 0; i < post.Length; i++)
-         {
-            if (post[i] == ')')
-            {
-               if (!ParenthesisStack.TryPop(out _))
-               {
-                  postI = i;
-                  break;
-               }
-            }
-            if (post[i] == ',' && ParenthesisStack.Count == 0)
-            {
-               postI = i;
-               break;
-            }
-            if (post[i] == '(')
-            {
-               ParenthesisStack.Push(Byte.MinValue);
-            }
-         }
-
-         if (ParenthesisStack.Count > 0)
-            ParenthesisStack.Clear();
-
-         return (prevI, postI);
-
-      }
-
-      private (int prevI, int postI) GetPostionOfParenthesis(ReadOnlySpan<char> prev, ReadOnlySpan<char> post)
-      {
-         int prevI = -1;
-         int postI = -1;
-         for (int i = prev.Length - 1; i >= 0; i--)
-         {
-            if (prev[i] == '(')
-            {
-               if (!ParenthesisStack.TryPop(out _))
-               {
-                  prevI = i;
-                  break;
-               }
-            }
-            if (prev[i] == ')')
-            {
-               ParenthesisStack.Push(Byte.MinValue);
-            }
-         }
-
-         for (int i = 0; i < post.Length; i++)
-         {
-            if (post[i] == ')')
-            {
-               if (!ParenthesisStack.TryPop(out _))
-               {
-                  postI = i;
-                  break;
-               }
-            }
-            if (post[i] == '(')
-            {
-               ParenthesisStack.Push(Byte.MinValue);
-            }
-         }
-         if (ParenthesisStack.Count > 0)
-            ParenthesisStack.Clear();
-
-         return (prevI, postI);
-      }
 
 
       ///<inheritdoc/>
@@ -2026,14 +1898,24 @@ namespace AcAvalonEdit
 
       private void HandleKey(KeyEventArgs e)
       {
-         if (e.Handled || FreeText || completionWindow is not null)
-            return;
-         if (e.Key == Key.Tab)
+         if (TransformModifiedEnterToCarriageReturn)
          {
-
-            e.Handled = SelecteNextVariable();
+            if (e.Key == Key.Enter && Keyboard.Modifiers.HasFlag(ModifierKeys.Shift))
+            {
+               TextArea.Selection.ReplaceSelectionWithText(CarriageReturn);
+               e.Handled = true;
+               return;
+            }
          }
-         if(e.Key == Key.Space && Keyboard.Modifiers.HasFlag(ModifierKeys.Control))
+         if (!FreeText && !e.Handled)
+            if (e.Key == Key.Tab)
+            {
+               CompletionWindow?.Close();
+               e.Handled = SelecteNextVariable();
+            }
+         if (e.Handled || FreeText || CompletionWindow is not null)
+            return;
+         if (e.Key == Key.Space && Keyboard.Modifiers.HasFlag(ModifierKeys.Control))
          {
             CreateCompletionWindow();
             e.Handled = true;

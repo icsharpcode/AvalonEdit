@@ -40,10 +40,6 @@ namespace AcAvalonEdit.Highlighting
 			this.richTextModel = richTextModel;
 		}
 
-		public HighlightingColor GetColorForOffsett(int offset)
-		{
-			return richTextModel.GetHighlightingAt(offset);
-		}
 		internal HighlightingColor GetColorForOffsett(int offset)
 		{
 			return richTextModel.GetHighlightingAt(offset);

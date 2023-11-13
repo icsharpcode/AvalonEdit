@@ -137,6 +137,14 @@ namespace AcAvalonEdit.Highlighting
             int newOffset = updateOffset(stateChangeOffsets[readPos], AnchorMovementType.Default);
             if (newOffset == stateChangeOffsets[writePos - 1])
             {
+               //Handling of EOL Marker
+               if (stateChanges[writePos - 1].EOLMarker.HasValue)
+               {
+                  if (stateChanges[readPos].EOLMarker.HasValue)
+                     stateChanges[readPos].EOLMarker += stateChanges[writePos - 1].EOLMarker.Value;
+                  else
+                     stateChanges[readPos].EOLMarker = stateChanges[writePos - 1].EOLMarker.Value;
+               }
                // offset moved to same position as previous offset
                // -> previous segment has length 0 and gets overwritten with this segment
                stateChanges[writePos - 1] = stateChanges[readPos];
@@ -180,7 +188,7 @@ namespace AcAvalonEdit.Highlighting
       /// </summary>
       public void Clear()
       {
-         stateChangeOffsets.Clear();   
+         stateChangeOffsets.Clear();
          stateChanges.Clear();
          stateChangeOffsets.Add(0);
          stateChanges.Add(new HighlightingColor());
@@ -192,6 +200,22 @@ namespace AcAvalonEdit.Highlighting
       public HighlightingColor GetHighlightingAt(int offset)
       {
          return stateChanges[GetIndexForOffsetUseExistingSegment(offset)].Clone();
+      }
+
+      /// <summary>
+      /// Gets a copy of the HighlightingColors for the specified area.
+      /// </summary>
+      public List<(HighlightingColor, int)> GetHighlightingsAt(int offset, int endOffset)
+      {
+         List<(HighlightingColor, int)> result = new();
+         for (int i = 0; i < stateChangeOffsets.Count; i++)
+         {
+            if (stateChangeOffsets[i] >= offset && stateChangeOffsets[i] <= endOffset)
+            {
+               result.Add((stateChanges[i].Clone(), stateChangeOffsets[i]));
+            }
+         }
+         return result;
       }
 
       /// <summary>
@@ -310,13 +334,28 @@ namespace AcAvalonEdit.Highlighting
       /// <summary>
       /// Sets the Underline property for the specified text segment
       /// </summary>
-      public void SetUnderline(int offset, int length, bool underline)
+      public void SetUnderline(int offset, int length, bool underline, SimpleHighlightingBrush? brush = null)
       {
          int startIndex = GetIndexForOffset(offset);
          int endIndex = GetIndexForOffset(offset + length);
          for (int i = startIndex; i < endIndex; i++)
          {
             stateChanges[i].Underline = underline;
+            stateChanges[i].UnderlineBrush = brush;
+         }
+      }
+
+      /// <summary>
+      /// Sets Overline
+      /// </summary>
+      public void SetOverline(int offset, int length, bool overline, SimpleHighlightingBrush brush)
+      {
+         int startIndex = GetIndexForOffset(offset);
+         int endIndex = GetIndexForOffset(offset + length);
+         for (int i = startIndex; i < endIndex; i++)
+         {
+            stateChanges[i].Overline = overline;
+            stateChanges[i].OverlineBrush = brush;
          }
       }
 
@@ -332,6 +371,7 @@ namespace AcAvalonEdit.Highlighting
             stateChanges[i].Strikethrough = strikethrough;
          }
       }
+
       /// <summary>
       /// Sets the Strikthrough property for the specified text segment
       /// </summary>
@@ -344,7 +384,38 @@ namespace AcAvalonEdit.Highlighting
             stateChanges[i].FontStretch = stretch;
          }
       }
+      /// <summary>
+      /// Sets the EOL Marker for the specified text segment
+      /// </summary>
+      /// <param name="offset"></param>
+      public void SetEOLMarker(int offset)
+      {
+         int startIndex = GetIndexForOffset(offset);
+         int endIndex = GetIndexForOffset(offset + 1);
+         for (int i = startIndex; i < endIndex; i++)
+         {
+            if (stateChanges[i].EOLMarker.HasValue)
+               stateChanges[i].EOLMarker++;
+            else
+               stateChanges[i].EOLMarker = 1;
+         }
+      }
 
+      /// <summary>
+      /// Sets the Horizontal alignment for the specified text segment
+      /// </summary>
+      /// <param name="offset"></param>
+      /// <param name="length"></param>
+      /// <param name="alignment"></param>
+      public void SetTextAlignment(int offset, int length, TextAlignment alignment)
+      {
+         int startIndex = GetIndexForOffset(offset);
+         int endIndex = GetIndexForOffset(offset + length);
+         for(int i = startIndex; i < endIndex; i++)
+         {
+            stateChanges[i].TextAlignment = alignment;
+         }
+      }
 
       /// <summary>
       /// Retrieves the highlighted sections in the specified range.

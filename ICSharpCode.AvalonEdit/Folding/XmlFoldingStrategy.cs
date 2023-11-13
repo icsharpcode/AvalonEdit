@@ -137,7 +137,7 @@ namespace AcAvalonEdit.Folding
 					int startOffset = GetOffset(document, reader) - 4;
 					int endOffset = startOffset + comment.Length + 7;
 
-					string foldText = String.Concat("<!--", comment.Substring(0, firstNewLine).TrimEnd('\r'), "-->");
+					string foldText = string.Concat("<!--", comment.Substring(0, firstNewLine).TrimEnd('\r'), "-->");
 					foldMarkers.Add(new NewFolding(startOffset, endOffset) { Name = foldText });
 				}
 			}
@@ -160,9 +160,9 @@ namespace AcAvalonEdit.Folding
 			newFoldStart.StartOffset = document.GetOffset(newFoldStart.StartLine, lineInfo.LinePosition - 1);
 
 			if (this.ShowAttributesWhenFolded && reader.HasAttributes) {
-				newFoldStart.Name = String.Concat("<", reader.Name, " ", GetAttributeFoldText(reader), ">");
+				newFoldStart.Name = string.Concat("<", reader.Name, " ", GetAttributeFoldText(reader), ">");
 			} else {
-				newFoldStart.Name = String.Concat("<", reader.Name, ">");
+				newFoldStart.Name = string.Concat("<", reader.Name, ">");
 			}
 
 			return newFoldStart;

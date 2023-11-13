@@ -10,6 +10,8 @@ using AcAvalonEdit.Editing;
 
 namespace AcAvalonEdit.CodeCompletion
 {
+
+   /// <inheritdoc/>
    public class AcronCompletionData : ICompletionData
    {
       /// <inheritdoc/>
@@ -97,6 +99,4 @@ namespace AcAvalonEdit.CodeCompletion
          textArea.OnAutoCompleteFired(Text);
       }
    }
-
-#pragma warning restore CS1591 // Fehledes XML-Kommentar für öffentlich sichtbaren Typ oder Element
 }

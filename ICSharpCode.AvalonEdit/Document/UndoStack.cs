@@ -72,7 +72,7 @@ namespace AcAvalonEdit.Document
 
 		void RecalcIsOriginalFile()
 		{
-			bool newIsOriginalFile = (elementsOnUndoUntilOriginalFile == 0);
+			bool newIsOriginalFile = elementsOnUndoUntilOriginalFile == 0;
 			if (newIsOriginalFile != isOriginalFile) {
 				isOriginalFile = newIsOriginalFile;
 				NotifyPropertyChanged("IsOriginalFile");
@@ -197,6 +197,7 @@ namespace AcAvalonEdit.Document
 				optionalActionCount = 0;
 				lastGroupDescriptor = groupDescriptor;
 			}
+
 			undoGroupDepth++;
 			//Util.LoggingService.Debug("Open undo group (new depth=" + undoGroupDepth + ")");
 		}
@@ -216,6 +217,7 @@ namespace AcAvalonEdit.Document
 				optionalActionCount = 0;
 				lastGroupDescriptor = groupDescriptor;
 			}
+
 			undoGroupDepth++;
 			//Util.LoggingService.Debug("Continue undo group (new depth=" + undoGroupDepth + ")");
 		}
@@ -236,6 +238,7 @@ namespace AcAvalonEdit.Document
 					for (int i = 0; i < optionalActionCount; i++) {
 						undostack.PopBack();
 					}
+
 					allowContinue = false;
 				} else if (actionCountInUndoGroup > 1) {
 					// combine all actions within the group into a single grouped action
@@ -258,6 +261,7 @@ namespace AcAvalonEdit.Document
 				undoGroupDepth = 0;
 				throw new InvalidOperationException("No undo group should be open at this point");
 			}
+
 			if (state != StateListen) {
 				throw new InvalidOperationException("This method cannot be called while an undo operation is being performed");
 			}
@@ -281,6 +285,7 @@ namespace AcAvalonEdit.Document
 				foreach (TextDocument doc in affectedDocuments) {
 					doc.EndUpdate();
 				}
+
 				affectedDocuments = null;
 			}
 		}
@@ -305,6 +310,7 @@ namespace AcAvalonEdit.Document
 					FileModified(-1);
 					CallEndUpdateOnAffectedDocuments();
 				}
+
 				RecalcIsOriginalFile();
 				if (undostack.Count == 0)
 					NotifyPropertyChanged("CanUndo");
@@ -315,12 +321,11 @@ namespace AcAvalonEdit.Document
 
 		internal void RunUndo(IUndoableOperation op)
 		{
-			IUndoableOperationWithContext opWithCtx = op as IUndoableOperationWithContext;
-			if (opWithCtx != null)
-				opWithCtx.Undo(this);
-			else
-				op.Undo();
-		}
+         if (op is IUndoableOperationWithContext opWithCtx)
+            opWithCtx.Undo(this);
+         else
+            op.Undo();
+      }
 
 		/// <summary>
 		/// Call this method to redo the last undone operation
@@ -340,6 +345,7 @@ namespace AcAvalonEdit.Document
 					FileModified(1);
 					CallEndUpdateOnAffectedDocuments();
 				}
+
 				RecalcIsOriginalFile();
 				if (redostack.Count == 0)
 					NotifyPropertyChanged("CanRedo");
@@ -350,12 +356,11 @@ namespace AcAvalonEdit.Document
 
 		internal void RunRedo(IUndoableOperation op)
 		{
-			IUndoableOperationWithContext opWithCtx = op as IUndoableOperationWithContext;
-			if (opWithCtx != null)
-				opWithCtx.Redo(this);
-			else
-				op.Redo();
-		}
+         if (op is IUndoableOperationWithContext opWithCtx)
+            opWithCtx.Redo(this);
+         else
+            op.Redo();
+      }
 
 		/// <summary>
 		/// Call this method to push an UndoableOperation on the undostack.
@@ -432,6 +437,7 @@ namespace AcAvalonEdit.Document
 				undostack.Clear();
 				NotifyPropertyChanged("CanUndo");
 			}
+
 			ClearRedoStack();
 		}
 

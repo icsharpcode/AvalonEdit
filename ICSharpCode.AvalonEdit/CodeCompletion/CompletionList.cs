@@ -41,7 +41,7 @@ namespace AcAvalonEdit.CodeCompletion
 													 new FrameworkPropertyMetadata(typeof(CompletionList)));
 		}
 
-		bool isFiltering = true;
+		bool isFiltering = false;
 		/// <summary>
 		/// If true, the CompletionList is filtered to show only matching items. Also enables search by substring.
 		/// If false, enables the old behavior: no filtering, search by string.StartsWith.
@@ -169,6 +169,7 @@ namespace AcAvalonEdit.CodeCompletion
 					listBox.SelectIndex(listBox.Items.Count - 1);
 					break;
 				case Key.Tab:
+					break;
 				case Key.Enter:
 					e.Handled = true;
 					RequestInsertion(e);
@@ -253,11 +254,11 @@ namespace AcAvalonEdit.CodeCompletion
 			if (listBox == null)
 				ApplyTemplate();
 
-			if (this.IsFiltering) {
+			if (true) {
 				SelectItemFiltering(text,force);
-			} else {
+			}/* else {
 				SelectItemWithStart(text);
-			}
+			}*/
 			currentText = text;
 		}
 
@@ -408,6 +409,7 @@ namespace AcAvalonEdit.CodeCompletion
 
 			return -1;
 		}
+
 
 		static bool CamelCaseMatch(string text, string query)
 		{
