@@ -48,12 +48,13 @@ namespace ICSharpCode.AvalonEdit.Rendering
 		public VisualLinesInvalidException(string message, Exception innerException) : base(message, innerException)
 		{
 		}
-
+#if !NET6_0_OR_GREATER
 		/// <summary>
 		/// Creates a new VisualLinesInvalidException instance.
 		/// </summary>
 		protected VisualLinesInvalidException(SerializationInfo info, StreamingContext context) : base(info, context)
 		{
 		}
+#endif
 	}
 }
