@@ -76,6 +76,11 @@ namespace ICSharpCode.AvalonEdit.Editing
 		public bool Compare(ITextRangeProvider range)
 		{
 			TextRangeProvider other = (TextRangeProvider)range;
+			if (textArea.CodeCompletionAutomationPeer != null) {
+				Log("{0}.Compare({1}) [ActiveIntelliSenseAutomationPeer != null]= false", ID, other.ID);
+				return false;
+			}
+
 			bool result = doc == other.doc
 				&& segment.Offset == other.segment.Offset
 				&& segment.EndOffset == other.segment.EndOffset;
@@ -194,6 +199,11 @@ namespace ICSharpCode.AvalonEdit.Editing
 		public string GetText(int maxLength)
 		{
 			Log("{0}.GetText({1})", ID, maxLength);
+			if (textArea.CodeCompletionAutomationPeer != null) {
+				var result = textArea.CodeCompletionAutomationPeer.GetName();
+				Log("{0}.GetText({1}) --> {2}", ID, maxLength, result);
+				return result;
+			}
 			if (maxLength < 0)
 				return doc.GetText(segment);
 			else
