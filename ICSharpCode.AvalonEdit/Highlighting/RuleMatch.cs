@@ -16,40 +16,47 @@
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
 
-using System;
 using System.Text.RegularExpressions;
 
 namespace ICSharpCode.AvalonEdit.Highlighting
 {
 	/// <summary>
-	/// A highlighting rule.
+	/// And object that contains information about a rule's match
 	/// </summary>
-	[Serializable]
-	public class HighlightingRule : IHighlightingRule
+	public class RuleMatch
 	{
 		/// <summary>
-		/// Gets/Sets the regular expression for the rule.
+		/// Creates a new RuleMatch instance.
 		/// </summary>
-		public Regex Regex { get; set; }
+		public RuleMatch() { }
 
 		/// <summary>
-		/// Gets/Sets the highlighting color.
+		/// Gets a value indicating whether the match was successful.
 		/// </summary>
-		public HighlightingColor Color { get; set; }
+		public bool Success { get; set; }
 
-		/// <inheritdoc/>
-		public string RuleInfo => $"Regex: {Regex}";
+		/// <summary>
+		/// The position in the original string where the first character of captured substring was found.
+		/// </summary>
+		public int Index { get; set; }
 
-		/// <inheritdoc/>
-		public RuleMatch GetMatch(string input, int beginning, int length, int lineNumber)
+		/// <summary>
+		/// The length of the captured substring.
+		/// </summary>
+		public int Length { get; set; }
+
+		/// <summary>
+		/// Creates a new RuleMatch instance from a <see cref="Match"/> instance.
+		/// </summary>
+		/// <param name="match">Match to use</param>
+		/// <returns>RuleMatch instance built from match parameter</returns>
+		public static RuleMatch FromRegexMatch(Match match)
 		{
-			return RuleMatch.FromRegexMatch(Regex.Match(input, beginning, length));
-		}
-
-		/// <inheritdoc/>
-		public override string ToString()
-		{
-			return "[" + GetType().Name + " " + Regex + "]";
+			return new RuleMatch() {
+				Success = match.Success,
+				Index = match.Index,
+				Length = match.Length,
+			};
 		}
 	}
 }
