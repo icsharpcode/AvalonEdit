@@ -27,6 +27,11 @@ jobs:
         assemblyVersion: ${{ env.BuildVersion }}.${{ github.run_number }}
         fileVersion: ${{ env.BuildVersion }}.${{ github.run_number }}    
 
+    - name: Setup .NET 8.0
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 8.0.x
+        
     - name: Setup LTS .NET
       uses: actions/setup-dotnet@v3
       with:
