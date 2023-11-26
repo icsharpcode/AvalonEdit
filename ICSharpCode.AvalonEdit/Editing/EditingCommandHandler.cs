@@ -78,6 +78,9 @@ namespace ICSharpCode.AvalonEdit.Editing
 			CommandBindings.Add(new CommandBinding(AvalonEditCommands.ToggleOverstrike, OnToggleOverstrike));
 			CommandBindings.Add(new CommandBinding(AvalonEditCommands.DeleteLine, OnDeleteLine));
 
+			CommandBindings.Add(new CommandBinding(AvalonEditCommands.SwapLinesUp, OnSwapLinesUp));
+			CommandBindings.Add(new CommandBinding(AvalonEditCommands.SwapLinesDown, OnSwapLinesDown));
+			
 			CommandBindings.Add(new CommandBinding(AvalonEditCommands.RemoveLeadingWhitespace, OnRemoveLeadingWhitespace));
 			CommandBindings.Add(new CommandBinding(AvalonEditCommands.RemoveTrailingWhitespace, OnRemoveTrailingWhitespace));
 			CommandBindings.Add(new CommandBinding(AvalonEditCommands.ConvertToUppercase, OnConvertToUpperCase));
@@ -518,6 +521,94 @@ namespace ICSharpCode.AvalonEdit.Editing
 				textArea.RemoveSelectedText();
 				args.Handled = true;
 			}
+		}
+		#endregion
+
+		#region SwapLines
+		static void OnSwapLinesUp(object target, ExecutedRoutedEventArgs args)
+		{
+			TextArea textArea = GetTextArea(target);
+			if (textArea != null && textArea.Document != null) {
+				using (var caretSelectionPreserver = CaretSelectionPreserver.Create(textArea)) {
+					var selectionFirstLine = textArea.Selection.IsEmpty ? textArea.Caret.Line : textArea.Selection.StartPosition.Line;
+					var selectionLastLine = textArea.Selection.IsEmpty ? textArea.Caret.Line : textArea.Selection.EndPosition.Line;
+					// we cannot move up if the selection is on the first line
+					if (selectionFirstLine == 1) return;
+
+					DocumentLine movedLine = textArea.Document.GetLineByNumber(selectionFirstLine - 1);
+					DocumentLine lastLine = textArea.Document.GetLineByNumber(selectionLastLine);
+
+					using (textArea.Document.RunUpdate()) {
+						textArea.Selection = Selection.Create(textArea, movedLine.Offset, movedLine.Offset + movedLine.TotalLength);
+						string movedLineText = textArea.Selection.GetText();
+						if (lastLine.NextLine == null) {
+							movedLineText = movedLineText.RotateTailLinebreak();
+						}
+						textArea.Document.Insert(lastLine.Offset + lastLine.TotalLength, movedLineText);
+						textArea.RemoveSelectedText();
+						caretSelectionPreserver.MoveLine(-1);
+					}
+				}
+				args.Handled = true;
+			}
+		}
+
+		static void OnSwapLinesDown(object target, ExecutedRoutedEventArgs args)
+		{
+			TextArea textArea = GetTextArea(target);
+			if (textArea != null && textArea.Document != null) {
+				using (var caretSelectionPreserver = CaretSelectionPreserver.Create(textArea)) {
+					var selectionFirstLine = textArea.Selection.IsEmpty ? textArea.Caret.Line : textArea.Selection.StartPosition.Line;
+					var selectionLastLine = textArea.Selection.IsEmpty ? textArea.Caret.Line : textArea.Selection.EndPosition.Line;
+					// we cannot move down if the selection is on the last line
+					if (selectionLastLine == textArea.Document.LineCount) return;
+
+					DocumentLine firstLine = textArea.Document.GetLineByNumber(selectionFirstLine);
+					DocumentLine lastLine = textArea.Document.GetLineByNumber(selectionLastLine);
+					DocumentLine movedLine = textArea.Document.GetLineByNumber(selectionLastLine + 1);
+
+					using (textArea.Document.RunUpdate()) {
+						textArea.Selection = Selection.Create(textArea, lastLine.EndOffset, movedLine.EndOffset);
+						string movedLineText = textArea.Selection.GetText().RotateHeadLinebreak();
+						textArea.Document.Insert(firstLine.Offset, movedLineText);
+						textArea.RemoveSelectedText();
+						caretSelectionPreserver.MoveLine(+1);
+					}
+				}
+				args.Handled = true;
+			}
+		}
+
+		/// <summary>
+		/// Move the leading linebreak to the end.
+		/// </summary>
+		/// <param name="self">A string which starts with one or more linebreaks.</param>
+		/// <returns></returns>
+		private static string RotateHeadLinebreak(this string self)
+		{
+			int len = self.Length;
+			// check if the line break is /n or /r/n
+			string linebreak =
+				(len >= 2 && self.Substring(0, 2) == "\r\n")
+				? "\r\n"
+				: self.Substring(0, 1);
+			return self.Remove(0, linebreak.Length) + linebreak;
+		}
+
+		/// <summary>
+		/// Move the tailing linebreak to the head.
+		/// </summary>
+		/// <param name="self">A string which ends with one or more linebreaks.</param>
+		/// <returns></returns>
+		private static string RotateTailLinebreak(this string self)
+		{
+			int len = self.Length;
+			// check if the line break is /n or /r/n
+			string linebreak =
+				(len >= 2 && self.Substring(len - 2, 2) == "\r\n")
+				? "\r\n"
+				: self.Substring(len - 1, 1);
+			return linebreak + self.Remove(len - linebreak.Length);
 		}
 		#endregion
 
