@@ -10,7 +10,7 @@
 	<Color name="Punctuation" foreground="Black" />
 
 	<RuleSet name="String">
-		<Span begin="\\" end="."/>
+		<Span begin="\\" end="." />
 	</RuleSet>
 
 	<RuleSet name="Object">
@@ -22,27 +22,28 @@
 			<Begin>'</Begin>
 			<End>'</End>
 		</Span>
-		<Span color="Punctuation" ruleSet="Expression">
+		<Span color="Punctuation" ruleSet="Expression" multiline="true">
 			<Begin>:</Begin>
+			<End>(?= [,}] )</End>
 		</Span>
-		<Span color="Punctuation">
-			<Begin>,</Begin>
-		</Span>
+		<Rule color="Punctuation">
+			,
+		</Rule>
 	</RuleSet>
 
 	<RuleSet name="Array">
-		<Import ruleSet="Expression"/>
-		<Span color="Punctuation">
-			<Begin>,</Begin>
-		</Span>
+		<Import ruleSet="Expression" />
+		<Rule color="Punctuation">
+			,
+		</Rule>
 	</RuleSet>
 
 	<RuleSet name="Expression">
-		<Keywords color="Bool" >
+		<Keywords color="Bool">
 			<Word>true</Word>
 			<Word>false</Word>
 		</Keywords>
-		<Keywords color="Null" >
+		<Keywords color="Null">
 			<Word>null</Word>
 		</Keywords>
 		<Span color="String" ruleSet="String">
@@ -62,11 +63,22 @@
 			<End>\]</End>
 		</Span>
 		<Rule color="Number">
-			\b0[xX][0-9a-fA-F]+|(\b\d+(\.[0-9]+)?|\.[0-9]+)([eE][+-]?[0-9]+)?
+			-? \b
+			(?:
+				0[xX][0-9a-fA-F]+
+				|
+				(?:
+
+					[0-9]+ (?: \. [0-9]+ )?
+					|
+					\. [0-9]+
+				)
+				(?: [eE] [+-]? [0-9]+ )?
+			)
 		</Rule>
 	</RuleSet>
 
 	<RuleSet>
-		<Import ruleSet="Expression"/>
+		<Import ruleSet="Expression" />
 	</RuleSet>
 </SyntaxDefinition>
