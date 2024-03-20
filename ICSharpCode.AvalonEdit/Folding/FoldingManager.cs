@@ -55,6 +55,14 @@ namespace ICSharpCode.AvalonEdit.Folding
 		}
 		#endregion
 
+		/// <summary>
+		/// Adds another text view to the same document
+		/// </summary>
+		public void AddTextView(TextView textView)
+		{
+			textViews.Add(textView);
+		}
+
 		#region ReceiveWeakEvent
 		/// <inheritdoc cref="IWeakEventListener.ReceiveWeakEvent"/>
 		protected virtual bool ReceiveWeakEvent(Type managerType, object sender, EventArgs e)
