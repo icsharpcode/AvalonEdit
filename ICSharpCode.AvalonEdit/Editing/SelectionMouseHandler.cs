@@ -436,7 +436,7 @@ namespace ICSharpCode.AvalonEdit.Editing
 							startWord = GetLineAtMousePosition(e);
 						} else {
 							mode = MouseSelectionMode.WholeWord;
-							startWord = GetWordAtMousePosition(e);
+							startWord = GetWordOrWhitespacesAtMousePosition(e);
 						}
 						if (startWord == SimpleSegment.Invalid) {
 							mode = MouseSelectionMode.None;
@@ -506,6 +506,48 @@ namespace ICSharpCode.AvalonEdit.Editing
 				int wordStartOffset = line.GetRelativeOffset(wordStartVC) + relOffset;
 				int wordEndOffset = line.GetRelativeOffset(wordEndVC) + relOffset;
 				return new SimpleSegment(wordStartOffset, wordEndOffset - wordStartOffset);
+			} else {
+				return SimpleSegment.Invalid;
+			}
+		}
+
+  		SimpleSegment GetWordOrWhitespacesAtMousePosition(MouseEventArgs e)
+		{
+			TextView textView = textArea.TextView;
+			if (textView == null) return SimpleSegment.Invalid;
+			Point pos = e.GetPosition(textView);
+			if (pos.Y < 0)
+				pos.Y = 0;
+			if (pos.Y > textView.ActualHeight)
+				pos.Y = textView.ActualHeight;
+			pos += textView.ScrollOffset;
+			VisualLine line = textView.GetVisualLineFromVisualTop(pos.Y);
+			if (line != null) {
+				int visualColumn = line.GetVisualColumn(pos, textArea.Selection.EnableVirtualSpace);
+				var ch = textArea.Document.GetCharAt(line.StartOffset + visualColumn);
+				if (ch == ' ' || ch == '\t') {
+					int wordStartVC = line.GetNextCaretPosition(visualColumn + 1, LogicalDirection.Backward, CaretPositioningMode.WordBorderOrSymbol, textArea.Selection.EnableVirtualSpace);
+					if (wordStartVC == -1)
+						wordStartVC = 0;
+					int wordEndVC = line.GetNextCaretPosition(visualColumn, LogicalDirection.Forward, CaretPositioningMode.WordStartOrSymbol, textArea.Selection.EnableVirtualSpace);
+					if (wordEndVC == -1)
+						wordEndVC = line.VisualLength;
+					int relOffset = line.FirstDocumentLine.Offset;
+					int wordStartOffset = line.GetRelativeOffset(wordStartVC) + relOffset;
+					int wordEndOffset = line.GetRelativeOffset(wordEndVC) + relOffset;
+					return new SimpleSegment(wordStartOffset, wordEndOffset - wordStartOffset);
+				} else {
+					int wordStartVC = line.GetNextCaretPosition(visualColumn + 1, LogicalDirection.Backward, CaretPositioningMode.WordStartOrSymbol, textArea.Selection.EnableVirtualSpace);
+					if (wordStartVC == -1)
+						wordStartVC = 0;
+					int wordEndVC = line.GetNextCaretPosition(wordStartVC, LogicalDirection.Forward, CaretPositioningMode.WordBorderOrSymbol, textArea.Selection.EnableVirtualSpace);
+					if (wordEndVC == -1)
+						wordEndVC = line.VisualLength;
+					int relOffset = line.FirstDocumentLine.Offset;
+					int wordStartOffset = line.GetRelativeOffset(wordStartVC) + relOffset;
+					int wordEndOffset = line.GetRelativeOffset(wordEndVC) + relOffset;
+					return new SimpleSegment(wordStartOffset, wordEndOffset - wordStartOffset);
+				}
 			} else {
 				return SimpleSegment.Invalid;
 			}
@@ -638,7 +680,7 @@ namespace ICSharpCode.AvalonEdit.Editing
 				else
 					textArea.Selection = textArea.Selection.StartSelectionOrSetEndpoint(oldPosition, textArea.Caret.Position);
 			} else if (mode == MouseSelectionMode.WholeWord || mode == MouseSelectionMode.WholeLine) {
-				var newWord = (mode == MouseSelectionMode.WholeLine) ? GetLineAtMousePosition(e) : GetWordAtMousePosition(e);
+				var newWord = (mode == MouseSelectionMode.WholeLine) ? GetLineAtMousePosition(e) : GetWordOrWhitespacesAtMousePosition(e);
 				if (newWord != SimpleSegment.Invalid) {
 					textArea.Selection = Selection.Create(textArea,
 														  Math.Min(newWord.Offset, startWord.Offset),
