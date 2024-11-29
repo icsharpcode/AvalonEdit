@@ -42,6 +42,11 @@ namespace ICSharpCode.AvalonEdit.Search
 		/// </summary>
 		public static int DelayBeforeSearch { get; set; } = 250;
 
+		/// <summary>
+		/// Event that occurs if the search wrapped the end or beginning of the file
+		/// </summary>
+		public static event EventHandler SearchWrapped;
+
 		TextArea textArea;
 		SearchInputHandler handler;
 		TextDocument currentDocument;
@@ -97,7 +102,7 @@ namespace ICSharpCode.AvalonEdit.Search
 		/// <summary>
 		/// Gets/sets whether the search pattern should only match whole words.
 		/// </summary>
-		public bool WholeWords
+		public bool WholeWords 
 		{
 			get { return (bool)GetValue(WholeWordsProperty); }
 			set { SetValue(WholeWordsProperty, value); }
@@ -196,7 +201,7 @@ namespace ICSharpCode.AvalonEdit.Search
 		/// <summary>
 		/// Gets/sets the localization for the SearchPanel.
 		/// </summary>
-		public Localization Localization
+		public Localization Localization 
 		{
 			get { return (Localization)GetValue(LocalizationProperty); }
 			set { SetValue(LocalizationProperty, value); }
@@ -370,9 +375,10 @@ namespace ICSharpCode.AvalonEdit.Search
 			SearchResult result = renderer.CurrentResults.FindFirstSegmentWithStartAfter(textArea.Caret.Offset + 1);
 			if (result == null)
 				result = renderer.CurrentResults.FirstSegment;
-			if (result != null)
+			if (result != null) 
 			{
-				SelectResult(result);
+				var s = Selection.Create(textArea, result.StartOffset, result.EndOffset);
+				SelectResult(result, textArea.Caret.Line >= s.StartPosition.Line);
 			}
 		}
 
@@ -388,7 +394,8 @@ namespace ICSharpCode.AvalonEdit.Search
 				result = renderer.CurrentResults.LastSegment;
 			if (result != null)
 			{
-				SelectResult(result);
+				var s = Selection.Create(textArea, result.StartOffset, result.EndOffset);
+				SelectResult(result, textArea.Caret.Line <= s.StartPosition.Line);
 			}
 		}
 
@@ -400,7 +407,7 @@ namespace ICSharpCode.AvalonEdit.Search
 				return;
 
 			lastChangeSelection = changeSelection;
-			if (typingTimer == null)
+			if (typingTimer == null) 
 			{
 				typingTimer = new DispatcherTimer
 				{
@@ -416,7 +423,7 @@ namespace ICSharpCode.AvalonEdit.Search
 		private void handleTypingTimerTimeout(object sender, EventArgs e)
 		{
 			var timer = sender as DispatcherTimer; // WPF
-			if (timer == null)
+			if (timer == null) 
 			{
 				return;
 			}
@@ -427,7 +434,7 @@ namespace ICSharpCode.AvalonEdit.Search
 			if (!string.IsNullOrEmpty(SearchPattern))
 			{
 				int offset = textArea.Caret.Offset;
-				if (changeSelection)
+				if (changeSelection) 
 				{
 					textArea.ClearSelection();
 				}
@@ -436,7 +443,7 @@ namespace ICSharpCode.AvalonEdit.Search
 				{
 					if (changeSelection && result.StartOffset >= offset)
 					{
-						SelectResult(result);
+						SelectResult(result, false);
 						changeSelection = false;
 					}
 					renderer.CurrentResults.Add(result);
@@ -446,7 +453,7 @@ namespace ICSharpCode.AvalonEdit.Search
 					messageView.IsOpen = true;
 					messageView.Content = Localization.NoMatchesFoundText;
 					messageView.PlacementTarget = searchTextBox;
-				}
+				} 
 				else
 					messageView.IsOpen = false;
 			}
@@ -455,13 +462,16 @@ namespace ICSharpCode.AvalonEdit.Search
 			timer.Stop();
 		}
 
-		void SelectResult(SearchResult result)
+		void SelectResult(SearchResult result, bool searchWrapped)
 		{
 			textArea.Caret.Offset = result.StartOffset;
 			textArea.Selection = Selection.Create(textArea, result.StartOffset, result.EndOffset);
 			textArea.Caret.BringCaretToView();
 			// show caret even if the editor does not have the Keyboard Focus
 			textArea.Caret.Show();
+			if (searchWrapped) {
+				SearchWrapped?.Invoke(this, EventArgs.Empty);
+			}
 		}
 
 		void SearchLayerKeyDown(object sender, KeyEventArgs e)
@@ -474,7 +484,7 @@ namespace ICSharpCode.AvalonEdit.Search
 						FindPrevious();
 					else
 						FindNext();
-					if (searchTextBox != null)
+					if (searchTextBox != null) 
 					{
 						var error = Validation.GetErrors(searchTextBox).FirstOrDefault();
 						if (error != null)
