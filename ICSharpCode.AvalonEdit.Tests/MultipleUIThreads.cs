@@ -19,6 +19,7 @@
 using System;
 using System.Threading;
 using System.Windows;
+
 using NUnit.Framework;
 
 namespace ICSharpCode.AvalonEdit
@@ -27,7 +28,21 @@ namespace ICSharpCode.AvalonEdit
 	public class MultipleUIThreads
 	{
 		Exception error;
-		
+
+		/* NET80 error on GH CI:
+		The active test run was aborted. Reason: Test host process crashed : Process terminated. Encountered infinite recursion while looking up resource 'Arg_NullReferenceException' in System.Private.CoreLib. Verify the installation of .NET is complete and does not need repairing, and that the state of the process has not become corrupted.
+			at System.Environment.FailFast(System.String)
+			at System.SR.InternalGetResourceString(System.String)
+			at System.SR.GetResourceString(System.String)
+			at System.NullReferenceException..ctor()
+			at System.Resources.ResourceManager.GetString(System.String, System.Globalization.CultureInfo)
+			at System.SR.InternalGetResourceString(System.String)
+			at System.SR.GetResourceString(System.String)
+			at System.NullReferenceException..ctor()
+			at System.Threading.Thread.get_CurrentThread()
+			at MS.Win32.HwndSubclass.SubclassWndProc(IntPtr, Int32, IntPtr, IntPtr)
+		*/
+#if !NET8_0_OR_GREATER
 		[Test]
 		public void CreateEditorInstancesOnMultipleUIThreads()
 		{
@@ -42,7 +57,7 @@ namespace ICSharpCode.AvalonEdit
 			if (error != null)
 				throw new InvalidOperationException(error.Message, error);
 		}
-		
+#endif
 		[STAThread]
 		void Run()
 		{

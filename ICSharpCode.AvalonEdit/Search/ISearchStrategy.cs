@@ -93,11 +93,12 @@ namespace ICSharpCode.AvalonEdit.Search
 		public SearchPatternException(string message, Exception innerException) : base(message, innerException)
 		{
 		}
-
+#if !NET6_0_OR_GREATER
 		// This constructor is needed for serialization.
 		/// <inheritdoc/>
 		protected SearchPatternException(SerializationInfo info, StreamingContext context) : base(info, context)
 		{
 		}
+#endif
 	}
 }

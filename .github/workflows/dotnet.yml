@@ -27,10 +27,10 @@ jobs:
         assemblyVersion: ${{ env.BuildVersion }}.${{ github.run_number }}
         fileVersion: ${{ env.BuildVersion }}.${{ github.run_number }}    
 
-    - name: Setup .NET 7
+    - name: Setup .NET 8.0
       uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: 7.0.x
+        dotnet-version: 8.0.x
         
     - name: Setup LTS .NET
       uses: actions/setup-dotnet@v3
@@ -53,10 +53,10 @@ jobs:
       env:
         TestAssembly: ICSharpCode.AvalonEdit.Tests\bin\${{ matrix.configuration }}\net6.0-windows\ICSharpCode.AvalonEdit.Tests.dll
 
-    - name: net7.0-windows Unit Tests
+    - name: net8.0-windows Unit Tests
       run: vstest.console $env:TestAssembly
       env:
-        TestAssembly: ICSharpCode.AvalonEdit.Tests\bin\${{ matrix.configuration }}\net7.0-windows\ICSharpCode.AvalonEdit.Tests.dll
+        TestAssembly: ICSharpCode.AvalonEdit.Tests\bin\${{ matrix.configuration }}\net8.0-windows\ICSharpCode.AvalonEdit.Tests.dll
         
     - name: net462 Unit Tests
       run: vstest.console $env:TestAssembly
