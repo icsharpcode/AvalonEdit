@@ -261,6 +261,9 @@ namespace ICSharpCode.AvalonEdit.Rendering
 					} else {
 						right = visualLine.GetTextLineVisualXPosition(lastTextLine, segmentEndVC);
 					}
+
+					left -= scrollOffset.X;
+					right -= scrollOffset.X;
 					Rect extendSelection = new Rect(Math.Min(left, right), y, Math.Abs(right - left), line.Height);
 					if (!lastRect.IsEmpty) {
 						if (extendSelection.IntersectsWith(lastRect)) {
