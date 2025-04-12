@@ -16,7 +16,7 @@ jobs:
     env:
         Solution: '**/ICSharpCode.AvalonEdit.sln'
         BuildPlatform: 'Any CPU'
-        BuildVersion: '6.3.0'
+        BuildVersion: '6.3.1'
     steps:
     - uses: actions/checkout@v4
     - name: Update project version
