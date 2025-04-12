@@ -18,7 +18,7 @@ jobs:
         BuildPlatform: 'Any CPU'
         BuildVersion: '6.3.0'
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Update project version
       uses: roryprimrose/set-vs-sdk-project-version@v1
       with:
@@ -28,17 +28,17 @@ jobs:
         fileVersion: ${{ env.BuildVersion }}.${{ github.run_number }}    
 
     - name: Setup .NET 8.0
-      uses: actions/setup-dotnet@v3
+      uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 8.0.x
         
     - name: Setup LTS .NET
-      uses: actions/setup-dotnet@v3
+      uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 6.0.x
 
     - name: Add msbuild to PATH
-      uses: microsoft/setup-msbuild@v1.1
+      uses: microsoft/setup-msbuild@v2
 
     - run: msbuild ICSharpCode.AvalonEdit.sln /t:Restore /p:Configuration=${{ matrix.configuration }}
 
@@ -71,7 +71,7 @@ jobs:
 
     - name: Upload NuGet
       if: matrix.configuration == 'release'
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: AvalonEdit NuGet Package (${{ matrix.configuration }})
         path: ICSharpCode.AvalonEdit/bin/Release/AvalonEdit*.nupkg
@@ -79,7 +79,7 @@ jobs:
 
     - name: Upload Snupkg Artifact
       if: matrix.configuration == 'release'
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: AvalonEdit Snupkg (${{ matrix.configuration }})
         path: ICSharpCode.AvalonEdit/bin/Release/AvalonEdit*.snupkg
