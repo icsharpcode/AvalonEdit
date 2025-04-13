@@ -39,57 +39,57 @@ namespace ICSharpCode.AvalonEdit.Editing
 		[Test]
 		public void InsertionPossibleWhenNothingIsReadOnly()
 		{
-			Assert.IsTrue(provider.CanInsert(0));
-			Assert.IsTrue(provider.CanInsert(100));
+			Assert.That(provider.CanInsert(0), Is.True);
+			Assert.That(provider.CanInsert(100), Is.True);
 		}
 		
 		[Test]
 		public void DeletionPossibleWhenNothingIsReadOnly()
 		{
 			var result = provider.GetDeletableSegments(new SimpleSegment(10, 20)).ToList();
-			Assert.AreEqual(1, result.Count);
-			Assert.AreEqual(10, result[0].Offset);
-			Assert.AreEqual(20, result[0].Length);
+			Assert.That(result.Count, Is.EqualTo(1));
+			Assert.That(result[0].Offset, Is.EqualTo(10));
+			Assert.That(result[0].Length, Is.EqualTo(20));
 		}
 		
 		[Test]
 		public void EmptyDeletionPossibleWhenNothingIsReadOnly()
 		{
 			var result = provider.GetDeletableSegments(new SimpleSegment(10, 0)).ToList();
-			Assert.AreEqual(1, result.Count);
-			Assert.AreEqual(10, result[0].Offset);
-			Assert.AreEqual(0, result[0].Length);
+			Assert.That(result.Count, Is.EqualTo(1));
+			Assert.That(result[0].Offset, Is.EqualTo(10));
+			Assert.That(result[0].Length, Is.EqualTo(0));
 		}
 		
 		[Test]
 		public void InsertionPossibleBeforeReadOnlySegment()
 		{
 			segments.Add(new TextSegment { StartOffset = 10, EndOffset = 15 });
-			Assert.IsTrue(provider.CanInsert(5));
+			Assert.That(provider.CanInsert(5), Is.True);
 		}
 		
 		[Test]
 		public void InsertionPossibleAtStartOfReadOnlySegment()
 		{
 			segments.Add(new TextSegment { StartOffset = 10, EndOffset = 15 });
-			Assert.IsTrue(provider.CanInsert(10));
+			Assert.That(provider.CanInsert(10), Is.True);
 		}
 		
 		[Test]
 		public void InsertionImpossibleInsideReadOnlySegment()
 		{
 			segments.Add(new TextSegment { StartOffset = 10, EndOffset = 15 });
-			Assert.IsFalse(provider.CanInsert(11));
-			Assert.IsFalse(provider.CanInsert(12));
-			Assert.IsFalse(provider.CanInsert(13));
-			Assert.IsFalse(provider.CanInsert(14));
+			Assert.That(provider.CanInsert(11), Is.False);
+			Assert.That(provider.CanInsert(12), Is.False);
+			Assert.That(provider.CanInsert(13), Is.False);
+			Assert.That(provider.CanInsert(14), Is.False);
 		}
 		
 		[Test]
 		public void InsertionPossibleAtEndOfReadOnlySegment()
 		{
 			segments.Add(new TextSegment { StartOffset = 10, EndOffset = 15 });
-			Assert.IsTrue(provider.CanInsert(15));
+			Assert.That(provider.CanInsert(15), Is.True);
 		}
 		
 		[Test]
@@ -97,7 +97,7 @@ namespace ICSharpCode.AvalonEdit.Editing
 		{
 			segments.Add(new TextSegment { StartOffset = 10, EndOffset = 15 });
 			segments.Add(new TextSegment { StartOffset = 15, EndOffset = 20 });
-			Assert.IsTrue(provider.CanInsert(15));
+			Assert.That(provider.CanInsert(15), Is.True);
 		}
 		
 		[Test]
@@ -105,7 +105,7 @@ namespace ICSharpCode.AvalonEdit.Editing
 		{
 			segments.Add(new TextSegment { StartOffset = 10, Length = 5 });
 			var result = provider.GetDeletableSegments(new SimpleSegment(11, 2)).ToList();
-			Assert.AreEqual(0, result.Count);
+			Assert.That(result.Count, Is.EqualTo(0));
 		}
 		
 		[Test]
@@ -113,7 +113,7 @@ namespace ICSharpCode.AvalonEdit.Editing
 		{
 			segments.Add(new TextSegment { StartOffset = 10, Length = 5 });
 			var result = provider.GetDeletableSegments(new SimpleSegment(11, 0)).ToList();
-			Assert.AreEqual(0, result.Count);
+			Assert.That(result.Count, Is.EqualTo(0));
 		}
 		
 		[Test]
@@ -121,9 +121,9 @@ namespace ICSharpCode.AvalonEdit.Editing
 		{
 			segments.Add(new TextSegment { StartOffset = 10, Length = 5 });
 			var result = provider.GetDeletableSegments(new SimpleSegment(10, 0)).ToList();
-			Assert.AreEqual(1, result.Count);
-			Assert.AreEqual(10, result[0].Offset);
-			Assert.AreEqual(0, result[0].Length);
+			Assert.That(result.Count, Is.EqualTo(1));
+			Assert.That(result[0].Offset, Is.EqualTo(10));
+			Assert.That(result[0].Length, Is.EqualTo(0));
 		}
 		
 		[Test]
@@ -131,9 +131,9 @@ namespace ICSharpCode.AvalonEdit.Editing
 		{
 			segments.Add(new TextSegment { StartOffset = 10, Length = 5 });
 			var result = provider.GetDeletableSegments(new SimpleSegment(15, 0)).ToList();
-			Assert.AreEqual(1, result.Count);
-			Assert.AreEqual(15, result[0].Offset);
-			Assert.AreEqual(0, result[0].Length);
+			Assert.That(result.Count, Is.EqualTo(1));
+			Assert.That(result[0].Offset, Is.EqualTo(15));
+			Assert.That(result[0].Length, Is.EqualTo(0));
 		}
 		
 		[Test]
@@ -141,11 +141,11 @@ namespace ICSharpCode.AvalonEdit.Editing
 		{
 			segments.Add(new TextSegment { StartOffset = 20, Length = 5 });
 			var result = provider.GetDeletableSegments(new SimpleSegment(15, 16)).ToList();
-			Assert.AreEqual(2, result.Count);
-			Assert.AreEqual(15, result[0].Offset);
-			Assert.AreEqual(5, result[0].Length);
-			Assert.AreEqual(25, result[1].Offset);
-			Assert.AreEqual(6, result[1].Length);
+			Assert.That(result.Count, Is.EqualTo(2));
+			Assert.That(result[0].Offset, Is.EqualTo(15));
+			Assert.That(result[0].Length, Is.EqualTo(5));
+			Assert.That(result[1].Offset, Is.EqualTo(25));
+			Assert.That(result[1].Length, Is.EqualTo(6));
 		}
 		
 		[Test]
@@ -153,7 +153,7 @@ namespace ICSharpCode.AvalonEdit.Editing
 		{
 			segments.Add(new TextSegment { StartOffset = 20, Length = 5 });
 			var result = provider.GetDeletableSegments(new SimpleSegment(24, 1)).ToList();
-			Assert.AreEqual(0, result.Count);
+			Assert.That(result.Count, Is.EqualTo(0));
 			/* // we would need this result for the old Backspace code so that the last character doesn't get selected:
 			Assert.AreEqual(1, result.Count);
 			Assert.AreEqual(25, result[0].Offset);
@@ -165,7 +165,7 @@ namespace ICSharpCode.AvalonEdit.Editing
 		{
 			segments.Add(new TextSegment { StartOffset = 20, Length = 5 });
 			var result = provider.GetDeletableSegments(new SimpleSegment(20, 1)).ToList();
-			Assert.AreEqual(0, result.Count);
+			Assert.That(result.Count, Is.EqualTo(0));
 			/* // we would need this result for the old Delete code so that the first character doesn't get selected:
 			Assert.AreEqual(1, result.Count);
 			Assert.AreEqual(2, result[0].Offset);
@@ -177,7 +177,7 @@ namespace ICSharpCode.AvalonEdit.Editing
 		{
 			segments.Add(new TextSegment { StartOffset = 20, Length = 5 });
 			var result = provider.GetDeletableSegments(new SimpleSegment(20, 5)).ToList();
-			Assert.AreEqual(0, result.Count);
+			Assert.That(result.Count, Is.EqualTo(0));
 		}
 	}
 }

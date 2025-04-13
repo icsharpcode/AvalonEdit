@@ -30,24 +30,24 @@ namespace ICSharpCode.AvalonEdit.Utils
 		public void EmptyRope()
 		{
 			Rope<char> empty = new Rope<char>();
-			Assert.AreEqual(0, empty.Length);
-			Assert.AreEqual("", empty.ToString());
+			Assert.That(empty.Length, Is.EqualTo(0));
+			Assert.That(empty.ToString(), Is.Empty);
 		}
 		
 		[Test]
 		public void EmptyRopeFromString()
 		{
 			Rope<char> empty = new Rope<char>(string.Empty);
-			Assert.AreEqual(0, empty.Length);
-			Assert.AreEqual("", empty.ToString());
+			Assert.That(empty.Length, Is.EqualTo(0));
+			Assert.That(empty.ToString(), Is.Empty);
 		}
 		
 		[Test]
 		public void InitializeRopeFromShortString()
 		{
 			Rope<char> rope = new Rope<char>("Hello, World");
-			Assert.AreEqual(12, rope.Length);
-			Assert.AreEqual("Hello, World", rope.ToString());
+			Assert.That(rope.Length, Is.EqualTo(12));
+			Assert.That(rope.ToString(), Is.EqualTo("Hello, World"));
 		}
 		
 		string BuildLongString(int lines)
@@ -65,9 +65,9 @@ namespace ICSharpCode.AvalonEdit.Utils
 		{
 			string text = BuildLongString(1000);
 			Rope<char> rope = new Rope<char>(text);
-			Assert.AreEqual(text.Length, rope.Length);
-			Assert.AreEqual(text, rope.ToString());
-			Assert.AreEqual(text.ToCharArray(), rope.ToArray());
+			Assert.That(rope.Length, Is.EqualTo(text.Length));
+			Assert.That(rope.ToString(), Is.EqualTo(text));
+			Assert.That(rope.ToArray(), Is.EqualTo(text.ToCharArray()));
 		}
 		
 		[Test]
@@ -78,12 +78,12 @@ namespace ICSharpCode.AvalonEdit.Utils
 			
 			string textPart = text.Substring(1200, 600);
 			char[] arrayPart = textPart.ToCharArray();
-			Assert.AreEqual(textPart, rope.ToString(1200, 600));
-			Assert.AreEqual(arrayPart, rope.ToArray(1200, 600));
+			Assert.That(rope.ToString(1200, 600), Is.EqualTo(textPart));
+			Assert.That(rope.ToArray(1200, 600), Is.EqualTo(arrayPart));
 			
 			Rope<char> partialRope = rope.GetRange(1200, 600);
-			Assert.AreEqual(textPart, partialRope.ToString());
-			Assert.AreEqual(arrayPart, partialRope.ToArray());
+			Assert.That(partialRope.ToString(), Is.EqualTo(textPart));
+			Assert.That(partialRope.ToArray(), Is.EqualTo(arrayPart));
 		}
 		
 		[Test]
@@ -97,7 +97,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 				b.Append(' ');
 				rope.Add(' ');
 			}
-			Assert.AreEqual(b.ToString(), rope.ToString());
+			Assert.That(rope.ToString(), Is.EqualTo(b.ToString()));
 		}
 		
 		[Test]
@@ -110,7 +110,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 				b.Append(' ');
 				rope.AddRange(CharRope.Create(i.ToString() + " "));
 			}
-			Assert.AreEqual(b.ToString(), rope.ToString());
+			Assert.That(rope.ToString(), Is.EqualTo(b.ToString()));
 		}
 		
 		[Test]
@@ -119,7 +119,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 			string text = BuildLongString(1000);
 			Rope<char> rope = new Rope<char>();
 			rope.AddText(text);
-			Assert.AreEqual(text, rope.ToString());
+			Assert.That(rope.ToString(), Is.EqualTo(text));
 		}
 		
 		[Test]
@@ -135,7 +135,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 				rope.Insert(0, ' ');
 				rope.InsertText(0, i.ToString());
 			}
-			Assert.AreEqual(b.ToString(), rope.ToString());
+			Assert.That(rope.ToString(), Is.EqualTo(b.ToString()));
 		}
 		
 		[Test]
@@ -150,7 +150,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 			for (int i = 1000; i >= 1; i--) {
 				rope.InsertRange(0, CharRope.Create(i.ToString() + " "));
 			}
-			Assert.AreEqual(b.ToString(), rope.ToString());
+			Assert.That(rope.ToString(), Is.EqualTo(b.ToString()));
 		}
 		
 		[Test]
@@ -171,7 +171,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 				rope.InsertText(middle, (999-i).ToString("d3"));
 				rope.Insert(middle + 3, ' ');
 			}
-			Assert.AreEqual(b.ToString(), rope.ToString());
+			Assert.That(rope.ToString(), Is.EqualTo(b.ToString()));
 		}
 		
 		[Test]
@@ -189,7 +189,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 				middle += 4;
 				rope.InsertRange(middle, CharRope.Create((1001-i).ToString("d3") + " "));
 			}
-			Assert.AreEqual(b.ToString(), rope.ToString());
+			Assert.That(rope.ToString(), Is.EqualTo(b.ToString()));
 		}
 	}
 }

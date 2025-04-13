@@ -39,117 +39,117 @@ namespace ICSharpCode.AvalonEdit.Utils
 		[Test]
 		public void CaretStopInEmptyString()
 		{
-			Assert.AreEqual(0, GetNextCaretStop("", -1, CaretPositioningMode.Normal));
-			Assert.AreEqual(-1, GetNextCaretStop("", 0, CaretPositioningMode.Normal));
-			Assert.AreEqual(-1, GetPrevCaretStop("", 0, CaretPositioningMode.Normal));
-			Assert.AreEqual(0, GetPrevCaretStop("", 1, CaretPositioningMode.Normal));
-			
-			Assert.AreEqual(-1, GetNextCaretStop("", -1, CaretPositioningMode.WordStart));
-			Assert.AreEqual(-1, GetNextCaretStop("", -1, CaretPositioningMode.WordBorder));
-			Assert.AreEqual(-1, GetPrevCaretStop("", 1, CaretPositioningMode.WordStart));
-			Assert.AreEqual(-1, GetPrevCaretStop("", 1, CaretPositioningMode.WordBorder));
+			Assert.That(GetNextCaretStop("", -1, CaretPositioningMode.Normal), Is.EqualTo(0));
+			Assert.That(GetNextCaretStop("", 0, CaretPositioningMode.Normal), Is.EqualTo(-1));
+			Assert.That(GetPrevCaretStop("", 0, CaretPositioningMode.Normal), Is.EqualTo(-1));
+			Assert.That(GetPrevCaretStop("", 1, CaretPositioningMode.Normal), Is.EqualTo(0));
+
+			Assert.That(GetNextCaretStop("", -1, CaretPositioningMode.WordStart), Is.EqualTo(-1));
+			Assert.That(GetNextCaretStop("", -1, CaretPositioningMode.WordBorder), Is.EqualTo(-1));
+			Assert.That(GetPrevCaretStop("", 1, CaretPositioningMode.WordStart), Is.EqualTo(-1));
+			Assert.That(GetPrevCaretStop("", 1, CaretPositioningMode.WordBorder), Is.EqualTo(-1));
 		}
 		
 		[Test]
 		public void StartOfDocumentWithWordStart()
 		{
-			Assert.AreEqual(0, GetNextCaretStop("word", -1, CaretPositioningMode.Normal));
-			Assert.AreEqual(0, GetNextCaretStop("word", -1, CaretPositioningMode.WordStart));
-			Assert.AreEqual(0, GetNextCaretStop("word", -1, CaretPositioningMode.WordBorder));
-			
-			Assert.AreEqual(0, GetPrevCaretStop("word", 1, CaretPositioningMode.Normal));
-			Assert.AreEqual(0, GetPrevCaretStop("word", 1, CaretPositioningMode.WordStart));
-			Assert.AreEqual(0, GetPrevCaretStop("word", 1, CaretPositioningMode.WordBorder));
+			Assert.That(GetNextCaretStop("word", -1, CaretPositioningMode.Normal), Is.EqualTo(0));
+			Assert.That(GetNextCaretStop("word", -1, CaretPositioningMode.WordStart), Is.EqualTo(0));
+			Assert.That(GetNextCaretStop("word", -1, CaretPositioningMode.WordBorder), Is.EqualTo(0));
+
+			Assert.That(GetPrevCaretStop("word", 1, CaretPositioningMode.Normal), Is.EqualTo(0));
+			Assert.That(GetPrevCaretStop("word", 1, CaretPositioningMode.WordStart), Is.EqualTo(0));
+			Assert.That(GetPrevCaretStop("word", 1, CaretPositioningMode.WordBorder), Is.EqualTo(0));
 		}
 		
 		[Test]
 		public void StartOfDocumentNoWordStart()
 		{
-			Assert.AreEqual(0, GetNextCaretStop(" word", -1, CaretPositioningMode.Normal));
-			Assert.AreEqual(1, GetNextCaretStop(" word", -1, CaretPositioningMode.WordStart));
-			Assert.AreEqual(1, GetNextCaretStop(" word", -1, CaretPositioningMode.WordBorder));
-			
-			Assert.AreEqual(0, GetPrevCaretStop(" word", 1, CaretPositioningMode.Normal));
-			Assert.AreEqual(-1, GetPrevCaretStop(" word", 1, CaretPositioningMode.WordStart));
-			Assert.AreEqual(-1, GetPrevCaretStop(" word", 1, CaretPositioningMode.WordBorder));
+			Assert.That(GetNextCaretStop(" word", -1, CaretPositioningMode.Normal), Is.EqualTo(0));
+			Assert.That(GetNextCaretStop(" word", -1, CaretPositioningMode.WordStart), Is.EqualTo(1));
+			Assert.That(GetNextCaretStop(" word", -1, CaretPositioningMode.WordBorder), Is.EqualTo(1));
+
+			Assert.That(GetPrevCaretStop(" word", 1, CaretPositioningMode.Normal), Is.EqualTo(0));
+			Assert.That(GetPrevCaretStop(" word", 1, CaretPositioningMode.WordStart), Is.EqualTo(-1));
+			Assert.That(GetPrevCaretStop(" word", 1, CaretPositioningMode.WordBorder), Is.EqualTo(-1));
 		}
 		
 		[Test]
 		public void EndOfDocumentWordBorder()
 		{
-			Assert.AreEqual(4, GetNextCaretStop("word", 3, CaretPositioningMode.Normal));
-			Assert.AreEqual(-1, GetNextCaretStop("word", 3, CaretPositioningMode.WordStart));
-			Assert.AreEqual(4, GetNextCaretStop("word", 3, CaretPositioningMode.WordBorder));
-			
-			Assert.AreEqual(4, GetPrevCaretStop("word", 5, CaretPositioningMode.Normal));
-			Assert.AreEqual(0, GetPrevCaretStop("word", 5, CaretPositioningMode.WordStart));
-			Assert.AreEqual(4, GetPrevCaretStop("word", 5, CaretPositioningMode.WordBorder));
+			Assert.That(GetNextCaretStop("word", 3, CaretPositioningMode.Normal), Is.EqualTo(4));
+			Assert.That(GetNextCaretStop("word", 3, CaretPositioningMode.WordStart), Is.EqualTo(-1));
+			Assert.That(GetNextCaretStop("word", 3, CaretPositioningMode.WordBorder), Is.EqualTo(4));
+
+			Assert.That(GetPrevCaretStop("word", 5, CaretPositioningMode.Normal), Is.EqualTo(4));
+			Assert.That(GetPrevCaretStop("word", 5, CaretPositioningMode.WordStart), Is.EqualTo(0));
+			Assert.That(GetPrevCaretStop("word", 5, CaretPositioningMode.WordBorder), Is.EqualTo(4));
 		}
 		
 		[Test]
 		public void EndOfDocumentNoWordBorder()
 		{
-			Assert.AreEqual(4, GetNextCaretStop("txt ", 3, CaretPositioningMode.Normal));
-			Assert.AreEqual(-1, GetNextCaretStop("txt ", 3, CaretPositioningMode.WordStart));
-			Assert.AreEqual(-1, GetNextCaretStop("txt ", 3, CaretPositioningMode.WordBorder));
-			
-			Assert.AreEqual(4, GetPrevCaretStop("txt ", 5, CaretPositioningMode.Normal));
-			Assert.AreEqual(0, GetPrevCaretStop("txt ", 5, CaretPositioningMode.WordStart));
-			Assert.AreEqual(3, GetPrevCaretStop("txt ", 5, CaretPositioningMode.WordBorder));
+			Assert.That(GetNextCaretStop("txt ", 3, CaretPositioningMode.Normal), Is.EqualTo(4));
+			Assert.That(GetNextCaretStop("txt ", 3, CaretPositioningMode.WordStart), Is.EqualTo(-1));
+			Assert.That(GetNextCaretStop("txt ", 3, CaretPositioningMode.WordBorder), Is.EqualTo(-1));
+
+			Assert.That(GetPrevCaretStop("txt ", 5, CaretPositioningMode.Normal), Is.EqualTo(4));
+			Assert.That(GetPrevCaretStop("txt ", 5, CaretPositioningMode.WordStart), Is.EqualTo(0));
+			Assert.That(GetPrevCaretStop("txt ", 5, CaretPositioningMode.WordBorder), Is.EqualTo(3));
 		}
 		
 		[Test]
 		public void SingleCharacterOutsideBMP()
 		{
 			string c = "\U0001D49E";
-			Assert.AreEqual(2, GetNextCaretStop(c, 0, CaretPositioningMode.Normal));
-			Assert.AreEqual(0, GetPrevCaretStop(c, 2, CaretPositioningMode.Normal));
+			Assert.That(GetNextCaretStop(c, 0, CaretPositioningMode.Normal), Is.EqualTo(2));
+			Assert.That(GetPrevCaretStop(c, 2, CaretPositioningMode.Normal), Is.EqualTo(0));
 		}
 		
 		[Test]
 		public void DetectWordBordersOutsideBMP()
 		{
 			string c = " a\U0001D49Eb ";
-			Assert.AreEqual(1, GetNextCaretStop(c, 0, CaretPositioningMode.WordBorder));
-			Assert.AreEqual(5, GetNextCaretStop(c, 1, CaretPositioningMode.WordBorder));
-			
-			Assert.AreEqual(5, GetPrevCaretStop(c, 6, CaretPositioningMode.WordBorder));
-			Assert.AreEqual(1, GetPrevCaretStop(c, 5, CaretPositioningMode.WordBorder));
+			Assert.That(GetNextCaretStop(c, 0, CaretPositioningMode.WordBorder), Is.EqualTo(1));
+			Assert.That(GetNextCaretStop(c, 1, CaretPositioningMode.WordBorder), Is.EqualTo(5));
+
+			Assert.That(GetPrevCaretStop(c, 6, CaretPositioningMode.WordBorder), Is.EqualTo(5));
+			Assert.That(GetPrevCaretStop(c, 5, CaretPositioningMode.WordBorder), Is.EqualTo(1));
 		}
 		
 		[Test]
 		public void DetectWordBordersOutsideBMP2()
 		{
 			string c = " \U0001D49E\U0001D4AA ";
-			Assert.AreEqual(1, GetNextCaretStop(c, 0, CaretPositioningMode.WordBorder));
-			Assert.AreEqual(5, GetNextCaretStop(c, 1, CaretPositioningMode.WordBorder));
-			
-			Assert.AreEqual(5, GetPrevCaretStop(c, 6, CaretPositioningMode.WordBorder));
-			Assert.AreEqual(1, GetPrevCaretStop(c, 5, CaretPositioningMode.WordBorder));
+			Assert.That(GetNextCaretStop(c, 0, CaretPositioningMode.WordBorder), Is.EqualTo(1));
+			Assert.That(GetNextCaretStop(c, 1, CaretPositioningMode.WordBorder), Is.EqualTo(5));
+
+			Assert.That(GetPrevCaretStop(c, 6, CaretPositioningMode.WordBorder), Is.EqualTo(5));
+			Assert.That(GetPrevCaretStop(c, 5, CaretPositioningMode.WordBorder), Is.EqualTo(1));
 		}
 		
 		[Test]
 		public void CombiningMark()
 		{
 			string str = " x͆ ";
-			Assert.AreEqual(3, GetNextCaretStop(str, 1, CaretPositioningMode.Normal));
-			Assert.AreEqual(1, GetPrevCaretStop(str, 3, CaretPositioningMode.Normal));
+			Assert.That(GetNextCaretStop(str, 1, CaretPositioningMode.Normal), Is.EqualTo(3));
+			Assert.That(GetPrevCaretStop(str, 3, CaretPositioningMode.Normal), Is.EqualTo(1));
 		}
 		
 		[Test]
 		public void StackedCombiningMark()
 		{
 			string str = " x͆͆͆͆ ";
-			Assert.AreEqual(6, GetNextCaretStop(str, 1, CaretPositioningMode.Normal));
-			Assert.AreEqual(1, GetPrevCaretStop(str, 6, CaretPositioningMode.Normal));
+			Assert.That(GetNextCaretStop(str, 1, CaretPositioningMode.Normal), Is.EqualTo(6));
+			Assert.That(GetPrevCaretStop(str, 6, CaretPositioningMode.Normal), Is.EqualTo(1));
 		}
 		
 		[Test]
 		public void SingleClosingBraceAtLineEnd()
 		{
 			string str = "\t\t}";
-			Assert.AreEqual(2, GetNextCaretStop(str, 1, CaretPositioningMode.WordStart));
-			Assert.AreEqual(-1, GetPrevCaretStop(str, 1, CaretPositioningMode.WordStart));
+			Assert.That(GetNextCaretStop(str, 1, CaretPositioningMode.WordStart), Is.EqualTo(2));
+			Assert.That(GetPrevCaretStop(str, 1, CaretPositioningMode.WordStart), Is.EqualTo(-1));
 		}
 	}
 }

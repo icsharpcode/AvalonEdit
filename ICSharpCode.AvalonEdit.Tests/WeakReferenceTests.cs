@@ -35,7 +35,7 @@ namespace ICSharpCode.AvalonEdit
 		{
 			WeakReference wr = TextViewCanBeCollectedTest_CreateTextView();
 			GarbageCollect();
-			Assert.IsFalse(wr.IsAlive);
+			Assert.That(wr.IsAlive, Is.False);
 		}
 
 		// Use separate no-inline method so that the JIT can't keep a strong
@@ -50,19 +50,19 @@ namespace ICSharpCode.AvalonEdit
 		public void DocumentDoesNotHoldReferenceToTextView()
 		{
 			TextDocument textDocument = new TextDocument();
-			Assert.AreEqual(0, textDocument.LineTrackers.Count);
+			Assert.That(textDocument.LineTrackers.Count, Is.EqualTo(0));
 			
 			WeakReference wr = DocumentDoesNotHoldReferenceToTextView_CreateTextView(textDocument);
-			Assert.AreEqual(1, textDocument.LineTrackers.Count);
+			Assert.That(textDocument.LineTrackers.Count, Is.EqualTo(1));
 			
 			GarbageCollect();
-			Assert.IsFalse(wr.IsAlive);
+			Assert.That(wr.IsAlive, Is.False);
 			// document cannot immediately clear the line tracker
-			Assert.AreEqual(1, textDocument.LineTrackers.Count);
+			Assert.That(textDocument.LineTrackers.Count, Is.EqualTo(1));
 			
 			// but it should clear it on the next change
 			textDocument.Insert(0, "a");
-			Assert.AreEqual(0, textDocument.LineTrackers.Count);
+			Assert.That(textDocument.LineTrackers.Count, Is.EqualTo(0));
 		}
 
 		[MethodImpl(MethodImplOptions.NoInlining)]
@@ -80,7 +80,7 @@ namespace ICSharpCode.AvalonEdit
 			WeakReference wr = DocumentDoesNotHoldReferenceToTextArea_CreateTextArea(textDocument);
 			
 			GarbageCollect();
-			Assert.IsFalse(wr.IsAlive);
+			Assert.That(wr.IsAlive, Is.False);
 			GC.KeepAlive(textDocument);
 		}
 
@@ -99,7 +99,7 @@ namespace ICSharpCode.AvalonEdit
 			WeakReference wr = DocumentDoesNotHoldReferenceToTextEditor_CreateTextEditor(textDocument);
 			
 			GarbageCollect();
-			Assert.IsFalse(wr.IsAlive);
+			Assert.That(wr.IsAlive, Is.False);
 			GC.KeepAlive(textDocument);
 		}
 
@@ -119,7 +119,7 @@ namespace ICSharpCode.AvalonEdit
 			WeakReference wr = DocumentDoesNotHoldReferenceToLineMargin_CreateMargin(textDocument);
 			
 			GarbageCollect();
-			Assert.IsFalse(wr.IsAlive);
+			Assert.That(wr.IsAlive, Is.False);
 			GC.KeepAlive(textDocument);
 		}
 

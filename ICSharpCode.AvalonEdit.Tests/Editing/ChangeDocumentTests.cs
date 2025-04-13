@@ -35,9 +35,9 @@ namespace ICSharpCode.AvalonEdit.Editing
 			textArea.Caret.Offset = 6;
 			textArea.Selection = Selection.Create(textArea, 3, 6);
 			textArea.Document = new TextDocument("1\n2nd");
-			Assert.AreEqual(0, textArea.Caret.Offset);
-			Assert.AreEqual(new TextLocation(1, 1), textArea.Caret.Location);
-			Assert.IsTrue(textArea.Selection.IsEmpty);
+			Assert.That(textArea.Caret.Offset, Is.EqualTo(0));
+			Assert.That(textArea.Caret.Location, Is.EqualTo(new TextLocation(1, 1)));
+			Assert.That(textArea.Selection.IsEmpty, Is.True);
 		}
 		
 		[Test]
@@ -48,9 +48,9 @@ namespace ICSharpCode.AvalonEdit.Editing
 			textArea.Caret.Offset = 6;
 			textArea.Selection = Selection.Create(textArea, 3, 6);
 			textArea.Document = null;
-			Assert.AreEqual(0, textArea.Caret.Offset);
-			Assert.AreEqual(new TextLocation(1, 1), textArea.Caret.Location);
-			Assert.IsTrue(textArea.Selection.IsEmpty);
+			Assert.That(textArea.Caret.Offset, Is.EqualTo(0));
+			Assert.That(textArea.Caret.Location, Is.EqualTo(new TextLocation(1, 1)));
+			Assert.That(textArea.Selection.IsEmpty, Is.True);
 		}
 		
 		[Test]
@@ -61,16 +61,16 @@ namespace ICSharpCode.AvalonEdit.Editing
 			StringBuilder b = new StringBuilder();
 			textArea.TextView.DocumentChanged += delegate {
 				b.Append("TextView.DocumentChanged;");
-				Assert.AreSame(newDocument, textArea.TextView.Document);
-				Assert.AreSame(newDocument, textArea.Document);
+				Assert.That(textArea.TextView.Document, Is.SameAs(newDocument));
+				Assert.That(textArea.Document, Is.SameAs(newDocument));
 			};
 			textArea.DocumentChanged += delegate {
 				b.Append("TextArea.DocumentChanged;");
-				Assert.AreSame(newDocument, textArea.TextView.Document);
-				Assert.AreSame(newDocument, textArea.Document);
+				Assert.That(textArea.TextView.Document, Is.SameAs(newDocument));
+				Assert.That(textArea.Document, Is.SameAs(newDocument));
 			};
 			textArea.Document = newDocument;
-			Assert.AreEqual("TextView.DocumentChanged;TextArea.DocumentChanged;", b.ToString());
+			Assert.That(b.ToString(), Is.EqualTo("TextView.DocumentChanged;TextArea.DocumentChanged;"));
 		}
 	}
 }

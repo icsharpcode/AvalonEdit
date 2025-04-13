@@ -61,9 +61,9 @@ namespace ICSharpCode.AvalonEdit.Document
 		[Test]
 		public void FindInEmptyTree()
 		{
-			Assert.AreSame(null, tree.FindFirstSegmentWithStartAfter(0));
-			Assert.AreEqual(0, tree.FindSegmentsContaining(0).Count);
-			Assert.AreEqual(0, tree.FindOverlappingSegments(10, 20).Count);
+			Assert.That(tree.FindFirstSegmentWithStartAfter(0), Is.SameAs(null));
+			Assert.That(tree.FindSegmentsContaining(0).Count, Is.EqualTo(0));
+			Assert.That(tree.FindOverlappingSegments(10, 20).Count, Is.EqualTo(0));
 		}
 		
 		[Test]
@@ -73,15 +73,15 @@ namespace ICSharpCode.AvalonEdit.Document
 			var s2 = new TestTextSegment(10, 10);
 			tree.Add(s1);
 			tree.Add(s2);
-			Assert.AreSame(s1, tree.FindFirstSegmentWithStartAfter(-100));
-			Assert.AreSame(s1, tree.FindFirstSegmentWithStartAfter(0));
-			Assert.AreSame(s1, tree.FindFirstSegmentWithStartAfter(4));
-			Assert.AreSame(s1, tree.FindFirstSegmentWithStartAfter(5));
-			Assert.AreSame(s2, tree.FindFirstSegmentWithStartAfter(6));
-			Assert.AreSame(s2, tree.FindFirstSegmentWithStartAfter(9));
-			Assert.AreSame(s2, tree.FindFirstSegmentWithStartAfter(10));
-			Assert.AreSame(null, tree.FindFirstSegmentWithStartAfter(11));
-			Assert.AreSame(null, tree.FindFirstSegmentWithStartAfter(100));
+			Assert.That(tree.FindFirstSegmentWithStartAfter(-100), Is.SameAs(s1));
+			Assert.That(tree.FindFirstSegmentWithStartAfter(0), Is.SameAs(s1));
+			Assert.That(tree.FindFirstSegmentWithStartAfter(4), Is.SameAs(s1));
+			Assert.That(tree.FindFirstSegmentWithStartAfter(5), Is.SameAs(s1));
+			Assert.That(tree.FindFirstSegmentWithStartAfter(6), Is.SameAs(s2));
+			Assert.That(tree.FindFirstSegmentWithStartAfter(9), Is.SameAs(s2));
+			Assert.That(tree.FindFirstSegmentWithStartAfter(10), Is.SameAs(s2));
+			Assert.That(tree.FindFirstSegmentWithStartAfter(11), Is.SameAs(null));
+			Assert.That(tree.FindFirstSegmentWithStartAfter(100), Is.SameAs(null));
 		}
 		
 		[Test]
@@ -95,17 +95,17 @@ namespace ICSharpCode.AvalonEdit.Document
 			tree.Add(s1b);
 			tree.Add(s2);
 			tree.Add(s2b);
-			Assert.AreSame(s1b, tree.GetNextSegment(s1));
-			Assert.AreSame(s2b, tree.GetNextSegment(s2));
-			Assert.AreSame(s1, tree.FindFirstSegmentWithStartAfter(-100));
-			Assert.AreSame(s1, tree.FindFirstSegmentWithStartAfter(0));
-			Assert.AreSame(s1, tree.FindFirstSegmentWithStartAfter(4));
-			Assert.AreSame(s1, tree.FindFirstSegmentWithStartAfter(5));
-			Assert.AreSame(s2, tree.FindFirstSegmentWithStartAfter(6));
-			Assert.AreSame(s2, tree.FindFirstSegmentWithStartAfter(9));
-			Assert.AreSame(s2, tree.FindFirstSegmentWithStartAfter(10));
-			Assert.AreSame(null, tree.FindFirstSegmentWithStartAfter(11));
-			Assert.AreSame(null, tree.FindFirstSegmentWithStartAfter(100));
+			Assert.That(tree.GetNextSegment(s1), Is.SameAs(s1b));
+			Assert.That(tree.GetNextSegment(s2), Is.SameAs(s2b));
+			Assert.That(tree.FindFirstSegmentWithStartAfter(-100), Is.SameAs(s1));
+			Assert.That(tree.FindFirstSegmentWithStartAfter(0), Is.SameAs(s1));
+			Assert.That(tree.FindFirstSegmentWithStartAfter(4), Is.SameAs(s1));
+			Assert.That(tree.FindFirstSegmentWithStartAfter(5), Is.SameAs(s1));
+			Assert.That(tree.FindFirstSegmentWithStartAfter(6), Is.SameAs(s2));
+			Assert.That(tree.FindFirstSegmentWithStartAfter(9), Is.SameAs(s2));
+			Assert.That(tree.FindFirstSegmentWithStartAfter(10), Is.SameAs(s2));
+			Assert.That(tree.FindFirstSegmentWithStartAfter(11), Is.SameAs(null));
+			Assert.That(tree.FindFirstSegmentWithStartAfter(100), Is.SameAs(null));
 		}
 		
 		[Test]
@@ -119,11 +119,11 @@ namespace ICSharpCode.AvalonEdit.Document
 			tree.Add(s2);
 			tree.Add(s3);
 			tree.Add(s4);
-			Assert.AreSame(s1, tree.FindFirstSegmentWithStartAfter(0));
-			Assert.AreSame(s1, tree.FindFirstSegmentWithStartAfter(1));
-			Assert.AreSame(s1, tree.FindFirstSegmentWithStartAfter(4));
-			Assert.AreSame(s1, tree.FindFirstSegmentWithStartAfter(5));
-			Assert.AreSame(null, tree.FindFirstSegmentWithStartAfter(6));
+			Assert.That(tree.FindFirstSegmentWithStartAfter(0), Is.SameAs(s1));
+			Assert.That(tree.FindFirstSegmentWithStartAfter(1), Is.SameAs(s1));
+			Assert.That(tree.FindFirstSegmentWithStartAfter(4), Is.SameAs(s1));
+			Assert.That(tree.FindFirstSegmentWithStartAfter(5), Is.SameAs(s1));
+			Assert.That(tree.FindFirstSegmentWithStartAfter(6), Is.SameAs(null));
 		}
 		
 		TestTextSegment AddSegment(int offset, int length)
@@ -153,16 +153,16 @@ namespace ICSharpCode.AvalonEdit.Document
 					continue;
 				expected.Add(e);
 			}
-			Assert.IsTrue(actual.IsSubsetOf(expected));
-			Assert.IsTrue(expected.IsSubsetOf(actual));
+			Assert.That(actual.IsSubsetOf(expected), Is.True);
+			Assert.That(expected.IsSubsetOf(actual), Is.True);
 		}
 		
 		void CheckSegments()
 		{
-			Assert.AreEqual(expectedSegments.Count, tree.Count);
+			Assert.That(tree.Count, Is.EqualTo(expectedSegments.Count));
 			foreach (TestTextSegment s in expectedSegments) {
-				Assert.AreEqual(s.ExpectedOffset, s.StartOffset /*, "startoffset for " + s*/);
-				Assert.AreEqual(s.ExpectedLength, s.Length /*, "length for " + s*/);
+				Assert.That(s.StartOffset, Is.EqualTo(s.ExpectedOffset) /*, "startoffset for " + s*/);
+				Assert.That(s.Length, Is.EqualTo(s.ExpectedLength) /*, "length for " + s*/);
 			}
 		}
 		
