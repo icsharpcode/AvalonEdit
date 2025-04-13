@@ -172,7 +172,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting.Xshd
 						if (span != null) {
 							rs.Spans.Add(span);
 						} else {
-							HighlightingRule elementRule = o as HighlightingRule;
+							IHighlightingRule elementRule = o as IHighlightingRule;
 							if (elementRule != null) {
 								rs.Rules.Add(elementRule);
 							}

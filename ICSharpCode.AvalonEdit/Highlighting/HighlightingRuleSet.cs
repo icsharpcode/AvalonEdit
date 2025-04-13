@@ -35,7 +35,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 		public HighlightingRuleSet()
 		{
 			this.Spans = new NullSafeCollection<HighlightingSpan>();
-			this.Rules = new NullSafeCollection<HighlightingRule>();
+			this.Rules = new NullSafeCollection<IHighlightingRule>();
 		}
 
 		/// <summary>
@@ -51,7 +51,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 		/// <summary>
 		/// Gets the list of rules.
 		/// </summary>
-		public IList<HighlightingRule> Rules { get; private set; }
+		public IList<IHighlightingRule> Rules { get; private set; }
 
 		/// <inheritdoc/>
 		public override string ToString()

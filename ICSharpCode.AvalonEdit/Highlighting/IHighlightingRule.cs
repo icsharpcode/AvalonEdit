@@ -16,40 +16,32 @@
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
 
-using System;
-using System.Text.RegularExpressions;
-
 namespace ICSharpCode.AvalonEdit.Highlighting
 {
 	/// <summary>
-	/// A highlighting rule.
+	/// Interface of a highlighting rule
 	/// </summary>
-	[Serializable]
-	public class HighlightingRule : IHighlightingRule
+	public interface IHighlightingRule
 	{
 		/// <summary>
-		/// Gets/Sets the regular expression for the rule.
+		/// Gets the first match for the rule
 		/// </summary>
-		public Regex Regex { get; set; }
+		/// <param name="input">The string to search for a match.</param>
+		/// <param name="beginning">The zero-based character position in the input string that defines the leftmost 
+		/// position to be searched.</param>
+		/// <param name="length">The number of characters in the substring to include in the search.</param>
+		/// <param name="lineNumber">The line number of the <paramref name="input"/> string.</param>
+		/// <returns>An object that contains information about the match.</returns>
+		RuleMatch GetMatch(string input, int beginning, int length, int lineNumber);
 
 		/// <summary>
-		/// Gets/Sets the highlighting color.
+		/// Gets the highlighting color.
 		/// </summary>
-		public HighlightingColor Color { get; set; }
+		HighlightingColor Color { get; }
 
-		/// <inheritdoc/>
-		public string RuleInfo => $"Regex: {Regex}";
-
-		/// <inheritdoc/>
-		public RuleMatch GetMatch(string input, int beginning, int length, int lineNumber)
-		{
-			return RuleMatch.FromRegexMatch(Regex.Match(input, beginning, length));
-		}
-
-		/// <inheritdoc/>
-		public override string ToString()
-		{
-			return "[" + GetType().Name + " " + Regex + "]";
-		}
+		/// <summary>
+		/// Info about rule. Used to help figure out why rule failed
+		/// </summary>
+		string RuleInfo { get; }
 	}
 }
