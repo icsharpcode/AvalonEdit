@@ -1743,10 +1743,12 @@ namespace ICSharpCode.AvalonEdit.Rendering
 			// TODO: change this method to also work outside the visible range -
 			// required to make GetPosition work as expected!
 			EnsureVisualLines();
+
+			double epsilon = 1e-12; // Small margin to prevent rounding problems, Double.Epsilon is not a large enough margin.
 			foreach (VisualLine vl in this.VisualLines) {
-				if (visualTop < vl.VisualTop)
+				if (visualTop < vl.VisualTop - epsilon)
 					continue;
-				if (visualTop < vl.VisualTop + vl.Height)
+				if (visualTop < vl.VisualTop + vl.Height - epsilon)
 					return vl;
 			}
 			return null;
