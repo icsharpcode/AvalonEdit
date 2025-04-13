@@ -470,6 +470,9 @@ namespace ICSharpCode.AvalonEdit.Rendering
 		{
 			var textLine = GetTextLineByVisualYPosition(point.Y);
 			int vc = GetVisualColumn(textLine, point.X, allowVirtualSpace);
+			// Not matter how many columns the generated element originally occupies.it is only considered a single column.
+			// so need recalculate column 
+			vc = GetVisualColumn(vc);
 			isAtEndOfLine = (vc >= GetTextLineVisualStartColumn(textLine) + textLine.Length);
 			return vc;
 		}
