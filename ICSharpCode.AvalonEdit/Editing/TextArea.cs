@@ -1085,6 +1085,15 @@ namespace ICSharpCode.AvalonEdit.Editing
 
 		#endregion
 
+		#region AutomationPeer override for CodeCompletion
+		/// <summary>
+		/// Gets or sets AutomationPeer instance used by CodeCompletion.
+		/// CompletionWindow can use this property to inject AutomationPeer that reflects
+		/// the suggestion list and the value of the currently selected CompletionData item.
+		/// </summary>
+		public System.Windows.Automation.Peers.AutomationPeer CodeCompletionAutomationPeer { get; set; }
+		#endregion
+
 		/// <inheritdoc/>
 		protected override System.Windows.Automation.Peers.AutomationPeer OnCreateAutomationPeer()
 		{
