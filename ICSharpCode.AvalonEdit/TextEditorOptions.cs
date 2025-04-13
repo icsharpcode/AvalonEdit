@@ -492,5 +492,21 @@ namespace ICSharpCode.AvalonEdit
 				}
 			}
 		}
+
+		double minimumDistanceToViewBorder = 5.0;
+
+		/// <summary>
+		/// Gets/Sets the minimum distance to the view border.
+		/// </summary>
+		[DefaultValue(5.0)]
+		public double MinimumDistanceToViewBorder {
+			get { return minimumDistanceToViewBorder; }
+			set {
+				if (Math.Abs(minimumDistanceToViewBorder - value) >= 1e-6) {
+					minimumDistanceToViewBorder = value;
+					OnPropertyChanged("MinimumDistanceToViewBorder");
+				}
+			}
+		}
 	}
 }

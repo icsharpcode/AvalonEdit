@@ -994,6 +994,21 @@ namespace ICSharpCode.AvalonEdit.Rendering
 			while (yPos < availableSize.Height && nextLine != null) {
 				VisualLine visualLine = GetVisualLine(nextLine.LineNumber);
 				if (visualLine == null) {
+					
+					// Don't build visual lines from collapsed lines
+					var bBreakAll = false;
+					while (heightTree.GetIsCollapsed(nextLine.LineNumber)) {
+						if (nextLine.NextLine != null)
+							nextLine = nextLine.NextLine;
+						else {
+							bBreakAll = true;
+							break;
+						}
+					}
+					
+					if (bBreakAll)
+						break;
+					
 					visualLine = BuildVisualLine(nextLine,
 												 globalTextRunProperties, paragraphProperties,
 												 elementGeneratorsArray, lineTransformersArray,

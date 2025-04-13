@@ -198,20 +198,29 @@ namespace ICSharpCode.AvalonEdit.Editing
 			if (textArea != null && textArea.Document != null) {
 				using (textArea.Document.RunUpdate()) {
 					if (textArea.Selection.IsMultiline) {
-						var segment = textArea.Selection.SurroundingSegment;
-						DocumentLine start = textArea.Document.GetLineByOffset(segment.Offset);
-						DocumentLine end = textArea.Document.GetLineByOffset(segment.EndOffset);
-						// don't include the last line if no characters on it are selected
-						if (start != end && end.Offset == segment.EndOffset)
-							end = end.PreviousLine;
-						DocumentLine current = start;
-						while (true) {
-							int offset = current.Offset;
-							if (textArea.ReadOnlySectionProvider.CanInsert(offset))
-								textArea.Document.Replace(offset, 0, textArea.Options.IndentationString, OffsetChangeMappingType.KeepAnchorBeforeInsertion);
-							if (current == end)
-								break;
-							current = current.NextLine;
+						if (!textArea.Selection.EnableVirtualSpace) {
+							var segment = textArea.Selection.SurroundingSegment;
+							DocumentLine start = textArea.Document.GetLineByOffset(segment.Offset);
+							DocumentLine end = textArea.Document.GetLineByOffset(segment.EndOffset);
+							// don't include the last line if no characters on it are selected
+							if (start != end && end.Offset == segment.EndOffset)
+								end = end.PreviousLine;
+							DocumentLine current = start;
+							while (true) {
+								int offset = current.Offset;
+								if (textArea.ReadOnlySectionProvider.CanInsert(offset))
+									textArea.Document.Replace(offset, 0, textArea.Options.IndentationString, OffsetChangeMappingType.KeepAnchorBeforeInsertion);
+								if (current == end)
+									break;
+								current = current.NextLine;
+							}
+						} else {
+							IEnumerable<SelectionSegment> segments = textArea.Selection.Segments;
+							foreach (var segment in segments.Reverse()) {
+								int offset = segment.StartOffset;
+								if (textArea.ReadOnlySectionProvider.CanInsert(offset))
+									textArea.Document.Replace(offset, 0, textArea.Options.IndentationString, OffsetChangeMappingType.KeepAnchorBeforeInsertion);
+							}
 						}
 					} else {
 						string indentationString = textArea.Options.GetIndentationString(textArea.Caret.Column);
@@ -225,17 +234,37 @@ namespace ICSharpCode.AvalonEdit.Editing
 
 		static void OnShiftTab(object target, ExecutedRoutedEventArgs args)
 		{
-			TransformSelectedLines(
-				delegate (TextArea textArea, DocumentLine line) {
-					int offset = line.Offset;
-					ISegment s = TextUtilities.GetSingleIndentationSegment(textArea.Document, offset, textArea.Options.IndentationSize);
-					if (s.Length > 0) {
-						s = textArea.GetDeletableSegments(s).FirstOrDefault();
-						if (s != null && s.Length > 0) {
-							textArea.Document.Remove(s.Offset, s.Length);
+			TextArea textArea = GetTextArea(target);
+			if (textArea != null && textArea.Document != null) {
+				if (textArea.Selection.IsEmpty || !textArea.Selection.EnableVirtualSpace) {
+					TransformSelectedLines(
+						delegate (TextArea textAreaIn, DocumentLine line) {
+							int offset = line.Offset;
+							ISegment s = TextUtilities.GetSingleIndentationSegment(textAreaIn.Document, offset, textAreaIn.Options.IndentationSize);
+							if (s.Length > 0) {
+								s = textAreaIn.GetDeletableSegments(s).FirstOrDefault();
+								if (s != null && s.Length > 0) {
+									textAreaIn.Document.Remove(s.Offset, s.Length);
+								}
+							}
+						}, target, args, DefaultSegmentType.CurrentLine);
+				} else {
+					using (textArea.Document.RunUpdate()) {
+						IEnumerable<SelectionSegment> segments = textArea.Selection.Segments;
+						foreach (var segment in segments.Reverse()) {
+							int offset = segment.StartOffset - 1;
+							ISegment s = TextUtilities.GetSingleIndentationSegment(textArea.Document, offset,
+								textArea.Options.IndentationSize);
+							if (s.Length > 0) {
+								s = textArea.GetDeletableSegments(s).FirstOrDefault();
+								if (s != null && s.Length > 0) {
+									textArea.Document.Remove(s.Offset, s.Length);
+								}
+							}
 						}
 					}
-				}, target, args, DefaultSegmentType.CurrentLine);
+				}
+			}
 		}
 		#endregion
 
