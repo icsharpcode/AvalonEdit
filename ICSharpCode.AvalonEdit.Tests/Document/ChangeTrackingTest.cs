@@ -18,6 +18,7 @@
 
 using System;
 using System.Linq;
+
 using NUnit.Framework;
 
 namespace ICSharpCode.AvalonEdit.Document
@@ -31,12 +32,12 @@ namespace ICSharpCode.AvalonEdit.Document
 			TextDocument document = new TextDocument("initial text");
 			ITextSource snapshot1 = document.CreateSnapshot();
 			ITextSource snapshot2 = document.CreateSnapshot();
-			Assert.AreEqual(0, snapshot1.Version.CompareAge(snapshot2.Version));
-			Assert.AreEqual(0, snapshot1.Version.GetChangesTo(snapshot2.Version).Count());
-			Assert.AreEqual(document.Text, snapshot1.Text);
-			Assert.AreEqual(document.Text, snapshot2.Text);
+			Assert.That(snapshot1.Version.CompareAge(snapshot2.Version), Is.EqualTo(0));
+			Assert.That(snapshot1.Version.GetChangesTo(snapshot2.Version).Count(), Is.EqualTo(0));
+			Assert.That(snapshot1.Text, Is.EqualTo(document.Text));
+			Assert.That(snapshot2.Text, Is.EqualTo(document.Text));
 		}
-		
+
 		[Test]
 		public void ForwardChanges()
 		{
@@ -45,16 +46,16 @@ namespace ICSharpCode.AvalonEdit.Document
 			document.Replace(0, 7, "nw");
 			document.Insert(1, "e");
 			ITextSource snapshot2 = document.CreateSnapshot();
-			Assert.AreEqual(-1, snapshot1.Version.CompareAge(snapshot2.Version));
+			Assert.That(snapshot1.Version.CompareAge(snapshot2.Version), Is.EqualTo(-1));
 			TextChangeEventArgs[] arr = snapshot1.Version.GetChangesTo(snapshot2.Version).ToArray();
-			Assert.AreEqual(2, arr.Length);
-			Assert.AreEqual("nw", arr[0].InsertedText.Text);
-			Assert.AreEqual("e", arr[1].InsertedText.Text);
-			
-			Assert.AreEqual("initial text", snapshot1.Text);
-			Assert.AreEqual("new text", snapshot2.Text);
+			Assert.That(arr.Length, Is.EqualTo(2));
+			Assert.That(arr[0].InsertedText.Text, Is.EqualTo("nw"));
+			Assert.That(arr[1].InsertedText.Text, Is.EqualTo("e"));
+
+			Assert.That(snapshot1.Text, Is.EqualTo("initial text"));
+			Assert.That(snapshot2.Text, Is.EqualTo("new text"));
 		}
-		
+
 		[Test]
 		public void BackwardChanges()
 		{
@@ -63,14 +64,14 @@ namespace ICSharpCode.AvalonEdit.Document
 			document.Replace(0, 7, "nw");
 			document.Insert(1, "e");
 			ITextSource snapshot2 = document.CreateSnapshot();
-			Assert.AreEqual(1, snapshot2.Version.CompareAge(snapshot1.Version));
+			Assert.That(snapshot2.Version.CompareAge(snapshot1.Version), Is.EqualTo(1));
 			TextChangeEventArgs[] arr = snapshot2.Version.GetChangesTo(snapshot1.Version).ToArray();
-			Assert.AreEqual(2, arr.Length);
-			Assert.AreEqual("", arr[0].InsertedText.Text);
-			Assert.AreEqual("initial", arr[1].InsertedText.Text);
-			
-			Assert.AreEqual("initial text", snapshot1.Text);
-			Assert.AreEqual("new text", snapshot2.Text);
+			Assert.That(arr.Length, Is.EqualTo(2));
+			Assert.That(arr[0].InsertedText.Text, Is.Empty);
+			Assert.That(arr[1].InsertedText.Text, Is.EqualTo("initial"));
+
+			Assert.That(snapshot1.Text, Is.EqualTo("initial text"));
+			Assert.That(snapshot2.Text, Is.EqualTo("new text"));
 		}
 	}
 }

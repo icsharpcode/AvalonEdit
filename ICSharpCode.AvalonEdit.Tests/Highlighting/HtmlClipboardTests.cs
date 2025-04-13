@@ -40,9 +40,9 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 		{
 			var segment = new TextSegment { StartOffset = 0, Length = document.TextLength };
 			string html = HtmlClipboard.CreateHtmlFragment(document, highlighter, segment, new HtmlOptions());
-			Assert.AreEqual("<span style=\"color: #008000; font-weight: bold; \">using</span> System.Text;<br>" + Environment.NewLine +
-			                "&nbsp;&nbsp;&nbsp;&nbsp;<span style=\"color: #ff0000; \">string</span> " +
-			                "text = <span style=\"color: #191970; font-weight: bold; \">SomeMethod</span>();", html);
+			Assert.That(html, Is.EqualTo("<span style=\"color: #008000; font-weight: bold; \">using</span> System.Text;<br>" + Environment.NewLine +
+							"&nbsp;&nbsp;&nbsp;&nbsp;<span style=\"color: #ff0000; \">string</span> " +
+							"text = <span style=\"color: #191970; font-weight: bold; \">SomeMethod</span>();"));
 		}
 		
 		[Test]
@@ -50,7 +50,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 		{
 			var segment = new TextSegment { StartOffset = 1, Length = 3 };
 			string html = HtmlClipboard.CreateHtmlFragment(document, highlighter, segment, new HtmlOptions());
-			Assert.AreEqual("<span style=\"color: #008000; font-weight: bold; \">sin</span>", html);
+			Assert.That(html, Is.EqualTo("<span style=\"color: #008000; font-weight: bold; \">sin</span>"));
 		}
 	}
 }

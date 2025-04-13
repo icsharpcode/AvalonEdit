@@ -19,6 +19,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+
 using NUnit.Framework;
 
 namespace ICSharpCode.AvalonEdit.Document
@@ -27,557 +28,547 @@ namespace ICSharpCode.AvalonEdit.Document
 	public class LineManagerTests
 	{
 		TextDocument document;
-		
+
 		[SetUp]
 		public void SetUp()
 		{
 			document = new TextDocument();
 		}
-		
+
 		[Test]
 		public void CheckEmptyDocument()
 		{
-			Assert.AreEqual("", document.Text);
-			Assert.AreEqual(0, document.TextLength);
-			Assert.AreEqual(1, document.LineCount);
+			Assert.That(document.Text, Is.Empty);
+			Assert.That(document.TextLength, Is.EqualTo(0));
+			Assert.That(document.LineCount, Is.EqualTo(1));
 		}
-		
+
 		[Test]
 		public void CheckClearingDocument()
 		{
 			document.Text = "Hello,\nWorld!";
-			Assert.AreEqual(2, document.LineCount);
+			Assert.That(document.LineCount, Is.EqualTo(2));
 			var oldLines = document.Lines.ToArray();
 			document.Text = "";
-			Assert.AreEqual("", document.Text);
-			Assert.AreEqual(0, document.TextLength);
-			Assert.AreEqual(1, document.LineCount);
-			Assert.AreSame(oldLines[0], document.Lines.Single());
-			Assert.IsFalse(oldLines[0].IsDeleted);
-			Assert.IsTrue(oldLines[1].IsDeleted);
-			Assert.IsNull(oldLines[0].NextLine);
-			Assert.IsNull(oldLines[1].PreviousLine);
+			Assert.That(document.Text, Is.Empty);
+			Assert.That(document.TextLength, Is.EqualTo(0));
+			Assert.That(document.LineCount, Is.EqualTo(1));
+			Assert.That(document.Lines.Single(), Is.SameAs(oldLines[0]));
+			Assert.That(oldLines[0].IsDeleted, Is.False);
+			Assert.That(oldLines[1].IsDeleted, Is.True);
+			Assert.That(oldLines[0].NextLine, Is.Null);
+			Assert.That(oldLines[1].PreviousLine, Is.Null);
 		}
-		
+
 		[Test]
 		public void CheckGetLineInEmptyDocument()
 		{
-			Assert.AreEqual(1, document.Lines.Count);
+			Assert.That(document.Lines.Count, Is.EqualTo(1));
 			List<DocumentLine> lines = new List<DocumentLine>(document.Lines);
-			Assert.AreEqual(1, lines.Count);
+			Assert.That(lines.Count, Is.EqualTo(1));
 			DocumentLine line = document.Lines[0];
-			Assert.AreSame(line, lines[0]);
-			Assert.AreSame(line, document.GetLineByNumber(1));
-			Assert.AreSame(line, document.GetLineByOffset(0));
+			Assert.That(lines[0], Is.SameAs(line));
+			Assert.That(document.GetLineByNumber(1), Is.SameAs(line));
+			Assert.That(document.GetLineByOffset(0), Is.SameAs(line));
 		}
-		
+
 		[Test]
 		public void CheckLineSegmentInEmptyDocument()
 		{
 			DocumentLine line = document.GetLineByNumber(1);
-			Assert.AreEqual(1, line.LineNumber);
-			Assert.AreEqual(0, line.Offset);
-			Assert.IsFalse(line.IsDeleted);
-			Assert.AreEqual(0, line.Length);
-			Assert.AreEqual(0, line.TotalLength);
-			Assert.AreEqual(0, line.DelimiterLength);
+			Assert.That(line.LineNumber, Is.EqualTo(1));
+			Assert.That(line.Offset, Is.EqualTo(0));
+			Assert.That(line.IsDeleted, Is.False);
+			Assert.That(line.Length, Is.EqualTo(0));
+			Assert.That(line.TotalLength, Is.EqualTo(0));
+			Assert.That(line.DelimiterLength, Is.EqualTo(0));
 		}
-		
+
 		[Test]
 		public void LineIndexOfTest()
 		{
 			DocumentLine line = document.GetLineByNumber(1);
-			Assert.AreEqual(0, document.Lines.IndexOf(line));
+			Assert.That(document.Lines.IndexOf(line), Is.EqualTo(0));
 			DocumentLine lineFromOtherDocument = new TextDocument().GetLineByNumber(1);
-			Assert.AreEqual(-1, document.Lines.IndexOf(lineFromOtherDocument));
+			Assert.That(document.Lines.IndexOf(lineFromOtherDocument), Is.EqualTo(-1));
 			document.Text = "a\nb\nc";
 			DocumentLine middleLine = document.GetLineByNumber(2);
-			Assert.AreEqual(1, document.Lines.IndexOf(middleLine));
+			Assert.That(document.Lines.IndexOf(middleLine), Is.EqualTo(1));
 			document.Remove(1, 3);
-			Assert.IsTrue(middleLine.IsDeleted);
-			Assert.AreEqual(-1, document.Lines.IndexOf(middleLine));
+			Assert.That(middleLine.IsDeleted, Is.True);
+			Assert.That(document.Lines.IndexOf(middleLine), Is.EqualTo(-1));
 		}
-		
+
 		[Test]
 		public void InsertInEmptyDocument()
 		{
 			document.Insert(0, "a");
-			Assert.AreEqual(document.LineCount, 1);
+			Assert.That(document.LineCount, Is.EqualTo(1));
 			DocumentLine line = document.GetLineByNumber(1);
-			Assert.AreEqual("a", document.GetText(line));
+			Assert.That(document.GetText(line), Is.EqualTo("a"));
 		}
-		
+
 		[Test]
 		public void SetText()
 		{
 			document.Text = "a";
-			Assert.AreEqual(document.LineCount, 1);
+			Assert.That(document.LineCount, Is.EqualTo(1));
 			DocumentLine line = document.GetLineByNumber(1);
-			Assert.AreEqual("a", document.GetText(line));
+			Assert.That(document.GetText(line), Is.EqualTo("a"));
 		}
-		
+
 		[Test]
 		public void InsertNothing()
 		{
 			document.Insert(0, "");
-			Assert.AreEqual(document.LineCount, 1);
-			Assert.AreEqual(document.TextLength, 0);
+			Assert.That(document.LineCount, Is.EqualTo(1));
+			Assert.That(document.TextLength, Is.EqualTo(0));
 		}
-		
+
 		[Test]
 		public void InsertNull()
 		{
-			Assert.Throws<ArgumentNullException>(() => document.Insert(0, (string) null));
+			Assert.Throws<ArgumentNullException>(() => document.Insert(0, (string)null));
 		}
-		
+
 		[Test]
 		public void SetTextNull()
 		{
 			Assert.Throws<ArgumentNullException>(() => document.Text = null);
 		}
-		
+
 		[Test]
 		public void RemoveNothing()
 		{
 			document.Remove(0, 0);
-			Assert.AreEqual(document.LineCount, 1);
-			Assert.AreEqual(document.TextLength, 0);
+			Assert.That(document.LineCount, Is.EqualTo(1));
+			Assert.That(document.TextLength, Is.EqualTo(0));
 		}
-		
+
 		[Test]
 		public void GetCharAt0EmptyDocument()
 		{
 			Assert.Throws<ArgumentOutOfRangeException>(() => document.GetCharAt(0));
 		}
-		
+
 		[Test]
 		public void GetCharAtNegativeOffset()
 		{
-			Assert.Throws<ArgumentOutOfRangeException>(() =>
-			{
+			Assert.Throws<ArgumentOutOfRangeException>(() => {
 				document.Text = "a\nb";
 				document.GetCharAt(-1);
 			});
 		}
-		
+
 		[Test]
 		public void GetCharAtEndOffset()
 		{
-			Assert.Throws<ArgumentOutOfRangeException>(() =>
-			{
+			Assert.Throws<ArgumentOutOfRangeException>(() => {
 				document.Text = "a\nb";
 				document.GetCharAt(document.TextLength);
 			});
 		}
-		
+
 		[Test]
 		public void InsertAtNegativeOffset()
 		{
-			Assert.Throws<ArgumentOutOfRangeException>(() =>
-			{
+			Assert.Throws<ArgumentOutOfRangeException>(() => {
 				document.Text = "a\nb";
 				document.Insert(-1, "text");
 			});
 		}
-		
+
 		[Test]
 		public void InsertAfterEndOffset()
 		{
-			Assert.Throws<ArgumentOutOfRangeException>(() =>
-			{
+			Assert.Throws<ArgumentOutOfRangeException>(() => {
 				document.Text = "a\nb";
 				document.Insert(4, "text");
 			});
 		}
-		
+
 		[Test]
 		public void RemoveNegativeAmount()
 		{
-			Assert.Throws<ArgumentOutOfRangeException>(() =>
-			{
+			Assert.Throws<ArgumentOutOfRangeException>(() => {
 				document.Text = "abcd";
 				document.Remove(2, -1);
 			});
 		}
-		
+
 		[Test]
 		public void RemoveTooMuch()
 		{
-			Assert.Throws<ArgumentOutOfRangeException>(() =>
-			{
+			Assert.Throws<ArgumentOutOfRangeException>(() => {
 				document.Text = "abcd";
 				document.Remove(2, 10);
 			});
 		}
-		
+
 		[Test]
 		public void GetLineByNumberNegative()
 		{
-			Assert.Throws<ArgumentOutOfRangeException>(() =>
-			{
+			Assert.Throws<ArgumentOutOfRangeException>(() => {
 				document.Text = "a\nb";
 				document.GetLineByNumber(-1);
 			});
 		}
-		
+
 		[Test]
 		public void GetLineByNumberTooHigh()
 		{
-			Assert.Throws<ArgumentOutOfRangeException>(() =>
-			{
+			Assert.Throws<ArgumentOutOfRangeException>(() => {
 				document.Text = "a\nb";
 				document.GetLineByNumber(3);
 			});
 		}
-		
+
 		[Test]
 		public void GetLineByOffsetNegative()
 		{
-			Assert.Throws<ArgumentOutOfRangeException>(() =>
-			{
+			Assert.Throws<ArgumentOutOfRangeException>(() => {
 				document.Text = "a\nb";
 				document.GetLineByOffset(-1);
 			});
 		}
-		
-		
+
+
 		[Test]
 		public void GetLineByOffsetToHigh()
 		{
-			Assert.Throws<ArgumentOutOfRangeException>(() =>
-			{
+			Assert.Throws<ArgumentOutOfRangeException>(() => {
 				document.Text = "a\nb";
 				document.GetLineByOffset(10);
 			});
 		}
-		
+
 		[Test]
 		public void InsertAtEndOffset()
 		{
 			document.Text = "a\nb";
 			CheckDocumentLines("a",
-			                   "b");
+							   "b");
 			document.Insert(3, "text");
 			CheckDocumentLines("a",
-			                   "btext");
+							   "btext");
 		}
-		
+
 		[Test]
 		public void GetCharAt()
 		{
 			document.Text = "a\r\nb";
-			Assert.AreEqual('a', document.GetCharAt(0));
-			Assert.AreEqual('\r', document.GetCharAt(1));
-			Assert.AreEqual('\n', document.GetCharAt(2));
-			Assert.AreEqual('b', document.GetCharAt(3));
+			Assert.That(document.GetCharAt(0), Is.EqualTo('a'));
+			Assert.That(document.GetCharAt(1), Is.EqualTo('\r'));
+			Assert.That(document.GetCharAt(2), Is.EqualTo('\n'));
+			Assert.That(document.GetCharAt(3), Is.EqualTo('b'));
 		}
-		
+
 		[Test]
 		public void CheckMixedNewLineTest()
 		{
 			const string mixedNewlineText = "line 1\nline 2\r\nline 3\rline 4";
 			document.Text = mixedNewlineText;
-			Assert.AreEqual(mixedNewlineText, document.Text);
-			Assert.AreEqual(4, document.LineCount);
+			Assert.That(document.Text, Is.EqualTo(mixedNewlineText));
+			Assert.That(document.LineCount, Is.EqualTo(4));
 			for (int i = 1; i < 4; i++) {
 				DocumentLine line = document.GetLineByNumber(i);
-				Assert.AreEqual(i, line.LineNumber);
-				Assert.AreEqual("line " + i, document.GetText(line));
+				Assert.That(line.LineNumber, Is.EqualTo(i));
+				Assert.That(document.GetText(line), Is.EqualTo("line " + i));
 			}
-			Assert.AreEqual(1, document.GetLineByNumber(1).DelimiterLength);
-			Assert.AreEqual(2, document.GetLineByNumber(2).DelimiterLength);
-			Assert.AreEqual(1, document.GetLineByNumber(3).DelimiterLength);
-			Assert.AreEqual(0, document.GetLineByNumber(4).DelimiterLength);
+			Assert.That(document.GetLineByNumber(1).DelimiterLength, Is.EqualTo(1));
+			Assert.That(document.GetLineByNumber(2).DelimiterLength, Is.EqualTo(2));
+			Assert.That(document.GetLineByNumber(3).DelimiterLength, Is.EqualTo(1));
+			Assert.That(document.GetLineByNumber(4).DelimiterLength, Is.EqualTo(0));
 		}
-		
+
 		[Test]
 		public void LfCrIsTwoNewLinesTest()
 		{
 			document.Text = "a\n\rb";
-			Assert.AreEqual("a\n\rb", document.Text);
+			Assert.That(document.Text, Is.EqualTo("a\n\rb"));
 			CheckDocumentLines("a",
-			                   "",
-			                   "b");
+							   "",
+							   "b");
 		}
-		
+
 		[Test]
 		public void RemoveFirstPartOfDelimiter()
 		{
 			document.Text = "a\r\nb";
 			document.Remove(1, 1);
-			Assert.AreEqual("a\nb", document.Text);
+			Assert.That(document.Text, Is.EqualTo("a\nb"));
 			CheckDocumentLines("a",
-			                   "b");
+							   "b");
 		}
-		
+
 		[Test]
 		public void RemoveLineContentAndJoinDelimiters()
 		{
 			document.Text = "a\rb\nc";
 			document.Remove(2, 1);
-			Assert.AreEqual("a\r\nc", document.Text);
+			Assert.That(document.Text, Is.EqualTo("a\r\nc"));
 			CheckDocumentLines("a",
-			                   "c");
+							   "c");
 		}
-		
+
 		[Test]
 		public void RemoveLineContentAndJoinDelimiters2()
 		{
 			document.Text = "a\rb\nc\nd";
 			document.Remove(2, 3);
-			Assert.AreEqual("a\r\nd", document.Text);
+			Assert.That(document.Text, Is.EqualTo("a\r\nd"));
 			CheckDocumentLines("a",
-			                   "d");
+							   "d");
 		}
-		
+
 		[Test]
 		public void RemoveLineContentAndJoinDelimiters3()
 		{
 			document.Text = "a\rb\r\nc";
 			document.Remove(2, 2);
-			Assert.AreEqual("a\r\nc", document.Text);
+			Assert.That(document.Text, Is.EqualTo("a\r\nc"));
 			CheckDocumentLines("a",
-			                   "c");
+							   "c");
 		}
-		
+
 		[Test]
 		public void RemoveLineContentAndJoinNonMatchingDelimiters()
 		{
 			document.Text = "a\nb\nc";
 			document.Remove(2, 1);
-			Assert.AreEqual("a\n\nc", document.Text);
+			Assert.That(document.Text, Is.EqualTo("a\n\nc"));
 			CheckDocumentLines("a",
-			                   "",
-			                   "c");
+							   "",
+							   "c");
 		}
-		
+
 		[Test]
 		public void RemoveLineContentAndJoinNonMatchingDelimiters2()
 		{
 			document.Text = "a\nb\rc";
 			document.Remove(2, 1);
-			Assert.AreEqual("a\n\rc", document.Text);
+			Assert.That(document.Text, Is.EqualTo("a\n\rc"));
 			CheckDocumentLines("a",
-			                   "",
-			                   "c");
+							   "",
+							   "c");
 		}
-		
+
 		[Test]
 		public void RemoveMultilineUpToFirstPartOfDelimiter()
 		{
 			document.Text = "0\n1\r\n2";
 			document.Remove(1, 3);
-			Assert.AreEqual("0\n2", document.Text);
+			Assert.That(document.Text, Is.EqualTo("0\n2"));
 			CheckDocumentLines("0",
-			                   "2");
+							   "2");
 		}
-		
+
 		[Test]
 		public void RemoveSecondPartOfDelimiter()
 		{
 			document.Text = "a\r\nb";
 			document.Remove(2, 1);
-			Assert.AreEqual("a\rb", document.Text);
+			Assert.That(document.Text, Is.EqualTo("a\rb"));
 			CheckDocumentLines("a",
-			                   "b");
+							   "b");
 		}
-		
+
 		[Test]
 		public void RemoveFromSecondPartOfDelimiter()
 		{
 			document.Text = "a\r\nb\nc";
 			document.Remove(2, 3);
-			Assert.AreEqual("a\rc", document.Text);
+			Assert.That(document.Text, Is.EqualTo("a\rc"));
 			CheckDocumentLines("a",
-			                   "c");
+							   "c");
 		}
-		
+
 		[Test]
 		public void RemoveFromSecondPartOfDelimiterToDocumentEnd()
 		{
 			document.Text = "a\r\nb";
 			document.Remove(2, 2);
-			Assert.AreEqual("a\r", document.Text);
+			Assert.That(document.Text, Is.EqualTo("a\r"));
 			CheckDocumentLines("a",
-			                   "");
+							   "");
 		}
-		
+
 		[Test]
 		public void RemoveUpToMatchingDelimiter1()
 		{
 			document.Text = "a\r\nb\nc";
 			document.Remove(2, 2);
-			Assert.AreEqual("a\r\nc", document.Text);
+			Assert.That(document.Text, Is.EqualTo("a\r\nc"));
 			CheckDocumentLines("a",
-			                   "c");
+							   "c");
 		}
-		
+
 		[Test]
 		public void RemoveUpToMatchingDelimiter2()
 		{
 			document.Text = "a\r\nb\r\nc";
 			document.Remove(2, 3);
-			Assert.AreEqual("a\r\nc", document.Text);
+			Assert.That(document.Text, Is.EqualTo("a\r\nc"));
 			CheckDocumentLines("a",
-			                   "c");
+							   "c");
 		}
-		
+
 		[Test]
 		public void RemoveUpToNonMatchingDelimiter()
 		{
 			document.Text = "a\r\nb\rc";
 			document.Remove(2, 2);
-			Assert.AreEqual("a\r\rc", document.Text);
+			Assert.That(document.Text, Is.EqualTo("a\r\rc"));
 			CheckDocumentLines("a",
-			                   "",
-			                   "c");
+							   "",
+							   "c");
 		}
-		
+
 		[Test]
 		public void RemoveTwoCharDelimiter()
 		{
 			document.Text = "a\r\nb";
 			document.Remove(1, 2);
-			Assert.AreEqual("ab", document.Text);
+			Assert.That(document.Text, Is.EqualTo("ab"));
 			CheckDocumentLines("ab");
 		}
-		
+
 		[Test]
 		public void RemoveOneCharDelimiter()
 		{
 			document.Text = "a\nb";
 			document.Remove(1, 1);
-			Assert.AreEqual("ab", document.Text);
+			Assert.That(document.Text, Is.EqualTo("ab"));
 			CheckDocumentLines("ab");
 		}
-		
+
 		void CheckDocumentLines(params string[] lines)
 		{
-			Assert.AreEqual(lines.Length, document.LineCount, "LineCount");
+			Assert.That(document.LineCount, Is.EqualTo(lines.Length), "LineCount");
 			for (int i = 0; i < lines.Length; i++) {
-				Assert.AreEqual(lines[i],  document.GetText(document.Lines[i]), "Text of line " + (i + 1));
+				Assert.That(document.GetText(document.Lines[i]), Is.EqualTo(lines[i]), "Text of line " + (i + 1));
 			}
 		}
-		
+
 		[Test]
 		public void FixUpFirstPartOfDelimiter()
 		{
 			document.Text = "a\n\nb";
 			document.Replace(1, 1, "\r");
-			Assert.AreEqual("a\r\nb", document.Text);
+			Assert.That(document.Text, Is.EqualTo("a\r\nb"));
 			CheckDocumentLines("a",
-			                   "b");
+							   "b");
 		}
-		
+
 		[Test]
 		public void FixUpSecondPartOfDelimiter()
 		{
 			document.Text = "a\r\rb";
 			document.Replace(2, 1, "\n");
-			Assert.AreEqual("a\r\nb", document.Text);
+			Assert.That(document.Text, Is.EqualTo("a\r\nb"));
 			CheckDocumentLines("a",
-			                   "b");
+							   "b");
 		}
-		
+
 		[Test]
 		public void InsertInsideDelimiter()
 		{
 			document.Text = "a\r\nc";
 			document.Insert(2, "b");
-			Assert.AreEqual("a\rb\nc", document.Text);
+			Assert.That(document.Text, Is.EqualTo("a\rb\nc"));
 			CheckDocumentLines("a",
-			                   "b",
-			                   "c");
+							   "b",
+							   "c");
 		}
-		
+
 		[Test]
 		public void InsertInsideDelimiter2()
 		{
 			document.Text = "a\r\nd";
 			document.Insert(2, "b\nc");
-			Assert.AreEqual("a\rb\nc\nd", document.Text);
+			Assert.That(document.Text, Is.EqualTo("a\rb\nc\nd"));
 			CheckDocumentLines("a",
-			                   "b",
-			                   "c",
-			                   "d");
+							   "b",
+							   "c",
+							   "d");
 		}
-		
+
 		[Test]
 		public void InsertInsideDelimiter3()
 		{
 			document.Text = "a\r\nc";
 			document.Insert(2, "b\r");
-			Assert.AreEqual("a\rb\r\nc", document.Text);
+			Assert.That(document.Text, Is.EqualTo("a\rb\r\nc"));
 			CheckDocumentLines("a",
-			                   "b",
-			                   "c");
+							   "b",
+							   "c");
 		}
-		
+
 		[Test]
 		public void ExtendDelimiter1()
 		{
 			document.Text = "a\nc";
 			document.Insert(1, "b\r");
-			Assert.AreEqual("ab\r\nc", document.Text);
+			Assert.That(document.Text, Is.EqualTo("ab\r\nc"));
 			CheckDocumentLines("ab",
-			                   "c");
+							   "c");
 		}
-		
+
 		[Test]
 		public void ExtendDelimiter2()
 		{
 			document.Text = "a\rc";
 			document.Insert(2, "\nb");
-			Assert.AreEqual("a\r\nbc", document.Text);
+			Assert.That(document.Text, Is.EqualTo("a\r\nbc"));
 			CheckDocumentLines("a",
-			                   "bc");
+							   "bc");
 		}
-		
+
 		[Test]
 		public void ReplaceLineContentBetweenMatchingDelimiters()
 		{
 			document.Text = "a\rb\nc";
 			document.Replace(2, 1, "x");
-			Assert.AreEqual("a\rx\nc", document.Text);
+			Assert.That(document.Text, Is.EqualTo("a\rx\nc"));
 			CheckDocumentLines("a",
-			                   "x",
-			                   "c");
+							   "x",
+							   "c");
 		}
-		
+
 		[Test]
 		public void GetOffset()
 		{
 			document.Text = "Hello,\nWorld!";
-			Assert.AreEqual(0, document.GetOffset(1, 1));
-			Assert.AreEqual(1, document.GetOffset(1, 2));
-			Assert.AreEqual(5, document.GetOffset(1, 6));
-			Assert.AreEqual(6, document.GetOffset(1, 7));
-			Assert.AreEqual(7, document.GetOffset(2, 1));
-			Assert.AreEqual(8, document.GetOffset(2, 2));
-			Assert.AreEqual(12, document.GetOffset(2, 6));
-			Assert.AreEqual(13, document.GetOffset(2, 7));
+			Assert.That(document.GetOffset(1, 1), Is.EqualTo(0));
+			Assert.That(document.GetOffset(1, 2), Is.EqualTo(1));
+			Assert.That(document.GetOffset(1, 6), Is.EqualTo(5));
+			Assert.That(document.GetOffset(1, 7), Is.EqualTo(6));
+			Assert.That(document.GetOffset(2, 1), Is.EqualTo(7));
+			Assert.That(document.GetOffset(2, 2), Is.EqualTo(8));
+			Assert.That(document.GetOffset(2, 6), Is.EqualTo(12));
+			Assert.That(document.GetOffset(2, 7), Is.EqualTo(13));
 		}
-		
+
 		[Test]
 		public void GetOffsetIgnoreNegativeColumns()
 		{
 			document.Text = "Hello,\nWorld!";
-			Assert.AreEqual(0, document.GetOffset(1, -1));
-			Assert.AreEqual(0, document.GetOffset(1, -100));
-			Assert.AreEqual(0, document.GetOffset(1, 0));
-			Assert.AreEqual(7, document.GetOffset(2, -1));
-			Assert.AreEqual(7, document.GetOffset(2, -100));
-			Assert.AreEqual(7, document.GetOffset(2, 0));
+			Assert.That(document.GetOffset(1, -1), Is.EqualTo(0));
+			Assert.That(document.GetOffset(1, -100), Is.EqualTo(0));
+			Assert.That(document.GetOffset(1, 0), Is.EqualTo(0));
+			Assert.That(document.GetOffset(2, -1), Is.EqualTo(7));
+			Assert.That(document.GetOffset(2, -100), Is.EqualTo(7));
+			Assert.That(document.GetOffset(2, 0), Is.EqualTo(7));
 		}
-		
+
 		[Test]
 		public void GetOffsetIgnoreTooHighColumns()
 		{
 			document.Text = "Hello,\nWorld!";
-			Assert.AreEqual(6, document.GetOffset(1, 8));
-			Assert.AreEqual(6, document.GetOffset(1, 100));
-			Assert.AreEqual(13, document.GetOffset(2, 8));
-			Assert.AreEqual(13, document.GetOffset(2, 100));
+			Assert.That(document.GetOffset(1, 8), Is.EqualTo(6));
+			Assert.That(document.GetOffset(1, 100), Is.EqualTo(6));
+			Assert.That(document.GetOffset(2, 8), Is.EqualTo(13));
+			Assert.That(document.GetOffset(2, 100), Is.EqualTo(13));
 		}
 	}
 }

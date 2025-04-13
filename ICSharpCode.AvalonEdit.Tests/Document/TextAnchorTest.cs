@@ -40,11 +40,11 @@ namespace ICSharpCode.AvalonEdit.Document
 			TextAnchor a2 = document.CreateAnchor(0);
 			a1.MovementType = AnchorMovementType.BeforeInsertion;
 			a2.MovementType = AnchorMovementType.AfterInsertion;
-			Assert.AreEqual(0, a1.Offset);
-			Assert.AreEqual(0, a2.Offset);
+			Assert.That(a1.Offset, Is.EqualTo(0));
+			Assert.That(a2.Offset, Is.EqualTo(0));
 			document.Insert(0, "x");
-			Assert.AreEqual(0, a1.Offset);
-			Assert.AreEqual(1, a2.Offset);
+			Assert.That(a1.Offset, Is.EqualTo(0));
+			Assert.That(a2.Offset, Is.EqualTo(1));
 		}
 		
 		[Test]
@@ -64,25 +64,25 @@ namespace ICSharpCode.AvalonEdit.Document
 				//Console.WriteLine(document.GetTextAnchorTreeAsString());
 			}
 			for (int i = 0; i < 11; i++) {
-				Assert.AreEqual(i, a1[i].Offset);
-				Assert.AreEqual(i, a2[i].Offset);
+				Assert.That(a1[i].Offset, Is.EqualTo(i));
+				Assert.That(a2[i].Offset, Is.EqualTo(i));
 			}
 			document.Remove(1, 8);
 			for (int i = 0; i < 11; i++) {
 				if (i <= 1) {
-					Assert.IsFalse(a1[i].IsDeleted);
-					Assert.IsFalse(a2[i].IsDeleted);
-					Assert.AreEqual(i, a1[i].Offset);
-					Assert.AreEqual(i, a2[i].Offset);
+					Assert.That(a1[i].IsDeleted, Is.False);
+					Assert.That(a2[i].IsDeleted, Is.False);
+					Assert.That(a1[i].Offset, Is.EqualTo(i));
+					Assert.That(a2[i].Offset, Is.EqualTo(i));
 				} else if (i <= 8) {
-					Assert.IsFalse(a1[i].IsDeleted);
-					Assert.IsTrue(a2[i].IsDeleted);
-					Assert.AreEqual(1, a1[i].Offset);
+					Assert.That(a1[i].IsDeleted, Is.False);
+					Assert.That(a2[i].IsDeleted, Is.True);
+					Assert.That(a1[i].Offset, Is.EqualTo(1));
 				} else {
-					Assert.IsFalse(a1[i].IsDeleted);
-					Assert.IsFalse(a2[i].IsDeleted);
-					Assert.AreEqual(i - 8, a1[i].Offset);
-					Assert.AreEqual(i - 8, a2[i].Offset);
+					Assert.That(a1[i].IsDeleted, Is.False);
+					Assert.That(a2[i].IsDeleted, Is.False);
+					Assert.That(a1[i].Offset, Is.EqualTo(i - 8));
+					Assert.That(a2[i].Offset, Is.EqualTo(i - 8));
 				}
 			}
 		}
@@ -110,7 +110,7 @@ namespace ICSharpCode.AvalonEdit.Document
 				expectedOffsets.Add(offset);
 			}
 			for (int i = 0; i < anchors.Count; i++) {
-				Assert.AreEqual(expectedOffsets[i], anchors[i].Offset);
+				Assert.That(anchors[i].Offset, Is.EqualTo(expectedOffsets[i]));
 			}
 			GC.KeepAlive(anchors);
 		}
@@ -135,7 +135,7 @@ namespace ICSharpCode.AvalonEdit.Document
 					GC.Collect();
 				}
 				for (int j = 0; j < anchors.Count; j++) {
-					Assert.AreEqual(expectedOffsets[j], anchors[j].Offset);
+					Assert.That(anchors[j].Offset, Is.EqualTo(expectedOffsets[j]));
 				}
 			}
 			GC.KeepAlive(anchors);
@@ -155,12 +155,12 @@ namespace ICSharpCode.AvalonEdit.Document
 			middleSurvivorRight.MovementType = AnchorMovementType.AfterInsertion;
 			TextAnchor end = document.CreateAnchor(3);
 			document.Replace(1, 2, "BxC");
-			
-			Assert.AreEqual(1, start.Offset);
-			Assert.IsTrue(middleDeletable.IsDeleted);
-			Assert.AreEqual(1, middleSurvivorLeft.Offset);
-			Assert.AreEqual(4, middleSurvivorRight.Offset);
-			Assert.AreEqual(4, end.Offset);
+
+			Assert.That(start.Offset, Is.EqualTo(1));
+			Assert.That(middleDeletable.IsDeleted, Is.True);
+			Assert.That(middleSurvivorLeft.Offset, Is.EqualTo(1));
+			Assert.That(middleSurvivorRight.Offset, Is.EqualTo(4));
+			Assert.That(end.Offset, Is.EqualTo(4));
 		}
 		
 		[Test]
@@ -220,7 +220,7 @@ namespace ICSharpCode.AvalonEdit.Document
 								if (anchors[i].SurviveDeletion) {
 									expectedOffsets[i] = removalOffset;
 								} else {
-									Assert.IsTrue(anchors[i].IsDeleted);
+									Assert.That(anchors[i].IsDeleted, Is.True);
 									anchors.RemoveAt(i);
 									expectedOffsets.RemoveAt(i);
 								}
@@ -243,7 +243,7 @@ namespace ICSharpCode.AvalonEdit.Document
 									else
 										expectedOffsets[i] = replaceOffset;
 								} else {
-									Assert.IsTrue(anchors[i].IsDeleted);
+									Assert.That(anchors[i].IsDeleted, Is.True);
 									anchors.RemoveAt(i);
 									expectedOffsets.RemoveAt(i);
 								}
@@ -255,9 +255,9 @@ namespace ICSharpCode.AvalonEdit.Document
 						}
 						break;
 				}
-				Assert.AreEqual(anchors.Count, expectedOffsets.Count);
+				Assert.That(expectedOffsets.Count, Is.EqualTo(anchors.Count));
 				for (int j = 0; j < anchors.Count; j++) {
-					Assert.AreEqual(expectedOffsets[j], anchors[j].Offset);
+					Assert.That(anchors[j].Offset, Is.EqualTo(expectedOffsets[j]));
 				}
 			}
 			GC.KeepAlive(anchors);
@@ -296,12 +296,12 @@ namespace ICSharpCode.AvalonEdit.Document
 			TextAnchor deletedMiddle = document.CreateAnchor(3);
 			
 			document.Replace(1, 4, "\t", OffsetChangeMappingType.CharacterReplace);
-			Assert.AreEqual("a\tb", document.Text);
+			Assert.That(document.Text, Is.EqualTo("a\tb"));
 			// yes, the movement is a bit strange; but that's how CharacterReplace works when the text gets shorter
-			Assert.AreEqual(1, before.Offset);
-			Assert.AreEqual(2, after.Offset);
-			Assert.AreEqual(2, survivingMiddle.Offset);
-			Assert.AreEqual(2, deletedMiddle.Offset);
+			Assert.That(before.Offset, Is.EqualTo(1));
+			Assert.That(after.Offset, Is.EqualTo(2));
+			Assert.That(survivingMiddle.Offset, Is.EqualTo(2));
+			Assert.That(deletedMiddle.Offset, Is.EqualTo(2));
 		}
 		
 		[Test]
@@ -318,11 +318,11 @@ namespace ICSharpCode.AvalonEdit.Document
 			before.MovementType = AnchorMovementType.AfterInsertion;
 			
 			document.Replace(1, 2, "123", OffsetChangeMappingType.CharacterReplace);
-			Assert.AreEqual("a123b", document.Text);
-			Assert.AreEqual(1, before.Offset);
-			Assert.AreEqual(4, after.Offset);
-			Assert.AreEqual(2, middleA.Offset);
-			Assert.AreEqual(2, middleB.Offset);
+			Assert.That(document.Text, Is.EqualTo("a123b"));
+			Assert.That(before.Offset, Is.EqualTo(1));
+			Assert.That(after.Offset, Is.EqualTo(4));
+			Assert.That(middleA.Offset, Is.EqualTo(2));
+			Assert.That(middleB.Offset, Is.EqualTo(2));
 		}
 	}
 }
