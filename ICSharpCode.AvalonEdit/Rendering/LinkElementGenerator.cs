@@ -41,7 +41,10 @@ namespace ICSharpCode.AvalonEdit.Rendering
 		// try to detect email addresses
 		internal readonly static Regex defaultMailRegex = new Regex(@"\b[\w\d\.\-]+\@[\w\d\.\-]+\.[a-z]{2,6}\b");
 
-		readonly Regex linkRegex;
+		/// <summary>
+		/// The regex used to parse the type of link this class represents.
+		/// </summary>
+		protected Regex linkRegex;
 
 		/// <summary>
 		/// Gets/Sets whether the user needs to press Control to click the link.
@@ -71,6 +74,7 @@ namespace ICSharpCode.AvalonEdit.Rendering
 		void IBuiltinElementGenerator.FetchOptions(TextEditorOptions options)
 		{
 			this.RequireControlModifierForClick = options.RequireControlModifierForHyperlinkClick;
+			this.linkRegex = new Regex(options.LinkRegex);
 		}
 
 		Match GetMatch(int startOffset, out int matchOffset)
@@ -142,7 +146,7 @@ namespace ICSharpCode.AvalonEdit.Rendering
 	/// This element generator can be easily enabled and configured using the
 	/// <see cref="TextEditorOptions"/>.
 	/// </remarks>
-	sealed class MailLinkElementGenerator : LinkElementGenerator
+	sealed class MailLinkElementGenerator : LinkElementGenerator, IBuiltinElementGenerator
 	{
 		/// <summary>
 		/// Creates a new MailLinkElementGenerator.
@@ -150,6 +154,12 @@ namespace ICSharpCode.AvalonEdit.Rendering
 		public MailLinkElementGenerator()
 			: base(defaultMailRegex)
 		{
+		}
+
+		void IBuiltinElementGenerator.FetchOptions(TextEditorOptions options)
+		{
+			this.RequireControlModifierForClick = options.RequireControlModifierForHyperlinkClick;
+			this.linkRegex = new Regex(options.MailRegex);
 		}
 
 		protected override Uri GetUriFromMatch(Match match)
