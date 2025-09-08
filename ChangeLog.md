@@ -3,6 +3,13 @@ Note: this changelog only lists major changes and fixes for major bugs. For a co
 tbd: AvalonEdit XML
 * tbd
 
+2025/04/13: AvalonEdit 6.3.1
+* Fix rectangular selection ignores scroll offset by @mgarstenauer
+* Fix JSON highlighting by @ltrzesniewski
+* Add support for runtimes without built-in COM interop by @kekekeks
+* Change framework targets: .NET 8.0 instead of .NET 7.0
+* Migrate to NUnit 4
+
 2023/03/19: AvalonEdit 6.3.0
 * Change framework targets: .NET 7.0 instead of .NET Core 3.1
 * Spelling fixes by @jimfoye

@@ -38,9 +38,9 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 			var text2 = new RichText("text2", textModel2);
 
 			RichText text3 = RichText.Concat(text1, RichText.Empty, text2);
-			Assert.AreEqual(text1.GetHighlightingAt(0), text3.GetHighlightingAt(0));
-			Assert.AreNotEqual(text1.GetHighlightingAt(0), text3.GetHighlightingAt(5));
-			Assert.AreEqual(text2.GetHighlightingAt(0), text3.GetHighlightingAt(5));
+			Assert.That(text3.GetHighlightingAt(0), Is.EqualTo(text1.GetHighlightingAt(0)));
+			Assert.That(text3.GetHighlightingAt(5), Is.Not.EqualTo(text1.GetHighlightingAt(0)));
+			Assert.That(text3.GetHighlightingAt(5), Is.EqualTo(text2.GetHighlightingAt(0)));
 		}
 
 		[Test]
@@ -52,7 +52,7 @@ namespace ICSharpCode.AvalonEdit.Highlighting
 			textModel.SetFontWeight(15, 1, FontWeights.Bold);
 			var text = new RichText("This has spaces!", textModel);
 			var html = text.ToHtml(new HtmlOptions());
-			Assert.AreEqual("This&nbsp;<span style=\"background-color: #ffff00; \">has</span>&nbsp;<span style=\"color: #0000ff; \">spaces</span><span style=\"font-weight: bold; \">!</span>", html);
+			Assert.That(html, Is.EqualTo("This&nbsp;<span style=\"background-color: #ffff00; \">has</span>&nbsp;<span style=\"color: #0000ff; \">spaces</span><span style=\"font-weight: bold; \">!</span>"));
 		}
 	}
 }

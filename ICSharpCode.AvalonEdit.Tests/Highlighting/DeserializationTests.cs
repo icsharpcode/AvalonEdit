@@ -6,6 +6,7 @@ using ICSharpCode.AvalonEdit.Highlighting;
 using ICSharpCode.AvalonEdit.Highlighting.Xshd;
 
 using Newtonsoft.Json;
+
 using NUnit.Framework;
 
 
@@ -31,7 +32,7 @@ namespace ICSharpCode.AvalonEdit.Tests.Highlighting
 			string jsonString = JsonConvert.SerializeObject(color);
 
 			HighlightingColor color2 = JsonConvert.DeserializeObject<HighlightingColor>(jsonString);
-			Assert.AreEqual(color, color2);
+			Assert.That(color2, Is.EqualTo(color));
 		}
 
 		[TestCase("CSharp-Mode.xshd")]
@@ -43,9 +44,9 @@ namespace ICSharpCode.AvalonEdit.Tests.Highlighting
 					xshd = HighlightingLoader.LoadXshd(reader, false);
 				}
 			}
-			Assert.AreEqual("C#", xshd.Name);
-			Assert.IsNotEmpty(xshd.Extensions);
-			Assert.AreEqual(".cs", xshd.Extensions[0]);
+			Assert.That(xshd.Name, Is.EqualTo("C#"));
+			Assert.That(xshd.Extensions, Is.Not.Empty);
+			Assert.That(xshd.Extensions[0], Is.EqualTo(".cs"));
 
 			Assert.DoesNotThrow(() => JsonConvert.SerializeObject(xshd));
 		}

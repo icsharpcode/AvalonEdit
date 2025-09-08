@@ -83,9 +83,9 @@ namespace ICSharpCode.AvalonEdit.Document
 				visualPositions[i+1]=visualPositions[i]+heights[i];
 			}
 			foreach (DocumentLine ls in document.Lines) {
-				Assert.AreEqual(visualPositions[ls.LineNumber-1], heightTree.GetVisualPosition(ls));
+				Assert.That(heightTree.GetVisualPosition(ls), Is.EqualTo(visualPositions[ls.LineNumber - 1]));
 			}
-			Assert.AreEqual(visualPositions[document.LineCount], heightTree.TotalHeight);
+			Assert.That(heightTree.TotalHeight, Is.EqualTo(visualPositions[document.LineCount]));
 		}
 	}
 }
