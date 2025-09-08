@@ -24,6 +24,7 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Threading;
 
 using ICSharpCode.AvalonEdit.Document;
 using ICSharpCode.AvalonEdit.Editing;
@@ -36,6 +37,16 @@ namespace ICSharpCode.AvalonEdit.Search
 	/// </summary>
 	public class SearchPanel : Control
 	{
+		/// <summary>
+		/// Specifies the time to wait till the entered text is searched for
+		/// </summary>
+		public static int DelayBeforeSearch { get; set; } = 250;
+
+		/// <summary>
+		/// Event that occurs if the search wrapped the end or beginning of the file
+		/// </summary>
+		public static event EventHandler SearchWrapped;
+
 		TextArea textArea;
 		SearchInputHandler handler;
 		TextDocument currentDocument;
@@ -43,6 +54,10 @@ namespace ICSharpCode.AvalonEdit.Search
 		TextBox searchTextBox;
 		Popup dropdownPopup;
 		SearchPanelAdorner adorner;
+
+		DispatcherTimer typingTimer;
+		bool lastChangeSelection;
+
 
 		#region DependencyProperties
 		/// <summary>
@@ -55,7 +70,8 @@ namespace ICSharpCode.AvalonEdit.Search
 		/// <summary>
 		/// Gets/sets whether the search pattern should be interpreted as regular expression.
 		/// </summary>
-		public bool UseRegex {
+		public bool UseRegex
+		{
 			get { return (bool)GetValue(UseRegexProperty); }
 			set { SetValue(UseRegexProperty, value); }
 		}
@@ -70,7 +86,8 @@ namespace ICSharpCode.AvalonEdit.Search
 		/// <summary>
 		/// Gets/sets whether the search pattern should be interpreted case-sensitive.
 		/// </summary>
-		public bool MatchCase {
+		public bool MatchCase
+		{
 			get { return (bool)GetValue(MatchCaseProperty); }
 			set { SetValue(MatchCaseProperty, value); }
 		}
@@ -85,7 +102,8 @@ namespace ICSharpCode.AvalonEdit.Search
 		/// <summary>
 		/// Gets/sets whether the search pattern should only match whole words.
 		/// </summary>
-		public bool WholeWords {
+		public bool WholeWords 
+		{
 			get { return (bool)GetValue(WholeWordsProperty); }
 			set { SetValue(WholeWordsProperty, value); }
 		}
@@ -100,7 +118,8 @@ namespace ICSharpCode.AvalonEdit.Search
 		/// <summary>
 		/// Gets/sets the search pattern.
 		/// </summary>
-		public string SearchPattern {
+		public string SearchPattern
+		{
 			get { return (string)GetValue(SearchPatternProperty); }
 			set { SetValue(SearchPatternProperty, value); }
 		}
@@ -115,7 +134,8 @@ namespace ICSharpCode.AvalonEdit.Search
 		/// <summary>
 		/// Gets/sets the Brush used for marking search results in the TextView.
 		/// </summary>
-		public Brush MarkerBrush {
+		public Brush MarkerBrush
+		{
 			get { return (Brush)GetValue(MarkerBrushProperty); }
 			set { SetValue(MarkerBrushProperty, value); }
 		}
@@ -181,7 +201,8 @@ namespace ICSharpCode.AvalonEdit.Search
 		/// <summary>
 		/// Gets/sets the localization for the SearchPanel.
 		/// </summary>
-		public Localization Localization {
+		public Localization Localization 
+		{
 			get { return (Localization)GetValue(LocalizationProperty); }
 			set { SetValue(LocalizationProperty, value); }
 		}
@@ -197,7 +218,8 @@ namespace ICSharpCode.AvalonEdit.Search
 		static void SearchPatternChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
 		{
 			SearchPanel panel = d as SearchPanel;
-			if (panel != null) {
+			if (panel != null)
+			{
 				panel.ValidateSearchText();
 				panel.UpdateSearch();
 			}
@@ -291,7 +313,8 @@ namespace ICSharpCode.AvalonEdit.Search
 			if (currentDocument != null)
 				currentDocument.TextChanged -= textArea_Document_TextChanged;
 			currentDocument = textArea.Document;
-			if (currentDocument != null) {
+			if (currentDocument != null)
+			{
 				currentDocument.TextChanged += textArea_Document_TextChanged;
 				DoSearch(false);
 			}
@@ -318,13 +341,16 @@ namespace ICSharpCode.AvalonEdit.Search
 
 			var be = searchTextBox.GetBindingExpression(TextBox.TextProperty);
 
-			try {
+			try
+			{
 				if (be != null)
 					Validation.ClearInvalid(be);
 
 				UpdateSearch();
 
-			} catch (SearchPatternException ex) {
+			}
+			catch (SearchPatternException ex)
+			{
 				var ve = new ValidationError(be.ParentBinding.ValidationRules[0], be, ex.Message, ex);
 				Validation.MarkInvalid(be, ve);
 			}
@@ -349,8 +375,10 @@ namespace ICSharpCode.AvalonEdit.Search
 			SearchResult result = renderer.CurrentResults.FindFirstSegmentWithStartAfter(textArea.Caret.Offset + 1);
 			if (result == null)
 				result = renderer.CurrentResults.FirstSegment;
-			if (result != null) {
-				SelectResult(result);
+			if (result != null) 
+			{
+				var s = Selection.Create(textArea, result.StartOffset, result.EndOffset);
+				SelectResult(result, textArea.Caret.Line >= s.StartPosition.Line);
 			}
 		}
 
@@ -364,8 +392,10 @@ namespace ICSharpCode.AvalonEdit.Search
 				result = renderer.CurrentResults.GetPreviousSegment(result);
 			if (result == null)
 				result = renderer.CurrentResults.LastSegment;
-			if (result != null) {
-				SelectResult(result);
+			if (result != null)
+			{
+				var s = Selection.Create(textArea, result.StartOffset, result.EndOffset);
+				SelectResult(result, textArea.Caret.Line <= s.StartPosition.Line);
 			}
 		}
 
@@ -375,52 +405,90 @@ namespace ICSharpCode.AvalonEdit.Search
 		{
 			if (IsClosed)
 				return;
+
+			lastChangeSelection = changeSelection;
+			if (typingTimer == null) 
+			{
+				typingTimer = new DispatcherTimer
+				{
+					Interval = TimeSpan.FromMilliseconds(DelayBeforeSearch)
+				};
+
+				typingTimer.Tick += handleTypingTimerTimeout;
+			}
+			typingTimer.Stop();
+			typingTimer.Start();
+		}
+
+		private void handleTypingTimerTimeout(object sender, EventArgs e)
+		{
+			var timer = sender as DispatcherTimer; // WPF
+			if (timer == null) 
+			{
+				return;
+			}
+
+			var changeSelection = lastChangeSelection;
 			renderer.CurrentResults.Clear();
 
-			if (!string.IsNullOrEmpty(SearchPattern)) {
+			if (!string.IsNullOrEmpty(SearchPattern))
+			{
 				int offset = textArea.Caret.Offset;
-				if (changeSelection) {
+				if (changeSelection) 
+				{
 					textArea.ClearSelection();
 				}
 				// We cast from ISearchResult to SearchResult; this is safe because we always use the built-in strategy
-				foreach (SearchResult result in strategy.FindAll(textArea.Document, 0, textArea.Document.TextLength)) {
-					if (changeSelection && result.StartOffset >= offset) {
-						SelectResult(result);
+				foreach (SearchResult result in strategy.FindAll(textArea.Document, 0, textArea.Document.TextLength))
+				{
+					if (changeSelection && result.StartOffset >= offset)
+					{
+						SelectResult(result, false);
 						changeSelection = false;
 					}
 					renderer.CurrentResults.Add(result);
 				}
-				if (!renderer.CurrentResults.Any()) {
+				if (!renderer.CurrentResults.Any())
+				{
 					messageView.IsOpen = true;
 					messageView.Content = Localization.NoMatchesFoundText;
 					messageView.PlacementTarget = searchTextBox;
-				} else
+				} 
+				else
 					messageView.IsOpen = false;
 			}
 			textArea.TextView.InvalidateLayer(KnownLayer.Selection);
+
+			timer.Stop();
 		}
 
-		void SelectResult(SearchResult result)
+		void SelectResult(SearchResult result, bool searchWrapped)
 		{
 			textArea.Caret.Offset = result.StartOffset;
 			textArea.Selection = Selection.Create(textArea, result.StartOffset, result.EndOffset);
 			textArea.Caret.BringCaretToView();
 			// show caret even if the editor does not have the Keyboard Focus
 			textArea.Caret.Show();
+			if (searchWrapped) {
+				SearchWrapped?.Invoke(this, EventArgs.Empty);
+			}
 		}
 
 		void SearchLayerKeyDown(object sender, KeyEventArgs e)
 		{
-			switch (e.Key) {
+			switch (e.Key)
+			{
 				case Key.Enter:
 					e.Handled = true;
 					if ((Keyboard.Modifiers & ModifierKeys.Shift) == ModifierKeys.Shift)
 						FindPrevious();
 					else
 						FindNext();
-					if (searchTextBox != null) {
+					if (searchTextBox != null) 
+					{
 						var error = Validation.GetErrors(searchTextBox).FirstOrDefault();
-						if (error != null) {
+						if (error != null)
+						{
 							messageView.Content = Localization.ErrorText + " " + error.ErrorContent;
 							messageView.PlacementTarget = searchTextBox;
 							messageView.IsOpen = true;
@@ -485,7 +553,8 @@ namespace ICSharpCode.AvalonEdit.Search
 		/// </summary>
 		protected virtual void OnSearchOptionsChanged(SearchOptionsChangedEventArgs e)
 		{
-			if (SearchOptionsChanged != null) {
+			if (SearchOptionsChanged != null)
+			{
 				SearchOptionsChanged(this, e);
 			}
 		}
@@ -539,7 +608,8 @@ namespace ICSharpCode.AvalonEdit.Search
 			AddVisualChild(panel);
 		}
 
-		protected override int VisualChildrenCount {
+		protected override int VisualChildrenCount
+		{
 			get { return 1; }
 		}
 
