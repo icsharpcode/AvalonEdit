@@ -47,8 +47,9 @@ namespace ICSharpCode.AvalonEdit
 
 			// copy each value over to 'this'
 			foreach (FieldInfo fi in fields) {
-				if (fi.GetCustomAttribute<NonSerializedAttribute>() == null)
+				if (fi.GetCustomAttribute<NonSerializedAttribute>() == null) {
 					fi.SetValue(this, fi.GetValue(options));
+				}
 			}
 		}
 		#endregion
@@ -91,7 +92,7 @@ namespace ICSharpCode.AvalonEdit
 			set {
 				if (showSpaces != value) {
 					showSpaces = value;
-					OnPropertyChanged("ShowSpaces");
+					OnPropertyChanged(nameof(ShowSpaces));
 				}
 			}
 		}
@@ -108,7 +109,7 @@ namespace ICSharpCode.AvalonEdit
 			set {
 				if (showTabs != value) {
 					showTabs = value;
-					OnPropertyChanged("ShowTabs");
+					OnPropertyChanged(nameof(ShowTabs));
 				}
 			}
 		}
@@ -125,7 +126,7 @@ namespace ICSharpCode.AvalonEdit
 			set {
 				if (showEndOfLine != value) {
 					showEndOfLine = value;
-					OnPropertyChanged("ShowEndOfLine");
+					OnPropertyChanged(nameof(ShowEndOfLine));
 				}
 			}
 		}
@@ -142,7 +143,7 @@ namespace ICSharpCode.AvalonEdit
 			set {
 				if (showBoxForControlCharacters != value) {
 					showBoxForControlCharacters = value;
-					OnPropertyChanged("ShowBoxForControlCharacters");
+					OnPropertyChanged(nameof(ShowBoxForControlCharacters));
 				}
 			}
 		}
@@ -161,7 +162,7 @@ namespace ICSharpCode.AvalonEdit
 			set {
 				if (enableHyperlinks != value) {
 					enableHyperlinks = value;
-					OnPropertyChanged("EnableHyperlinks");
+					OnPropertyChanged(nameof(EnableHyperlinks));
 				}
 			}
 		}
@@ -196,7 +197,7 @@ namespace ICSharpCode.AvalonEdit
 			set {
 				if (requireControlModifierForHyperlinkClick != value) {
 					requireControlModifierForHyperlinkClick = value;
-					OnPropertyChanged("RequireControlModifierForHyperlinkClick");
+					OnPropertyChanged(nameof(RequireControlModifierForHyperlinkClick));
 				}
 			}
 		}
@@ -219,15 +220,15 @@ namespace ICSharpCode.AvalonEdit
 			get { return indentationSize; }
 			set {
 				if (value < 1)
-					throw new ArgumentOutOfRangeException("value", value, "value must be positive");
+					throw new ArgumentOutOfRangeException(nameof(value), value, "value must be positive");
 				// sanity check; a too large value might cause WPF to crash internally much later
 				// (it only crashed in the hundred thousands for me; but might crash earlier with larger fonts)
 				if (value > 1000)
-					throw new ArgumentOutOfRangeException("value", value, "indentation size is too large");
+					throw new ArgumentOutOfRangeException(nameof(value), value, "indentation size is too large");
 				if (indentationSize != value) {
 					indentationSize = value;
-					OnPropertyChanged("IndentationSize");
-					OnPropertyChanged("IndentationString");
+					OnPropertyChanged(nameof(IndentationSize));
+					OnPropertyChanged(nameof(IndentationString));
 				}
 			}
 		}
@@ -244,8 +245,8 @@ namespace ICSharpCode.AvalonEdit
 			set {
 				if (convertTabsToSpaces != value) {
 					convertTabsToSpaces = value;
-					OnPropertyChanged("ConvertTabsToSpaces");
-					OnPropertyChanged("IndentationString");
+					OnPropertyChanged(nameof(ConvertTabsToSpaces));
+					OnPropertyChanged(nameof(IndentationString));
 				}
 			}
 		}
@@ -265,7 +266,7 @@ namespace ICSharpCode.AvalonEdit
 		public virtual string GetIndentationString(int column)
 		{
 			if (column < 1)
-				throw new ArgumentOutOfRangeException("column", column, "Value must be at least 1.");
+				throw new ArgumentOutOfRangeException(nameof(column), column, "Value must be at least 1.");
 			int indentationSize = this.IndentationSize;
 			if (ConvertTabsToSpaces) {
 				return new string(' ', indentationSize - ((column - 1) % indentationSize));
@@ -286,7 +287,7 @@ namespace ICSharpCode.AvalonEdit
 			set {
 				if (cutCopyWholeLine != value) {
 					cutCopyWholeLine = value;
-					OnPropertyChanged("CutCopyWholeLine");
+					OnPropertyChanged(nameof(CutCopyWholeLine));
 				}
 			}
 		}
@@ -303,7 +304,7 @@ namespace ICSharpCode.AvalonEdit
 			set {
 				if (allowScrollBelowDocument != value) {
 					allowScrollBelowDocument = value;
-					OnPropertyChanged("AllowScrollBelowDocument");
+					OnPropertyChanged(nameof(AllowScrollBelowDocument));
 				}
 			}
 		}
@@ -319,10 +320,10 @@ namespace ICSharpCode.AvalonEdit
 			get { return wordWrapIndentation; }
 			set {
 				if (double.IsNaN(value) || double.IsInfinity(value))
-					throw new ArgumentOutOfRangeException("value", value, "value must not be NaN/infinity");
+					throw new ArgumentOutOfRangeException(nameof(value), value, "value must not be NaN/infinity");
 				if (value != wordWrapIndentation) {
 					wordWrapIndentation = value;
-					OnPropertyChanged("WordWrapIndentation");
+					OnPropertyChanged(nameof(WordWrapIndentation));
 				}
 			}
 		}
@@ -340,7 +341,7 @@ namespace ICSharpCode.AvalonEdit
 			set {
 				if (value != inheritWordWrapIndentation) {
 					inheritWordWrapIndentation = value;
-					OnPropertyChanged("InheritWordWrapIndentation");
+					OnPropertyChanged(nameof(InheritWordWrapIndentation));
 				}
 			}
 		}
@@ -356,7 +357,7 @@ namespace ICSharpCode.AvalonEdit
 			set {
 				if (enableRectangularSelection != value) {
 					enableRectangularSelection = value;
-					OnPropertyChanged("EnableRectangularSelection");
+					OnPropertyChanged(nameof(EnableRectangularSelection));
 				}
 			}
 		}
@@ -372,7 +373,7 @@ namespace ICSharpCode.AvalonEdit
 			set {
 				if (enableTextDragDrop != value) {
 					enableTextDragDrop = value;
-					OnPropertyChanged("EnableTextDragDrop");
+					OnPropertyChanged(nameof(EnableTextDragDrop));
 				}
 			}
 		}
@@ -391,7 +392,7 @@ namespace ICSharpCode.AvalonEdit
 			set {
 				if (enableVirtualSpace != value) {
 					enableVirtualSpace = value;
-				 OnPropertyChanged("EnableVirtualSpace");
+					OnPropertyChanged(nameof(EnableVirtualSpace));
 				}
 			}
 		}
@@ -408,7 +409,7 @@ namespace ICSharpCode.AvalonEdit
 			set {
 				if (enableImeSupport != value) {
 					enableImeSupport = value;
-					OnPropertyChanged("EnableImeSupport");
+					OnPropertyChanged(nameof(EnableImeSupport));
 				}
 			}
 		}
@@ -424,7 +425,7 @@ namespace ICSharpCode.AvalonEdit
 			set {
 				if (showColumnRuler != value) {
 					showColumnRuler = value;
-					OnPropertyChanged("ShowColumnRuler");
+					OnPropertyChanged(nameof(ShowColumnRuler));
 				}
 			}
 		}
@@ -440,7 +441,7 @@ namespace ICSharpCode.AvalonEdit
 			set {
 				if (columnRulerPosition != value) {
 					columnRulerPosition = value;
-					OnPropertyChanged("ColumnRulerPosition");
+					OnPropertyChanged(nameof(ColumnRulerPosition));
 				}
 			}
 		}
@@ -456,7 +457,7 @@ namespace ICSharpCode.AvalonEdit
 			set {
 				if (highlightCurrentLine != value) {
 					highlightCurrentLine = value;
-					OnPropertyChanged("HighlightCurrentLine");
+					OnPropertyChanged(nameof(HighlightCurrentLine));
 				}
 			}
 		}
@@ -472,7 +473,7 @@ namespace ICSharpCode.AvalonEdit
 			set {
 				if (hideCursorWhileTyping != value) {
 					hideCursorWhileTyping = value;
-					OnPropertyChanged("HideCursorWhileTyping");
+					OnPropertyChanged(nameof(HideCursorWhileTyping));
 				}
 			}
 		}
@@ -488,7 +489,7 @@ namespace ICSharpCode.AvalonEdit
 			set {
 				if (allowToggleOverstrikeMode != value) {
 					allowToggleOverstrikeMode = value;
-					OnPropertyChanged("AllowToggleOverstrikeMode");
+					OnPropertyChanged(nameof(AllowToggleOverstrikeMode));
 				}
 			}
 		}
