@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
 	<PropertyGroup>
 		<OutputType>WinExe</OutputType>
-		<TargetFrameworks>net6.0-windows;net8.0-windows;net472</TargetFrameworks>
+		<TargetFrameworks>net10.0-windows;net8.0-windows;net472</TargetFrameworks>
 	<UseWPF>true</UseWPF>
 	<UseWindowsForms>true</UseWindowsForms>
 	<DefineConstants>TRACE</DefineConstants>
@@ -9,12 +9,12 @@
 	<AssemblyOriginatorKeyFile>..\ICSharpCode.AvalonEdit\ICSharpCode.AvalonEdit.snk</AssemblyOriginatorKeyFile>
 		<RootNamespace>AvalonEdit.Sample</RootNamespace>
 	<Company>ic#code</Company>
-		<Copyright>2000-2022 AlphaSierraPapa for the SharpDevelop Team</Copyright>
+		<Copyright>2000-2025 AlphaSierraPapa for the SharpDevelop Team</Copyright>
 		<Description>Sample for WPF-based extensible text editor</Description>
 	<IsPackable>false</IsPackable>	
 	</PropertyGroup>
 	
-	<PropertyGroup Condition=" '$(TargetFramework)' == 'net6.0-windows' ">
+	<PropertyGroup Condition=" '$(TargetFramework)' == 'net10.0-windows' ">
 		<DefineConstants>TRACE</DefineConstants>
 	</PropertyGroup>
 	<PropertyGroup Condition=" '$(TargetFramework)' == 'net8.0-windows' ">

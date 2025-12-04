@@ -16,9 +16,10 @@ jobs:
     env:
         Solution: '**/ICSharpCode.AvalonEdit.sln'
         BuildPlatform: 'Any CPU'
-        BuildVersion: '6.3.1'
+        BuildVersion: '6.3.2'
+
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
     - name: Update project version
       uses: roryprimrose/set-vs-sdk-project-version@v1
       with:
@@ -27,15 +28,15 @@ jobs:
         assemblyVersion: ${{ env.BuildVersion }}.${{ github.run_number }}
         fileVersion: ${{ env.BuildVersion }}.${{ github.run_number }}    
 
-    - name: Setup .NET 8.0
-      uses: actions/setup-dotnet@v4
+    - name: Setup .NET LTS Current
+      uses: actions/setup-dotnet@v5
       with:
-        dotnet-version: 8.0.x
+        dotnet-version: '10.0.x'
         
-    - name: Setup LTS .NET
-      uses: actions/setup-dotnet@v4
+    - name: Setup .NET LTS Previous
+      uses: actions/setup-dotnet@v5
       with:
-        dotnet-version: 6.0.x
+        dotnet-version: '8.0.x'
 
     - name: Add msbuild to PATH
       uses: microsoft/setup-msbuild@v2
@@ -48,12 +49,12 @@ jobs:
     - name: Setup VSTest
       uses: Malcolmnixon/Setup-VSTest@v4
       
-    - name: net6.0-windows Unit Tests
+    - name: LTS Current Unit Tests
       run: vstest.console $env:TestAssembly
       env:
-        TestAssembly: ICSharpCode.AvalonEdit.Tests\bin\${{ matrix.configuration }}\net6.0-windows\ICSharpCode.AvalonEdit.Tests.dll
+        TestAssembly: ICSharpCode.AvalonEdit.Tests\bin\${{ matrix.configuration }}\net10.0-windows\ICSharpCode.AvalonEdit.Tests.dll
 
-    - name: net8.0-windows Unit Tests
+    - name: LTS Previous Unit Tests
       run: vstest.console $env:TestAssembly
       env:
         TestAssembly: ICSharpCode.AvalonEdit.Tests\bin\${{ matrix.configuration }}\net8.0-windows\ICSharpCode.AvalonEdit.Tests.dll
@@ -71,7 +72,7 @@ jobs:
 
     - name: Upload NuGet
       if: matrix.configuration == 'release'
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v5
       with:
         name: AvalonEdit NuGet Package (${{ matrix.configuration }})
         path: ICSharpCode.AvalonEdit/bin/Release/AvalonEdit*.nupkg
@@ -79,7 +80,7 @@ jobs:
 
     - name: Upload Snupkg Artifact
       if: matrix.configuration == 'release'
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v5
       with:
         name: AvalonEdit Snupkg (${{ matrix.configuration }})
         path: ICSharpCode.AvalonEdit/bin/Release/AvalonEdit*.snupkg
