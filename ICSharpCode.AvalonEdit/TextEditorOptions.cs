@@ -47,7 +47,7 @@ namespace ICSharpCode.AvalonEdit
 
 			// copy each value over to 'this'
 			foreach (FieldInfo fi in fields) {
-				if (!fi.IsNotSerialized)
+				if (fi.GetCustomAttribute<NonSerializedAttribute>() == null)
 					fi.SetValue(this, fi.GetValue(options));
 			}
 		}
@@ -391,7 +391,7 @@ namespace ICSharpCode.AvalonEdit
 			set {
 				if (enableVirtualSpace != value) {
 					enableVirtualSpace = value;
-					OnPropertyChanged("EnableVirtualSpace");
+				 OnPropertyChanged("EnableVirtualSpace");
 				}
 			}
 		}
